@@ -1,5 +1,3 @@
-import { nanoid } from 'nanoid/non-secure';
-
 import { SwitchRouter } from './SwitchRouter';
 import {
   type TabActionHelpers,
@@ -13,6 +11,7 @@ import type {
   ParamListBase,
   PartialState,
   Router,
+  RouterContext,
 } from './types';
 
 export type DrawerStatus = 'open' | 'closed';
@@ -85,14 +84,15 @@ export const DrawerActions = {
   },
 };
 
-export function DrawerRouter({
-  defaultStatus = 'closed',
-  ...rest
-}: DrawerRouterOptions): Router<
+export function DrawerRouter(
+  { defaultStatus = 'closed', ...rest }: DrawerRouterOptions,
+  context: RouterContext
+): Router<
   DrawerNavigationState<ParamListBase>,
   DrawerActionType | CommonNavigationAction
 > {
-  const router = SwitchRouter<'drawer'>(rest);
+  const { uid } = context;
+  const router = SwitchRouter<'drawer'>(rest, context);
 
   const isDrawerInHistory = (
     state:
@@ -169,7 +169,7 @@ export function DrawerRouter({
         default: defaultStatus,
         stale: false,
         type: 'drawer',
-        key: `drawer-${nanoid()}`,
+        key: `drawer-${uid()}`,
       };
     },
 
@@ -189,7 +189,7 @@ export function DrawerRouter({
         }),
         default: defaultStatus,
         type: 'drawer',
-        key: `drawer-${nanoid()}`,
+        key: `drawer-${uid()}`,
       };
 
       if (isDrawerInHistory(partialState)) {

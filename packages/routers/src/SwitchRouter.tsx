@@ -1,5 +1,3 @@
-import { nanoid } from 'nanoid/non-secure';
-
 import { BaseRouter } from './BaseRouter';
 import { createParamsFromAction } from './createParamsFromAction';
 import type {
@@ -9,6 +7,7 @@ import type {
   PartialState,
   Route,
   RouterConfigOptions,
+  RouterContext,
 } from './types';
 
 export type SwitchActionType = {
@@ -235,10 +234,10 @@ const changeIndex = <Type extends SwitchRouterType>(
   };
 };
 
-export function SwitchRouter<Type extends SwitchRouterType>({
-  initialRouteName,
-  backBehavior = 'firstRoute',
-}: SwitchRouterOptions) {
+export function SwitchRouter<Type extends SwitchRouterType>(
+  { initialRouteName, backBehavior = 'firstRoute' }: SwitchRouterOptions,
+  { uid }: RouterContext
+) {
   type State = SwitchRouterStateMap[Type];
 
   const router = {
@@ -255,13 +254,13 @@ export function SwitchRouter<Type extends SwitchRouterType>({
 
       const routes = routeNames.map((name) => ({
         name,
-        key: `${name}-${nanoid()}`,
+        key: `${name}-${uid()}`,
         params: routeParamList[name],
       }));
 
       return {
         stale: false,
-        key: nanoid(),
+        key: uid(),
         index,
         routeNames,
         history: getRouteHistory(routes, index, backBehavior, initialRouteName),
@@ -283,7 +282,7 @@ export function SwitchRouter<Type extends SwitchRouterType>({
           key:
             route && route.name === name && route.key
               ? route.key
-              : `${name}-${nanoid()}`,
+              : `${name}-${uid()}`,
           params:
             routeParamList[name] !== undefined
               ? {
@@ -313,7 +312,7 @@ export function SwitchRouter<Type extends SwitchRouterType>({
 
       const stateData: SwitchRouterState<RouteHistory> = {
         stale: false,
-        key: nanoid(),
+        key: uid(),
         index,
         routeNames,
         history,
@@ -343,7 +342,7 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             (r) => r.name === name && !routeKeyChanges.includes(r.name)
           ) ?? {
             name,
-            key: `${name}-${nanoid()}`,
+            key: `${name}-${uid()}`,
             params: routeParamList[name],
           }
       );
@@ -432,7 +431,7 @@ export function SwitchRouter<Type extends SwitchRouterType>({
           const nextId = getId?.({ params: action.payload.params });
 
           const key =
-            currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
+            currentId === nextId ? route.key : `${route.name}-${uid()}`;
 
           let params;
 
@@ -600,7 +599,7 @@ export function SwitchRouter<Type extends SwitchRouterType>({
           const nextId = getId?.({ params: action.payload.params });
 
           const key =
-            currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
+            currentId === nextId ? route.key : `${route.name}-${uid()}`;
 
           const params = createParamsFromAction({ action, routeParamList });
           const newRoute =
@@ -640,7 +639,7 @@ export function SwitchRouter<Type extends SwitchRouterType>({
         }
 
         default:
-          return BaseRouter.getStateForAction(state, action);
+          return BaseRouter.getStateForAction(state, action, { uid });
       }
     },
   };

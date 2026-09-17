@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
+import { afterEach, expect, jest, test } from '@jest/globals';
 import {
   CommonActions,
   type DefaultRouterOptions,
@@ -17,24 +17,7 @@ import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { Screen } from '../Screen';
 import { useNavigationBuilder } from '../useNavigationBuilder';
-import {
-  type MockActions,
-  MockRouter,
-  MockRouterKey,
-} from './__fixtures__/MockRouter';
-
-jest.mock('nanoid/non-secure', () => {
-  const m = { nanoid: () => String(++m.__key), __key: 0 };
-
-  return m;
-});
-
-beforeEach(() => {
-  MockRouterKey.current = 0;
-
-  // eslint-disable-next-line import-x/no-extraneous-dependencies
-  require('nanoid/non-secure').__key = 0;
-});
+import { type MockActions, MockRouter } from './__fixtures__/MockRouter';
 
 afterEach(() => {
   jest.restoreAllMocks();
@@ -125,12 +108,12 @@ test("lets parent handle the action if child didn't", async () => {
     stale: false,
     type: 'test',
     index: 2,
-    key: '0',
+    key: expect.any(String),
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar' },
-      { key: 'foo', name: 'foo' },
+      { key: expect.any(String), name: 'baz' },
+      { key: expect.any(String), name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
     ],
   });
 });
@@ -202,25 +185,25 @@ test('action goes to hidden nested navigator if target is specified', async () =
     stale: false,
     type: 'test',
     index: 0,
-    key: '0',
+    key: expect.any(String),
     routeNames: ['parent-a', 'parent-b'],
     routes: [
       {
-        key: 'parent-a',
+        key: expect.any(String),
         name: 'parent-a',
         state: {
           stale: false,
           type: 'test',
           index: 1,
-          key: '1',
+          key: expect.any(String),
           routeNames: ['child-a', 'child-b'],
           routes: [
-            { key: 'child-a', name: 'child-a' },
-            { key: 'child-b', name: 'child-b' },
+            { key: expect.any(String), name: 'child-a' },
+            { key: expect.any(String), name: 'child-b' },
           ],
         },
       },
-      { key: 'parent-b', name: 'parent-b' },
+      { key: expect.any(String), name: 'parent-b' },
     ],
   });
 });
@@ -265,7 +248,10 @@ test('action goes to correct parent navigator if target is specified', async () 
 
   const TestScreen = (props: any) => {
     React.useEffect(() => {
-      props.navigation.dispatch({ type: 'REVERSE', target: '0' });
+      props.navigation.dispatch({
+        type: 'REVERSE',
+        target: props.navigation.getParent().getState().key,
+      });
     }, [props.navigation]);
 
     return null;
@@ -327,23 +313,23 @@ test('action goes to correct parent navigator if target is specified', async () 
     stale: false,
     type: 'test',
     index: 1,
-    key: '0',
+    key: expect.any(String),
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo', name: 'foo' },
-      { key: 'bar', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
       {
-        key: 'baz',
+        key: expect.any(String),
         name: 'baz',
         state: {
           stale: false,
           type: 'test',
           index: 0,
-          key: '1',
+          key: expect.any(String),
           routeNames: ['qux', 'lex'],
           routes: [
-            { key: 'lex', name: 'lex' },
-            { key: 'qux', name: 'qux' },
+            { key: expect.any(String), name: 'lex' },
+            { key: expect.any(String), name: 'qux' },
           ],
         },
       },
@@ -444,7 +430,13 @@ test('action goes to correct child navigator if target is specified', async () =
   await render(element);
 
   await act(() => {
-    navigation.dispatch({ type: 'REVERSE', target: '1' });
+    const target = navigation.getRootState()?.routes[2]?.state?.key;
+
+    if (target === undefined) {
+      throw new Error('Expected the child navigator to be initialized.');
+    }
+
+    navigation.dispatch({ type: 'REVERSE', target });
   });
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
@@ -452,23 +444,23 @@ test('action goes to correct child navigator if target is specified', async () =
     stale: false,
     type: 'test',
     index: 2,
-    key: '0',
+    key: expect.any(String),
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo', name: 'foo' },
-      { key: 'bar', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
       {
-        key: 'baz',
+        key: expect.any(String),
         name: 'baz',
         state: {
           stale: false,
           type: 'test',
           index: 0,
-          key: '1',
+          key: expect.any(String),
           routeNames: ['qux', 'lex'],
           routes: [
-            { key: 'lex', name: 'lex' },
-            { key: 'qux', name: 'qux' },
+            { key: expect.any(String), name: 'lex' },
+            { key: expect.any(String), name: 'qux' },
           ],
         },
       },
@@ -648,7 +640,10 @@ test("action doesn't bubble to child if target is specified", async () => {
 
   const TestScreen = (props: any) => {
     React.useEffect(() => {
-      props.navigation.dispatch({ type: 'REVERSE', target: '0' });
+      props.navigation.dispatch({
+        type: 'REVERSE',
+        target: props.navigation.getState().key,
+      });
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -811,12 +806,12 @@ test("emits 'beforeRemove' when removing a screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -827,14 +822,14 @@ test("emits 'beforeRemove' when removing a screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
       {
-        key: 'baz-4',
+        key: expect.any(String),
         name: 'baz',
       },
     ],
@@ -849,13 +844,13 @@ test("emits 'beforeRemove' when removing a screen", async () => {
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
-      { key: 'baz-4', name: 'baz' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
+      { key: expect.any(String), name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -868,10 +863,10 @@ test("emits 'beforeRemove' when removing a screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -885,10 +880,10 @@ test("emits 'beforeRemove' when removing a screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -959,12 +954,12 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -975,21 +970,21 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
       {
-        key: 'baz-4',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-5',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-6', name: 'qux' }],
+          routes: [{ key: expect.any(String), name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -1006,21 +1001,21 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
       {
-        key: 'baz-4',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-5',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-6', name: 'qux' }],
+          routes: [{ key: expect.any(String), name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -1037,10 +1032,10 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -1054,10 +1049,10 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -1133,12 +1128,12 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -1149,30 +1144,30 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
       {
-        key: 'baz-4',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-5',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-6',
+              key: expect.any(String),
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-7',
+                key: expect.any(String),
                 retainedRouteKeys: [],
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-8', name: 'lex' }],
+                routes: [{ key: expect.any(String), name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -1194,30 +1189,30 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
       {
-        key: 'baz-4',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-5',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-6',
+              key: expect.any(String),
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-7',
+                key: expect.any(String),
                 retainedRouteKeys: [],
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-8', name: 'lex' }],
+                routes: [{ key: expect.any(String), name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -1239,10 +1234,10 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -1256,10 +1251,10 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -1343,33 +1338,35 @@ test("emits 'beforeRemove' for multiple removed screens in reverse order", async
     navigation.navigate('bax');
   });
 
-  const preventedState = {
+  const preventedState = navigation.getRootState();
+
+  expect(preventedState).toEqual({
     index: 3,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
-      { key: 'baz-4', name: 'baz' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
+      { key: expect.any(String), name: 'baz' },
       {
-        key: 'bax-5',
+        key: expect.any(String),
         name: 'bax',
         state: {
           index: 0,
-          key: 'stack-6',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-7',
+              key: expect.any(String),
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-8',
+                key: expect.any(String),
                 retainedRouteKeys: [],
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-9', name: 'lex' }],
+                routes: [{ key: expect.any(String), name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -1382,7 +1379,7 @@ test("emits 'beforeRemove' for multiple removed screens in reverse order", async
     ],
     stale: false,
     type: 'stack',
-  };
+  });
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith(preventedState);
@@ -1419,10 +1416,10 @@ test("emits 'beforeRemove' for multiple removed screens in reverse order", async
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -1494,20 +1491,20 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
+      { key: expect.any(String), name: 'foo' },
       {
-        key: 'baz-3',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-4',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-5', name: 'qux' }],
+          routes: [{ key: expect.any(String), name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -1518,17 +1515,17 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
   });
 
   await act(() => {
-    const state = {
-      index: 0,
-      key: 'stack-1',
-      routeNames: ['foo', 'bar', 'baz'],
-      routes: [{ key: 'foo-2', name: 'foo' }],
-      retainedRouteKeys: [],
-      stale: false,
-      type: 'stack',
-    };
+    const state = navigation.getRootState();
 
-    navigation.resetRoot(state);
+    if (state === undefined) {
+      throw new Error('Expected navigation state to be initialized.');
+    }
+
+    navigation.resetRoot({
+      ...state,
+      index: 0,
+      routes: state.routes.slice(0, 1),
+    });
   });
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
@@ -1536,20 +1533,20 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
 
   expect(navigation.getRootState()).toEqual({
     index: 1,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
+      { key: expect.any(String), name: 'foo' },
       {
-        key: 'baz-3',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-4',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-5', name: 'qux' }],
+          routes: [{ key: expect.any(String), name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -1562,25 +1559,25 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
   shouldPrevent = false;
 
   await act(() => {
-    const state = {
-      index: 0,
-      key: 'stack-1',
-      routeNames: ['foo', 'bar', 'baz'],
-      routes: [{ key: 'foo-2', name: 'foo' }],
-      retainedRouteKeys: [],
-      stale: false,
-      type: 'stack',
-    };
+    const state = navigation.getRootState();
 
-    navigation.resetRoot(state);
+    if (state === undefined) {
+      throw new Error('Expected navigation state to be initialized.');
+    }
+
+    navigation.resetRoot({
+      ...state,
+      index: 0,
+      routes: state.routes.slice(0, 1),
+    });
   });
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     retainedRouteKeys: [],
     stale: false,
     type: 'stack',
@@ -3032,11 +3029,11 @@ test('handles action dispatched immediately after a reset with partial state', a
     stale: false,
     type: 'test',
     index: 1,
-    key: '2',
+    key: expect.any(String),
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'bar-1', name: 'bar' },
-      { key: 'baz-3', name: 'baz' },
+      { key: expect.any(String), name: 'bar' },
+      { key: expect.any(String), name: 'baz' },
     ],
   });
 });
@@ -3086,11 +3083,11 @@ test('reflects reset with partial state when state is read immediately after', a
     stale: false,
     type: 'test',
     index: 0,
-    key: '3',
+    key: expect.any(String),
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'bar-1', name: 'bar' },
-      { key: 'baz-2', name: 'baz' },
+      { key: expect.any(String), name: 'bar' },
+      { key: expect.any(String), name: 'baz' },
     ],
   });
 });
@@ -3143,12 +3140,12 @@ test('handles navigating to a newly added screen from a layout effect', async ()
     stale: false,
     type: 'test',
     index: 2,
-    key: '0',
+    key: expect.any(String),
     routeNames: ['foo', 'bar', 'qux'],
     routes: [
-      { key: 'foo', name: 'foo' },
-      { key: 'bar', name: 'bar' },
-      { key: 'qux-1', name: 'qux' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
+      { key: expect.any(String), name: 'qux' },
     ],
   });
 });
@@ -3201,11 +3198,11 @@ test("doesn't lose navigation from a layout effect when screens change in the sa
     stale: false,
     type: 'test',
     index: 1,
-    key: '0',
+    key: expect.any(String),
     routeNames: ['foo', 'bar'],
     routes: [
-      { key: 'foo', name: 'foo' },
-      { key: 'bar', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
     ],
   });
 });

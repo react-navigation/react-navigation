@@ -1,16 +1,14 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
+import { beforeEach, expect, test } from '@jest/globals';
 
 import { BaseRouter } from '../BaseRouter';
 import * as CommonActions from '../CommonActions';
 
-jest.mock('nanoid/non-secure', () => {
-  const m = { nanoid: () => String(++m.__key), __key: 0 };
+let count = 0;
 
-  return m;
-});
+const uid = () => String(++count);
 
 beforeEach(() => {
-  require('nanoid/non-secure').__key = 0;
+  count = 0;
 });
 
 const STATE = {
@@ -29,7 +27,8 @@ const STATE = {
 test('sets params for the focused screen with SET_PARAMS', () => {
   const result = BaseRouter.getStateForAction(
     STATE,
-    CommonActions.setParams({ answer: 42 })
+    CommonActions.setParams({ answer: 42 }),
+    { uid }
   );
 
   expect(result).toEqual({
@@ -47,10 +46,14 @@ test('sets params for the focused screen with SET_PARAMS', () => {
 });
 
 test('merges params for the source screen with SET_PARAMS', () => {
-  const result = BaseRouter.getStateForAction(STATE, {
-    ...CommonActions.setParams({ user: 'jane' }),
-    source: 'baz',
-  });
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    {
+      ...CommonActions.setParams({ user: 'jane' }),
+      source: 'baz',
+    },
+    { uid }
+  );
 
   expect(result).toEqual({
     stale: false,
@@ -67,10 +70,14 @@ test('merges params for the source screen with SET_PARAMS', () => {
 });
 
 test('sets params for the source screen with SET_PARAMS', () => {
-  const result = BaseRouter.getStateForAction(STATE, {
-    ...CommonActions.setParams({ user: 'jane' }),
-    source: 'foo',
-  });
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    {
+      ...CommonActions.setParams({ user: 'jane' }),
+      source: 'foo',
+    },
+    { uid }
+  );
 
   expect(result).toEqual({
     stale: false,
@@ -87,10 +94,14 @@ test('sets params for the source screen with SET_PARAMS', () => {
 });
 
 test("doesn't handle SET_PARAMS if source key isn't present", () => {
-  const result = BaseRouter.getStateForAction(STATE, {
-    ...CommonActions.setParams({ answer: 42 }),
-    source: 'magic',
-  });
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    {
+      ...CommonActions.setParams({ answer: 42 }),
+      source: 'magic',
+    },
+    { uid }
+  );
 
   expect(result).toBeNull();
 });
@@ -98,7 +109,8 @@ test("doesn't handle SET_PARAMS if source key isn't present", () => {
 test('replaces params for the focused screen with REPLACE_PARAMS', () => {
   const result = BaseRouter.getStateForAction(
     STATE,
-    CommonActions.replaceParams({ answer: 42 })
+    CommonActions.replaceParams({ answer: 42 }),
+    { uid }
   );
 
   expect(result).toEqual({
@@ -116,10 +128,14 @@ test('replaces params for the focused screen with REPLACE_PARAMS', () => {
 });
 
 test('adds params for the source screen with REPLACE_PARAMS', () => {
-  const result = BaseRouter.getStateForAction(STATE, {
-    ...CommonActions.replaceParams({ user: 'jane' }),
-    source: 'foo',
-  });
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    {
+      ...CommonActions.replaceParams({ user: 'jane' }),
+      source: 'foo',
+    },
+    { uid }
+  );
 
   expect(result).toEqual({
     stale: false,
@@ -136,10 +152,14 @@ test('adds params for the source screen with REPLACE_PARAMS', () => {
 });
 
 test('replaces params for the source screen with REPLACE_PARAMS', () => {
-  const result = BaseRouter.getStateForAction(STATE, {
-    ...CommonActions.replaceParams({ user: 'jane' }),
-    source: 'baz',
-  });
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    {
+      ...CommonActions.replaceParams({ user: 'jane' }),
+      source: 'baz',
+    },
+    { uid }
+  );
 
   expect(result).toEqual({
     stale: false,
@@ -156,10 +176,14 @@ test('replaces params for the source screen with REPLACE_PARAMS', () => {
 });
 
 test("doesn't handle REPLACE_PARAMS if source key isn't present", () => {
-  const result = BaseRouter.getStateForAction(STATE, {
-    ...CommonActions.replaceParams({ answer: 42 }),
-    source: 'magic',
-  });
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    {
+      ...CommonActions.replaceParams({ answer: 42 }),
+      source: 'magic',
+    },
+    { uid }
+  );
 
   expect(result).toBeNull();
 });
@@ -167,7 +191,8 @@ test("doesn't handle REPLACE_PARAMS if source key isn't present", () => {
 test('pushes new params for the focused screen with PUSH_PARAMS', () => {
   const result = BaseRouter.getStateForAction(
     STATE,
-    CommonActions.pushParams({ answer: 42 })
+    CommonActions.pushParams({ answer: 42 }),
+    { uid }
   );
 
   expect(result).toEqual({
@@ -190,10 +215,14 @@ test('pushes new params for the focused screen with PUSH_PARAMS', () => {
 });
 
 test('pushes new params for the source screen with PUSH_PARAMS', () => {
-  const result = BaseRouter.getStateForAction(STATE, {
-    ...CommonActions.pushParams({ user: 'jane' }),
-    source: 'baz',
-  });
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    {
+      ...CommonActions.pushParams({ user: 'jane' }),
+      source: 'baz',
+    },
+    { uid }
+  );
 
   expect(result).toEqual({
     stale: false,
@@ -215,10 +244,14 @@ test('pushes new params for the source screen with PUSH_PARAMS', () => {
 });
 
 test('pushes new params for route with no existing params with PUSH_PARAMS', () => {
-  const result = BaseRouter.getStateForAction(STATE, {
-    ...CommonActions.pushParams({ user: 'jane' }),
-    source: 'foo',
-  });
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    {
+      ...CommonActions.pushParams({ user: 'jane' }),
+      source: 'foo',
+    },
+    { uid }
+  );
 
   expect(result).toEqual({
     stale: false,
@@ -256,7 +289,8 @@ test('pushes new params with existing history with PUSH_PARAMS', () => {
 
   const result = BaseRouter.getStateForAction(
     stateWithHistory,
-    CommonActions.pushParams({ fruit: 'banana' })
+    CommonActions.pushParams({ fruit: 'banana' }),
+    { uid }
   );
 
   expect(result).toEqual({
@@ -282,10 +316,14 @@ test('pushes new params with existing history with PUSH_PARAMS', () => {
 });
 
 test("doesn't handle PUSH_PARAMS if source key isn't present", () => {
-  const result = BaseRouter.getStateForAction(STATE, {
-    ...CommonActions.pushParams({ answer: 42 }),
-    source: 'magic',
-  });
+  const result = BaseRouter.getStateForAction(
+    STATE,
+    {
+      ...CommonActions.pushParams({ answer: 42 }),
+      source: 'magic',
+    },
+    { uid }
+  );
 
   expect(result).toBeNull();
 });
@@ -303,7 +341,8 @@ test('resets state to new state with RESET', () => {
     CommonActions.reset({
       index: 0,
       routes,
-    })
+    }),
+    { uid }
   );
 
   expect(result).toEqual({ index: 0, routes });
@@ -315,7 +354,8 @@ test('adds keys to routes missing keys during RESET', () => {
     CommonActions.reset({
       ...STATE,
       routes: [...STATE.routes, { name: 'qux' }],
-    })
+    }),
+    { uid }
   );
 
   expect(result).toEqual({
@@ -336,7 +376,8 @@ test("doesn't handle RESET if routes don't match routeNames", () => {
     CommonActions.reset({
       index: 0,
       routes,
-    })
+    }),
+    { uid }
   );
 
   expect(result).toBeNull();
@@ -348,7 +389,8 @@ test("doesn't handle RESET if routeNames don't match", () => {
     CommonActions.reset({
       ...STATE,
       routeNames: ['ten'],
-    })
+    }),
+    { uid }
   );
 
   expect(result).toBeNull();
@@ -362,7 +404,8 @@ test("doesn't handle RESET if a complete state has an out-of-bounds index", () =
         ...STATE,
         index: 99,
         routes: [{ key: 'foo', name: 'foo' }],
-      })
+      }),
+      { uid }
     )
   ).toBeNull();
 
@@ -372,7 +415,8 @@ test("doesn't handle RESET if a complete state has an out-of-bounds index", () =
       CommonActions.reset({
         ...STATE,
         index: -1,
-      })
+      }),
+      { uid }
     )
   ).toBeNull();
 });
@@ -383,7 +427,8 @@ test("doesn't handle RESET if there are no routes", () => {
     CommonActions.reset({
       index: 0,
       routes: [],
-    })
+    }),
+    { uid }
   );
 
   expect(result).toBeNull();

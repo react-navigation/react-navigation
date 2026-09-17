@@ -370,6 +370,9 @@ export function useNavigationBuilder<
     EventMap
   >(children);
 
+  const id = React.useId();
+  const count = React.useRef(0);
+
   const router = useLazyValue<Router<State, any>>(() => {
     if (
       rest.initialRouteName != null &&
@@ -382,7 +385,10 @@ export function useNavigationBuilder<
       );
     }
 
-    const original = createRouter(rest as unknown as RouterOptions);
+    const original = createRouter(rest as RouterOptions, {
+      // TODO: State persistence may result in duplicate ids
+      uid: () => `${id}-${count.current++}`,
+    });
 
     if (routerOverrides != null) {
       const overrides = routerOverrides(original);

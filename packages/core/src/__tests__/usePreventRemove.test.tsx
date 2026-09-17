@@ -1,4 +1,4 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
+import { expect, jest, test } from '@jest/globals';
 import {
   CommonActions,
   type ParamListBase,
@@ -16,20 +16,6 @@ import { Screen } from '../Screen';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import { usePreventRemove } from '../usePreventRemove';
 import { usePreventRemoveContext } from '../usePreventRemoveContext';
-import { MockRouterKey } from './__fixtures__/MockRouter';
-
-jest.mock('nanoid/non-secure', () => {
-  const m = { nanoid: () => String(++m.__key), __key: 0 };
-
-  return m;
-});
-
-beforeEach(() => {
-  MockRouterKey.current = 0;
-
-  // eslint-disable-next-line import-x/no-extraneous-dependencies
-  require('nanoid/non-secure').__key = 0;
-});
 
 test("prevents removing a screen with 'usePreventRemove' hook", async () => {
   const TestNavigator = (props: any) => {
@@ -79,12 +65,12 @@ test("prevents removing a screen with 'usePreventRemove' hook", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -95,13 +81,13 @@ test("prevents removing a screen with 'usePreventRemove' hook", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
-      { key: 'baz-4', name: 'baz' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
+      { key: expect.any(String), name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -114,13 +100,13 @@ test("prevents removing a screen with 'usePreventRemove' hook", async () => {
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
-      { key: 'baz-4', name: 'baz' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
+      { key: expect.any(String), name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -134,10 +120,10 @@ test("prevents removing a screen with 'usePreventRemove' hook", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(4);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -193,12 +179,12 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -209,13 +195,13 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
-      { key: 'baz-4', name: 'baz' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
+      { key: expect.any(String), name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -228,13 +214,13 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
-      { key: 'baz-4', name: 'baz' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
+      { key: expect.any(String), name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -248,10 +234,10 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
   expect(onStateChange).toHaveBeenCalledTimes(4);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -290,6 +276,8 @@ test("doesn't prevent retaining a screen in inactive routes", async () => {
   );
 
   await act(() => navigation.navigate('bar'));
+  const retainedRoute = navigation.getCurrentRoute();
+
   await act(() => navigation.dispatch(StackActions.retain(true)));
   await act(() => navigation.navigate('baz'));
   await act(() => navigation.dispatch(StackActions.popTo('foo')));
@@ -300,10 +288,10 @@ test("doesn't prevent retaining a screen in inactive routes", async () => {
     expect.objectContaining({
       index: 0,
       routes: [
-        { key: 'foo-2', name: 'foo' },
-        { key: 'bar-3', name: 'bar' },
+        { key: expect.any(String), name: 'foo' },
+        { key: expect.any(String), name: 'bar' },
       ],
-      retainedRouteKeys: ['bar-3'],
+      retainedRouteKeys: [retainedRoute?.key],
     })
   );
 });
@@ -351,12 +339,12 @@ test("should have no effect when 'usePreventRemove' hook is set to false", async
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -367,13 +355,13 @@ test("should have no effect when 'usePreventRemove' hook is set to false", async
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
-      { key: 'baz-4', name: 'baz' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
+      { key: expect.any(String), name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -385,10 +373,10 @@ test("should have no effect when 'usePreventRemove' hook is set to false", async
 
   expect(navigation.getRootState()).toEqual({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -399,10 +387,10 @@ test("should have no effect when 'usePreventRemove' hook is set to false", async
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -464,12 +452,12 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -480,21 +468,21 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
       {
-        key: 'baz-4',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-5',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-6', name: 'qux' }],
+          routes: [{ key: expect.any(String), name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -511,21 +499,21 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
       {
-        key: 'baz-4',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-5',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-6', name: 'qux' }],
+          routes: [{ key: expect.any(String), name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -540,21 +528,21 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(navigation.getRootState()).toEqual({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
       {
-        key: 'baz-4',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-5',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-6', name: 'qux' }],
+          routes: [{ key: expect.any(String), name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -572,10 +560,10 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
   expect(onStateChange).toHaveBeenCalledTimes(4);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -698,12 +686,12 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", asyn
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -714,30 +702,30 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", asyn
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
       {
-        key: 'baz-4',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-5',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-6',
+              key: expect.any(String),
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-7',
+                key: expect.any(String),
                 retainedRouteKeys: [],
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-8', name: 'lex' }],
+                routes: [{ key: expect.any(String), name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -759,30 +747,30 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", asyn
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
       {
-        key: 'baz-4',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-5',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-6',
+              key: expect.any(String),
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-7',
+                key: expect.any(String),
                 retainedRouteKeys: [],
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-8', name: 'lex' }],
+                routes: [{ key: expect.any(String), name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -805,10 +793,10 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", asyn
   expect(onStateChange).toHaveBeenCalledTimes(4);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -887,33 +875,35 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", async
     navigation.navigate('bax');
   });
 
-  const preventedState = {
+  const preventedState = navigation.getRootState();
+
+  expect(preventedState).toEqual({
     index: 3,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
-      { key: 'bar-3', name: 'bar' },
-      { key: 'baz-4', name: 'baz' },
+      { key: expect.any(String), name: 'foo' },
+      { key: expect.any(String), name: 'bar' },
+      { key: expect.any(String), name: 'baz' },
       {
-        key: 'bax-5',
+        key: expect.any(String),
         name: 'bax',
         state: {
           index: 0,
-          key: 'stack-6',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-7',
+              key: expect.any(String),
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-8',
+                key: expect.any(String),
                 retainedRouteKeys: [],
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-9', name: 'lex' }],
+                routes: [{ key: expect.any(String), name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -926,7 +916,7 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", async
     ],
     stale: false,
     type: 'stack',
-  };
+  });
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith(preventedState);
@@ -963,10 +953,10 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", async
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
-    routes: [{ key: 'foo-2', name: 'foo' }],
+    routes: [{ key: expect.any(String), name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -1024,20 +1014,20 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
+      { key: expect.any(String), name: 'foo' },
       {
-        key: 'baz-3',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-4',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-5', name: 'qux' }],
+          routes: [{ key: expect.any(String), name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -1048,37 +1038,37 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
   });
 
   await act(() => {
-    const state = {
-      index: 0,
-      key: 'stack-1',
-      routeNames: ['foo', 'bar', 'baz'],
-      routes: [{ key: 'foo-2', name: 'foo' }],
-      retainedRouteKeys: [],
-      stale: false,
-      type: 'stack',
-    };
+    const state = navigation.getRootState();
 
-    navigation.resetRoot(state);
+    if (state === undefined) {
+      throw new Error('Expected navigation state to be initialized.');
+    }
+
+    navigation.resetRoot({
+      ...state,
+      index: 0,
+      routes: state.routes.slice(0, 1),
+    });
   });
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
 
   expect(navigation.getRootState()).toEqual({
     index: 1,
-    key: 'stack-1',
+    key: expect.any(String),
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-2', name: 'foo' },
+      { key: expect.any(String), name: 'foo' },
       {
-        key: 'baz-3',
+        key: expect.any(String),
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-4',
+          key: expect.any(String),
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-5', name: 'qux' }],
+          routes: [{ key: expect.any(String), name: 'qux' }],
           stale: false,
           type: 'stack',
         },

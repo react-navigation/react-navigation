@@ -816,10 +816,6 @@ importers:
         version: 6.0.3
 
   packages/routers:
-    dependencies:
-      nanoid:
-        specifier: ^5.1.11
-        version: 5.1.11
     devDependencies:
       '@jest/globals':
         specifier: ^30.4.1

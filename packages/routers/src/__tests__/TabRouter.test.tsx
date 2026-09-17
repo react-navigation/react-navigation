@@ -1,4 +1,4 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
+import { beforeEach, expect, test } from '@jest/globals';
 
 import {
   CommonActions,
@@ -9,18 +9,16 @@ import {
   TabRouter,
 } from '../index';
 
-jest.mock('nanoid/non-secure', () => {
-  const m = { nanoid: () => String(++m.__key), __key: 0 };
+let count = 0;
 
-  return m;
-});
+const uid = () => String(++count);
 
 beforeEach(() => {
-  require('nanoid/non-secure').__key = 0;
+  count = 0;
 });
 
 test('gets initial state from route names and params with initialRouteName', () => {
-  const router = TabRouter({ initialRouteName: 'baz' });
+  const router = TabRouter({ initialRouteName: 'baz' }, { uid });
 
   expect(
     router.getInitialState({
@@ -51,7 +49,7 @@ test('gets initial state from route names and params with initialRouteName', () 
 });
 
 test('gets initial state from route names and params without initialRouteName', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
 
   expect(
     router.getInitialState({
@@ -79,7 +77,7 @@ test('gets initial state from route names and params without initialRouteName', 
 });
 
 test('gets rehydrated state from partial state', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
 
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
@@ -252,7 +250,7 @@ test('gets rehydrated state from partial state', () => {
 });
 
 test("doesn't rehydrate state if it's not stale", () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
 
   const state: TabNavigationState<ParamListBase> = {
     index: 0,
@@ -279,7 +277,7 @@ test("doesn't rehydrate state if it's not stale", () => {
 });
 
 test('removes invalid preloaded route keys on rehydration', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
 
   expect(
     router.getRehydratedState(
@@ -315,7 +313,7 @@ test('removes invalid preloaded route keys on rehydration', () => {
 });
 
 test('restores correct history on rehydrating with backBehavior: order', () => {
-  const router = TabRouter({ backBehavior: 'order' });
+  const router = TabRouter({ backBehavior: 'order' }, { uid });
 
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -358,7 +356,7 @@ test('restores correct history on rehydrating with backBehavior: order', () => {
 });
 
 test('restores correct history on rehydrating with backBehavior: history', () => {
-  const router = TabRouter({ backBehavior: 'history' });
+  const router = TabRouter({ backBehavior: 'history' }, { uid });
 
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -397,7 +395,7 @@ test('restores correct history on rehydrating with backBehavior: history', () =>
 });
 
 test('restores correct history on rehydrating with backBehavior: fullHistory', () => {
-  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const router = TabRouter({ backBehavior: 'fullHistory' }, { uid });
 
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -436,10 +434,10 @@ test('restores correct history on rehydrating with backBehavior: fullHistory', (
 });
 
 test('restores correct history on rehydrating with backBehavior: firstRoute', () => {
-  const router = TabRouter({
-    backBehavior: 'firstRoute',
-    initialRouteName: 'bar',
-  });
+  const router = TabRouter(
+    { backBehavior: 'firstRoute', initialRouteName: 'bar' },
+    { uid }
+  );
 
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -481,10 +479,10 @@ test('restores correct history on rehydrating with backBehavior: firstRoute', ()
 });
 
 test('restores correct history on rehydrating with backBehavior: initialRoute', () => {
-  const router = TabRouter({
-    backBehavior: 'initialRoute',
-    initialRouteName: 'bar',
-  });
+  const router = TabRouter(
+    { backBehavior: 'initialRoute', initialRouteName: 'bar' },
+    { uid }
+  );
 
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -526,7 +524,7 @@ test('restores correct history on rehydrating with backBehavior: initialRoute', 
 });
 
 test('restores correct history on rehydrating with backBehavior: none', () => {
-  const router = TabRouter({ backBehavior: 'none' });
+  const router = TabRouter({ backBehavior: 'none' }, { uid });
 
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -565,7 +563,7 @@ test('restores correct history on rehydrating with backBehavior: none', () => {
 });
 
 test('gets state on route names change', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
 
   expect(
     router.getStateForRouteNamesChange(
@@ -647,7 +645,7 @@ test('gets state on route names change', () => {
 });
 
 test('preserves focused route on route names change', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
 
   expect(
     router.getStateForRouteNamesChange(
@@ -696,7 +694,7 @@ test('preserves focused route on route names change', () => {
 });
 
 test('falls back to first route if route is removed on route names change', () => {
-  const router = TabRouter({ initialRouteName: 'fiz' });
+  const router = TabRouter({ initialRouteName: 'fiz' }, { uid });
 
   expect(
     router.getStateForRouteNamesChange(
@@ -741,7 +739,7 @@ test('falls back to first route if route is removed on route names change', () =
 });
 
 test('focuses the most recent route in history if focused route is removed on route names change', () => {
-  const router = TabRouter({ backBehavior: 'history' });
+  const router = TabRouter({ backBehavior: 'history' }, { uid });
 
   const state = router.getStateForRouteNamesChange(
     {
@@ -807,7 +805,10 @@ test.each<{
 ])(
   'updates history when the focused route key changes with backBehavior: $backBehavior',
   ({ backBehavior, expectedRoute }) => {
-    const router = TabRouter({ backBehavior, initialRouteName: 'bar' });
+    const router = TabRouter(
+      { backBehavior, initialRouteName: 'bar' },
+      { uid }
+    );
     const options: RouterConfigOptions = {
       routeNames: ['bar', 'baz', 'qux'],
       routeParamList: { qux: { answer: 42 } },
@@ -844,7 +845,7 @@ test.each<{ backBehavior: 'history' | 'fullHistory' }>([
 ])(
   'does not add an unfocused route with a changed key to $backBehavior',
   ({ backBehavior }) => {
-    const router = TabRouter({ backBehavior });
+    const router = TabRouter({ backBehavior }, { uid });
     const options: RouterConfigOptions = {
       routeNames: ['bar', 'baz', 'qux'],
       routeParamList: {},
@@ -878,7 +879,7 @@ test.each<{ backBehavior: 'history' | 'fullHistory' }>([
 );
 
 test('rebuilds order history when an unfocused route key changes', () => {
-  const router = TabRouter({ backBehavior: 'order' });
+  const router = TabRouter({ backBehavior: 'order' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
@@ -901,7 +902,7 @@ test('rebuilds order history when an unfocused route key changes', () => {
 });
 
 test('removes stale preloaded route keys on route names change', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
 
   expect(
     router.getStateForRouteNamesChange(
@@ -930,7 +931,7 @@ test('removes stale preloaded route keys on route names change', () => {
 });
 
 test('handles navigate action', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz'],
     routeParamList: {},
@@ -971,7 +972,7 @@ test('handles navigate action', () => {
 });
 
 test('merges params on navigate when specified', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz'],
     routeParamList: {},
@@ -1012,7 +1013,7 @@ test('merges params on navigate when specified', () => {
 });
 
 test("doesn't navigate to nonexistent screen", () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
     routeParamList: {},
@@ -1061,7 +1062,7 @@ test("doesn't navigate to nonexistent screen", () => {
 });
 
 test('ensures unique ID for navigate', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -1140,7 +1141,7 @@ test('ensures unique ID for navigate', () => {
 });
 
 test('removes stale history entries when getId changes the key', () => {
-  const router = TabRouter({ backBehavior: 'history' });
+  const router = TabRouter({ backBehavior: 'history' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
     routeParamList: {},
@@ -1209,7 +1210,7 @@ test('removes stale history entries when getId changes the key', () => {
 });
 
 test('goes back to the previous tab after navigate creates a new route instance', () => {
-  const router = TabRouter({ backBehavior: 'history' });
+  const router = TabRouter({ backBehavior: 'history' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
     routeParamList: {},
@@ -1266,7 +1267,7 @@ test('goes back to the previous tab after navigate creates a new route instance'
 });
 
 test('handles jump to action', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz'],
     routeParamList: {},
@@ -1310,7 +1311,7 @@ test('handles jump to action', () => {
 });
 
 test("doesn't jump to nonexistent screen", () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
     routeParamList: {},
@@ -1339,7 +1340,7 @@ test("doesn't jump to nonexistent screen", () => {
 });
 
 test('ensures unique ID for jump to', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -1418,7 +1419,7 @@ test('ensures unique ID for jump to', () => {
 });
 
 test('handles back action with backBehavior: history', () => {
-  const router = TabRouter({ backBehavior: 'history' });
+  const router = TabRouter({ backBehavior: 'history' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
@@ -1508,7 +1509,7 @@ test('handles back action with backBehavior: history', () => {
 });
 
 test('handles back action with backBehavior: fullHistory', () => {
-  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const router = TabRouter({ backBehavior: 'fullHistory' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
@@ -1599,7 +1600,7 @@ test('handles back action with backBehavior: fullHistory', () => {
 });
 
 test('handles back action with backBehavior: order', () => {
-  const router = TabRouter({ backBehavior: 'order' });
+  const router = TabRouter({ backBehavior: 'order' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
@@ -1673,7 +1674,7 @@ test('handles back action with backBehavior: order', () => {
 });
 
 test('handles back action with backBehavior: initialRoute', () => {
-  const router = TabRouter({ backBehavior: 'initialRoute' });
+  const router = TabRouter({ backBehavior: 'initialRoute' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
@@ -1744,10 +1745,10 @@ test('handles back action with backBehavior: initialRoute', () => {
 });
 
 test('handles back action with backBehavior: initialRoute and initialRouteName', () => {
-  const router = TabRouter({
-    backBehavior: 'initialRoute',
-    initialRouteName: 'baz',
-  });
+  const router = TabRouter(
+    { backBehavior: 'initialRoute', initialRouteName: 'baz' },
+    { uid }
+  );
 
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
@@ -1819,7 +1820,7 @@ test('handles back action with backBehavior: initialRoute and initialRouteName',
 });
 
 test('handles back action with backBehavior: none', () => {
-  const router = TabRouter({ backBehavior: 'none' });
+  const router = TabRouter({ backBehavior: 'none' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
@@ -1840,7 +1841,7 @@ test('handles back action with backBehavior: none', () => {
 });
 
 test('updates route key history on navigate and jump to with backBehavior: history', () => {
-  const router = TabRouter({ backBehavior: 'history' });
+  const router = TabRouter({ backBehavior: 'history' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
@@ -1918,7 +1919,7 @@ test('updates route key history on navigate and jump to with backBehavior: histo
 });
 
 test('updates route key history on focus change with backBehavior: history', () => {
-  const router = TabRouter({ backBehavior: 'history' });
+  const router = TabRouter({ backBehavior: 'history' }, { uid });
 
   let state: TabNavigationState<ParamListBase> = {
     index: 0,
@@ -1964,7 +1965,7 @@ test('updates route key history on focus change with backBehavior: history', () 
 });
 
 test('updates route key history on navigate and jump to with backBehavior: fullHistory', () => {
-  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const router = TabRouter({ backBehavior: 'fullHistory' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
@@ -2073,7 +2074,7 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
 });
 
 test('preserves params in history with backBehavior: fullHistory', () => {
-  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const router = TabRouter({ backBehavior: 'fullHistory' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
     routeParamList: {},
@@ -2133,7 +2134,7 @@ test('preserves params in history with backBehavior: fullHistory', () => {
 });
 
 test('restores updated params before initial params with backBehavior: fullHistory', () => {
-  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const router = TabRouter({ backBehavior: 'fullHistory' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar'],
     routeParamList: { foo: { value: 'initial' } },
@@ -2182,7 +2183,7 @@ test('restores updated params before initial params with backBehavior: fullHisto
 });
 
 test('keeps initial params on goBack with backBehavior: fullHistory', () => {
-  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const router = TabRouter({ backBehavior: 'fullHistory' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz'],
     routeParamList: { bar: { initial: true } },
@@ -2208,7 +2209,7 @@ test('keeps initial params on goBack with backBehavior: fullHistory', () => {
 });
 
 test('updates route key history on focus change with backBehavior: fullHistory', () => {
-  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const router = TabRouter({ backBehavior: 'fullHistory' }, { uid });
 
   let state: TabNavigationState<ParamListBase> = {
     index: 0,
@@ -2273,7 +2274,7 @@ test('updates route key history on focus change with backBehavior: fullHistory',
 });
 
 test('adds path on navigate if provided', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -2378,7 +2379,7 @@ test('adds path on navigate if provided', () => {
 });
 
 test("doesn't remove existing path on navigate if not provided", () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -2424,7 +2425,7 @@ test("doesn't remove existing path on navigate if not provided", () => {
 });
 
 test("doesn't merge params on navigate to an existing screen", () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {
@@ -2546,7 +2547,7 @@ test("doesn't merge params on navigate to an existing screen", () => {
 });
 
 test('merges params on navigate to an existing screen if merge: true', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -2637,7 +2638,7 @@ test('merges params on navigate to an existing screen if merge: true', () => {
 });
 
 test("doesn't merge params on jump to an existing screen", () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -2720,7 +2721,7 @@ test("doesn't merge params on jump to an existing screen", () => {
 });
 
 test('adds route key to preloadedRouteKeys with preload', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -2765,7 +2766,7 @@ test('adds route key to preloadedRouteKeys with preload', () => {
 });
 
 test("doesn't preload nonexistent screen", () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -2795,7 +2796,7 @@ test("doesn't preload nonexistent screen", () => {
 });
 
 test('updates an existing route with preload when the ID changes', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -2840,7 +2841,7 @@ test('updates an existing route with preload when the ID changes', () => {
 });
 
 test('replaces the preloaded route key with preload when the ID changes', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -2889,7 +2890,7 @@ test('replaces the preloaded route key with preload when the ID changes', () => 
 });
 
 test('updates an existing route with preload when the ID matches', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -2942,7 +2943,7 @@ test('updates an existing route with preload when the ID matches', () => {
 });
 
 test('removes focused route from preloadedRouteKeys on navigate', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -2998,7 +2999,7 @@ test('removes focused route from preloadedRouteKeys on navigate', () => {
 });
 
 test('removes focused route from preloadedRouteKeys on goBack', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -3054,7 +3055,7 @@ test('removes focused route from preloadedRouteKeys on goBack', () => {
 });
 
 test('adds an existing route key to preloadedRouteKeys with preload', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -3113,7 +3114,7 @@ test('adds an existing route key to preloadedRouteKeys with preload', () => {
 });
 
 test('replaces an existing preloaded route with a fresh route when the ID changes', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -3181,7 +3182,7 @@ test('replaces an existing preloaded route with a fresh route when the ID change
 });
 
 test('creates a new preloaded route with preload when the ID changes', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -3237,7 +3238,7 @@ test('creates a new preloaded route with preload when the ID changes', () => {
 });
 
 test('keeps history ending with the focused route when preload replaces it', () => {
-  const router = TabRouter({ backBehavior: 'history' });
+  const router = TabRouter({ backBehavior: 'history' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
     routeParamList: {},
@@ -3306,7 +3307,7 @@ test('keeps history ending with the focused route when preload replaces it', () 
 });
 
 test('preserves params when preload replaces the focused route with fullHistory', () => {
-  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const router = TabRouter({ backBehavior: 'fullHistory' }, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
     routeParamList: {},
@@ -3371,7 +3372,7 @@ test('preserves params when preload replaces the focused route with fullHistory'
 });
 
 test('handles pushParams action', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -3431,7 +3432,7 @@ test('handles pushParams action', () => {
 });
 
 test('handles goBack with route history', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -3492,7 +3493,7 @@ test('handles goBack with route history', () => {
 });
 
 test('handles goBack with multiple route history entries', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -3614,7 +3615,7 @@ test('handles goBack with multiple route history entries', () => {
 });
 
 test('goBack falls back to tab history when route history is empty', () => {
-  const router = TabRouter({});
+  const router = TabRouter({}, { uid });
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},

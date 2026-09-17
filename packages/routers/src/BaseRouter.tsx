@@ -1,5 +1,3 @@
-import { nanoid } from 'nanoid/non-secure';
-
 import type {
   CommonNavigationAction,
   NavigationState,
@@ -8,11 +6,13 @@ import type {
 
 function getStateForAction<State extends NavigationState>(
   state: State,
-  action: CommonNavigationAction
+  action: CommonNavigationAction,
+  context: { uid: () => string }
 ): State | PartialState<State> | null;
 function getStateForAction(
   state: NavigationState,
-  action: CommonNavigationAction
+  action: CommonNavigationAction,
+  { uid }: { uid: () => string }
 ) {
   switch (action.type) {
     case 'SET_PARAMS':
@@ -97,7 +97,7 @@ function getStateForAction(
           routes: nextState.routes.map((route) =>
             'key' in route && route.key
               ? route
-              : { ...route, key: `${route.name}-${nanoid()}` }
+              : { ...route, key: `${route.name}-${uid()}` }
           ),
         };
       }

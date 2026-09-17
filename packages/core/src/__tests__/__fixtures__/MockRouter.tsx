@@ -203,7 +203,9 @@ export function MockRouter(options: DefaultRouterOptions) {
         }
 
         default:
-          return BaseRouter.getStateForAction(state, action);
+          return BaseRouter.getStateForAction(state, action, {
+            uid: () => String(MockRouterKey.current++),
+          });
       }
     },
 

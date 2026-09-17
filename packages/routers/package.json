@@ -40,9 +40,6 @@
     "prepack": "bob build",
     "clean": "del lib"
   },
-  "dependencies": {
-    "nanoid": "^5.1.11"
-  },
   "devDependencies": {
     "@jest/globals": "^30.4.1",
     "del-cli": "^7.0.0",

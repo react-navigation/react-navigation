@@ -1,5 +1,3 @@
-import { nanoid } from 'nanoid/non-secure';
-
 import { BaseRouter } from './BaseRouter';
 import { createParamsFromAction } from './createParamsFromAction';
 import { createRouteFromAction } from './createRouteFromAction';
@@ -10,6 +8,7 @@ import type {
   ParamListBase,
   Route,
   Router,
+  RouterContext,
 } from './types';
 
 export type StackActionType =
@@ -273,7 +272,10 @@ const getStateWithRoutes = <ParamList extends ParamListBase>(
   };
 };
 
-export function StackRouter(options: StackRouterOptions) {
+export function StackRouter(
+  options: StackRouterOptions,
+  { uid }: RouterContext
+) {
   const router: Router<
     StackNavigationState<ParamListBase>,
     CommonNavigationAction | StackActionType
@@ -298,13 +300,13 @@ export function StackRouter(options: StackRouterOptions) {
       return {
         stale: false,
         type: 'stack',
-        key: `stack-${nanoid()}`,
+        key: `stack-${uid()}`,
         index: 0,
         routeNames,
         retainedRouteKeys: [],
         routes: [
           {
-            key: `${initialRouteName}-${nanoid()}`,
+            key: `${initialRouteName}-${uid()}`,
             name: initialRouteName,
             params: routeParamList[initialRouteName],
           },
@@ -323,7 +325,7 @@ export function StackRouter(options: StackRouterOptions) {
         .filter((route) => routeNames.includes(route.name))
         .map((route) => ({
           ...route,
-          key: route.key || `${route.name}-${nanoid()}`,
+          key: route.key || `${route.name}-${uid()}`,
           params:
             routeParamList[route.name] !== undefined
               ? {
@@ -347,7 +349,7 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         routes.push({
-          key: `${initialRouteName}-${nanoid()}`,
+          key: `${initialRouteName}-${uid()}`,
           name: initialRouteName,
           params: routeParamList[initialRouteName],
         });
@@ -365,7 +367,7 @@ export function StackRouter(options: StackRouterOptions) {
       return {
         stale: false,
         type: 'stack',
-        key: `stack-${nanoid()}`,
+        key: `stack-${uid()}`,
         index,
         routeNames,
         routes,
@@ -409,7 +411,7 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         routes.push({
-          key: `${initialRouteName}-${nanoid()}`,
+          key: `${initialRouteName}-${uid()}`,
           name: initialRouteName,
           params: routeParamList[initialRouteName],
         });
@@ -488,7 +490,7 @@ export function StackRouter(options: StackRouterOptions) {
           );
 
           if (!route) {
-            route = createRouteFromAction({ action, routeParamList });
+            route = createRouteFromAction({ action, routeParamList, uid });
           } else {
             const params = createParamsFromAction({ action, routeParamList });
 
@@ -662,7 +664,7 @@ export function StackRouter(options: StackRouterOptions) {
             nextRoutes = [
               ...routes,
               {
-                key: `${action.payload.name}-${nanoid()}`,
+                key: `${action.payload.name}-${uid()}`,
                 name: action.payload.name,
                 path:
                   action.type === 'NAVIGATE' ? action.payload.path : undefined,
@@ -900,7 +902,7 @@ export function StackRouter(options: StackRouterOptions) {
             );
 
             if (!route) {
-              route = createRouteFromAction({ action, routeParamList });
+              route = createRouteFromAction({ action, routeParamList, uid });
             } else {
               const params = createParamsFromAction({ action, routeParamList });
 
@@ -1064,13 +1066,13 @@ export function StackRouter(options: StackRouterOptions) {
             state,
             routes,
             preloadedRoutes.concat(
-              createRouteFromAction({ action, routeParamList })
+              createRouteFromAction({ action, routeParamList, uid })
             )
           );
         }
 
         default:
-          return BaseRouter.getStateForAction(state, action);
+          return BaseRouter.getStateForAction(state, action, { uid });
       }
     },
 

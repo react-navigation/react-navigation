@@ -8,6 +8,7 @@ import type {
   NavigationState,
   ParamListBase,
   Router,
+  RouterContext,
 } from './types';
 
 export type { TabActionType, TabRouterOptions };
@@ -56,12 +57,13 @@ export const TabActions = {
 };
 
 export function TabRouter(
-  options: TabRouterOptions
+  options: TabRouterOptions,
+  context: RouterContext
 ): Router<
   TabNavigationState<ParamListBase>,
   TabActionType | CommonNavigationAction
 > {
-  const router = SwitchRouter<'tab'>(options);
+  const router = SwitchRouter<'tab'>(options, context);
 
   return {
     ...router,

@@ -141,11 +141,18 @@ export type DefaultRouterOptions<RouteName extends string = string> = {
   initialRouteName?: RouteName | undefined;
 };
 
+export type RouterContext = {
+  /**
+   * Function to generate unique IDs.
+   */
+  uid: () => string;
+};
+
 export type RouterFactory<
   State extends NavigationState,
   Action extends NavigationAction,
   RouterOptions extends DefaultRouterOptions,
-> = (options: RouterOptions) => Router<State, Action>;
+> = (options: RouterOptions, context: RouterContext) => Router<State, Action>;
 
 export type RouterConfigOptions = {
   routeNames: string[];
