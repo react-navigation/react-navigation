@@ -39,7 +39,7 @@ export function ActivityView({
   style,
   children,
 }: Props) {
-  const [delayedMode, setDelayedMode] = useState(mode);
+  const [delayedPaused, setDelayedPaused] = useState(mode === 'paused');
 
   useEffect(() => {
     if (!delay) {
@@ -47,7 +47,7 @@ export function ActivityView({
     }
 
     const timer = setTimeout(() => {
-      setDelayedMode(mode);
+      setDelayedPaused(mode === 'paused');
     }, delay);
 
     return () => clearTimeout(timer);
@@ -55,9 +55,7 @@ export function ActivityView({
 
   const display = visible ? 'flex' : 'none';
   const activityMode =
-    mode !== 'paused' || (delay && delayedMode !== 'paused')
-      ? 'visible'
-      : 'hidden';
+    mode !== 'paused' || (delay && !delayedPaused) ? 'visible' : 'hidden';
 
   /**
    * Activity has 2 modes, visible and hidden - hidden unmounts effects
