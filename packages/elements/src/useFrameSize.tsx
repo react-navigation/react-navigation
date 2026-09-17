@@ -35,12 +35,69 @@ export function useFrameSize<T>(
     throw new Error('useFrameSize must be used within a FrameSizeProvider');
   }
 
+  const subscribe = throttle ? context.subscribeThrottled : context.subscribe;
+
   const value = useSyncExternalStoreWithSelector(
-    throttle ? context.subscribeThrottled : context.subscribe,
+    subscribe,
     context.getCurrent,
     context.getCurrent,
     selector
   );
+
+  // Record the frame at render time to compare in the layout effect.
+  const frame = context.getCurrent();
+
+  const [, forceUpdate] = React.useReducer((value: number) => value + 1, 0);
+
+  const subscriptionRef = React.useRef<RemoveListener | null>(null);
+  const subscribedBeforeRef = React.useRef(false);
+
+  React.useLayoutEffect(() => {
+    // We have empty dependency array, but `Suspense` can replay the layout effect,
+    // So we need to explicitly check if we've subscribed before.
+    // Subsequent updates are handled by `useSyncExternalStoreWithSelector`.
+    // So we don't need to subscribe again.
+    if (subscribedBeforeRef.current) {
+      return;
+    }
+
+    const check = () => {
+      const nextFrame = context.getCurrent();
+
+      if (nextFrame !== frame && !Object.is(selector(nextFrame), value)) {
+        forceUpdate();
+      }
+    };
+
+    // The sync external store subscription starts in a passive effect.
+    // So if layout was measured, we may not get it here before paint.
+    // We use a layout effect to check if it has changed since the last render,
+    // and force an update so it reflects the latest frame before the next paint.
+    const unsubscribe = subscribe(check);
+
+    subscriptionRef.current = unsubscribe;
+
+    check();
+
+    return unsubscribe;
+
+    // We only need to check for changes on initial render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
+    // We don't need to keep the subscription after passive effects run.
+    // At this point, `useSyncExternalStoreWithSelector` has already subscribed.
+    subscriptionRef.current?.();
+    subscriptionRef.current = null;
+    subscribedBeforeRef.current = true;
+
+    return () => {
+      // The layout effect should recheck when `Activity` becomes visible.
+      // So we clean this up when `Activity` becomes hidden.
+      subscribedBeforeRef.current = false;
+    };
+  }, []);
 
   return value;
 }
@@ -139,7 +196,7 @@ export function FrameSizeProvider({
 
   const viewRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (Platform.OS === 'web') {
       // We use ResizeObserver on web
       return;
@@ -175,7 +232,7 @@ function FrameSizeListenerWeb({
 }) {
   const elementRef = React.useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (elementRef.current == null) {
       return;
     }

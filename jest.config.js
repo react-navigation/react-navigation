@@ -9,10 +9,7 @@ module.exports = {
   projects: [
     {
       preset: '@react-native/jest-preset',
-      setupFilesAfterEnv: [
-        '<rootDir>/jest/setup.js',
-        '<rootDir>/jest/setup.native.js',
-      ],
+      setupFilesAfterEnv: ['<rootDir>/jest/setup.js'],
       testEnvironment: 'node',
       testEnvironmentOptions: {
         customExportConditions: ['react-native', '@react-navigation/source'],
