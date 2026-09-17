@@ -29,7 +29,6 @@ import { CardContent } from './CardContent';
 
 type Props = {
   animated: boolean;
-  active: boolean;
   interpolationIndex: number;
   opening: boolean;
   closing: boolean;
@@ -135,7 +134,6 @@ function Card({
   gestureVelocityImpact = GESTURE_VELOCITY_IMPACT,
   overlay = defaultOverlay,
   animated,
-  active,
   interpolationIndex,
   opening,
   closing,
@@ -602,15 +600,7 @@ function Card({
         <GestureDetector gesture={panGesture}>
           <Animated.View
             needsOffscreenAlphaCompositing={hasOpacityStyle(cardStyle)}
-            style={[
-              styles.card,
-              {
-                // Avoid unfocused larger pages increasing scroll area
-                // e.g. when a smaller screen is pushed over a larger one on web
-                overflow: active ? undefined : 'hidden',
-              },
-              cardStyle,
-            ]}
+            style={[styles.card, cardStyle]}
           >
             {(shadowEnabled ?? shadowStyle != null) && !isTransparent ? (
               <Animated.View

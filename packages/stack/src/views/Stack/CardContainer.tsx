@@ -225,7 +225,6 @@ function CardContainerInner({
   return (
     <Card
       animated={animated}
-      active={active}
       interpolationIndex={interpolationIndex}
       gestureDirection={gestureDirection}
       layout={layout}
@@ -250,7 +249,17 @@ function CardContainerInner({
       gestureVelocityImpact={gestureVelocityImpact}
       transitionSpec={transitionSpec}
       styleInterpolator={cardStyleInterpolator}
-      pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
+      pageOverflowEnabled={
+        // Avoid unfocused larger pages increasing scroll area
+        // e.g. when a smaller screen is pushed over a larger one on web
+        active &&
+        // Float header disables full-page scrolling in browsers
+        // So we don't need to keep overflow enabled
+        headerMode !== 'float' &&
+        // Avoid modals scrolling the whole page
+        // Modal content should be scrollable within the modal
+        presentation !== 'modal'
+      }
       preloaded={preloaded}
       contentStyle={[
         {
