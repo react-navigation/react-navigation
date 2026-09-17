@@ -225,6 +225,7 @@ function CardContainerInner({
   return (
     <Card
       animated={animated}
+      active={active}
       interpolationIndex={interpolationIndex}
       gestureDirection={gestureDirection}
       layout={layout}

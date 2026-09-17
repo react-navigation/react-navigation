@@ -898,9 +898,6 @@ export class CardStack extends React.Component<Props, State> {
                 visible={isVisible}
                 style={{
                   ...StyleSheet.absoluteFill,
-                  // Avoid unfocused larger pages increasing scroll area
-                  // e.g. when a smaller screen is pushed over a larger one on web
-                  overflow: isTopmost ? undefined : 'hidden',
                   marginTop:
                     headerTransparent || headerMode === 'screen'
                       ? 0
