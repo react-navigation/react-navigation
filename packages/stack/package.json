@@ -59,7 +59,7 @@
     "react-native-builder-bob": "^0.43.0",
     "react-native-gesture-handler": "^3.0.2",
     "react-native-safe-area-context": "~5.7.0",
-    "react-native-screens": "^4.26.2",
+    "react-native-screens": "^5.0.0-alpha.1",
     "react-native-web": "~0.21.2",
     "test-renderer": "1.2.0",
     "typescript": "^6.0.3"
