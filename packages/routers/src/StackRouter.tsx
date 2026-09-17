@@ -513,27 +513,43 @@ export function StackRouter(options: StackRouterOptions) {
             return null;
           }
 
+          /**
+           * When navigating or pushing from a specific route,
+           * treat it as if it were the focused route:
+           *
+           * - For `navigate`, reuse the first matching route at or above the source
+           *   and remove only the screens above the match.
+           * - Otherwise, remove screens above the source route.
+           * - Keep preloaded and retained screens.
+           */
+          const sourceIndex = action.source
+            ? routes.findIndex((r) => r.key === action.source)
+            : -1;
+
+          let remainingRoutes =
+            sourceIndex === -1 ? routes : routes.slice(0, sourceIndex + 1);
+
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
 
           let route: Route<string> | undefined;
 
           if (action.type === 'NAVIGATE') {
-            const currentRoute = routes[state.index];
+            const currentIndex = sourceIndex === -1 ? state.index : sourceIndex;
+            const index = routes.findIndex(
+              (route, i) =>
+                i >= currentIndex &&
+                route.name === action.payload.name &&
+                (id === undefined || id === getId?.({ params: route.params }))
+            );
 
-            if (currentRoute == null) {
-              throw new Error(`Couldn't find a route at index ${state.index}.`);
-            }
-
-            if (id !== undefined) {
-              if (
-                currentRoute.name === action.payload.name &&
-                id === getId?.({ params: currentRoute.params })
-              ) {
-                route = currentRoute;
-              } else if (action.payload.pop) {
-                for (let i = routes.length - 1; i >= 0; i--) {
-                  const r = routes[i];
+            if (index !== -1) {
+              route = routes[index];
+              remainingRoutes = routes.slice(0, index + 1);
+            } else if (action.payload.pop) {
+              if (id !== undefined) {
+                for (let i = remainingRoutes.length - 1; i >= 0; i--) {
+                  const r = remainingRoutes[i];
 
                   if (r == null) {
                     throw new Error(`Couldn't find a route at index ${i}.`);
@@ -576,13 +592,8 @@ export function StackRouter(options: StackRouterOptions) {
                     }
                   }
                 }
-              }
-            } else {
-              // If the route matches the current one, then navigate to it
-              if (action.payload.name === currentRoute.name) {
-                route = currentRoute;
-              } else if (action.payload.pop) {
-                route = routes.findLast(
+              } else {
+                route = remainingRoutes.findLast(
                   (route) => route.name === action.payload.name
                 );
               }
@@ -620,7 +631,7 @@ export function StackRouter(options: StackRouterOptions) {
               nextRoutes = [];
 
               // Get all routes until the matching one
-              for (const r of routes) {
+              for (const r of remainingRoutes) {
                 if (r.key === route.key) {
                   nextRoutes.push({
                     ...route,
@@ -647,7 +658,7 @@ export function StackRouter(options: StackRouterOptions) {
                 });
               }
             } else {
-              nextRoutes = routes.filter((r) => r.key !== route.key);
+              nextRoutes = remainingRoutes.filter((r) => r.key !== route.key);
               nextRoutes.push({
                 ...route,
                 path:
@@ -660,7 +671,7 @@ export function StackRouter(options: StackRouterOptions) {
             }
           } else {
             nextRoutes = [
-              ...routes,
+              ...remainingRoutes,
               {
                 key: `${action.payload.name}-${nanoid()}`,
                 name: action.payload.name,

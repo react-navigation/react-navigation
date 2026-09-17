@@ -187,14 +187,18 @@ export function TabView<T extends Route>({
     }
   };
 
-  const options = Object.fromEntries(
-    navigationState.routes.map((route) => [
-      route.key,
-      {
-        ...commonOptions,
-        ...sceneOptions?.[route.key],
-      },
-    ])
+  const options = React.useMemo(
+    () =>
+      Object.fromEntries(
+        navigationState.routes.map((route) => [
+          route.key,
+          {
+            ...commonOptions,
+            ...sceneOptions?.[route.key],
+          },
+        ])
+      ),
+    [navigationState.routes, commonOptions, sceneOptions]
   );
 
   const element = renderAdapter({

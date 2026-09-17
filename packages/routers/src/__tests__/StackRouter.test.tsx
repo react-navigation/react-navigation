@@ -1407,6 +1407,1229 @@ test('moves retained routes to inactive routes when navigate with pop removes th
   });
 });
 
+test('removes screens above the source route on navigate', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        retainedRouteKeys: [],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar' },
+          { key: 'baz', name: 'baz' },
+        ],
+      },
+      {
+        ...CommonActions.navigate('qux', { answer: 42 }),
+        source: 'bar',
+        target: 'root',
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    retainedRouteKeys: [],
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'qux-1', name: 'qux', params: { answer: 42 } },
+    ],
+  });
+});
+
+test.each([false, true])(
+  'reuses the source before a matching screen above it (pop: %s)',
+  (pop) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['foo', 'bar', 'baz', 'qux'],
+      routeParamList: {},
+      routeGetIdList: {},
+    };
+
+    expect(
+      router.getStateForAction(
+        {
+          stale: false,
+          type: 'stack',
+          key: 'root',
+          index: 3,
+          retainedRouteKeys: [],
+          routeNames: ['foo', 'bar', 'baz', 'qux'],
+          routes: [
+            { key: 'foo', name: 'foo' },
+            { key: 'bar', name: 'bar', params: { answer: 42 } },
+            { key: 'bar-next', name: 'bar' },
+            { key: 'baz', name: 'baz' },
+          ],
+        },
+        {
+          ...CommonActions.navigate('bar', { answer: 96 }, { pop }),
+          source: 'bar',
+          target: 'root',
+        },
+        options
+      )
+    ).toEqual({
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 1,
+      retainedRouteKeys: [],
+      routeNames: ['foo', 'bar', 'baz', 'qux'],
+      routes: [
+        { key: 'foo', name: 'foo' },
+        { key: 'bar', name: 'bar', params: { answer: 96 } },
+      ],
+    });
+  }
+);
+
+test.each([false, true])(
+  'reuses a preloaded screen and keeps other preloaded screens when removing screens above the source (pop: %s)',
+  (pop) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['foo', 'bar', 'baz', 'qux'],
+      routeParamList: {},
+      routeGetIdList: {},
+    };
+
+    expect(
+      router.getStateForAction(
+        {
+          stale: false,
+          type: 'stack',
+          key: 'root',
+          index: 2,
+          retainedRouteKeys: [],
+          routeNames: ['foo', 'bar', 'baz', 'qux'],
+          routes: [
+            { key: 'foo', name: 'foo' },
+            { key: 'bar', name: 'bar' },
+            { key: 'baz', name: 'baz' },
+            { key: 'baz-preload', name: 'baz' },
+            { key: 'qux-preload', name: 'qux' },
+          ],
+        },
+        {
+          ...CommonActions.navigate('qux', { answer: 42 }, { pop }),
+          source: 'bar',
+          target: 'root',
+        },
+        options
+      )
+    ).toEqual({
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 2,
+      retainedRouteKeys: [],
+      routeNames: ['foo', 'bar', 'baz', 'qux'],
+      routes: [
+        { key: 'foo', name: 'foo' },
+        { key: 'bar', name: 'bar' },
+        { key: 'qux-preload', name: 'qux', params: { answer: 42 } },
+        { key: 'baz-preload', name: 'baz' },
+      ],
+    });
+  }
+);
+
+test('keeps retained screens when navigate removes screens above the source', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        retainedRouteKeys: ['baz'],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar' },
+          { key: 'baz', name: 'baz' },
+        ],
+      },
+      {
+        ...CommonActions.navigate('qux'),
+        source: 'bar',
+        target: 'root',
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    retainedRouteKeys: ['baz'],
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'qux-1', name: 'qux' },
+      { key: 'baz', name: 'baz' },
+    ],
+  });
+});
+
+test("doesn't remove screens if source isn't in the stack", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        retainedRouteKeys: [],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar' },
+          { key: 'baz', name: 'baz' },
+        ],
+      },
+      {
+        ...CommonActions.navigate('qux'),
+        source: 'screen-in-child-navigator',
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 3,
+    retainedRouteKeys: [],
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+      { key: 'qux-1', name: 'qux' },
+    ],
+  });
+});
+
+test('removes screens above the source route on push', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        retainedRouteKeys: [],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar' },
+          { key: 'baz', name: 'baz' },
+        ],
+      },
+      {
+        ...StackActions.push('qux', { answer: 42 }),
+        source: 'bar',
+        target: 'root',
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    retainedRouteKeys: [],
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'qux-1', name: 'qux', params: { answer: 42 } },
+    ],
+  });
+});
+
+test('reuses inactive route when push removes screens above the source', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        retainedRouteKeys: [],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar' },
+          { key: 'baz-preload', name: 'baz' },
+        ],
+      },
+      {
+        ...StackActions.push('baz'),
+        source: 'foo',
+        target: 'root',
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    retainedRouteKeys: [],
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'baz-preload', name: 'baz' },
+    ],
+  });
+});
+
+test.each([false, true])(
+  'reuses the source with the same ID before matching active and preloaded screens (pop: %s)',
+  (pop) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['foo', 'bar'],
+      routeParamList: {},
+      routeGetIdList: { bar: ({ params }) => params?.id },
+    };
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 2,
+      retainedRouteKeys: [],
+      routeNames: ['foo', 'bar'],
+      routes: [
+        { key: 'bar-source', name: 'bar', params: { id: 'a', answer: 42 } },
+        { key: 'bar-next', name: 'bar', params: { id: 'a' } },
+        { key: 'foo', name: 'foo' },
+        { key: 'bar-preload', name: 'bar', params: { id: 'a' } },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(
+        state,
+        {
+          ...CommonActions.navigate('bar', { id: 'a', answer: 96 }, { pop }),
+          source: 'bar-source',
+        },
+        options
+      )
+    ).toEqual({
+      ...state,
+      index: 0,
+      routes: [
+        { key: 'bar-source', name: 'bar', params: { id: 'a', answer: 96 } },
+        { key: 'bar-preload', name: 'bar', params: { id: 'a' } },
+      ],
+    });
+  }
+);
+
+test.each([false, true])(
+  'reuses the first matching screen above the source without reordering earlier screens (pop: %s)',
+  (pop) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['foo', 'bar', 'baz'],
+      routeParamList: {},
+      routeGetIdList: {},
+    };
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 4,
+      retainedRouteKeys: [],
+      routeNames: ['foo', 'bar', 'baz'],
+      routes: [
+        { key: 'bar-earlier', name: 'bar' },
+        { key: 'foo', name: 'foo' },
+        { key: 'baz', name: 'baz' },
+        { key: 'bar-next', name: 'bar', params: { answer: 42 } },
+        { key: 'bar-farther', name: 'bar' },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(
+        state,
+        {
+          ...CommonActions.navigate('bar', { answer: 96 }, { pop }),
+          source: 'foo',
+        },
+        options
+      )
+    ).toEqual({
+      ...state,
+      index: 3,
+      routes: [
+        { key: 'bar-earlier', name: 'bar' },
+        { key: 'foo', name: 'foo' },
+        { key: 'baz', name: 'baz' },
+        { key: 'bar-next', name: 'bar', params: { answer: 96 } },
+      ],
+    });
+  }
+);
+
+test.each([false, true])(
+  'reuses the first screen above the source with a matching ID before source history or earlier screens (pop: %s)',
+  (pop) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['bar'],
+      routeParamList: {},
+      routeGetIdList: { bar: ({ params }) => params?.id },
+    };
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 4,
+      retainedRouteKeys: [],
+      routeNames: ['bar'],
+      routes: [
+        { key: 'bar-earlier', name: 'bar', params: { id: 'a' } },
+        {
+          key: 'bar-source',
+          name: 'bar',
+          params: { id: 'b' },
+          history: [{ type: 'params', params: { id: 'a' } }],
+        },
+        { key: 'bar-intervening', name: 'bar', params: { id: 'c' } },
+        { key: 'bar-next', name: 'bar', params: { id: 'a' } },
+        { key: 'bar-farther', name: 'bar', params: { id: 'a' } },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(
+        state,
+        {
+          ...CommonActions.navigate('bar', { id: 'a', answer: 42 }, { pop }),
+          source: 'bar-source',
+        },
+        options
+      )
+    ).toEqual({
+      ...state,
+      index: 3,
+      routes: [
+        { key: 'bar-earlier', name: 'bar', params: { id: 'a' } },
+        {
+          key: 'bar-source',
+          name: 'bar',
+          params: { id: 'b' },
+          history: [{ type: 'params', params: { id: 'a' } }],
+        },
+        { key: 'bar-intervening', name: 'bar', params: { id: 'c' } },
+        { key: 'bar-next', name: 'bar', params: { id: 'a', answer: 42 } },
+      ],
+    });
+  }
+);
+
+test.each([false, true])(
+  'keeps screens before a matching destination and removes only screens after it (pop: %s)',
+  (pop) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['foo', 'bar', 'baz'],
+      routeParamList: {},
+      routeGetIdList: {},
+    };
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 3,
+      retainedRouteKeys: [],
+      routeNames: ['foo', 'bar', 'baz'],
+      routes: [
+        { key: 'foo', name: 'foo' },
+        { key: 'baz', name: 'baz' },
+        { key: 'bar-farther', name: 'bar' },
+        { key: 'baz-last', name: 'baz' },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(
+        state,
+        {
+          ...CommonActions.navigate('bar', { answer: 42 }, { pop }),
+          source: 'foo',
+        },
+        options
+      )
+    ).toEqual({
+      ...state,
+      index: 2,
+      routes: [
+        { key: 'foo', name: 'foo' },
+        { key: 'baz', name: 'baz' },
+        { key: 'bar-farther', name: 'bar', params: { answer: 42 } },
+      ],
+    });
+  }
+);
+
+test.each([false, true])(
+  'keeps screens with different IDs before the matching destination (pop: %s)',
+  (pop) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['bar'],
+      routeParamList: {},
+      routeGetIdList: { bar: ({ params }) => params?.id },
+    };
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 3,
+      retainedRouteKeys: [],
+      routeNames: ['bar'],
+      routes: [
+        { key: 'bar-source', name: 'bar', params: { id: 'a' } },
+        { key: 'bar-next', name: 'bar', params: { id: 'b' } },
+        { key: 'bar-farther', name: 'bar', params: { id: 'c' } },
+        { key: 'bar-last', name: 'bar', params: { id: 'd' } },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(
+        state,
+        {
+          ...CommonActions.navigate('bar', { id: 'c' }, { pop }),
+          source: 'bar-source',
+        },
+        options
+      )
+    ).toEqual({
+      ...state,
+      index: 2,
+      routes: [
+        { key: 'bar-source', name: 'bar', params: { id: 'a' } },
+        { key: 'bar-next', name: 'bar', params: { id: 'b' } },
+        { key: 'bar-farther', name: 'bar', params: { id: 'c' } },
+      ],
+    });
+  }
+);
+
+test.each([false, true])(
+  'adds a new screen after the source when no active screen has the requested ID (pop: %s)',
+  (pop) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['bar'],
+      routeParamList: {},
+      routeGetIdList: { bar: ({ params }) => params?.id },
+    };
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 2,
+      retainedRouteKeys: [],
+      routeNames: ['bar'],
+      routes: [
+        { key: 'bar-source', name: 'bar', params: { id: 'a' } },
+        { key: 'bar-next', name: 'bar', params: { id: 'b' } },
+        { key: 'bar-farther', name: 'bar', params: { id: 'c' } },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(
+        state,
+        {
+          ...CommonActions.navigate('bar', { id: 'd' }, { pop }),
+          source: 'bar-source',
+        },
+        options
+      )
+    ).toEqual({
+      ...state,
+      index: 1,
+      routes: [
+        { key: 'bar-source', name: 'bar', params: { id: 'a' } },
+        { key: 'bar-1', name: 'bar', params: { id: 'd' } },
+      ],
+    });
+  }
+);
+
+test('does not reuse another screen with the same ID as the destination', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {
+      foo: ({ params }) => params?.id,
+      bar: ({ params }) => params?.id,
+      baz: ({ params }) => params?.id,
+    },
+  };
+  const state: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    retainedRouteKeys: [],
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo', name: 'foo', params: { id: 'a' } },
+      { key: 'baz', name: 'baz', params: { id: 'a' } },
+    ],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      {
+        ...CommonActions.navigate('bar', { id: 'a' }, { pop: true }),
+        source: 'foo',
+      },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 1,
+    routes: [
+      { key: 'foo', name: 'foo', params: { id: 'a' } },
+      { key: 'bar-1', name: 'bar', params: { id: 'a' } },
+    ],
+  });
+});
+
+test.each(['bar', 'foo'])(
+  'reuses a matching screen name when getId returns undefined from source %s',
+  (source) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['foo', 'bar', 'baz'],
+      routeParamList: {},
+      routeGetIdList: { bar: ({ params }) => params?.id },
+    };
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 2,
+      retainedRouteKeys: [],
+      routeNames: ['foo', 'bar', 'baz'],
+      routes: [
+        { key: 'foo', name: 'foo' },
+        { key: 'bar', name: 'bar', params: { id: 'a' } },
+        { key: 'baz', name: 'baz' },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(
+        state,
+        {
+          ...CommonActions.navigate('bar', { answer: 42 }),
+          source,
+        },
+        options
+      )
+    ).toEqual({
+      ...state,
+      index: 1,
+      routes: [
+        { key: 'foo', name: 'foo' },
+        { key: 'bar', name: 'bar', params: { answer: 42 } },
+      ],
+    });
+  }
+);
+
+test('pops to an earlier screen when no screens at or above the source match', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+  const state: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 3,
+    retainedRouteKeys: [],
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'bar-earlier', name: 'bar' },
+      { key: 'foo', name: 'foo' },
+      { key: 'baz', name: 'baz' },
+      { key: 'baz-last', name: 'baz' },
+    ],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      {
+        ...CommonActions.navigate('bar', { answer: 42 }, { pop: true }),
+        source: 'foo',
+      },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 0,
+    routes: [{ key: 'bar-earlier', name: 'bar', params: { answer: 42 } }],
+  });
+});
+
+test('pops to an earlier screen with the requested ID when no screens at or above the source match', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar'],
+    routeParamList: {},
+    routeGetIdList: { bar: ({ params }) => params?.id },
+  };
+  const state: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 3,
+    retainedRouteKeys: [],
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'bar-earlier', name: 'bar', params: { id: 'a' } },
+      { key: 'foo', name: 'foo' },
+      { key: 'bar-next', name: 'bar', params: { id: 'b' } },
+      { key: 'bar-farther', name: 'bar', params: { id: 'c' } },
+    ],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      {
+        ...CommonActions.navigate(
+          'bar',
+          { id: 'a', answer: 42 },
+          { pop: true }
+        ),
+        source: 'foo',
+      },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 0,
+    routes: [
+      { key: 'bar-earlier', name: 'bar', params: { id: 'a', answer: 42 } },
+    ],
+  });
+});
+
+test.each(['bar', 'foo'])(
+  'restores parameter history at or below source %s without matching history above it',
+  (source) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['foo', 'bar'],
+      routeParamList: { bar: { initial: true } },
+      routeGetIdList: { bar: ({ params }) => params?.id },
+    };
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 3,
+      retainedRouteKeys: [],
+      routeNames: ['foo', 'bar'],
+      routes: [
+        {
+          key: 'bar',
+          name: 'bar',
+          params: { id: 'c', current: true },
+          history: [
+            { type: 'params', params: { id: 'a' } },
+            { type: 'params', params: { id: 'b', restored: true } },
+          ],
+        },
+        { key: 'foo', name: 'foo' },
+        {
+          key: 'bar-next',
+          name: 'bar',
+          params: { id: 'd' },
+          history: [{ type: 'params', params: { id: 'b' } }],
+        },
+        { key: 'bar-farther', name: 'bar', params: { id: 'e' } },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(
+        state,
+        {
+          ...CommonActions.navigate(
+            'bar',
+            { id: 'b', answer: 42 },
+            { pop: true, merge: true }
+          ),
+          source,
+        },
+        options
+      )
+    ).toEqual({
+      ...state,
+      index: 0,
+      routes: [
+        {
+          key: 'bar',
+          name: 'bar',
+          params: { initial: true, id: 'b', restored: true, answer: 42 },
+          history: [{ type: 'params', params: { id: 'a' } }],
+        },
+      ],
+    });
+  }
+);
+
+test('merges params and updates the path while preserving a reused screen and its nested navigation state', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz'],
+    routeParamList: { bar: { initial: true, answer: 0 } },
+    routeGetIdList: { bar: ({ params }) => params?.id },
+  };
+  const state: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 3,
+    retainedRouteKeys: [],
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'baz-middle', name: 'baz' },
+      {
+        key: 'bar',
+        name: 'bar',
+        path: '/old',
+        params: { id: 'a', answer: 42, preserved: true },
+        history: [{ type: 'params', params: { id: 'b' } }],
+        state: {
+          stale: true,
+          routes: [{ name: 'child', params: { answer: 42 } }],
+        },
+      },
+      { key: 'baz', name: 'baz' },
+    ],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      {
+        type: 'NAVIGATE',
+        source: 'foo',
+        payload: {
+          name: 'bar',
+          params: { id: 'a', answer: 96 },
+          merge: true,
+          pop: true,
+          path: '/new',
+        },
+      },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 2,
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'baz-middle', name: 'baz' },
+      {
+        key: 'bar',
+        name: 'bar',
+        path: '/new',
+        params: { initial: true, id: 'a', answer: 96, preserved: true },
+        history: [{ type: 'params', params: { id: 'b' } }],
+        state: {
+          stale: true,
+          routes: [{ name: 'child', params: { answer: 42 } }],
+        },
+      },
+    ],
+  });
+});
+
+test('replaces params and preserves the path when navigating again to the next screen', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz'],
+    routeParamList: { bar: { initial: true, answer: 0 } },
+    routeGetIdList: {},
+  };
+  const state: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    retainedRouteKeys: [],
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      {
+        key: 'bar',
+        name: 'bar',
+        path: '/bar',
+        params: { answer: 42, removed: true },
+      },
+      { key: 'baz', name: 'baz' },
+    ],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      {
+        ...CommonActions.navigate('bar', { answer: 96 }),
+        source: 'foo',
+      },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 1,
+    routes: [
+      { key: 'foo', name: 'foo' },
+      {
+        key: 'bar',
+        name: 'bar',
+        path: '/bar',
+        params: { initial: true, answer: 96 },
+      },
+    ],
+  });
+});
+
+test('keeps the same preloaded screen when navigation to it is repeated from the source', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+  const state: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    retainedRouteKeys: [],
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar-preload', name: 'bar' },
+    ],
+  };
+  const action = {
+    ...CommonActions.navigate('bar', { answer: 42 }),
+    source: 'foo',
+  };
+  const first = router.getStateForAction(state, action, options);
+
+  expect(first).toEqual({
+    ...state,
+    index: 1,
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar-preload', name: 'bar', params: { answer: 42 } },
+    ],
+  });
+
+  if (first?.stale !== false) {
+    throw new Error('Expected navigation to return a complete state.');
+  }
+
+  expect(router.getStateForAction(first, action, options)).toEqual(first);
+});
+
+test.each([false, true])(
+  'keeps intervening screens active and preserves retained and preloaded screens after the match (pop: %s)',
+  (pop) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['foo', 'bar', 'baz', 'qux'],
+      routeParamList: {},
+      routeGetIdList: {},
+    };
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 3,
+      retainedRouteKeys: ['bar', 'baz', 'qux-retained'],
+      routeNames: ['foo', 'bar', 'baz', 'qux'],
+      routes: [
+        { key: 'foo', name: 'foo' },
+        { key: 'qux-middle', name: 'qux' },
+        { key: 'bar', name: 'bar' },
+        { key: 'baz', name: 'baz' },
+        { key: 'qux-retained', name: 'qux' },
+        { key: 'bar-preload', name: 'bar' },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(
+        state,
+        {
+          ...CommonActions.navigate('bar', { answer: 42 }, { pop }),
+          source: 'foo',
+        },
+        options
+      )
+    ).toEqual({
+      ...state,
+      index: 2,
+      routes: [
+        { key: 'foo', name: 'foo' },
+        { key: 'qux-middle', name: 'qux' },
+        { key: 'bar', name: 'bar', params: { answer: 42 } },
+        { key: 'baz', name: 'baz' },
+        { key: 'qux-retained', name: 'qux' },
+        { key: 'bar-preload', name: 'bar' },
+      ],
+    });
+  }
+);
+
+test.each([
+  {
+    name: 'navigate',
+    action: CommonActions.navigate('bar', { id: 'a' }, { pop: true }),
+  },
+  { name: 'push', action: StackActions.push('bar', { id: 'a' }) },
+])(
+  'reuses a retained screen with $name and keeps other inactive screens when removing screens above the source',
+  ({ action }) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['foo', 'bar', 'baz', 'qux'],
+      routeParamList: {},
+      routeGetIdList: { bar: ({ params }) => params?.id },
+    };
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 2,
+      retainedRouteKeys: ['baz', 'bar-retained', 'qux-retained'],
+      routeNames: ['foo', 'bar', 'baz', 'qux'],
+      routes: [
+        { key: 'foo', name: 'foo' },
+        { key: 'bar-next', name: 'bar', params: { id: 'b' } },
+        { key: 'baz', name: 'baz' },
+        { key: 'bar-retained', name: 'bar', params: { id: 'a' } },
+        { key: 'qux-retained', name: 'qux' },
+        { key: 'bar-preload', name: 'bar', params: { id: 'a' } },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(state, { ...action, source: 'foo' }, options)
+    ).toEqual({
+      ...state,
+      index: 1,
+      routes: [
+        { key: 'foo', name: 'foo' },
+        { key: 'bar-retained', name: 'bar', params: { id: 'a' } },
+        { key: 'baz', name: 'baz' },
+        { key: 'qux-retained', name: 'qux' },
+        { key: 'bar-preload', name: 'bar', params: { id: 'a' } },
+      ],
+    });
+  }
+);
+
+test('pushes a new screen instead of reusing the source or next screen with the same ID', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar'],
+    routeParamList: {},
+    routeGetIdList: { bar: ({ params }) => params?.id },
+  };
+  const state: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    retainedRouteKeys: ['bar-next'],
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar-source', name: 'bar', params: { id: 'a' } },
+      { key: 'bar-next', name: 'bar', params: { id: 'a' } },
+    ],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      {
+        ...StackActions.push('bar', { id: 'a' }),
+        source: 'bar-source',
+      },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 2,
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar-source', name: 'bar', params: { id: 'a' } },
+      { key: 'bar-1', name: 'bar', params: { id: 'a' } },
+      { key: 'bar-next', name: 'bar', params: { id: 'a' } },
+    ],
+  });
+});
+
+test.each([
+  { description: 'absent', source: undefined },
+  { description: 'unknown', source: 'child-screen' },
+  { description: 'preloaded', source: 'baz-preload' },
+  { description: 'retained and inactive', source: 'qux-retained' },
+  { description: 'already focused', source: 'bar' },
+])(
+  'updates the focused screen when the source is $description',
+  ({ source }) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['foo', 'bar', 'baz', 'qux'],
+      routeParamList: {},
+      routeGetIdList: {},
+    };
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 1,
+      retainedRouteKeys: ['qux-retained'],
+      routeNames: ['foo', 'bar', 'baz', 'qux'],
+      routes: [
+        { key: 'foo', name: 'foo' },
+        { key: 'bar', name: 'bar', params: { answer: 42 } },
+        { key: 'qux-retained', name: 'qux' },
+        { key: 'baz-preload', name: 'baz' },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(
+        state,
+        {
+          ...CommonActions.navigate('bar', { answer: 96 }),
+          source,
+        },
+        options
+      )
+    ).toEqual({
+      ...state,
+      routes: [
+        { key: 'foo', name: 'foo' },
+        { key: 'bar', name: 'bar', params: { answer: 96 } },
+        { key: 'qux-retained', name: 'qux' },
+        { key: 'baz-preload', name: 'baz' },
+      ],
+    });
+  }
+);
+
+test.each([
+  { name: 'navigate', action: CommonActions.navigate('missing') },
+  { name: 'push', action: StackActions.push('missing') },
+])(
+  'does not handle $name to an unavailable screen from a source route',
+  ({ action }) => {
+    const router = StackRouter({});
+    const options: RouterConfigOptions = {
+      routeNames: ['foo', 'bar'],
+      routeParamList: {},
+      routeGetIdList: {},
+    };
+
+    expect(
+      router.getStateForAction(
+        {
+          stale: false,
+          type: 'stack',
+          key: 'root',
+          index: 1,
+          retainedRouteKeys: [],
+          routeNames: ['foo', 'bar'],
+          routes: [
+            { key: 'foo', name: 'foo' },
+            { key: 'bar', name: 'bar' },
+          ],
+        },
+        { ...action, source: 'foo' },
+        options
+      )
+    ).toBeNull();
+  }
+);
+
 test('goes back to matching ID for navigate if pop: true', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
