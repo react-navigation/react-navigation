@@ -605,9 +605,7 @@ function Card({
             style={[
               styles.card,
               {
-                // Avoid unfocused larger pages increasing scroll area
-                // e.g. when a smaller screen is pushed over a larger one on web
-                // Clipping here instead of the wrapper keeps the card's own shadow visible
+                // Clip inactive cards so a larger page under a smaller one doesn't grow the scroll area on web, without hiding the card's own shadow
                 overflow: active ? undefined : 'hidden',
               },
               cardStyle,
