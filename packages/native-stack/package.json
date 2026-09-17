@@ -60,7 +60,7 @@
     "react": "19.2.3",
     "react-native": "0.85.3",
     "react-native-builder-bob": "^0.43.0",
-    "react-native-safe-area-context": "~5.7.0",
+    "react-native-safe-area-context": "~5.10.0",
     "react-native-screens": "^4.26.2",
     "react-native-web": "~0.21.2",
     "test-renderer": "1.2.0",
