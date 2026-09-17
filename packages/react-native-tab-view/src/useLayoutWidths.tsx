@@ -33,10 +33,19 @@ export function useLayoutWidths(priorityKeys: string[]) {
     ) {
       // Synchronously set widths during the initial layout phase
       // So we don't have to wait for the next frame to render the indicator
-      setWidths((prev) => ({ ...prev, [key]: width }));
+      setWidths((prev) =>
+        prev[key] === width ? prev : { ...prev, [key]: width }
+      );
     } else if (hasFinishedLayoutRef.current) {
       handle.current = requestAnimationFrame(() => {
-        setWidths({ ...measured.current });
+        const next = { ...measured.current };
+
+        setWidths((prev) =>
+          Object.keys(prev).length === Object.keys(next).length &&
+          Object.keys(next).every((key) => prev[key] === next[key])
+            ? prev
+            : next
+        );
       });
     }
 
