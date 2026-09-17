@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid/non-secure';
 import * as React from 'react';
 
 import { SingleNavigatorContext } from './EnsureSingleNavigator';
@@ -8,7 +7,8 @@ import { SingleNavigatorContext } from './EnsureSingleNavigator';
  * This is used to prevent multiple navigators under a single container or screen.
  */
 export function useRegisterNavigator() {
-  const [key] = React.useState(() => nanoid());
+  const key = React.useId();
+
   const container = React.use(SingleNavigatorContext);
 
   if (container === undefined) {
