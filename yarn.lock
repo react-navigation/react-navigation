@@ -5069,7 +5069,7 @@ __metadata:
     react: "npm:19.2.3"
     react-native: "npm:0.85.3"
     react-native-builder-bob: "npm:^0.42.1"
-    react-native-safe-area-context: "npm:~5.7.0"
+    react-native-safe-area-context: "npm:~5.10.0"
     react-native-screens: "npm:^4.26.2"
     react-test-renderer: "npm:19.2.3"
     sf-symbols-typescript: "npm:^2.1.0"
@@ -5147,7 +5147,7 @@ __metadata:
     react-native-drawer-layout: "workspace:^"
     react-native-gesture-handler: "npm:~2.31.1"
     react-native-reanimated: "npm:4.3.1"
-    react-native-safe-area-context: "npm:~5.7.0"
+    react-native-safe-area-context: "npm:~5.10.0"
     react-native-screens: "npm:^4.26.2"
     react-native-worklets: "npm:0.8.3"
     react-test-renderer: "npm:19.2.3"
@@ -5241,7 +5241,7 @@ __metadata:
     react-native-monorepo-config: "npm:^0.3.5"
     react-native-pager-view: "npm:8.0.1"
     react-native-reanimated: "npm:4.3.1"
-    react-native-safe-area-context: "npm:~5.7.0"
+    react-native-safe-area-context: "npm:~5.10.0"
     react-native-screens: "npm:^4.26.2"
     react-native-web: "npm:^0.21.2"
     react-native-worklets: "npm:0.8.3"
@@ -5268,7 +5268,7 @@ __metadata:
     react-native: "npm:0.85.3"
     react-native-builder-bob: "npm:^0.42.1"
     react-native-pager-view: "npm:8.0.1"
-    react-native-safe-area-context: "npm:~5.7.0"
+    react-native-safe-area-context: "npm:~5.10.0"
     react-native-tab-view: "npm:^4.3.2"
     react-test-renderer: "npm:19.2.3"
     typescript: "npm:~6.0.3"
@@ -5364,7 +5364,7 @@ __metadata:
     react-native: "npm:0.85.3"
     react-native-builder-bob: "npm:^0.42.1"
     react-native-gesture-handler: "npm:~2.31.1"
-    react-native-safe-area-context: "npm:~5.7.0"
+    react-native-safe-area-context: "npm:~5.10.0"
     react-native-screens: "npm:^4.26.2"
     react-test-renderer: "npm:19.2.3"
     typescript: "npm:~6.0.3"
@@ -15421,13 +15421,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-safe-area-context@npm:~5.7.0":
-  version: 5.7.0
-  resolution: "react-native-safe-area-context@npm:5.7.0"
+"react-native-safe-area-context@npm:~5.10.0":
+  version: 5.10.0
+  resolution: "react-native-safe-area-context@npm:5.10.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/c3799e17321b41df1e0a10492c98472f8f8225ef0bbaf8146c4a9acb9519aae9ac11429059143c215e4402c2808e8445274850a339f8477522ded2461e18da80
+  checksum: 10c0/92286decb41de294113f0470982dd72608d7eb2751646704b31fdc857411d5b3434c508ed590140550d492a515610e88ee25c0ac23fa27eeca03f51147400a12
   languageName: node
   linkType: hard
 
