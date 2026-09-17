@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.11.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.11.1...@react-navigation/stack@7.11.2) (2026-09-17)
+
+### Bug Fixes
+
+* clip shadow visible for inactive cards in stack ([#13255](https://github.com/react-navigation/react-navigation/issues/13255)) ([684919a](https://github.com/react-navigation/react-navigation/commit/684919a78c9b2ab81335e8c588b43e76a0f80669)) - by @BartekObudzinski
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([13ce183](https://github.com/react-navigation/react-navigation/commit/13ce183d6cff2c284116a3a0d72502f4964cef09)) - by @satya164
+
 ## [7.11.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.11.0...@react-navigation/stack@7.11.1) (2026-09-15)
 
 **Note:** Version bump only for package @react-navigation/stack

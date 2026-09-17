@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.7.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.7.1...@react-navigation/material-top-tabs@7.7.2) (2026-09-17)
+
+### Bug Fixes
+
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([13ce183](https://github.com/react-navigation/react-navigation/commit/13ce183d6cff2c284116a3a0d72502f4964cef09)) - by @satya164
+
 ## [7.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.7.0...@react-navigation/material-top-tabs@7.7.1) (2026-09-15)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
