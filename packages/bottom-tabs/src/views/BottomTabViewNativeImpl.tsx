@@ -566,7 +566,10 @@ export function BottomTabViewNative({
           // An error is thrown for React Elements in `getIcon`
           // So we only call it when we actually render a native tab bar
           const icon = hasCustomTabBar ? undefined : getIcon(false);
-          const selectedIcon = hasCustomTabBar ? undefined : getIcon(true);
+          const selectedIcon =
+            !hasCustomTabBar && typeof tabBarIcon === 'function'
+              ? getIcon(true)
+              : icon;
 
           // For preloaded screens and if lazy is false,
           // Keep them active so that the effects can run
