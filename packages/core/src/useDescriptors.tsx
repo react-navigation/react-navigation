@@ -8,6 +8,8 @@ import type {
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
+import { isArrayEqual } from './isArrayEqual';
+import { isRecordEqual } from './isRecordEqual';
 import {
   type AddKeyedListener,
   type AddListener,
@@ -87,6 +89,30 @@ type Options<
   router: Router<State, NavigationAction>;
   emitter: NavigationEventEmitter<EventMap>;
 };
+
+type DescriptorCache<
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  ActionHelpers extends Record<string, (...args: any) => void>,
+> = Record<
+  string,
+  {
+    descriptor: Descriptor<
+      ScreenOptions,
+      NavigationProp<
+        ParamListBase,
+        string,
+        State,
+        ScreenOptions,
+        EventMap,
+        ActionHelpers
+      >,
+      RouteProp<ParamListBase>
+    >;
+    deps: unknown[];
+  }
+>;
 
 /**
  * Hook to create descriptor objects for the child routes.
@@ -183,6 +209,10 @@ export function useDescriptors<
     () => state.routes[state.index]?.key
   );
 
+  const cache = React.useMemo<{
+    current: DescriptorCache<State, ScreenOptions, EventMap, ActionHelpers>;
+  }>(() => ({ current: {} }), []);
+
   const getOptions = (
     route: RouteProp<ParamListBase, string>,
     navigation: NavigationProp<
@@ -231,7 +261,8 @@ export function useDescriptors<
       EventMap
     >,
     customOptions: ScreenOptions,
-    routeState: NavigationState | PartialState<NavigationState> | undefined
+    routeState: NavigationState | PartialState<NavigationState> | undefined,
+    layout: ScreenLayout<ScreenOptions> | undefined
   ) => {
     const config = screens[route.name];
     const screen = config?.props;
@@ -249,14 +280,6 @@ export function useDescriptors<
 
         return o;
       });
-
-    const layout =
-      // The `layout` prop passed to `Screen` elements,
-      screen.layout ??
-      // The `screenLayout` props passed to `Group` elements
-      config?.layout ??
-      // The default `screenLayout` passed to the navigator
-      screenLayout;
 
     let element = (
       <SceneView
@@ -293,21 +316,18 @@ export function useDescriptors<
     );
   };
 
+  const next: DescriptorCache<State, ScreenOptions, EventMap, ActionHelpers> =
+    {};
+
   const descriptors = cachedRoutes.reduce<
     Record<
       string,
-      Descriptor<
+      DescriptorCache<
+        State,
         ScreenOptions,
-        NavigationProp<
-          ParamListBase,
-          string,
-          State,
-          ScreenOptions,
-          EventMap,
-          ActionHelpers
-        >,
-        RouteProp<ParamListBase>
-      >
+        EventMap,
+        ActionHelpers
+      >[string]['descriptor']
     >
   >((acc, route, i) => {
     const navigation = navigations[route.key];
@@ -321,14 +341,56 @@ export function useDescriptors<
 
     const customOptions = getOptions(route, navigation, overrides);
 
+    const routeState = state.routes[i]?.state;
+    const config = screens[route.name];
+    const screen = config?.props;
+
+    const layout =
+      // The `layout` prop passed to `Screen` elements,
+      screen?.layout ??
+      // The `screenLayout` props passed to `Group` elements
+      config?.layout ??
+      // The default `screenLayout` passed to the navigator
+      screenLayout;
+
+    const deps = [
+      route,
+      navigation,
+      routeState,
+      screen?.component,
+      screen?.getComponent,
+      screen?.children,
+      layout,
+      context,
+      theme,
+      getFocusedRouteKey,
+      getState,
+      setState,
+      subscribe,
+    ];
+
+    const previous = cache.current[route.key];
+
+    if (
+      previous &&
+      isArrayEqual(previous.deps, deps) &&
+      isRecordEqual(previous.descriptor.options, customOptions)
+    ) {
+      next[route.key] = previous;
+      acc[route.key] = previous.descriptor;
+
+      return acc;
+    }
+
     const element = render(
       route,
       navigation,
       customOptions,
-      state.routes[i]?.state
+      routeState,
+      layout
     );
 
-    acc[route.key] = {
+    const descriptor = {
       route,
       navigation,
       render() {
@@ -337,8 +399,18 @@ export function useDescriptors<
       options: customOptions,
     };
 
+    acc[route.key] = descriptor;
+    next[route.key] = {
+      descriptor,
+      deps,
+    };
+
     return acc;
   }, {});
+
+  React.useInsertionEffect(() => {
+    cache.current = next;
+  });
 
   return descriptors;
 }
