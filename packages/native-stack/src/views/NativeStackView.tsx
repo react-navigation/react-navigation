@@ -3,7 +3,6 @@ import {
   Header,
   HeaderBackButton,
   HeaderBackContext,
-  useFrameSize,
   useHeaderHeight,
 } from '@react-navigation/elements';
 import {
@@ -17,7 +16,7 @@ import {
   useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 
 import type {
   NativeStackDescriptorMap,
@@ -25,7 +24,6 @@ import type {
 } from '../types';
 import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
-import { useFillsWindow } from '../utils/useFillsWindow';
 
 type Props = {
   state: StackNavigationState<ParamListBase>;
@@ -39,50 +37,14 @@ const TRANSPARENT_PRESENTATIONS = [
 ];
 
 export function NativeStackView({ state, descriptors }: Props) {
-  return (
-    <SafeAreaProviderCompat>
-      <NativeStackViewContent state={state} descriptors={descriptors} />
-    </SafeAreaProviderCompat>
-  );
-}
-
-function NativeStackViewContent({
-  state,
-  descriptors,
-}: Pick<Props, 'state' | 'descriptors'>) {
   const parentHeaderBack = React.use(HeaderBackContext);
   const { buildHref } = useLinkBuilder();
 
   const activeRoutes = state.routes.slice(0, state.index + 1);
   const modalRouteKeys = getModalRouteKeys(activeRoutes, descriptors);
 
-  const focusedRoute = state.routes[state.index];
-  const focusedOptions = focusedRoute
-    ? descriptors[focusedRoute.key]?.options
-    : undefined;
-
-  // Screens can opt out by explicitly setting `flex: 1` in `contentStyle`
-  const isOptedOut =
-    StyleSheet.flatten(focusedOptions?.contentStyle)?.flex === 1;
-
-  // Only screens rendered as a full page (as opposed to an overlay/sheet)
-  // can let `document.body` handle scrolling on web
-  const isFocusedFullPage =
-    focusedOptions?.presentation == null ||
-    focusedOptions.presentation === 'card';
-
-  const layout = useFrameSize((size) => size);
-
-  // Only one screen can be in the document's natural flow at a time, since
-  // several screens stay mounted simultaneously (for back-history/transitions)
-  // So this is only ever considered for the focused, full-page screen
-  const fill = useFillsWindow({
-    enabled: isFocusedFullPage && !isOptedOut,
-    layout,
-  });
-
   return (
-    <>
+    <SafeAreaProviderCompat>
       {state.routes.map((route, i) => {
         const isFocused = state.index === i;
         const previousKey = activeRoutes[i - 1]?.key;
@@ -164,9 +126,6 @@ function NativeStackViewContent({
           return null;
         }
 
-        // Only the focused screen can ever fill the window - see `fill` above
-        const usesPageStyle = isFocused && fill;
-
         const content = (
           <Screen
             key={route.key}
@@ -175,7 +134,10 @@ function NativeStackViewContent({
             navigation={navigation}
             headerShown={headerShown}
             headerTransparent={headerTransparent}
-            fill={usesPageStyle}
+            pageOverflowEnabled={
+              presentation == null || presentation === 'card'
+            }
+            contentStyle={contentStyle}
             header={
               header !== undefined ? (
                 header({
@@ -213,7 +175,6 @@ function NativeStackViewContent({
               )
             }
             style={{
-              ...(usesPageStyle ? styles.page : StyleSheet.absoluteFill),
               ...(presentation != null &&
               TRANSPARENT_PRESENTATIONS.includes(presentation)
                 ? { backgroundColor: 'transparent' }
@@ -222,14 +183,7 @@ function NativeStackViewContent({
           >
             <HeaderBackContext.Provider value={headerBack}>
               <AnimatedHeaderHeightProvider>
-                <View
-                  style={[
-                    usesPageStyle ? styles.page : styles.contentContainer,
-                    contentStyle,
-                  ]}
-                >
-                  {render()}
-                </View>
+                {render()}
               </AnimatedHeaderHeightProvider>
             </HeaderBackContext.Provider>
           </Screen>
@@ -240,16 +194,13 @@ function NativeStackViewContent({
             key={route.key}
             mode={activityMode}
             visible={isFocused || isNextScreenTransparent}
-            // Always out of flow, even when the screen fills the window:
-            // this is what stops the grown content from feeding back into
-            // the frame size that `useFillsWindow` measures against
             style={StyleSheet.absoluteFill}
           >
             {content}
           </ActivityView>
         );
       })}
-    </>
+    </SafeAreaProviderCompat>
   );
 }
 
@@ -273,12 +224,3 @@ const AnimatedHeaderHeightProvider = ({
     </AnimatedHeaderHeightContext.Provider>
   );
 };
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
-  },
-  page: {
-    minHeight: '100%',
-  },
-});

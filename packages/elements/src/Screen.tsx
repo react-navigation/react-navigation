@@ -6,7 +6,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, type ViewProps } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Container, type Props as ContainerProps } from './Container';
@@ -24,14 +24,9 @@ type Props = {
   headerShown?: boolean | undefined;
   headerStatusBarHeight?: number | undefined;
   headerTransparent?: boolean | undefined;
+  pageOverflowEnabled?: boolean | undefined;
   style?: ContainerProps['style'] | undefined;
-  /**
-   * Whether the screen's content should be allowed to grow beyond the
-   * screen's height instead of being clipped to it. Used on web to let
-   * `document.body` handle scrolling, so mobile browsers can collapse
-   * their address bar on scroll.
-   */
-  fill?: boolean | undefined;
+  contentStyle?: ViewProps['style'] | undefined;
   children: React.ReactNode;
 };
 
@@ -53,7 +48,8 @@ export function Screen(props: Props) {
     route,
     children,
     style,
-    fill,
+    contentStyle,
+    pageOverflowEnabled = false,
   } = props;
 
   const defaultHeaderHeight = useFrameSize((size) =>
@@ -63,6 +59,43 @@ export function Screen(props: Props) {
       topInset: headerStatusBarHeight,
     })
   );
+
+  // If the container fills the body, we consider it to be a "page" that can overflow the screen
+  // So we adjust the style accordingly to let the content take more space if needed
+  // This lets the document.body handle scrolling of the content
+  // This is necessary for mobile browsers to be able to hide the address bar on scroll
+  const [fill, setFill] = React.useState(false);
+
+  const onRef = React.useCallback(
+    (node: HTMLDivElement | React.ComponentRef<typeof View> | null) => {
+      if (
+        Platform.OS !== 'web' ||
+        !pageOverflowEnabled ||
+        !(node instanceof HTMLElement)
+      ) {
+        return;
+      }
+
+      const updateFill = () => {
+        setFill(
+          node.clientWidth === document.body.clientWidth &&
+            node.clientHeight === document.body.clientHeight
+        );
+      };
+
+      updateFill();
+
+      const observer = new ResizeObserver(updateFill);
+
+      observer.observe(node);
+      observer.observe(document.body);
+
+      return () => observer.disconnect();
+    },
+    [pageOverflowEnabled]
+  );
+
+  const page = pageOverflowEnabled && focused && fill;
 
   const headerRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
@@ -76,6 +109,7 @@ export function Screen(props: Props) {
 
   return (
     <Container
+      ref={onRef}
       inert={!focused}
       style={{
         ...styles.container,
@@ -115,7 +149,7 @@ export function Screen(props: Props) {
           </View>
         </NavigationProvider>
       ) : null}
-      <View style={fill ? styles.contentFill : styles.content}>
+      <View style={[page ? styles.page : styles.content, contentStyle]}>
         <HeaderShownContext.Provider
           value={isParentHeaderShown || headerShown !== false}
         >
@@ -137,8 +171,8 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
   },
-  contentFill: {
-    minHeight: '100%',
+  page: {
+    flexGrow: 1,
   },
   header: {
     zIndex: 1,
