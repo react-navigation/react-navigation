@@ -29,19 +29,11 @@ type Props = {
  * Once rendered, the content remains rendered.
  */
 export function Deferred({ lazy, visible, children }: Props) {
-  const [rendered, setRendered] = React.useState(lazy ? visible : false);
+  const [rendered, setRendered] = React.useState(visible);
 
   const shouldRenderDeferred = !(lazy || visible || rendered);
 
-  React.useEffect(() => {
-    if (shouldRenderDeferred === false) {
-      return;
-    }
-
-    React.startTransition(() => {
-      setRendered(true);
-    });
-  }, [shouldRenderDeferred]);
+  const canRenderDeferred = React.useDeferredValue(shouldRenderDeferred, false);
 
   if (visible && rendered === false) {
     setRendered(true);
@@ -49,7 +41,7 @@ export function Deferred({ lazy, visible, children }: Props) {
     return children;
   }
 
-  if (rendered) {
+  if (rendered || canRenderDeferred) {
     return children;
   }
 
