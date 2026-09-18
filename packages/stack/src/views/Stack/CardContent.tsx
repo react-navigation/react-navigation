@@ -7,21 +7,14 @@ type Props = ViewProps & {
   children: React.ReactNode;
 };
 
-// `document.body.clientHeight`/`clientWidth` are always rounded integers,
-// but `layout` is sub-pixel precise, so this tolerates a sub-pixel
-// difference instead of requiring an exact match.
-function approximatelyEqual(a: number, b: number) {
-  return Math.abs(a - b) < 1;
-}
-
-// This component will render a page which overflows the screen
-// if the container fills the body by comparing the size
-// This lets the document.body handle scrolling of the content
-// It's necessary for mobile browsers to be able to hide address bar on scroll
 export function CardContent({ enabled, layout, style, ...rest }: Props) {
+  // If the container fills the body, we consider it to be a "page" that can overflow the screen
+  // So we adjust the style accordingly to let the content take more space if needed
+  // This lets the document.body handle scrolling of the content
+  // This is necessary for mobile browsers to be able to hide the address bar on scroll
   const [fill, setFill] = React.useState(false);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (typeof document === 'undefined' || !document.body) {
       // Only run when DOM is available
       return;
@@ -30,22 +23,23 @@ export function CardContent({ enabled, layout, style, ...rest }: Props) {
     const width = document.body.clientWidth;
     const height = document.body.clientHeight;
 
-    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    // `document.body.clientHeight`/`clientWidth` are always rounded integers,
+    // But `layout` is sub-pixel precise, so we allow a small difference.
+    const approximatelyEqual = (a: number, b: number) => Math.abs(a - b) < 1;
+
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-layout-effect
     setFill(
       approximatelyEqual(width, layout.width) &&
         approximatelyEqual(height, layout.height)
     );
   }, [layout.height, layout.width]);
 
-  // Screens can opt out by explicitly setting `flex: 1` in `contentStyle`
-  const optedOut = StyleSheet.flatten(style)?.flex === 1;
-
   return (
     <View
       {...rest}
       style={[
         { pointerEvents: 'box-none' },
-        enabled && !optedOut && fill ? styles.page : styles.card,
+        enabled && fill ? styles.page : styles.card,
         style,
       ]}
     />
