@@ -513,9 +513,9 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
   }, [state, isReady, emitter]);
 
   React.useEffect(() => {
-    const hydratedState = getRootState();
-
     if (process.env.NODE_ENV !== 'production') {
+      const hydratedState = getRootState();
+
       if (hydratedState !== undefined) {
         const duplicateRouteNamesResult =
           checkDuplicateRouteNames(hydratedState);
@@ -535,6 +535,8 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     emitter.emit({ type: 'state', data: { state } });
 
     if (!isFirstMountRef.current && onStateChangeRef.current) {
+      const hydratedState = getRootState();
+
       onStateChangeRef.current(hydratedState);
     }
 
