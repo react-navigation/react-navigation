@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/drawer",
   "description": "Integration for the drawer component from react-native-drawer-layout",
-  "version": "8.0.0-alpha.52",
+  "version": "8.0.0-alpha.53",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -61,7 +61,7 @@
     "react-native-builder-bob": "^0.43.0",
     "react-native-gesture-handler": "^3.0.2",
     "react-native-reanimated": "4.5.3",
-    "react-native-safe-area-context": "~5.7.0",
+    "react-native-safe-area-context": "~5.10.0",
     "react-native-screens": "^4.26.2",
     "react-native-worklets": "0.11.3",
     "test-renderer": "1.2.0",

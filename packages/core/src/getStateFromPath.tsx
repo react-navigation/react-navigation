@@ -1,5 +1,4 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
-import queryString from 'query-string';
 
 import { arrayStartsWith } from './arrayStartsWith';
 import {
@@ -8,6 +7,7 @@ import {
   type PatternPartRepeat,
 } from './getPatternParts';
 import { isArrayEqual } from './isArrayEqual';
+import * as queryString from './queryString';
 import type { PathConfig, PathConfigMap } from './types';
 import type {
   StandardSchemaV1,
