@@ -11,6 +11,22 @@ object MaterialSymbolTypeface {
   private var availableFonts: Map<String, Set<Int>>? = null
 
   fun get(context: Context, variant: String?, weight: Int?): MaterialSymbolTypefaceResult {
+    val suffix = getSuffix(context, variant, weight)
+
+    val typeface = typefaces.getOrPut(suffix) {
+      val path = "fonts/MaterialSymbols${suffix}.ttf"
+
+      try {
+        Typeface.createFromAsset(context.assets, path)
+      } catch (e: Exception) {
+        throw RuntimeException("$path not found.", e)
+      }
+    }
+
+    return MaterialSymbolTypefaceResult(typeface, suffix)
+  }
+
+  fun getSuffix(context: Context, variant: String?, weight: Int?): String {
     val fonts = getAvailableFonts(context)
 
     val resolvedVariant = if (variant != null) {
@@ -25,19 +41,7 @@ object MaterialSymbolTypeface {
 
     val resolvedWeight = weight ?: resolveDefaultWeight(fonts, resolvedVariant)
 
-    val suffix = "${resolvedVariant}_$resolvedWeight"
-
-    val typeface = typefaces.getOrPut(suffix) {
-      val path = "fonts/MaterialSymbols${suffix}.ttf"
-
-      try {
-        Typeface.createFromAsset(context.assets, path)
-      } catch (e: Exception) {
-        throw RuntimeException("$path not found.", e)
-      }
-    }
-
-    return MaterialSymbolTypefaceResult(typeface, suffix)
+    return "${resolvedVariant}_$resolvedWeight"
   }
 
   private fun getAvailableFonts(context: Context): Map<String, Set<Int>> {
