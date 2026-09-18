@@ -15,7 +15,7 @@ export type Props = {
 
 export function Container({ ref, inert, children, style }: Props) {
   if (Platform.OS === 'web') {
-    const { backgroundColor, ...rest } = style ?? {};
+    const { backgroundColor, flex, ...rest } = style ?? {};
 
     return (
       <div
@@ -24,6 +24,12 @@ export function Container({ ref, inert, children, style }: Props) {
         aria-hidden={inert}
         style={{
           ...DEFAULT_STYLE,
+          // FIXME: A numeric flex shorthand uses a percentage basis in browsers.
+          // With nested containers, it slows down layout in Safari on iOS 27.
+          // So we explicitly set it to `0` without percentage, which renders 0px.
+          ...(flex !== undefined && flex > 0
+            ? { flexGrow: flex, flexShrink: 1, flexBasis: 0 }
+            : { flex }),
           ...rest,
           backgroundColor:
             // In practice we only get string on web instead of OpaqueValue
