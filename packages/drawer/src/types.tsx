@@ -24,12 +24,16 @@ export type Scene = {
 
 export type Layout = { width: number; height: number };
 
-export type DrawerNavigationConfig = {
+export type DrawerNavigationConfig<
+  ParamList extends ParamListBase = ParamListBase,
+> = {
   /**
    * Function that returns React element to render as the content of the drawer, for example, navigation items.
    * Defaults to `DrawerContent`.
    */
-  drawerContent?: (props: DrawerContentComponentProps) => React.ReactNode;
+  drawerContent?: (
+    props: DrawerContentComponentProps<ParamList>
+  ) => React.ReactNode;
 };
 
 export type DrawerNavigationOptions = HeaderOptions & {
@@ -223,9 +227,11 @@ export type DrawerNavigationOptions = HeaderOptions & {
   inactiveBehavior?: 'pause' | 'none';
 };
 
-export type DrawerContentComponentProps = {
-  state: DrawerNavigationState<ParamListBase>;
-  navigation: DrawerNavigationHelpers;
+export type DrawerContentComponentProps<
+  ParamList extends ParamListBase = ParamListBase,
+> = {
+  state: DrawerNavigationState<ParamList>;
+  navigation: DrawerNavigationHelpers<ParamList>;
   descriptors: DrawerDescriptorMap;
 };
 
@@ -271,11 +277,10 @@ export type DrawerNavigationEventMap = {
   gestureCancel: { data: undefined };
 };
 
-export type DrawerNavigationHelpers = NavigationHelpers<
-  ParamListBase,
-  DrawerNavigationEventMap
-> &
-  DrawerActionHelpers<ParamListBase>;
+export type DrawerNavigationHelpers<
+  ParamList extends ParamListBase = ParamListBase,
+> = NavigationHelpers<ParamList, DrawerNavigationEventMap> &
+  DrawerActionHelpers<ParamList>;
 
 export type DrawerNavigationProp<
   ParamList extends ParamListBase,
@@ -333,12 +338,14 @@ export type DrawerProps = {
   overlayAccessibilityLabel?: string;
 };
 
-export type DrawerNavigatorProps = DefaultNavigatorOptions<
-  ParamListBase,
-  DrawerNavigationState<ParamListBase>,
+export type DrawerNavigatorProps<
+  ParamList extends ParamListBase = ParamListBase,
+> = DefaultNavigatorOptions<
+  ParamList,
+  DrawerNavigationState<ParamList>,
   DrawerNavigationOptions,
   DrawerNavigationEventMap,
-  DrawerNavigationProp<ParamListBase>
+  DrawerNavigationProp<ParamList>
 > &
   DrawerRouterOptions &
-  DrawerNavigationConfig;
+  DrawerNavigationConfig<ParamList>;

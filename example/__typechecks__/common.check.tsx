@@ -5,10 +5,12 @@ import type {
   BottomTabNavigationOptions,
   BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
-import type {
-  DrawerNavigationOptions,
-  DrawerNavigationProp,
-  DrawerScreenProps,
+import {
+  createDrawerNavigator,
+  type DrawerContentComponentProps,
+  type DrawerNavigationOptions,
+  type DrawerNavigationProp,
+  type DrawerScreenProps,
 } from '@react-navigation/drawer';
 import { Button } from '@react-navigation/elements';
 import {
@@ -1953,4 +1955,96 @@ useNavigationState('Invalid', (state) => state.index);
   >().toEqualTypeOf<{
     variant: 'compact' | 'regular';
   }>();
+}
+
+/**
+ * Check that the props passed to `drawerContent` use the navigator's param list
+ */
+{
+  type DrawerParamList = {
+    Home: undefined;
+    Profile: { userId: string };
+  };
+
+  const Drawer = createDrawerNavigator<DrawerParamList>();
+
+  <Drawer.Navigator
+    drawerContent={(props) => {
+      props.navigation.navigate('Home');
+      props.navigation.navigate('Profile', { userId: 'jane' });
+      props.navigation.closeDrawer();
+      props.navigation.toggleDrawer();
+
+      expectTypeOf(props.state.routes[0]!.name).toEqualTypeOf<
+        keyof DrawerParamList
+      >();
+
+      // @ts-expect-error
+      props.navigation.navigate('NotARoute');
+
+      // @ts-expect-error
+      props.navigation.navigate('Profile', { userId: 42 });
+
+      return null;
+    }}
+  >
+    <Drawer.Screen name="Home" component={() => null} />
+  </Drawer.Navigator>;
+}
+
+/**
+ * Check that `DrawerContentComponentProps` still defaults to `ParamListBase`
+ */
+{
+  const DrawerContent = (props: DrawerContentComponentProps) => {
+    // Without a param list, any route name is accepted as before
+    props.navigation.navigate('AnyRouteName');
+    props.navigation.closeDrawer();
+
+    expectTypeOf(props.state.routes[0]!.name).toEqualTypeOf<string>();
+
+    return null;
+  };
+
+  // Components using the default are still assignable to a typed navigator
+  const Drawer = createDrawerNavigator<{ Home: undefined }>();
+
+  <Drawer.Navigator drawerContent={DrawerContent}>
+    <Drawer.Screen name="Home" component={() => null} />
+  </Drawer.Navigator>;
+
+  // As well as to a navigator without a param list
+  const UntypedDrawer = createDrawerNavigator();
+
+  <UntypedDrawer.Navigator drawerContent={DrawerContent}>
+    <UntypedDrawer.Screen name="Home" component={() => null} />
+  </UntypedDrawer.Navigator>;
+}
+
+/**
+ * Check for `DrawerContentComponentProps` with an explicit param list
+ */
+{
+  type DrawerParamList = {
+    Home: undefined;
+    Profile: { userId: string };
+  };
+
+  const DrawerContent = (
+    props: DrawerContentComponentProps<DrawerParamList>
+  ) => {
+    props.navigation.navigate('Home');
+    props.navigation.navigate('Profile', { userId: 'jane' });
+
+    // @ts-expect-error
+    props.navigation.navigate('NotARoute');
+
+    return null;
+  };
+
+  const Drawer = createDrawerNavigator<DrawerParamList>();
+
+  <Drawer.Navigator drawerContent={DrawerContent}>
+    <Drawer.Screen name="Home" component={() => null} />
+  </Drawer.Navigator>;
 }
