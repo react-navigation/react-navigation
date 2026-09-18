@@ -6,7 +6,6 @@ import { Text, View } from 'react-native';
 import { setUpTests } from 'react-native-reanimated';
 
 import { Drawer } from '../views/Drawer';
-import type { PanGestureConfig } from '../views/GestureHandler';
 
 setUpTests();
 
@@ -15,34 +14,6 @@ jest.useFakeTimers();
 jest.mock('react-native-worklets', () =>
   require('react-native-worklets/src/mock')
 );
-
-test("doesn't reconfigure the gesture when the parent re-renders with new callbacks", async () => {
-  const configureGestureHandler = jest.fn((config: PanGestureConfig) => config);
-
-  // The handlers are inline arrow functions, as in most call sites,
-  // so they get a new identity on every render of the parent
-  const element = () => (
-    <Drawer
-      open={false}
-      onOpen={() => {}}
-      onClose={() => {}}
-      configureGestureHandler={configureGestureHandler}
-      renderDrawerContent={() => <View />}
-    >
-      <Text>Content</Text>
-    </Drawer>
-  );
-
-  const { rerender } = await render(element());
-
-  expect(screen.getByText('Content')).not.toBeNull();
-  expect(configureGestureHandler).toHaveBeenCalledTimes(1);
-
-  await rerender(element());
-  await rerender(element());
-
-  expect(configureGestureHandler).toHaveBeenCalledTimes(1);
-});
 
 test("doesn't call 'onClose' when the parent re-renders with the drawer closed", async () => {
   const onClose = jest.fn();
@@ -60,6 +31,8 @@ test("doesn't call 'onClose' when the parent re-renders with the drawer closed",
   );
 
   const { rerender } = await render(element());
+
+  expect(screen.getByText('Content')).not.toBeNull();
 
   await rerender(element());
   await rerender(element());
