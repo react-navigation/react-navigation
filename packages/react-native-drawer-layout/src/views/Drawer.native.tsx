@@ -146,14 +146,6 @@ export function Drawer({
     onGestureCancel?.();
   });
 
-  const onDrawerOpen = useLatestCallback(() => {
-    onOpen();
-  });
-
-  const onDrawerClose = useLatestCallback(() => {
-    onClose();
-  });
-
   const hitSlop = React.useMemo(
     () =>
       isRight
@@ -292,9 +284,9 @@ export function Drawer({
       );
 
       if (open) {
-        scheduleOnRN(onDrawerOpen);
+        scheduleOnRN(onOpen);
       } else {
-        scheduleOnRN(onDrawerClose);
+        scheduleOnRN(onClose);
       }
     },
     [
@@ -307,8 +299,8 @@ export function Drawer({
       animatingTo,
       onAnimationStart,
       onAnimationEnd,
-      onDrawerOpen,
-      onDrawerClose,
+      onOpen,
+      onClose,
     ]
   );
 
