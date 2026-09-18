@@ -25,8 +25,8 @@ type Props = {
   headerStatusBarHeight?: number | undefined;
   headerTransparent?: boolean | undefined;
   pageOverflowEnabled?: boolean | undefined;
-  style?: ContainerProps['style'] | undefined;
   contentStyle?: ViewProps['style'] | undefined;
+  style?: ContainerProps['style'] | undefined;
   children: React.ReactNode;
 };
 
