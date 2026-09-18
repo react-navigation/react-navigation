@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
-import { NavigationContainer } from '@react-navigation/native';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { render, screen, userEvent } from '@testing-library/react-native';
 import * as React from 'react';
 import { Button, Text, View } from 'react-native';
@@ -67,4 +67,84 @@ test('renders a material top tab navigator with screens', async () => {
   await user.press(screen.getByRole('button', { name: 'Go to B' }));
 
   expect(screen.getByText('Screen B')).not.toBeNull();
+});
+
+test('renders a badge in the tab bar from a string or number', async () => {
+  const Test = () => <View />;
+
+  const Tab = createMaterialTopTabNavigator<TopTabParamList>();
+
+  await render(
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="A" component={Test} options={{ tabBarBadge: 3 }} />
+        <Tab.Screen
+          name="B"
+          component={Test}
+          options={{ tabBarBadge: 'new' }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(screen.getByText('3')).not.toBeNull();
+  expect(screen.getByText('new')).not.toBeNull();
+});
+
+test('renders a badge in the tab bar from a function', async () => {
+  const Test = () => <View />;
+
+  const Tab = createMaterialTopTabNavigator<TopTabParamList>();
+
+  await render(
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen
+          name="A"
+          component={Test}
+          options={{ tabBarBadge: () => <Text>Custom badge</Text> }}
+        />
+        <Tab.Screen name="B" component={Test} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(screen.getByText('Custom badge')).not.toBeNull();
+});
+
+test('applies the theme font to the badge', async () => {
+  const Test = () => <View />;
+
+  const Tab = createMaterialTopTabNavigator<TopTabParamList>();
+
+  const theme = {
+    ...DefaultTheme,
+    fonts: {
+      ...DefaultTheme.fonts,
+      medium: { fontFamily: 'Custom-Medium', fontWeight: '500' },
+    },
+  } as const;
+
+  await render(
+    <NavigationContainer theme={theme}>
+      <Tab.Navigator>
+        <Tab.Screen name="A" component={Test} options={{ tabBarBadge: 3 }} />
+        <Tab.Screen
+          name="B"
+          component={Test}
+          options={{
+            tabBarBadge: 9,
+            tabBarBadgeStyle: { fontFamily: 'Override' },
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(screen.getByText('3')).toHaveStyle({
+    fontFamily: 'Custom-Medium',
+    fontWeight: '500',
+  });
+
+  expect(screen.getByText('9')).toHaveStyle({ fontFamily: 'Override' });
 });
