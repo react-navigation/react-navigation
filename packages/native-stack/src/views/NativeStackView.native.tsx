@@ -49,22 +49,23 @@ import { useHeaderConfigProps } from './useHeaderConfigProps';
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
 
 // The height table in `getDefaultHeaderHeight` is the spec for the header that `elements` draws
-// itself, and it goes stale whenever an OS or a new form factor resizes the native bar. Ask the
-// platform for the metric of the current environment instead, and keep the table as the fallback.
-// Cached per orientation, since the answer changes with it.
-const nativeBarHeights = new Map<boolean, number | undefined>();
+// itself, and it goes stale whenever an OS or a new form factor moves the native bar. Ask screens
+// for the height UIKit lays out in the current window instead — the same number
+// `onHeaderHeightChange` reports later — and keep the table as the fallback. Cached per
+// orientation, since the answer changes with it.
+const nativeHeaderHeights = new Map<boolean, number | undefined>();
 
-function getNativeBarHeight(landscape: boolean) {
-  if (!nativeBarHeights.has(landscape)) {
-    const measured = NativeScreensModule?.getNavigationBarHeight?.();
+function getNativeHeaderHeight(landscape: boolean) {
+  if (!nativeHeaderHeights.has(landscape)) {
+    const measured = NativeScreensModule?.getHeaderHeight?.();
 
-    nativeBarHeights.set(
+    nativeHeaderHeights.set(
       landscape,
       typeof measured === 'number' && measured > 0 ? measured : undefined
     );
   }
 
-  return nativeBarHeights.get(landscape);
+  return nativeHeaderHeights.get(landscape);
 }
 
 type SceneViewProps = {
@@ -195,16 +196,15 @@ const SceneView = ({
       : insets.top;
 
   const defaultHeaderHeight = useFrameSize((frame) => {
-    // A plain `UINavigationBar` doesn't stand for a modal bar, so modals keep the table.
-    const nativeBarHeight =
+    // A modally presented bar is not what screens measures, so modals keep the table.
+    const nativeHeaderHeight =
       Platform.OS === 'ios' && !isModal
-        ? getNativeBarHeight(frame.width > frame.height)
+        ? getNativeHeaderHeight(frame.width > frame.height)
         : undefined;
 
-    if (nativeBarHeight != null) {
-      // The measured height excludes the status bar, and it needs no Dynamic Island correction:
-      // that correction exists to line the table up with the real bar.
-      return nativeBarHeight + topInset;
+    if (nativeHeaderHeight != null) {
+      // Already includes the status bar / top inset, as UIKit placed the bar.
+      return nativeHeaderHeight;
     }
 
     return Platform.select({
