@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.15...react-native-tab-view@5.0.0-alpha.16) (2026-09-19)
+
+### Bug Fixes
+
+* improve memoization for material top tabs ([f7fbf6f](https://github.com/react-navigation/react-navigation/commit/f7fbf6f0ced6b35247c09374bc674ac40a123f38)) - by @
+
 # [5.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.14...react-native-tab-view@5.0.0-alpha.15) (2026-08-06)
 
 ### Bug Fixes

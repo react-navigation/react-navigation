@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.52](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.51...@react-navigation/material-top-tabs@8.0.0-alpha.52) (2026-09-19)
+
+### Bug Fixes
+
+* improve memoization for material top tabs ([f7fbf6f](https://github.com/react-navigation/react-navigation/commit/f7fbf6f0ced6b35247c09374bc674ac40a123f38)) - by @
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([5bc7014](https://github.com/react-navigation/react-navigation/commit/5bc7014deb66940e7c07c0ce4668fbcfbf687730)) - by @satya164
+
 # [8.0.0-alpha.51](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.50...@react-navigation/material-top-tabs@8.0.0-alpha.51) (2026-09-15)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

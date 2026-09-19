@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.18...react-native-drawer-layout@5.0.0-alpha.19) (2026-09-19)
+
+### Bug Fixes
+
+* use stable onOpen and onClose for drawer callbacks ([f599852](https://github.com/react-navigation/react-navigation/commit/f599852bde0331932c346890807a9cca3222b19c)), closes [#13258](https://github.com/react-navigation/react-navigation/issues/13258) - by @satya164
+
 # [5.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.17...react-native-drawer-layout@5.0.0-alpha.18) (2026-08-19)
 
 ### Bug Fixes

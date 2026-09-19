@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.55](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.54...@react-navigation/native-stack@8.0.0-alpha.55) (2026-09-19)
+
+### Bug Fixes
+
+* let native-stack collapse the mobile address bar on scroll ([#13237](https://github.com/react-navigation/react-navigation/issues/13237)) ([2a1eacd](https://github.com/react-navigation/react-navigation/commit/2a1eacd93feb4e0ce5411c62b8a00b926f3bcdf6)) - by @rjmreis
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([5bc7014](https://github.com/react-navigation/react-navigation/commit/5bc7014deb66940e7c07c0ce4668fbcfbf687730)) - by @satya164
+
 # [8.0.0-alpha.54](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.53...@react-navigation/native-stack@8.0.0-alpha.54) (2026-09-15)
 
 **Note:** Version bump only for package @react-navigation/native-stack

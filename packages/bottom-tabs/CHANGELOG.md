@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.53](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.52...@react-navigation/bottom-tabs@8.0.0-alpha.53) (2026-09-19)
+
+### Bug Fixes
+
+* defer rendering lazy content with useDeferredValue ([fd840cf](https://github.com/react-navigation/react-navigation/commit/fd840cf1ad2e88a00290037c06c2d77e2e3cc2d9)) - by @satya164
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([5bc7014](https://github.com/react-navigation/react-navigation/commit/5bc7014deb66940e7c07c0ce4668fbcfbf687730)) - by @satya164
+
 # [8.0.0-alpha.52](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.51...@react-navigation/bottom-tabs@8.0.0-alpha.52) (2026-09-15)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

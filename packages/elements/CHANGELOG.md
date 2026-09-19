@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.51](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.50...@react-navigation/elements@3.0.0-alpha.51) (2026-09-19)
+
+### Bug Fixes
+
+* avoid redundant activity mode updates ([92e457a](https://github.com/react-navigation/react-navigation/commit/92e457a02ce47d83e59dd02eccce19d3ddb19955)) - by @satya164
+* fix slow layout on safari on iOS 27 ([#13260](https://github.com/react-navigation/react-navigation/issues/13260)) ([0e0c5b2](https://github.com/react-navigation/react-navigation/commit/0e0c5b25458399469850710b77d3dd249c5afd0c)) - by @satya164
+* let native-stack collapse the mobile address bar on scroll ([#13237](https://github.com/react-navigation/react-navigation/issues/13237)) ([2a1eacd](https://github.com/react-navigation/react-navigation/commit/2a1eacd93feb4e0ce5411c62b8a00b926f3bcdf6)) - by @rjmreis
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([5bc7014](https://github.com/react-navigation/react-navigation/commit/5bc7014deb66940e7c07c0ce4668fbcfbf687730)) - by @satya164
+
 # [3.0.0-alpha.50](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.49...@react-navigation/elements@3.0.0-alpha.50) (2026-09-15)
 
 **Note:** Version bump only for package @react-navigation/elements

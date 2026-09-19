@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.56](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.55...@react-navigation/stack@8.0.0-alpha.56) (2026-09-19)
+
+### Bug Fixes
+
+* clip shadow visible for inactive cards in stack ([#13255](https://github.com/react-navigation/react-navigation/issues/13255)) ([95ba05f](https://github.com/react-navigation/react-navigation/commit/95ba05fad5aa2a6950610b0ec01d129b14c70943)) - by @BartekObudzinski
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([5bc7014](https://github.com/react-navigation/react-navigation/commit/5bc7014deb66940e7c07c0ce4668fbcfbf687730)) - by @satya164
+* remove height workaround on chrome so address bar can collapse ([27c5992](https://github.com/react-navigation/react-navigation/commit/27c59922d79117d4df056f44a20b4aebc718092f)) - by @satya164
+
 # [8.0.0-alpha.55](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.54...@react-navigation/stack@8.0.0-alpha.55) (2026-09-15)
 
 **Note:** Version bump only for package @react-navigation/stack
