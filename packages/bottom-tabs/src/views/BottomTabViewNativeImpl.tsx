@@ -29,6 +29,7 @@ import {
   type PlatformIconShared,
   Tabs,
   type TabsBottomAccessoryEnvironment,
+  type TabsBottomAccessoryEnvironmentChangeEvent,
   type TabSelectedEvent,
   type TabSelectionRejectedEvent,
   type TabsScreenItemStateAppearanceAndroid,
@@ -404,6 +405,16 @@ export function BottomTabViewNative({
     });
   };
 
+  const onBottomAccessoryEnvironmentChange = (
+    event: NativeSyntheticEvent<TabsBottomAccessoryEnvironmentChangeEvent>
+  ) => {
+    navigation.emit({
+      type: 'bottomAccessoryPlacementChange',
+      target: focusedRouteKey,
+      data: { placement: event.nativeEvent.environment },
+    });
+  };
+
   const tabBarPosition = useTabBarPosition(currentOptions);
 
   const hasCustomTabBar = tabBar != null;
@@ -458,6 +469,7 @@ export function BottomTabViewNative({
             ? (environment: TabsBottomAccessoryEnvironment) =>
                 bottomAccessory({ placement: environment })
             : undefined,
+          onBottomAccessoryEnvironmentChange,
           tabBarControllerMode,
           tabBarMinimizeBehavior,
           tabBarTintColor: activeTintColor,
