@@ -187,19 +187,41 @@ export function TabView<T extends Route>({
     }
   };
 
+  const optionsCache = React.useRef<
+    | {
+        commonOptions: Props<T>['commonOptions'];
+        sceneOptions: Props<T>['options'];
+        options: Record<string, TabDescriptor<T>>;
+      }
+    | undefined
+  >(undefined);
+
   const options = React.useMemo(
     () =>
       Object.fromEntries(
-        navigationState.routes.map((route) => [
-          route.key,
-          {
-            ...commonOptions,
-            ...sceneOptions?.[route.key],
-          },
-        ])
+        navigationState.routes.map((route) => {
+          const previous = optionsCache.current;
+          const routeOptions = sceneOptions?.[route.key];
+          const cachedOptions = previous?.options[route.key];
+
+          return [
+            route.key,
+            previous &&
+            cachedOptions &&
+            Object.hasOwn(previous.options, route.key) &&
+            previous.commonOptions === commonOptions &&
+            previous.sceneOptions?.[route.key] === routeOptions
+              ? cachedOptions
+              : { ...commonOptions, ...routeOptions },
+          ];
+        })
       ),
-    [navigationState.routes, commonOptions, sceneOptions]
+    [navigationState.routes, commonOptions, sceneOptions, optionsCache]
   );
+
+  React.useInsertionEffect(() => {
+    optionsCache.current = { commonOptions, sceneOptions, options };
+  });
 
   const element = renderAdapter({
     navigationState,

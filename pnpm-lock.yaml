@@ -566,6 +566,9 @@ importers:
       react-native-tab-view:
         specifier: workspace:^
         version: link:../react-native-tab-view
+      use-latest-callback:
+        specifier: ^0.3.5
+        version: 0.3.5(react@19.2.3)
     devDependencies:
       '@jest/globals':
         specifier: ^30.4.1
