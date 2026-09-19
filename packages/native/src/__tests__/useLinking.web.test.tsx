@@ -1,8 +1,17 @@
-import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from '@jest/globals';
 import {
   CommonActions,
   createNavigationContainerRef,
   createNavigatorFactory,
+  DrawerActions,
+  DrawerRouter,
   findFocusedRoute,
   getPathFromState,
   getStateFromPath,
@@ -2430,9 +2439,9 @@ test('applies multiple updates queued during delayed history traversal', async (
 
   act(() => window.history.back());
 
-  await waitFor(() => expect(window.location.pathname).toBe('/a'));
+  await waitFor(() => expect(window.location.pathname).toBe('/b'));
 
-  expect(navigation.getCurrentRoute()?.name).toBe('A');
+  expect(navigation.getCurrentRoute()?.name).toBe('B');
 
   act(() => window.history.forward());
 
@@ -2865,4 +2874,1049 @@ test("doesn't navigate to an interrupted screen that finishes loading first", as
   await waitFor(() => expect(window.location.pathname).toBe('/b'));
 
   expect(navigation.getCurrentRoute()?.name).toBe('B');
+});
+
+describe('batched browser history', () => {
+  const Stack = createStackNavigator();
+  const Tab = createTabNavigator();
+  const Drawer = createNavigatorFactory(
+    (props: Parameters<typeof useNavigationBuilder>[1]) => {
+      const { state, descriptors, render } = useNavigationBuilder(
+        DrawerRouter,
+        props
+      );
+
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
+      );
+    }
+  )();
+
+  type NavigatorKind =
+    | 'stack'
+    | 'custom'
+    | 'drawer'
+    | NonNullable<Parameters<typeof TabRouter>[0]['backBehavior']>;
+
+  const renderNavigation = (
+    kind: NavigatorKind = 'stack',
+    getPath: typeof getPathFromState = getPathFromState
+  ) => {
+    const { Navigator, Screen } =
+      kind === 'stack' || kind === 'custom'
+        ? Stack
+        : kind === 'drawer'
+          ? Drawer
+          : Tab;
+    const navigation = createNavigationContainerRef<ParamListBase>();
+
+    render(
+      <NavigationContainer
+        ref={navigation}
+        linking={{
+          config: {
+            screens: {
+              Home: '',
+              A: 'a/:id?',
+              B: 'b/:id?',
+              C: 'c',
+              D: 'd',
+              Missing: '*',
+            },
+          },
+          getPathFromState: getPath,
+        }}
+      >
+        <Navigator
+          backBehavior={
+            kind === 'stack' || kind === 'custom'
+              ? undefined
+              : kind === 'drawer'
+                ? 'fullHistory'
+                : kind
+          }
+          router={
+            kind === 'custom'
+              ? (router) => ({
+                  type: 'custom',
+                  getInitialState: (options) => ({
+                    ...router.getInitialState(options),
+                    type: 'custom',
+                  }),
+                  getRehydratedState: (state, options) => ({
+                    ...router.getRehydratedState(state, options),
+                    type: 'custom',
+                  }),
+                })
+              : undefined
+          }
+        >
+          <Screen name="Home" component={TestScreen} />
+          <Screen name="A" component={TestScreen} />
+          <Screen name="B" component={TestScreen} />
+          <Screen name="C" component={TestScreen} />
+          <Screen name="D" component={TestScreen} />
+          <Screen name="Missing" component={TestScreen} />
+        </Navigator>
+      </NavigationContainer>
+    );
+
+    return navigation;
+  };
+
+  const renderNestedNavigation = (
+    kind: 'stack' | 'fullHistory' = 'fullHistory'
+  ) => {
+    type ChildParamList = { One: undefined; Two: undefined };
+    type RootParamList = {
+      Home: undefined;
+      Nested:
+        | (NavigatorScreenParams<ChildParamList> & { id?: string })
+        | undefined;
+      A: undefined;
+      B: undefined;
+    };
+    const navigation = createNavigationContainerRef<RootParamList>();
+    const { Navigator, Screen } = kind === 'stack' ? Stack : Tab;
+
+    render(
+      <NavigationContainer
+        ref={navigation}
+        linking={{
+          config: {
+            screens: {
+              Home: '',
+              Nested: {
+                path: 'nested/:id?',
+                screens: { One: 'one', Two: 'two' },
+              },
+              A: 'a',
+              B: 'b',
+            },
+          },
+        }}
+      >
+        <Navigator backBehavior="fullHistory">
+          <Screen name="Home" component={TestScreen} />
+          <Screen name="Nested">
+            {() => (
+              <Stack.Navigator>
+                <Stack.Screen name="One" component={TestScreen} />
+                <Stack.Screen name="Two" component={TestScreen} />
+              </Stack.Navigator>
+            )}
+          </Screen>
+          <Screen name="A" component={TestScreen} />
+          <Screen name="B" component={TestScreen} />
+        </Navigator>
+      </NavigationContainer>
+    );
+
+    return navigation;
+  };
+
+  test.each<NavigatorKind>(['stack', 'custom'])(
+    'restores every committed route with browser back and forward in a %s navigator',
+    async (kind) => {
+      const navigation = renderNavigation(kind);
+
+      act(() => navigation.navigate('D'));
+      await waitFor(() => expect(window.location.pathname).toBe('/d'));
+
+      const length = window.history.length;
+
+      act(() => {
+        navigation.dispatch(StackActions.push('A', { id: 'one' }));
+        navigation.dispatch(StackActions.push('B', { id: 'two' }));
+        navigation.dispatch(StackActions.push('C'));
+      });
+
+      await waitFor(() => expect(window.location.pathname).toBe('/c'));
+
+      expect(window.history.length).toBe(length + 3);
+      expect(navigation.getRootState()?.type).toBe(kind);
+
+      act(() => window.history.back());
+
+      await waitFor(() => expect(window.location.pathname).toBe('/b/two'));
+      expect(navigation.getCurrentRoute()).toMatchObject({
+        name: 'B',
+        params: { id: 'two' },
+      });
+      expect(
+        navigation.getRootState()?.routes.map((route) => route.name)
+      ).toEqual(['Home', 'D', 'A', 'B']);
+
+      act(() => window.history.back());
+
+      await waitFor(() => expect(window.location.pathname).toBe('/a/one'));
+      expect(navigation.getCurrentRoute()?.params).toEqual({ id: 'one' });
+
+      act(() => window.history.back());
+
+      await waitFor(() => expect(window.location.pathname).toBe('/d'));
+      expect(
+        navigation.getRootState()?.routes.map((route) => route.name)
+      ).toEqual(['Home', 'D']);
+
+      act(() => window.history.go(2));
+
+      await waitFor(() => expect(window.location.pathname).toBe('/b/two'));
+      expect(navigation.getCurrentRoute()?.params).toEqual({ id: 'two' });
+
+      act(() => window.history.forward());
+
+      await waitFor(() => expect(window.location.pathname).toBe('/c'));
+      expect(
+        navigation.getRootState()?.routes.map((route) => route.name)
+      ).toEqual(['Home', 'D', 'A', 'B', 'C']);
+    }
+  );
+
+  test('keeps separate stack entries that have the same URL', async () => {
+    const navigation = renderNavigation();
+    const length = window.history.length;
+
+    act(() => {
+      navigation.dispatch(StackActions.push('A'));
+      navigation.dispatch(StackActions.push('A'));
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/a'));
+    expect(window.history.length).toBe(length + 2);
+
+    const lastKey = navigation.getCurrentRoute()?.key;
+
+    act(() => window.history.back());
+
+    await waitFor(() =>
+      expect(navigation.getRootState()?.routes).toHaveLength(2)
+    );
+    expect(window.location.pathname).toBe('/a');
+    expect(navigation.getCurrentRoute()?.key).not.toBe(lastKey);
+
+    act(() => window.history.forward());
+
+    await waitFor(() =>
+      expect(navigation.getRootState()?.routes).toHaveLength(3)
+    );
+    expect(navigation.getCurrentRoute()?.key).toBe(lastKey);
+  });
+
+  test('recovers nested stack entries without changing the parent navigator', async () => {
+    const navigation = createNavigationContainerRef<{
+      Home: NavigatorScreenParams<{
+        Feed: undefined;
+        A: { id: string };
+        B: { id: string };
+      }>;
+      Other: undefined;
+    }>();
+
+    render(
+      <NavigationContainer
+        ref={navigation}
+        linking={{
+          config: {
+            screens: {
+              Home: { screens: { Feed: 'feed', A: 'a/:id', B: 'b/:id' } },
+              Other: 'other',
+            },
+          },
+        }}
+      >
+        <Tab.Navigator>
+          <Tab.Screen name="Home">
+            {() => (
+              <Stack.Navigator>
+                <Stack.Screen name="Feed" component={TestScreen} />
+                <Stack.Screen name="A" component={TestScreen} />
+                <Stack.Screen name="B" component={TestScreen} />
+              </Stack.Navigator>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="Other" component={TestScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
+
+    const parentKey = navigation.getRootState()?.key;
+    const length = window.history.length;
+
+    act(() => {
+      navigation.dispatch(CommonActions.navigate('A', { id: 'one' }));
+      navigation.dispatch(CommonActions.navigate('B', { id: 'two' }));
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/b/two'));
+    expect(window.history.length).toBe(length + 2);
+
+    act(() => window.history.back());
+
+    await waitFor(() => expect(window.location.pathname).toBe('/a/one'));
+    expect(navigation.getCurrentRoute()).toMatchObject({
+      name: 'A',
+      params: { id: 'one' },
+    });
+    expect(navigation.getRootState()).toMatchObject({
+      key: parentKey,
+      index: 0,
+    });
+
+    act(() => window.history.back());
+
+    await waitFor(() => expect(window.location.pathname).toBe('/feed'));
+    expect(navigation.getCurrentRoute()?.name).toBe('Feed');
+
+    act(() => window.history.go(2));
+
+    await waitFor(() => expect(window.location.pathname).toBe('/b/two'));
+    expect(navigation.getCurrentRoute()?.params).toEqual({ id: 'two' });
+    expect(navigation.getRootState()?.key).toBe(parentKey);
+  });
+
+  test.each<NavigatorKind>(['stack', 'history', 'fullHistory'])(
+    'recovers new focused parameter entries and preserves the hash in a %s navigator',
+    async (kind) => {
+      const navigation = renderNavigation(kind);
+
+      act(() =>
+        navigation.dispatch({
+          type: 'NAVIGATE',
+          payload: { name: 'A', params: { id: 'zero' }, path: '/a/zero' },
+        })
+      );
+      await waitFor(() => expect(window.location.pathname).toBe('/a/zero'));
+
+      act(() => navigation.dispatch(CommonActions.pushParams({ id: 'old' })));
+      await waitFor(() => expect(window.location.pathname).toBe('/a/old'));
+
+      window.history.replaceState(window.history.state, '', '/a/old#details');
+      const length = window.history.length;
+
+      act(() => {
+        navigation.dispatch(CommonActions.pushParams({ id: 'one' }));
+        navigation.dispatch(CommonActions.pushParams({ id: 'two' }));
+        navigation.dispatch(CommonActions.pushParams({ id: 'three' }));
+      });
+
+      await waitFor(() => expect(window.location.pathname).toBe('/a/three'));
+      expect(window.history.length).toBe(length + 3);
+      expect(window.location.hash).toBe('#details');
+
+      act(() => window.history.back());
+      await waitFor(() => expect(window.location.pathname).toBe('/a/two'));
+      expect(navigation.getCurrentRoute()?.params).toEqual({ id: 'two' });
+      expect(window.location.hash).toBe('#details');
+
+      act(() => window.history.back());
+      await waitFor(() => expect(window.location.pathname).toBe('/a/one'));
+      expect(navigation.getCurrentRoute()?.params).toEqual({ id: 'one' });
+      expect(window.location.hash).toBe('#details');
+
+      act(() => window.history.back());
+      await waitFor(() => expect(window.location.pathname).toBe('/a/old'));
+
+      act(() => window.history.go(3));
+      await waitFor(() => expect(window.location.pathname).toBe('/a/three'));
+      expect(navigation.getCurrentRoute()?.params).toEqual({ id: 'three' });
+    }
+  );
+
+  test.each<NavigatorKind>(['history', 'fullHistory'])(
+    'recovers unchanged paramless tabs with %s back behavior',
+    async (kind) => {
+      const navigation = renderNavigation(kind);
+      const length = window.history.length;
+
+      act(() => {
+        navigation.navigate('A');
+        navigation.navigate('B');
+        navigation.navigate('C');
+      });
+
+      await waitFor(() => expect(window.location.pathname).toBe('/c'));
+      expect(window.history.length).toBe(length + 3);
+
+      act(() => window.history.back());
+      await waitFor(() => expect(window.location.pathname).toBe('/b'));
+      expect(navigation.getCurrentRoute()?.name).toBe('B');
+
+      act(() => window.history.back());
+      await waitFor(() => expect(window.location.pathname).toBe('/a'));
+      expect(navigation.getCurrentRoute()?.name).toBe('A');
+
+      act(() => window.history.go(2));
+      await waitFor(() => expect(window.location.pathname).toBe('/c'));
+      expect(navigation.getCurrentRoute()?.name).toBe('C');
+    }
+  );
+
+  test('restores saved params for repeated fullHistory tab visits', async () => {
+    const navigation = renderNavigation('fullHistory');
+    const length = window.history.length;
+
+    act(() => {
+      navigation.navigate('A', { id: 'one' });
+      navigation.navigate('B');
+      navigation.navigate('A', { id: 'two' });
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/a/two'));
+    expect(window.history.length).toBe(length + 3);
+
+    act(() => window.history.go(-2));
+    await waitFor(() => expect(window.location.pathname).toBe('/a/one'));
+    expect(navigation.getCurrentRoute()?.params).toEqual({ id: 'one' });
+
+    act(() => window.history.forward());
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+    expect(navigation.getCurrentRoute()?.name).toBe('B');
+
+    act(() => window.history.forward());
+    await waitFor(() => expect(window.location.pathname).toBe('/a/two'));
+    expect(navigation.getCurrentRoute()?.params).toEqual({ id: 'two' });
+  });
+
+  test('recovers every repeated paramless fullHistory visit', async () => {
+    const navigation = renderNavigation('fullHistory');
+    const length = window.history.length;
+
+    act(() => {
+      navigation.navigate('A');
+      navigation.navigate('B');
+      navigation.navigate('A');
+      navigation.navigate('B');
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+    expect(window.history.length).toBe(length + 4);
+
+    for (const [path, name] of [
+      ['/a', 'A'],
+      ['/b', 'B'],
+      ['/a', 'A'],
+      ['/', 'Home'],
+    ]) {
+      act(() => window.history.back());
+      await waitFor(() => expect(window.location.pathname).toBe(path));
+      expect(navigation.getCurrentRoute()?.name).toBe(name);
+    }
+  });
+
+  test('recovers deduplicated tab history in its final back order', async () => {
+    const navigation = renderNavigation('history');
+    const length = window.history.length;
+
+    act(() => {
+      navigation.navigate('A');
+      navigation.navigate('B');
+      navigation.navigate('A');
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/a'));
+    expect(window.history.length).toBe(length + 2);
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+    expect(navigation.getCurrentRoute()?.name).toBe('B');
+
+    act(() => navigation.goBack());
+    await waitFor(() => expect(window.location.pathname).toBe('/'));
+    expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  });
+
+  test('recovers leaf visits when older fullHistory params changed', async () => {
+    const navigation = renderNavigation('fullHistory');
+    const length = window.history.length;
+
+    act(() => {
+      navigation.dispatch(CommonActions.setParams({ id: 'updated' }));
+      navigation.navigate('A');
+      navigation.navigate('B');
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+    expect(window.history.length).toBe(length + 2);
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/a'));
+    expect(navigation.getCurrentRoute()?.name).toBe('A');
+  });
+
+  test.each<NavigatorKind>(['history', 'fullHistory'])(
+    'does not invent tab visits from background parameter updates with %s back behavior',
+    async (kind) => {
+      const navigation = renderNavigation(kind);
+
+      act(() => navigation.navigate('A'));
+      await waitFor(() => expect(window.location.pathname).toBe('/a'));
+      act(() => navigation.navigate('B'));
+      await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+      const source = navigation
+        .getRootState()
+        ?.routes.find((route) => route.name === 'Home')?.key;
+      expect(source).toBeDefined();
+      const length = window.history.length;
+
+      act(() => {
+        navigation.dispatch({
+          ...CommonActions.pushParams({ id: 'one' }),
+          source,
+        });
+        navigation.dispatch({
+          ...CommonActions.pushParams({ id: 'two' }),
+          source,
+        });
+      });
+
+      await waitFor(() => expect(window.history.length).toBe(length + 1));
+      expect(window.location.pathname).toBe('/b');
+      expect(navigation.getCurrentRoute()?.name).toBe('B');
+    }
+  );
+
+  test('does not replay retained params from an earlier tab visit', async () => {
+    const navigation = renderNavigation('fullHistory');
+
+    act(() => navigation.navigate('A', { id: 'zero' }));
+    await waitFor(() => expect(window.location.pathname).toBe('/a/zero'));
+    act(() => navigation.dispatch(CommonActions.pushParams({ id: 'one' })));
+    await waitFor(() => expect(window.location.pathname).toBe('/a/one'));
+    act(() => navigation.navigate('B'));
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+    const length = window.history.length;
+
+    act(() => {
+      navigation.navigate('A', { id: 'two' });
+      navigation.navigate('C');
+      navigation.navigate('A', { id: 'three' });
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/a/three'));
+    expect(window.history.length).toBe(length + 1);
+    expect(navigation.getCurrentRoute()?.params).toEqual({ id: 'three' });
+  });
+
+  test.each<NavigatorKind>(['stack', 'fullHistory'])(
+    'stops at a preceding route with parameter history in a %s navigator',
+    async (kind) => {
+      const navigation = renderNavigation(kind);
+      const length = window.history.length;
+
+      act(() => {
+        navigation.navigate('A', { id: 'zero' });
+        navigation.dispatch(CommonActions.pushParams({ id: 'one' }));
+        navigation.navigate('B');
+        navigation.navigate('C');
+      });
+
+      await waitFor(() => expect(window.location.pathname).toBe('/c'));
+      expect(window.history.length).toBe(length + 2);
+
+      act(() => window.history.back());
+      await waitFor(() => expect(window.location.pathname).toBe('/b'));
+      expect(navigation.getCurrentRoute()?.name).toBe('B');
+    }
+  );
+
+  test('does not clear unsaved params in a history-mode tab snapshot', async () => {
+    const navigation = renderNavigation('history');
+    const length = window.history.length;
+
+    act(() => {
+      navigation.navigate('A', { id: 'one' });
+      navigation.navigate('B');
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+    expect(window.history.length).toBe(length + 1);
+    expect(
+      navigation.getRootState()?.routes.find((route) => route.name === 'A')
+        ?.params
+    ).toEqual({ id: 'one' });
+  });
+
+  test.each<NavigatorKind>(['history', 'fullHistory'])(
+    'handles params cleared by preload with %s back behavior',
+    async (kind) => {
+      const navigation = renderNavigation(kind);
+      const length = window.history.length;
+
+      act(() => {
+        navigation.navigate('A', { id: 'original' });
+        navigation.navigate('B');
+        navigation.dispatch(CommonActions.preload('A'));
+      });
+
+      await waitFor(() => expect(window.location.pathname).toBe('/b'));
+      expect(
+        navigation.getRootState()?.routes.find((route) => route.name === 'A')
+          ?.params
+      ).toBeUndefined();
+      expect(window.history.length).toBe(
+        length + (kind === 'fullHistory' ? 2 : 1)
+      );
+
+      act(() => window.history.back());
+      await waitFor(() =>
+        expect(window.location.pathname).toBe(
+          kind === 'fullHistory' ? '/a/original' : '/'
+        )
+      );
+      expect(navigation.getCurrentRoute()).toMatchObject(
+        kind === 'fullHistory'
+          ? { name: 'A', params: { id: 'original' } }
+          : { name: 'Home' }
+      );
+    }
+  );
+
+  test('does not infer an older undefined snapshot from a changed tab route', async () => {
+    const navigation = renderNavigation('fullHistory');
+    const length = window.history.length;
+
+    act(() => {
+      navigation.navigate('A');
+      navigation.navigate('B');
+      navigation.navigate('A', { id: 'latest' });
+      navigation.navigate('C');
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/c'));
+    expect(window.history.length).toBe(length + 3);
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/a/latest'));
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+  });
+
+  test('does not add entries for unvisited ordered tabs', async () => {
+    const navigation = renderNavigation('order');
+    const length = window.history.length;
+
+    act(() => navigation.navigate('C'));
+
+    await waitFor(() => expect(window.location.pathname).toBe('/c'));
+    expect(window.history.length).toBe(length + 1);
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/'));
+    expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  });
+
+  test('does not infer extra visits when a drawer opens in the same commit', async () => {
+    const navigation = renderNavigation('drawer');
+    const length = window.history.length;
+
+    act(() => {
+      navigation.navigate('A');
+      navigation.dispatch(DrawerActions.openDrawer());
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/a'));
+    expect(window.history.length).toBe(length + 1);
+    expect(navigation.getRootState()?.history).toContainEqual({
+      type: 'drawer',
+      status: 'open',
+    });
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/'));
+    expect(navigation.getRootState()?.history).not.toContainEqual({
+      type: 'drawer',
+      status: 'open',
+    });
+  });
+
+  test('preserves the original wildcard URL for a recovered stack entry', async () => {
+    const navigation = renderNavigation();
+
+    act(() => {
+      navigation.dispatch({
+        type: 'NAVIGATE',
+        payload: { name: 'Missing', path: '/unknown/deep/path' },
+      });
+      navigation.navigate('B');
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+    act(() => window.history.back());
+    await waitFor(() =>
+      expect(window.location.pathname).toBe('/unknown/deep/path')
+    );
+    expect(navigation.getCurrentRoute()?.name).toBe('Missing');
+
+    act(() => window.history.forward());
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+  });
+
+  test('uses a custom path builder for every recovered entry', async () => {
+    const navigation = renderNavigation(
+      'stack',
+      (state, options) => `/custom${getPathFromState(state, options)}`
+    );
+
+    act(() => {
+      navigation.navigate('A', { id: 'one' });
+      navigation.navigate('B', { id: 'two' });
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/custom/b/two'));
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/custom/a/one'));
+    expect(navigation.getCurrentRoute()?.params).toEqual({ id: 'one' });
+  });
+
+  test('drops the previous route hash from every new stack entry', async () => {
+    const navigation = renderNavigation();
+
+    window.history.replaceState(window.history.state, '', '/#details');
+
+    act(() => {
+      navigation.navigate('A');
+      navigation.navigate('B');
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+    expect(window.location.hash).toBe('');
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/a'));
+    expect(window.location.hash).toBe('');
+    expect(navigation.getCurrentRoute()?.name).toBe('A');
+  });
+
+  test('keeps the recoverable suffix and final URL when an earlier path cannot be built', async () => {
+    const error = new Error('Cannot build path for B');
+    const errors = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const navigation = renderNavigation('stack', (state, options) => {
+      if (findFocusedRoute(state)?.name === 'B') {
+        throw error;
+      }
+
+      return getPathFromState(state, options);
+    });
+    const length = window.history.length;
+
+    act(() => {
+      navigation.navigate('A');
+      navigation.navigate('B');
+      navigation.navigate('C');
+      navigation.navigate('D');
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/d'));
+    expect(window.history.length).toBe(length + 2);
+    expect(errors).toHaveBeenCalledWith(error);
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/c'));
+    expect(navigation.getCurrentRoute()?.name).toBe('C');
+
+    act(() => navigation.navigate('A', { id: 'next' }));
+    await waitFor(() => expect(window.location.pathname).toBe('/a/next'));
+    expect(navigation.getCurrentRoute()?.params).toEqual({ id: 'next' });
+  });
+
+  test('does not reuse the latest child state for an earlier tab visit', async () => {
+    const navigation = renderNestedNavigation();
+    const child = navigation
+      .getRootState()
+      ?.routes.find((route) => route.name === 'Nested')?.state;
+
+    if (child?.stale !== false) {
+      throw new Error('The nested navigator was not initialized.');
+    }
+
+    const length = window.history.length;
+
+    act(() => {
+      navigation.navigate('Nested');
+      navigation.navigate('Home');
+      navigation.navigate('Nested');
+      navigation.dispatch({
+        ...StackActions.replace('Two'),
+        target: child.key,
+      });
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/nested/two'));
+    expect(window.history.length).toBe(length + 2);
+    expect(navigation.getCurrentRoute()?.name).toBe('Two');
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/'));
+    expect(navigation.getCurrentRoute()?.name).toBe('Home');
+
+    act(() => window.history.forward());
+    await waitFor(() => expect(window.location.pathname).toBe('/nested/two'));
+    expect(navigation.getCurrentRoute()?.name).toBe('Two');
+  });
+
+  test('stops recovering stack entries when a preceding route contains child state', async () => {
+    const navigation = renderNestedNavigation('stack');
+    const length = window.history.length;
+
+    act(() => {
+      navigation.navigate('Nested');
+      navigation.navigate('A');
+      navigation.navigate('B');
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+    expect(window.history.length).toBe(length + 2);
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/a'));
+    expect(navigation.getCurrentRoute()?.name).toBe('A');
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/'));
+    expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  });
+
+  test.each([false, true])(
+    'recovers parent params only while its child state stays unchanged (child changed: %s)',
+    async (changeChild) => {
+      const navigation = renderNestedNavigation();
+
+      act(() => navigation.navigate('Nested', { screen: 'One', id: 'zero' }));
+      await waitFor(() =>
+        expect(window.location.pathname).toBe('/nested/zero/one')
+      );
+
+      const state = navigation.getRootState();
+      const route = state?.routes.find((item) => item.name === 'Nested');
+      const child = route?.state;
+
+      if (!route || child?.stale !== false) {
+        throw new Error('The nested navigator was not initialized.');
+      }
+
+      const length = window.history.length;
+
+      act(() => {
+        navigation.dispatch({
+          ...CommonActions.pushParams({ id: 'first' }),
+          source: route.key,
+          target: state?.key,
+        });
+        if (changeChild) {
+          navigation.dispatch({
+            ...StackActions.replace('Two'),
+            target: child.key,
+          });
+        }
+        navigation.dispatch({
+          ...CommonActions.pushParams({ id: 'last' }),
+          source: route.key,
+          target: state?.key,
+        });
+      });
+
+      await waitFor(() =>
+        expect(window.location.pathname).toBe(
+          changeChild ? '/nested/last/two' : '/nested/last/one'
+        )
+      );
+      expect(window.history.length).toBe(length + (changeChild ? 1 : 2));
+
+      act(() => window.history.back());
+      await waitFor(() =>
+        expect(window.location.pathname).toBe(
+          changeChild ? '/nested/zero/one' : '/nested/first/one'
+        )
+      );
+      expect(navigation.getCurrentRoute()?.name).toBe('One');
+    }
+  );
+
+  test('does not mix new parameter entries with tab switches', async () => {
+    const navigation = renderNavigation('fullHistory');
+
+    act(() => navigation.navigate('A', { id: 'zero' }));
+    await waitFor(() => expect(window.location.pathname).toBe('/a/zero'));
+    const length = window.history.length;
+
+    act(() => {
+      navigation.dispatch(CommonActions.pushParams({ id: 'one' }));
+      navigation.dispatch(CommonActions.pushParams({ id: 'two' }));
+      navigation.navigate('B');
+      navigation.navigate('A', { id: 'three' });
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/a/three'));
+    expect(window.history.length).toBe(length + 1);
+  });
+
+  test('does not infer parameter visits on a route first added in the same commit', async () => {
+    const navigation = renderNavigation();
+    const length = window.history.length;
+
+    act(() => {
+      navigation.navigate('A', { id: 'zero' });
+      navigation.dispatch(CommonActions.pushParams({ id: 'one' }));
+      navigation.dispatch(CommonActions.pushParams({ id: 'two' }));
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/a/two'));
+    expect(window.history.length).toBe(length + 1);
+  });
+
+  test('preserves preloaded stack routes when restoring recovered entries', async () => {
+    const navigation = renderNavigation();
+
+    act(() => navigation.dispatch(CommonActions.preload('D')));
+    await waitFor(() =>
+      expect(
+        navigation.getRootState()?.routes.map((route) => route.name)
+      ).toEqual(['Home', 'D'])
+    );
+
+    act(() => {
+      navigation.navigate('A');
+      navigation.navigate('B');
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+    act(() => window.history.go(-2));
+    await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+    act(() => window.history.forward());
+    await waitFor(() => expect(window.location.pathname).toBe('/a'));
+    expect(
+      navigation.getRootState()?.routes.map((route) => route.name)
+    ).toEqual(['Home', 'A', 'D']);
+
+    act(() => window.history.forward());
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+    expect(
+      navigation.getRootState()?.routes.map((route) => route.name)
+    ).toEqual(['Home', 'A', 'B', 'D']);
+  });
+
+  test('pushes only the final URL for an unfamiliar custom history format', async () => {
+    const navigation = createNavigationContainerRef<ParamListBase>();
+
+    render(
+      <NavigationContainer
+        ref={navigation}
+        linking={{ config: { screens: { Home: '', A: 'a', B: 'b' } } }}
+      >
+        <Stack.Navigator
+          router={(router) => ({
+            getInitialState(options) {
+              const state = router.getInitialState(options);
+              return {
+                ...state,
+                history: state.routes.map((route) => ({
+                  type: 'visit',
+                  key: route.key,
+                })),
+              };
+            },
+            getStateForAction(state, action, options) {
+              const next = router.getStateForAction(state, action, options);
+              return next
+                ? {
+                    ...next,
+                    history: next.routes.map((route) => ({
+                      type: 'visit',
+                      key: route.key,
+                    })),
+                  }
+                : next;
+            },
+          })}
+        >
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="A" component={TestScreen} />
+          <Stack.Screen name="B" component={TestScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+
+    const length = window.history.length;
+
+    act(() => {
+      navigation.navigate('A');
+      navigation.navigate('B');
+    });
+
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+    expect(window.history.length).toBe(length + 1);
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/'));
+    expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  });
+
+  test('keeps browser history aligned when a batch races with browser back', async () => {
+    const navigation = renderNavigation();
+
+    act(() => navigation.navigate('A'));
+    await waitFor(() => expect(window.location.pathname).toBe('/a'));
+    const length = window.history.length;
+
+    window.addEventListener(
+      'popstate',
+      () => {
+        navigation.navigate('B');
+        navigation.navigate('C');
+      },
+      { once: true }
+    );
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/c'));
+    expect(window.history.length).toBe(length);
+    expect(
+      navigation.getRootState()?.routes.map((route) => route.name)
+    ).toEqual(['Home', 'B', 'C']);
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/'));
+    expect(navigation.getCurrentRoute()?.name).toBe('Home');
+
+    act(() => window.history.forward());
+    await waitFor(() => expect(window.location.pathname).toBe('/c'));
+    expect(navigation.getCurrentRoute()?.name).toBe('C');
+  });
+
+  test('replaces forward history with the recovered entries of a new batch', async () => {
+    const navigation = renderNavigation();
+
+    act(() => {
+      navigation.navigate('A');
+      navigation.navigate('B');
+    });
+    await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/a'));
+
+    act(() => {
+      navigation.navigate('C');
+      navigation.navigate('D');
+    });
+    await waitFor(() => expect(window.location.pathname).toBe('/d'));
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/c'));
+    expect(navigation.getCurrentRoute()?.name).toBe('C');
+
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.pathname).toBe('/a'));
+
+    act(() => window.history.forward());
+    await waitFor(() => expect(window.location.pathname).toBe('/c'));
+    expect(navigation.getCurrentRoute()?.name).toBe('C');
+  });
 });

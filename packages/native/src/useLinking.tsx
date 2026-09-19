@@ -91,6 +91,157 @@ const getTotalHistoryLength = (state: NavigationState): number => {
   return baseHistoryLength + routeHistoryLength;
 };
 
+const isRouteHistoryEntry = (
+  entry: unknown
+): entry is { type: 'route'; key: string; params: object | undefined } =>
+  typeof entry === 'object' &&
+  entry !== null &&
+  'type' in entry &&
+  entry.type === 'route' &&
+  'key' in entry &&
+  typeof entry.key === 'string' &&
+  'params' in entry &&
+  (entry.params === undefined ||
+    (typeof entry.params === 'object' && entry.params !== null));
+
+/**
+ * We reconstruct one intermediate navigation state from a batched update.
+ *
+ * - Starting with the latest root state, we step back through newly added
+ *   parameter history, navigator history, or routes to add separate browser
+ *   history entries. For a stack changing from [A] to [A, B, C], we get [A, B].
+ * - With `previousFocusedState`, we find the navigator that changed and limit
+ *   recovery to entries added since the previous commit.
+ * - For a nested navigator, we follow focused child states to reach it and
+ *   replace its state inside the root. We keep the ancestors' selected routes,
+ *   params, and history so we can include the parent path in the URL and restore
+ *   the full navigation tree when returning to this browser history entry.
+ * - We return undefined when there are no more intermediate entries or we don't
+ *   have enough information to recover one safely (such as missing parameter
+ *   snapshots or unknown child state from an earlier visit).
+ */
+const getPreviousHistoryState = (
+  state: NavigationState,
+  previousFocusedState: NavigationState
+): NavigationState | undefined => {
+  const route = state.routes[state.index];
+
+  if (!route) {
+    return undefined;
+  }
+
+  if (state.key !== previousFocusedState.key) {
+    const childState =
+      route.state?.stale === false
+        ? getPreviousHistoryState(route.state, previousFocusedState)
+        : undefined;
+
+    return childState
+      ? {
+          ...state,
+          routes: state.routes.map((item) =>
+            item === route ? { ...item, state: childState } : item
+          ),
+        }
+      : undefined;
+  }
+
+  const previousRoute = previousFocusedState.routes[previousFocusedState.index];
+  const paramsEntry = route.history?.at(-1);
+
+  if (paramsEntry) {
+    // Parameter history doesn't record which navigator visit it belongs to.
+    // Only rewind new entries while the focused route and navigator history stay the same.
+    if (
+      route.key !== previousRoute?.key ||
+      route.state !== previousRoute.state ||
+      state.history !== previousFocusedState.history ||
+      (route.history?.length ?? 0) <= (previousRoute.history?.length ?? 0) + 1
+    ) {
+      return undefined;
+    }
+
+    return {
+      ...state,
+      routes: state.routes.map((item) =>
+        item === route
+          ? {
+              ...item,
+              params: paramsEntry.params,
+              history: item.history?.slice(0, -1),
+            }
+          : item
+      ),
+    };
+  }
+
+  const { history } = state;
+
+  if (history) {
+    if (history.length <= (previousFocusedState.history?.length ?? 0) + 1) {
+      return undefined;
+    }
+
+    const last = history.at(-1);
+    const entry = history.at(-2);
+
+    // Ordered back behaviors omit params, since their entries may never have been visited.
+    if (
+      !isRouteHistoryEntry(last) ||
+      last.key !== route.key ||
+      !isRouteHistoryEntry(entry)
+    ) {
+      return undefined;
+    }
+
+    const index = state.routes.findIndex((item) => item.key === entry.key);
+
+    const previous = state.routes[index];
+
+    // History doesn't save child states or route history.
+    // Undefined params may mean no snapshot was saved, so only trust unchanged routes.
+    if (
+      !previous ||
+      previous.state ||
+      previous.history?.length ||
+      (entry.params === undefined &&
+        (previous.params !== undefined ||
+          !previousFocusedState.routes.includes(previous)))
+    ) {
+      return undefined;
+    }
+
+    return {
+      ...state,
+      index,
+      history: history.slice(0, -1),
+      routes: state.routes.map((item) =>
+        item === previous && item.params !== entry.params
+          ? { ...item, params: entry.params }
+          : item
+      ),
+    };
+  }
+
+  const index = state.index - 1;
+  const previous = state.routes[index];
+
+  if (
+    index <= previousFocusedState.index ||
+    !previous ||
+    previous.state ||
+    previous.history?.length
+  ) {
+    return undefined;
+  }
+
+  return {
+    ...state,
+    index,
+    routes: state.routes.filter((_, i) => i !== state.index),
+  };
+};
+
 /**
  * Find the matching navigation state that changed between 2 navigation states
  * e.g.: a -> b -> c -> d and a -> b -> c -> e -> f, if history in b changed, b is the matching state
@@ -531,10 +682,12 @@ export function useLinking<ParamList extends ParamListBase>(
       return;
     }
 
-    const getPathForRoute = (
-      route: ReturnType<typeof findFocusedRoute>,
-      state: NavigationState | PartialState<NavigationState>
+    const getPathForState = (
+      state: NavigationState | PartialState<NavigationState>,
+      previousState = previousStateRef.current
     ): string => {
+      const route = findFocusedRoute(state);
+
       let path;
 
       // If the `route` object contains a `path`, use that path as long as `route.name` and `params` still match
@@ -570,8 +723,8 @@ export function useLinking<ParamList extends ParamListBase>(
         path = getPathFromStateRef.current(state, configRef.current);
       }
 
-      const previousRoute = previousStateRef.current
-        ? findFocusedRoute(previousStateRef.current)
+      const previousRoute = previousState
+        ? findFocusedRoute(previousState)
         : undefined;
 
       // Preserve the hash if the route didn't change
@@ -596,8 +749,7 @@ export function useLinking<ParamList extends ParamListBase>(
       if (state) {
         const stateForPath = getStateForPath(state, ref.current.getState());
 
-        const route = findFocusedRoute(stateForPath);
-        const path = getPathForRoute(route, stateForPath);
+        const path = getPathForState(stateForPath);
 
         if (previousStateRef.current === undefined) {
           previousStateRef.current = state;
@@ -630,8 +782,7 @@ export function useLinking<ParamList extends ParamListBase>(
 
       const stateForPath = getStateForPath(state, navigation.getState());
 
-      const route = findFocusedRoute(stateForPath);
-      const path = getPathForRoute(route, stateForPath);
+      const path = getPathForState(stateForPath);
 
       const pendingPopStateDelta = pendingPopStateDeltaRef.current;
 
@@ -662,7 +813,41 @@ export function useLinking<ParamList extends ParamListBase>(
         if (historyDelta > 0) {
           // If history length is increased, we should pushState
           // Note that path might not actually change here, for example, drawer open should pushState
-          history.push({ path, state });
+          const entries = [{ path, state }];
+          let currentState = state;
+
+          for (let i = 1; i < historyDelta; i++) {
+            const previous = getPreviousHistoryState(
+              currentState,
+              previousFocusedState
+            );
+
+            if (!previous) {
+              break;
+            }
+
+            const previousForPath = getStateForPath(
+              previous,
+              navigation.getState()
+            );
+
+            try {
+              entries.push({
+                path: getPathForState(previousForPath, previousState),
+                state: previous,
+              });
+            } catch (e) {
+              console.error(e);
+
+              break;
+            }
+
+            currentState = previous;
+          }
+
+          for (const entry of entries.reverse()) {
+            history.push(entry);
+          }
         } else if (historyDelta < 0) {
           // If history length is decreased, i.e. entries were removed, we want to go back
 
@@ -680,7 +865,7 @@ export function useLinking<ParamList extends ParamListBase>(
               await history.go(nextIndex - currentIndex);
             } else {
               // We couldn't find an existing entry to go back to, so we'll go back by the delta
-              // This won't be correct if multiple routes were pushed in one go before
+              // This may not be correct if some intermediate history entries couldn't be recovered
               // Usually this shouldn't happen and this is a fallback for that
               await history.go(historyDelta);
             }
