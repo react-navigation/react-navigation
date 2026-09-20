@@ -14,10 +14,10 @@ jest
     return { remove: () => {} } as ReturnType<typeof Keyboard.addListener>;
   });
 
-const emit = (types: string[], height: number) => {
+const emit = async (types: string[], height: number) => {
   const listener = types.map((type) => listeners[type]).find(Boolean);
 
-  act(() => {
+  await act(async () => {
     listener?.({ endCoordinates: { height } } as KeyboardEvent);
   });
 };
@@ -41,22 +41,22 @@ const renderHook = () => {
   return () => results[results.length - 1];
 };
 
-test('reports a keyboard that has a height', () => {
+test('reports a keyboard that has a height', async () => {
   const current = renderHook();
 
-  show(336);
+  await show(336);
 
   expect(current()).toBe(true);
 
-  hide();
+  await hide();
 
   expect(current()).toBe(false);
 });
 
-test('ignores the empty keyboard frame reported on interface rotation', () => {
+test('ignores the empty keyboard frame reported on interface rotation', async () => {
   const current = renderHook();
 
-  show(0);
+  await show(0);
 
   expect(current()).toBe(false);
 });
