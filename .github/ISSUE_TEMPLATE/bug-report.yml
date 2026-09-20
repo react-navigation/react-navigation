@@ -15,6 +15,7 @@ body:
 
         Before you proceed:
 
+        - Read and follow our [Code of Conduct](../blob/main/CODE_OF_CONDUCT.md) and [AI Usage Policy](../blob/main/AI_POLICY.md).
         - Make sure you are on latest versions of React Navigation packages and their dependencies.
         - If you are having an issue with your machine or build tools, the issue belongs on another repository as that is outside of the scope of React Navigation.
 
