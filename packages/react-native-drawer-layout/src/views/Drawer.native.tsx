@@ -216,6 +216,9 @@ export function Drawer({
   const isGestureActive = useSharedValue(false);
   const isPeeking = useSharedValue(false);
 
+  const onOpenLatest = useLatestCallback(onOpen);
+  const onCloseLatest = useLatestCallback(onClose);
+
   const onAnimationStart = useLatestCallback((open: boolean) => {
     onTransitionStart?.(!open);
   });
@@ -284,9 +287,9 @@ export function Drawer({
       );
 
       if (open) {
-        scheduleOnRN(onOpen);
+        scheduleOnRN(onOpenLatest);
       } else {
-        scheduleOnRN(onClose);
+        scheduleOnRN(onCloseLatest);
       }
     },
     [
@@ -299,8 +302,8 @@ export function Drawer({
       animatingTo,
       onAnimationStart,
       onAnimationEnd,
-      onOpen,
-      onClose,
+      onOpenLatest,
+      onCloseLatest,
     ]
   );
 

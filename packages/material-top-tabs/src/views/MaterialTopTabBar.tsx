@@ -3,13 +3,24 @@ import { Color } from '@react-navigation/elements/internal';
 import { useLinkBuilder, useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import { type ColorValue, StyleSheet } from 'react-native';
-import { type Route, TabBar, type TabDescriptor } from 'react-native-tab-view';
+import {
+  type Route,
+  TabBar,
+  type TabBarProps,
+  type TabDescriptor,
+} from 'react-native-tab-view';
+import useLatestCallback from 'use-latest-callback';
 
 import type { MaterialTopTabBarProps } from '../types';
 
 type MaterialLabelProps = Parameters<
   NonNullable<TabDescriptor<Route>['label']>
 >[0];
+
+type CachedOptions = {
+  deps: readonly unknown[];
+  options: TabDescriptor<Route>;
+};
 
 const MaterialLabel = ({
   color,
@@ -68,10 +79,10 @@ export function MaterialTopTabBar({
       .string() ??
     (dark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)');
 
-  const tabBarOptions = Object.fromEntries(
-    state.routes.map((route) => {
-      const options = descriptors[route.key]?.options ?? {};
+  const optionsCache = React.useRef<Record<string, CachedOptions>>({});
 
+  const nextOptions = Object.fromEntries<CachedOptions>(
+    state.routes.map((route) => {
       const {
         title,
         tabBarLabel,
@@ -84,7 +95,40 @@ export function MaterialTopTabBar({
         tabBarIcon,
         tabBarAllowFontScaling,
         tabBarLabelStyle,
-      } = options;
+      } = descriptors[route.key]?.options ?? {};
+
+      const focused = focusedRoute.key === route.key;
+      const href = buildHref(route.name, route.params);
+
+      const previous = optionsCache.current[route.key];
+
+      const deps = [
+        href,
+        route.name,
+        title,
+        tabBarLabel,
+        tabBarButtonTestID,
+        tabBarAccessibilityLabel,
+        tabBarBadge,
+        tabBarBadgeStyle,
+        tabBarShowIcon,
+        tabBarShowLabel,
+        tabBarIcon,
+        tabBarAllowFontScaling,
+        tabBarLabelStyle,
+        typeof tabBarLabel === 'function' && focused,
+        colors.notification,
+        fonts.medium,
+      ];
+
+      if (
+        previous &&
+        Object.hasOwn(optionsCache.current, route.key) &&
+        previous.deps.length === deps.length &&
+        deps.every((dep, index) => Object.is(dep, previous.deps[index]))
+      ) {
+        return [route.key, previous];
+      }
 
       let badgeStyle;
 
@@ -102,9 +146,7 @@ export function MaterialTopTabBar({
 
       let icon;
 
-      if (tabBarShowIcon === false) {
-        icon = undefined;
-      } else if (tabBarIcon) {
+      if (tabBarShowIcon !== false && tabBarIcon) {
         icon = ({
           focused,
           color,
@@ -135,38 +177,64 @@ export function MaterialTopTabBar({
         };
       }
 
-      return [
-        route.key,
-        {
-          href: buildHref(route.name, route.params),
-          testID: tabBarButtonTestID,
-          accessibilityLabel: tabBarAccessibilityLabel,
-          badge: tabBarBadge,
-          badgeStyle,
-          icon,
-          label:
-            tabBarShowLabel === false
-              ? undefined
-              : typeof tabBarLabel === 'function'
-                ? ({ labelText, color }: MaterialLabelProps) =>
-                    tabBarLabel({
-                      focused: focusedRoute.key === route.key,
-                      color,
-                      children: labelText ?? route.name,
-                    })
-                : renderLabelDefault,
-          labelAllowFontScaling: tabBarAllowFontScaling,
-          labelStyle: tabBarLabelStyle,
-          labelText:
-            options.tabBarShowLabel === false
-              ? undefined
-              : typeof tabBarLabel === 'string'
-                ? tabBarLabel
-                : title !== undefined
-                  ? title
-                  : route.name,
-        },
-      ];
+      const tabOptions: TabDescriptor<Route> = {
+        href,
+        testID: tabBarButtonTestID,
+        accessibilityLabel: tabBarAccessibilityLabel,
+        badge: tabBarBadge,
+        badgeStyle,
+        icon,
+        label:
+          tabBarShowLabel === false
+            ? undefined
+            : typeof tabBarLabel === 'function'
+              ? ({ labelText, color }: MaterialLabelProps) =>
+                  tabBarLabel({
+                    focused,
+                    color,
+                    children: labelText ?? route.name,
+                  })
+              : renderLabelDefault,
+        labelAllowFontScaling: tabBarAllowFontScaling,
+        labelStyle: tabBarLabelStyle,
+        labelText:
+          tabBarShowLabel === false
+            ? undefined
+            : typeof tabBarLabel === 'string'
+              ? tabBarLabel
+              : title !== undefined
+                ? title
+                : route.name,
+      };
+
+      return [route.key, { deps, options: tabOptions }];
+    })
+  );
+
+  React.useInsertionEffect(() => {
+    optionsCache.current = nextOptions;
+  });
+
+  const onTabPress = useLatestCallback<
+    NonNullable<TabBarProps<Route>['onTabPress']>
+  >(({ route, preventDefault }) => {
+    const event = navigation.emit({
+      type: 'tabPress',
+      target: route.key,
+      canPreventDefault: true,
+    });
+
+    if (event.defaultPrevented) {
+      preventDefault();
+    }
+  });
+
+  const onTabLongPress = useLatestCallback<
+    NonNullable<TabBarProps<Route>['onTabLongPress']>
+  >(({ route }) =>
+    navigation.emit({
+      type: 'tabLongPress',
+      target: route.key,
     })
   );
 
@@ -176,7 +244,9 @@ export function MaterialTopTabBar({
     <TabBar
       {...rest}
       navigationState={state}
-      options={tabBarOptions}
+      options={Object.fromEntries(
+        Object.entries(nextOptions).map(([key, { options }]) => [key, options])
+      )}
       direction={direction}
       scrollEnabled={focusedOptions.tabBarScrollEnabled}
       bounces={focusedOptions.tabBarBounces}
@@ -198,23 +268,8 @@ export function MaterialTopTabBar({
         { backgroundColor: colors.card, borderBottomColor: colors.border },
         focusedOptions.tabBarStyle,
       ]}
-      onTabPress={({ route, preventDefault }) => {
-        const event = navigation.emit({
-          type: 'tabPress',
-          target: route.key,
-          canPreventDefault: true,
-        });
-
-        if (event.defaultPrevented) {
-          preventDefault();
-        }
-      }}
-      onTabLongPress={({ route }) =>
-        navigation.emit({
-          type: 'tabLongPress',
-          target: route.key,
-        })
-      }
+      onTabPress={onTabPress}
+      onTabLongPress={onTabLongPress}
       renderIndicator={
         tabBarIndicator
           ? ({ navigationState: _, ...rest }) =>

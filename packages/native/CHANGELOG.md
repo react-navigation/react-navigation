@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.47](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.46...@react-navigation/native@8.0.0-alpha.47) (2026-09-19)
+
+### Bug Fixes
+
+* avoid loading fonts for cached material symbol images ([26209d0](https://github.com/react-navigation/react-navigation/commit/26209d0d71ad189fc10724e615e1677185d17ec2)) - by @satya164
+* handle AGP9's built-in kotlin support ([#13252](https://github.com/react-navigation/react-navigation/issues/13252)) ([273e688](https://github.com/react-navigation/react-navigation/commit/273e688fd32ec9c1a4332fa7ee7096633aa8d594)) - by @satya164
+
+# [8.0.0-alpha.46](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.45...@react-navigation/native@8.0.0-alpha.46) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/native
+
 # [8.0.0-alpha.45](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.44...@react-navigation/native@8.0.0-alpha.45) (2026-09-14)
 
 * refactor!: use a render callback instead of NavigationContent for custom navigators (#13238) ([c9c119e](https://github.com/react-navigation/react-navigation/commit/c9c119e13716ab82862c0cdddab2c84a4d3832ad)), closes [#13238](https://github.com/react-navigation/react-navigation/issues/13238) - by @satya164

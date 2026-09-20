@@ -1,5 +1,4 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
-import queryString from 'query-string';
 
 import {
   combinePatternParts,
@@ -7,6 +6,7 @@ import {
   type PatternPart,
 } from './getPatternParts';
 import { getStateFromRouteParams } from './getStateFromRouteParams';
+import * as queryString from './queryString';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
@@ -226,7 +226,9 @@ export function getPathFromState<ParamList extends {}>(
       if (route.params) {
         const options = config;
         const params = route.params as Record<string, unknown>;
-        const currentParams: Record<string, SerializedParamValue> = {};
+        const currentParams: Record<string, SerializedParamValue> = {
+          __proto__: null,
+        };
 
         for (const key in params) {
           const value = params[key];
@@ -270,7 +272,7 @@ export function getPathFromState<ParamList extends {}>(
           // If this is the focused route, keep the params for later use
           // We save it here since it's been stringified already
           // Params claimed by the pattern shouldn't be repeated in the query string
-          focusedParams = {};
+          focusedParams = { __proto__: null };
 
           for (const key in currentParams) {
             const value = currentParams[key];
@@ -405,7 +407,7 @@ export function getPathFromState<ParamList extends {}>(
     }
 
     if (!focusedParams && focusedRoute.params) {
-      focusedParams = {};
+      focusedParams = { __proto__: null };
 
       const params = focusedRoute.params as Record<string, unknown>;
 
@@ -421,7 +423,7 @@ export function getPathFromState<ParamList extends {}>(
     if (routeState) {
       path += '/';
     } else if (focusedParams) {
-      const query = queryString.stringify(focusedParams, { sort: false });
+      const query = queryString.stringify(focusedParams);
 
       if (query) {
         path += `?${query}`;

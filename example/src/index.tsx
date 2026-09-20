@@ -73,12 +73,6 @@ const WEB_COLORS = {
 let previousDirection = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr';
 
 if (Platform.OS === 'web') {
-  if (typeof document !== 'undefined' && document.documentElement) {
-    document
-      .getElementById('root')
-      ?.setAttribute('style', 'height: 100svh; overflow: auto;');
-  }
-
   if (
     typeof localStorage !== 'undefined' &&
     typeof document !== 'undefined' &&

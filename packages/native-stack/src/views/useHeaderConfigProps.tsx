@@ -375,6 +375,10 @@ export function useHeaderConfigProps({
   }
 
   const backImageSource = useMemo(() => {
+    if (headerShown === false || headerBackVisible === false) {
+      return undefined;
+    }
+
     if (headerBackIcon == null && Platform.OS === 'android') {
       try {
         // Use Material Symbol as default back icon on Android
@@ -403,7 +407,7 @@ export function useHeaderConfigProps({
     }
 
     return undefined;
-  }, [headerBackIcon, tintColor]);
+  }, [headerBackIcon, headerBackVisible, headerShown, tintColor]);
 
   const children = (
     <>

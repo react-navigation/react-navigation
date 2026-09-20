@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.36...@react-navigation/core@8.0.0-alpha.37) (2026-09-19)
+
+### Bug Fixes
+
+* don't build root state unless we have a listener ([69043be](https://github.com/react-navigation/react-navigation/commit/69043be6f520ac7144f6679f2a2921dde8e0444b)) - by @satya164
+
+# [8.0.0-alpha.36](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.35...@react-navigation/core@8.0.0-alpha.36) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/core
+
 # [8.0.0-alpha.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.34...@react-navigation/core@8.0.0-alpha.35) (2026-09-14)
 
 * refactor!: use a render callback instead of NavigationContent for custom navigators (#13238) ([c9c119e](https://github.com/react-navigation/react-navigation/commit/c9c119e13716ab82862c0cdddab2c84a4d3832ad)), closes [#13238](https://github.com/react-navigation/react-navigation/issues/13238) - by @satya164

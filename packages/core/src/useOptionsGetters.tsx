@@ -80,6 +80,12 @@ export function useOptionsGetters({
     (key: string, getter: () => object | undefined | null) => {
       optionsGettersFromChildRef.current[key] = getter;
 
+      // Hidden screens may register without running their passive effects.
+      // Wait until the commit finishes before reporting their options.
+      if (onOptionsChange !== undefined) {
+        void Promise.resolve().then(onOptionsChange);
+      }
+
       return () => {
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete optionsGettersFromChildRef.current[key];
@@ -87,7 +93,7 @@ export function useOptionsGetters({
         // Other getters and the focused route may still change during cleanup.
         // Wait until the commit finishes before reporting the remaining options.
         if (onOptionsChange !== undefined) {
-          queueMicrotask(onOptionsChange);
+          void Promise.resolve().then(onOptionsChange);
         }
       };
     },
