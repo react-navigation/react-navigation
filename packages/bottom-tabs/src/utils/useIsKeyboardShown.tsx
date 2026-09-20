@@ -8,9 +8,10 @@ export function useIsKeyboardShown() {
     // iOS 26+ posts a show notification on every interface rotation with an empty keyboard
     // frame, and never posts a matching hide. Treating those as a keyboard latches this
     // `true` for good, which leaves `tabBarHideOnKeyboard` navigators with no tab bar until
-    // the app is restarted. A keyboard that occupies no space is not shown.
-    const handleKeyboardShow = (e: KeyboardEvent) => {
-      if (e.endCoordinates.height === 0) {
+    // the app is restarted. A keyboard that occupies no space is not shown. An event without
+    // a frame keeps the previous behaviour.
+    const handleKeyboardShow = (e?: KeyboardEvent) => {
+      if (e?.endCoordinates?.height === 0) {
         return;
       }
 
