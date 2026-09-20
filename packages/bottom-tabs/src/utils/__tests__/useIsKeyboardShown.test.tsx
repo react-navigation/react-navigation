@@ -14,10 +14,18 @@ jest
     return { remove: () => {} } as ReturnType<typeof Keyboard.addListener>;
   });
 
-const emit = (type: string, height: number) =>
+const emit = (types: string[], height: number) => {
+  const listener = types.map((type) => listeners[type]).find(Boolean);
+
   act(() => {
-    listeners[type]?.({ endCoordinates: { height } } as KeyboardEvent);
+    listener?.({ endCoordinates: { height } } as KeyboardEvent);
   });
+};
+
+const show = (height: number) =>
+  emit(['keyboardWillShow', 'keyboardDidShow'], height);
+
+const hide = () => emit(['keyboardWillHide', 'keyboardDidHide'], 0);
 
 const renderHook = () => {
   const results: boolean[] = [];
@@ -30,25 +38,25 @@ const renderHook = () => {
 
   render(<Test />);
 
-  return results;
+  return () => results[results.length - 1];
 };
 
 test('reports a keyboard that has a height', () => {
-  const results = renderHook();
+  const current = renderHook();
 
-  emit('keyboardWillShow', 336);
+  show(336);
 
-  expect(results[results.length - 1]).toBe(true);
+  expect(current()).toBe(true);
 
-  emit('keyboardWillHide', 0);
+  hide();
 
-  expect(results[results.length - 1]).toBe(false);
+  expect(current()).toBe(false);
 });
 
 test('ignores the empty keyboard frame reported on interface rotation', () => {
-  const results = renderHook();
+  const current = renderHook();
 
-  emit('keyboardWillShow', 0);
+  show(0);
 
-  expect(results[results.length - 1]).toBe(false);
+  expect(current()).toBe(false);
 });
