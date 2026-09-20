@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   Animated,
   type StyleProp,
@@ -17,21 +16,17 @@ type Props = {
   allowFontScaling?: boolean | undefined;
 };
 
-export const TabBarItemBadge = React.memo(
-  ({ children, style, allowFontScaling }: Props) => {
-    return (
-      <Animated.Text
-        numberOfLines={1}
-        allowFontScaling={allowFontScaling}
-        style={[styles.badge, style]}
-      >
-        {children}
-      </Animated.Text>
-    );
-  }
-);
-
-TabBarItemBadge.displayName = 'TabBarItemBadge';
+export function TabBarItemBadge({ children, style, allowFontScaling }: Props) {
+  return (
+    <Animated.Text
+      numberOfLines={1}
+      allowFontScaling={allowFontScaling}
+      style={[styles.badge, style]}
+    >
+      {children}
+    </Animated.Text>
+  );
+}
 
 const styles = StyleSheet.create({
   badge: {
