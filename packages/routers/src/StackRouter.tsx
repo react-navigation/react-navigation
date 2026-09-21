@@ -51,6 +51,12 @@ export type StackActionType =
       payload: { enable: boolean };
       source?: string | undefined;
       target?: string | undefined;
+    }
+  | {
+      type: 'REMOVE';
+      payload: { name: string };
+      source?: string | undefined;
+      target?: string | undefined;
     };
 
 export type StackRouterOptions = DefaultRouterOptions;
@@ -133,13 +139,21 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   ): void;
 
   /**
-   * Enable or disable retaining the current route in the stack.
+   * Enable or disable retaining the current screen in the stack.
+   *
    * When a retained route gets removed from the stack,
    * it'll be kept in routes and can be navigated to again.
    *
    * @param enable Whether to retain the current route in the stack or not.
    */
   retain(enable: boolean): void;
+
+  /**
+   * Remove the specified screen from the stack.
+   *
+   * @param screen Name of the route to remove.
+   */
+  remove(screen: keyof ParamList): void;
 };
 
 export const StackActions = {
@@ -178,6 +192,12 @@ export const StackActions = {
     return {
       type: 'RETAIN',
       payload: { enable },
+    } as const satisfies StackActionType;
+  },
+  remove(name: string) {
+    return {
+      type: 'REMOVE',
+      payload: { name },
     } as const satisfies StackActionType;
   },
 };
@@ -775,6 +795,55 @@ export function StackRouter(options: StackRouterOptions) {
           }
 
           return null;
+        }
+
+        case 'REMOVE': {
+          if (!state.routeNames.includes(action.payload.name)) {
+            return null;
+          }
+
+          let currentIndex =
+            action.source !== undefined
+              ? state.routes.findIndex((r) => r.key === action.source)
+              : state.index;
+
+          if (currentIndex === -1) {
+            return null;
+          }
+
+          if (currentIndex > state.index) {
+            const route = state.routes[currentIndex];
+
+            if (route?.name !== action.payload.name) {
+              return null;
+            }
+
+            return {
+              ...state,
+              routes: state.routes.filter((r) => r.key !== route.key),
+              retainedRouteKeys: state.retainedRouteKeys.filter(
+                (key) => key !== route.key
+              ),
+            };
+          }
+
+          if (routes[currentIndex]?.name !== action.payload.name) {
+            currentIndex = routes.findLastIndex(
+              (route) => route.name === action.payload.name
+            );
+          }
+
+          if (currentIndex === -1 || routes.length === 1) {
+            return null;
+          }
+
+          return retainRoutes(
+            state,
+            getStateWithRoutes(
+              state,
+              routes.filter((_, i) => i !== currentIndex)
+            )
+          );
         }
 
         case 'POP_TO_TOP': {
