@@ -51,6 +51,12 @@ export type StackActionType =
       payload: { enable: boolean };
       source?: string | undefined;
       target?: string | undefined;
+    }
+  | {
+      type: 'REMOVE';
+      payload: { name: string; count: number };
+      source?: string | undefined;
+      target?: string | undefined;
     };
 
 export type StackRouterOptions = DefaultRouterOptions;
@@ -99,7 +105,9 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   ): void;
 
   /**
-   * Pop a screen from the stack.
+   * Pop a history entry from the stack.
+   *
+   * @param [count=1] Number of history entries to pop. Defaults to 1.
    */
   pop(count?: number): void;
 
@@ -133,13 +141,24 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   ): void;
 
   /**
-   * Enable or disable retaining the current route in the stack.
+   * Enable or disable retaining the current screen in the stack.
+   *
    * When a retained route gets removed from the stack,
    * it'll be kept in routes and can be navigated to again.
    *
    * @param enable Whether to retain the current route in the stack or not.
    */
   retain(enable: boolean): void;
+
+  /**
+   * Remove the specified screen from the stack.
+   *
+   * The `count` parameter has no effect when removing preloaded or retained screens.
+   *
+   * @param screen Name of the route to remove.
+   * @param [count=1] Number of screens to remove. Defaults to 1.
+   */
+  remove(screen: keyof ParamList, count?: number): void;
 };
 
 export const StackActions = {
@@ -178,6 +197,12 @@ export const StackActions = {
     return {
       type: 'RETAIN',
       payload: { enable },
+    } as const satisfies StackActionType;
+  },
+  remove(name: string, count: number = 1) {
+    return {
+      type: 'REMOVE',
+      payload: { name, count },
     } as const satisfies StackActionType;
   },
 };
@@ -775,6 +800,67 @@ export function StackRouter(options: StackRouterOptions) {
           }
 
           return null;
+        }
+
+        case 'REMOVE': {
+          if (!state.routeNames.includes(action.payload.name)) {
+            return null;
+          }
+
+          let currentIndex =
+            action.source !== undefined
+              ? state.routes.findIndex((r) => r.key === action.source)
+              : state.index;
+
+          if (currentIndex === -1) {
+            return null;
+          }
+
+          if (currentIndex > state.index) {
+            const route = state.routes[currentIndex];
+
+            if (route?.name !== action.payload.name) {
+              return null;
+            }
+
+            return {
+              ...state,
+              routes: state.routes.filter((r) => r.key !== route.key),
+              retainedRouteKeys: state.retainedRouteKeys.filter(
+                (key) => key !== route.key
+              ),
+            };
+          }
+
+          if (routes[currentIndex]?.name !== action.payload.name) {
+            currentIndex = routes.findLastIndex(
+              (route) => route.name === action.payload.name
+            );
+          }
+
+          if (
+            currentIndex === -1 ||
+            routes.length === 1 ||
+            action.payload.count < 1
+          ) {
+            return null;
+          }
+
+          const count = Math.min(
+            action.payload.count,
+            currentIndex + 1,
+            routes.length - 1
+          );
+
+          const firstIndex = currentIndex - count + 1;
+
+          return retainRoutes(
+            state,
+            getStateWithRoutes(
+              state,
+              routes.slice(0, firstIndex).concat(routes.slice(currentIndex + 1))
+            )
+          );
         }
 
         case 'POP_TO_TOP': {
