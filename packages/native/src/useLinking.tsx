@@ -137,6 +137,38 @@ const findMatchingState = <T extends NavigationState>(
 };
 
 /**
+ * Calculate the history delta between 2 navigation states.
+ * If no common navigation state is found, only replace the history entry.
+ */
+const getHistoryDelta = (
+  previous: NavigationState | undefined,
+  next: NavigationState | undefined
+): PopStateDelta => {
+  const [previousFocused, nextFocused] = findMatchingState(previous, next);
+
+  return previousFocused && nextFocused
+    ? getTotalHistoryLength(nextFocused) -
+        getTotalHistoryLength(previousFocused)
+    : 'replace';
+};
+
+/**
+ * Check if navigator history matches between committed and latest state.
+ */
+const hasMatchingBackHistory = (
+  current: NavigationState,
+  latest: NavigationState
+): boolean => {
+  if (current.history !== undefined || latest.history !== undefined) {
+    return isEqual(current.history, latest.history);
+  }
+
+  return current.routes
+    .slice(0, Math.min(current.index, latest.index) + 1)
+    .every((route, i) => route.key === latest.routes[i]?.key);
+};
+
+/**
  * Check if the state change is popping the last route or history entry.
  */
 const isPoppingLastEntry = (
@@ -314,9 +346,9 @@ export function useLinking<ParamList extends ParamListBase>(
 
   const previousIndexRef = React.useRef<number | undefined>(undefined);
   const previousStateRef = React.useRef<NavigationState | undefined>(undefined);
-  const pendingPopStateDeltaRef = React.useRef<PopStateDelta | undefined>(
-    undefined
-  );
+  const pendingPopStateRef = React.useRef<
+    { state: NavigationState | undefined; delta: PopStateDelta } | undefined
+  >(undefined);
 
   React.useEffect(() => {
     if (!history) {
@@ -397,7 +429,10 @@ export function useLinking<ParamList extends ParamListBase>(
         if (actionChangedState) {
           // The change may be committed later, e.g. with transitions
           // Remember the delta so it can be subtracted when syncing the commit
-          pendingPopStateDeltaRef.current = pendingDelta;
+          pendingPopStateRef.current = {
+            state: navigation.getRootState(),
+            delta: pendingDelta,
+          };
         } else if (removePrevented) {
           rollbackHistory();
         }
@@ -429,37 +464,70 @@ export function useLinking<ParamList extends ParamListBase>(
       const record = history.get(index);
 
       if (record?.path === path && record?.state) {
-        const currentState = navigation.getRootState();
+        const pending = pendingPopStateRef.current;
+
+        // Use the state synced to browser history or the result of a pending traversal,
+        // since the store may already contain another navigation that hasn't committed yet.
+        const currentState = pending?.state ?? previousStateRef.current;
 
         const [currentFocused, recordFocused] = findMatchingState(
           currentState,
           record.state
         );
 
+        const [latestFocused] = findMatchingState(
+          navigation.getRootState(),
+          record.state
+        );
+
+        const [pendingFocused] = findMatchingState(
+          previousStateRef.current,
+          pending?.state
+        );
+
+        const currentRoute = currentFocused?.routes[currentFocused.index];
+        const latestRoute =
+          latestFocused &&
+          getRoutesUntilIndex(latestFocused).find(
+            (route) => route.key === currentRoute?.key
+          );
+
         if (
           previousIndex - index === 1 &&
           currentFocused &&
           recordFocused &&
+          latestFocused &&
+          currentFocused.key === latestFocused.key &&
+          // Only combine pending browser history deltas within the same navigator,
+          // as history lengths from different navigators aren't comparable.
+          (!pending?.state || pendingFocused?.key === currentFocused.key) &&
+          // We don't want to dispatch `goBack` if route history was changed,
+          // as we can't specify the entry to go back from.
+          // We can only specify route to go back from with `source`.
+          (latestRoute?.history?.length ?? 0) <=
+            (currentRoute?.history?.length ?? 0) &&
+          hasMatchingBackHistory(currentFocused, latestFocused) &&
           isPoppingLastEntry(currentFocused, recordFocused)
         ) {
-          const pending = pendingPopStateDeltaRef.current;
-
           // If we detect that the state change is popping the last entry
           // Dispatch a back action instead of resetting to the state
           // This makes sure changes to history state since the entry was added don't get lost
           dispatch(
-            CommonActions.goBack(),
+            {
+              ...CommonActions.goBack(),
+              target: currentFocused.key,
+              // If another back action already removed the source, go back
+              // from the current route in the same navigator instead.
+              source: latestRoute?.key,
+            },
             // Stack on any delta from a previous `popstate` that hasn't committed yet
-            pending === 'replace' ? 'replace' : (pending ?? 0) - 1
+            pending?.delta === 'replace' ? 'replace' : (pending?.delta ?? 0) - 1
           );
         } else {
           // The browser already moved from the current state to the record's state
           resetRoot(
             record.state,
-            currentFocused && recordFocused
-              ? getTotalHistoryLength(recordFocused) -
-                  getTotalHistoryLength(currentFocused)
-              : 'replace'
+            getHistoryDelta(previousStateRef.current, record.state)
           );
         }
 
@@ -478,46 +546,38 @@ export function useLinking<ParamList extends ParamListBase>(
         state = undefined;
       }
 
+      // Make sure that the routes in the state exist in the root navigator
+      // Otherwise there's an error in the linking configuration
+      if (state && validateRoutesNotExistInRootState(state, rootState)) {
+        return;
+      }
+
       // We should only dispatch an action when going forward
       // Otherwise the action will likely add items to history, which would mess things up
-      if (state) {
-        // Make sure that the routes in the state exist in the root navigator
-        // Otherwise there's an error in the linking configuration
-        if (validateRoutesNotExistInRootState(state, rootState)) {
-          return;
-        }
+      const action =
+        state && index > previousIndex
+          ? getActionFromStateRef.current(state, configRef.current)
+          : undefined;
 
-        if (index > previousIndex) {
-          const action = getActionFromStateRef.current(
-            state,
-            configRef.current
+      if (action !== undefined) {
+        try {
+          dispatch(
+            {
+              target: rootState?.key,
+              ...action,
+            },
+            'replace'
           );
-
-          if (action !== undefined) {
-            try {
-              dispatch(
-                {
-                  target: rootState?.key,
-                  ...action,
-                },
-                'replace'
-              );
-            } catch (e) {
-              // Ignore any errors from deep linking.
-              // This could happen in case of malformed links, navigation object not being initialized etc.
-              console.warn(
-                `An error occurred when trying to handle the link '${path}': ${
-                  typeof e === 'object' && e != null && 'message' in e
-                    ? e.message
-                    : e
-                }`
-              );
-            }
-          } else {
-            resetRoot(state, 'replace');
-          }
-        } else {
-          resetRoot(state, 'replace');
+        } catch (e) {
+          // Ignore any errors from deep linking.
+          // This could happen in case of malformed links, navigation object not being initialized etc.
+          console.warn(
+            `An error occurred when trying to handle the link '${path}': ${
+              typeof e === 'object' && e != null && 'message' in e
+                ? e.message
+                : e
+            }`
+          );
         }
       } else {
         // if current path didn't return any state, we should revert to initial state
@@ -633,29 +693,24 @@ export function useLinking<ParamList extends ParamListBase>(
       const route = findFocusedRoute(stateForPath);
       const path = getPathForRoute(route, stateForPath);
 
-      const pendingPopStateDelta = pendingPopStateDeltaRef.current;
+      const pendingPopStateDelta = pendingPopStateRef.current?.delta;
 
       previousStateRef.current = state;
-      pendingPopStateDeltaRef.current = undefined;
+      pendingPopStateRef.current = undefined;
 
       // To detect the kind of state change, we need to:
       // - Find the common focused navigation state in previous and current state
       // - If only the route keys changed, compare history/routes.length to check if we go back/forward/replace
       // - If no common focused navigation state found, it's a replace
-      const [previousFocusedState, focusedState] = findMatchingState(
-        previousState,
-        state
-      );
+      const delta = getHistoryDelta(previousState, state);
 
       if (
-        previousFocusedState &&
-        focusedState &&
+        delta !== 'replace' &&
         // If the delta from `popstate` is unknown, we can only replace
         pendingPopStateDelta !== 'replace'
       ) {
         const historyDelta =
-          getTotalHistoryLength(focusedState) -
-          getTotalHistoryLength(previousFocusedState) -
+          delta -
           // Subtract the delta already applied by the browser to sync only the remaining changes
           (pendingPopStateDelta ?? 0);
 
