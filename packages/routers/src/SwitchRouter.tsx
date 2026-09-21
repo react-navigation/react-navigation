@@ -498,6 +498,39 @@ export function SwitchRouter<Type extends SwitchRouterType>({
         }
 
         case 'GO_BACK': {
+          if (action.source !== undefined) {
+            const sourceHistoryIndex = state.history.findLastIndex(
+              (item) => item.type === 'route' && item.key === action.source
+            );
+
+            if (sourceHistoryIndex === -1) {
+              // The source screen was never visited,
+              // so there's nothing before it to go back to
+              return null;
+            }
+
+            const sourceIndex = state.routes.findIndex(
+              (route) => route.key === action.source
+            );
+
+            // Remove the routes visited after the source from the history
+            // Since we're going back from the source route
+            const history = state.history.filter(
+              (item, index) =>
+                item.type !== 'route' || index <= sourceHistoryIndex
+            );
+
+            state = {
+              ...state,
+              ...changeIndex<Type>(
+                { routes: state.routes, history },
+                sourceIndex,
+                backBehavior,
+                initialRouteName
+              ),
+            };
+          }
+
           const focusedRoute = state.routes[state.index];
 
           if (focusedRoute == null) {
@@ -528,6 +561,9 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             return {
               ...state,
               routes,
+              preloadedRouteKeys: state.preloadedRouteKeys.filter(
+                (key) => key !== focusedRoute.key
+              ),
             };
           }
 

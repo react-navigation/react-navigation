@@ -21,6 +21,7 @@ type Options<
   getState: () => State;
   navigation: NavigationHelpers<ParamListBase, State> &
     Partial<NavigationProp<ParamListBase, string, any, any, any>>;
+  canGoBack: (source?: string) => boolean;
   setOptions: (
     cb: (
       options: Record<string, Partial<ScreenOptions> | undefined>
@@ -68,6 +69,7 @@ export function useNavigationCache<
   routes,
   getState,
   navigation,
+  canGoBack,
   setOptions,
   router,
   emitter,
@@ -89,6 +91,7 @@ export function useNavigationCache<
       getState,
       parentNavigation,
       navigation,
+      canGoBack,
       setOptions,
       router,
       emitter,
@@ -155,6 +158,7 @@ export function useNavigationCache<
           // FIXME: too much work to fix the types for now
           ...(emitter.create(route.key) as any),
           dispatch,
+          canGoBack: () => canGoBack(route.key),
           getParent: (routeName) => {
             if (routeName === route.name) {
               // If the passed route name is the same as the current route's name,
@@ -203,6 +207,7 @@ export function useNavigationCache<
     routes,
     getState,
     navigation,
+    canGoBack,
     router,
     withStackTrace,
     emitter,

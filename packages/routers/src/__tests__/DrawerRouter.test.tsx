@@ -1210,3 +1210,45 @@ test('go back closes drawer if it is open', () => {
     type: 'drawer',
   });
 });
+
+test('closes an open drawer on goBack from an unfocused source', () => {
+  const router = DrawerRouter({ backBehavior: 'history' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: DrawerNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'drawer',
+    key: 'root',
+    index: 1,
+    routeNames: ['bar', 'baz'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+    ],
+    history: [
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+      { type: 'drawer', status: 'open' },
+    ],
+    preloadedRouteKeys: [],
+    default: 'closed',
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...CommonActions.goBack(), source: 'bar' },
+      options
+    )
+  ).toEqual({
+    ...state,
+    history: [
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+    ],
+  });
+});

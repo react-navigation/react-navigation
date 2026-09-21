@@ -3662,3 +3662,300 @@ test('goBack falls back to tab history when route history is empty', () => {
     type: 'tab',
   });
 });
+
+test('goes back from an unfocused source with backBehavior: history', () => {
+  const router = TabRouter({ backBehavior: 'history' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: TabNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 2,
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'qux' },
+    ],
+    preloadedRouteKeys: [],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...CommonActions.goBack(), source: 'baz' },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 0,
+    history: [{ type: 'route', key: 'bar' }],
+  });
+});
+
+test('goes back from an unfocused source with backBehavior: order', () => {
+  const router = TabRouter({ backBehavior: 'order' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: TabNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 2,
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'qux' },
+    ],
+    preloadedRouteKeys: [],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...CommonActions.goBack(), source: 'baz' },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 0,
+    history: [{ type: 'route', key: 'bar' }],
+  });
+});
+
+test('restores previous params when going back from an unfocused source', () => {
+  const router = TabRouter({ backBehavior: 'history' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: TabNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 2,
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      {
+        key: 'baz',
+        name: 'baz',
+        params: { version: 2 },
+        history: [{ type: 'params', params: { version: 1 } }],
+      },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'qux' },
+    ],
+    preloadedRouteKeys: ['baz'],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...CommonActions.goBack(), source: 'baz' },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 1,
+    routes: [
+      { key: 'bar', name: 'bar' },
+      {
+        key: 'baz',
+        name: 'baz',
+        params: { version: 1 },
+        history: [],
+      },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+    ],
+    preloadedRouteKeys: [],
+  });
+});
+
+test('restores params of the screen before the source with backBehavior: fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: TabNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 2,
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar', name: 'bar', params: { round: 2 } },
+      { key: 'baz', name: 'baz', params: { value: 'current' } },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'bar', params: { round: 0 } },
+      { type: 'route', key: 'baz', params: { value: 'saved' } },
+      { type: 'route', key: 'bar', params: { round: 1 } },
+      { type: 'route', key: 'qux' },
+    ],
+    preloadedRouteKeys: [],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...CommonActions.goBack(), source: 'bar' },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 1,
+    routes: [
+      { key: 'bar', name: 'bar', params: { round: 2 } },
+      { key: 'baz', name: 'baz', params: { value: 'saved' } },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'bar', params: { round: 0 } },
+      { type: 'route', key: 'baz', params: { value: 'saved' } },
+    ],
+  });
+});
+
+test("doesn't handle goBack if source key isn't present", () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: TabNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['bar', 'baz'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+    ],
+    history: [
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+    ],
+    preloadedRouteKeys: [],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...CommonActions.goBack(), source: 'missing' },
+      options
+    )
+  ).toBeNull();
+});
+
+test("doesn't go back from a source not in history", () => {
+  const router = TabRouter({ backBehavior: 'history' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: TabNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+    ],
+    preloadedRouteKeys: ['qux'],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...CommonActions.goBack(), source: 'qux' },
+      options
+    )
+  ).toBeNull();
+});
+
+test("doesn't go back from a source not in history with route history", () => {
+  const router = TabRouter({ backBehavior: 'history' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: TabNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+      {
+        key: 'qux',
+        name: 'qux',
+        params: { version: 2 },
+        history: [{ type: 'params', params: { version: 1 } }],
+      },
+    ],
+    history: [
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+    ],
+    preloadedRouteKeys: ['qux'],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...CommonActions.goBack(), source: 'qux' },
+      options
+    )
+  ).toBeNull();
+});
