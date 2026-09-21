@@ -538,24 +538,37 @@ export function StackRouter(options: StackRouterOptions) {
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
 
+          let remainingRoutes = routes;
           let route: Route<string> | undefined;
 
           if (action.type === 'NAVIGATE') {
-            const currentRoute = routes[state.index];
+            const currentIndex =
+              action.source !== undefined
+                ? routes.findIndex((r) => r.key === action.source)
+                : state.index;
 
-            if (currentRoute == null) {
-              throw new Error(`Couldn't find a route at index ${state.index}.`);
+            if (currentIndex === -1) {
+              return null;
             }
 
-            if (id !== undefined) {
-              if (
-                currentRoute.name === action.payload.name &&
-                id === getId?.({ params: currentRoute.params })
-              ) {
-                route = currentRoute;
-              } else if (action.payload.pop) {
-                for (let i = routes.length - 1; i >= 0; i--) {
-                  const r = routes[i];
+            /**
+             * When navigating,
+             * - If the current route matches the destination, reuse it.
+             * - Or, if a route matching the destination exists after the current, reuse it.
+             * - Remove all non-matching routes after the current.
+             */
+            remainingRoutes = routes.slice(0, currentIndex + 1);
+            route = routes.find(
+              (route, i) =>
+                i >= currentIndex &&
+                route.name === action.payload.name &&
+                (id === undefined || id === getId?.({ params: route.params }))
+            );
+
+            if (!route && action.payload.pop) {
+              if (id !== undefined) {
+                for (let i = remainingRoutes.length - 1; i >= 0; i--) {
+                  const r = remainingRoutes[i];
 
                   if (r == null) {
                     throw new Error(`Couldn't find a route at index ${i}.`);
@@ -598,13 +611,8 @@ export function StackRouter(options: StackRouterOptions) {
                     }
                   }
                 }
-              }
-            } else {
-              // If the route matches the current one, then navigate to it
-              if (action.payload.name === currentRoute.name) {
-                route = currentRoute;
-              } else if (action.payload.pop) {
-                route = routes.findLast(
+              } else {
+                route = remainingRoutes.findLast(
                   (route) => route.name === action.payload.name
                 );
               }
@@ -641,48 +649,29 @@ export function StackRouter(options: StackRouterOptions) {
             if (action.type === 'NAVIGATE' && action.payload.pop) {
               nextRoutes = [];
 
-              // Get all routes until the matching one
-              for (const r of routes) {
+              // Get all routes before the matching one
+              for (const r of remainingRoutes) {
                 if (r.key === route.key) {
-                  nextRoutes.push({
-                    ...route,
-                    path:
-                      action.payload.path !== undefined
-                        ? action.payload.path
-                        : route.path,
-                    params,
-                  });
                   break;
                 }
 
                 nextRoutes.push(r);
               }
-
-              if (!nextRoutes.some((r) => r.key === route.key)) {
-                nextRoutes.push({
-                  ...route,
-                  path:
-                    action.payload.path !== undefined
-                      ? action.payload.path
-                      : route.path,
-                  params,
-                });
-              }
             } else {
-              nextRoutes = routes.filter((r) => r.key !== route.key);
-              nextRoutes.push({
-                ...route,
-                path:
-                  action.type === 'NAVIGATE' &&
-                  action.payload.path !== undefined
-                    ? action.payload.path
-                    : route.path,
-                params,
-              });
+              nextRoutes = remainingRoutes.filter((r) => r.key !== route.key);
             }
+
+            nextRoutes.push({
+              ...route,
+              path:
+                action.type === 'NAVIGATE' && action.payload.path !== undefined
+                  ? action.payload.path
+                  : route.path,
+              params,
+            });
           } else {
             nextRoutes = [
-              ...routes,
+              ...remainingRoutes,
               {
                 key: `${action.payload.name}-${nanoid()}`,
                 name: action.payload.name,
@@ -693,22 +682,7 @@ export function StackRouter(options: StackRouterOptions) {
             ];
           }
 
-          const lastRoute = nextRoutes[nextRoutes.length - 1];
-
-          if (lastRoute == null) {
-            throw new Error(
-              `Couldn't find a route at index ${nextRoutes.length - 1}.`
-            );
-          }
-
-          return retainRoutes(
-            state,
-            getStateWithRoutes(
-              state,
-              nextRoutes,
-              preloadedRoutes.filter((route) => lastRoute.key !== route.key)
-            )
-          );
+          return retainRoutes(state, getStateWithRoutes(state, nextRoutes));
         }
 
         case 'POP': {

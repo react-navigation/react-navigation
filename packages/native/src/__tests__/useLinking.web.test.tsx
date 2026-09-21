@@ -15,10 +15,11 @@ import {
   StackRouter,
   TabRouter,
   useIsFocused,
+  useNavigation,
   useNavigationBuilder,
   usePreventRemove,
 } from '@react-navigation/core';
-import { act, render, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { Text } from 'react-native';
 
@@ -2140,6 +2141,78 @@ test("doesn't update URL until navigation to a suspending screen commits", async
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+});
+
+test('replaces an interrupted destination when navigating again from the visible screen', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: { Home: '', Profile: 'profile', Settings: 'settings' },
+    },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const HomeScreen = () => {
+    const navigation = useNavigation();
+
+    return (
+      <button
+        type="button"
+        onClick={() => navigation.dispatch(CommonActions.navigate('Settings'))}
+      >
+        Open settings
+      </button>
+    );
+  };
+
+  const ProfileScreen = () => {
+    React.use(promise);
+
+    return <Text>Profile</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const root = render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Settings" component={TestScreen} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Profile'));
+
+  expect(window.location.pathname).toBe('/');
+
+  await act(async () =>
+    fireEvent.click(root.getByRole('button', { name: 'Open settings' }))
+  );
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'Home',
+    'Settings',
+  ]);
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
 });
 
 test('preserves updated params on browser back when navigation suspends', async () => {
