@@ -440,16 +440,18 @@ export class StackView extends React.Component<Props, State> {
   };
 
   private handleCloseRoute = ({ route }: { route: Route<string> }) => {
-    const { state, navigation } = this.props;
+    const { navigation } = this.props;
+
+    const state = navigation.getState();
 
     const activeRoutes = state.routes.slice(0, state.index + 1);
 
     if (activeRoutes.some((r) => r.key === route.key)) {
-      // If a route exists in state, trigger a pop
+      // If a route exists in state, remove it
       // This will happen in when the route was closed from the card component
       // e.g. When the close animation triggered from a gesture ends
       navigation.dispatch({
-        ...StackActions.pop(),
+        ...StackActions.remove(route.name),
         source: route.key,
         target: state.key,
       });
