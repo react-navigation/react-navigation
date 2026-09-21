@@ -2021,6 +2021,7 @@ test('removes a retained screen with a matching name and source key', () => {
 
 test('handles pop action', () => {
   const router = StackRouter({});
+
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
@@ -2120,79 +2121,6 @@ test('handles pop action', () => {
         stale: false,
         type: 'stack',
         key: 'root',
-        index: 2,
-        retainedRouteKeys: [],
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz-0', name: 'baz' },
-          { key: 'bar-0', name: 'bar' },
-          { key: 'qux-0', name: 'qux' },
-        ],
-      },
-      {
-        ...StackActions.pop(),
-        target: 'root',
-        source: 'bar-0',
-      },
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 1,
-    retainedRouteKeys: [],
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      { key: 'baz-0', name: 'baz' },
-      { key: 'qux-0', name: 'qux' },
-    ],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 4,
-        retainedRouteKeys: [],
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz-0', name: 'baz' },
-          { key: 'bar-0', name: 'bar' },
-          { key: 'qux-0', name: 'qux' },
-          { key: 'quy-0', name: 'quy' },
-          { key: 'quz-0', name: 'quz' },
-        ],
-      },
-      {
-        ...StackActions.pop(2),
-        target: 'root',
-        source: 'qux-0',
-      },
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 2,
-    retainedRouteKeys: [],
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      { key: 'baz-0', name: 'baz' },
-      { key: 'quy-0', name: 'quy' },
-      { key: 'quz-0', name: 'quz' },
-    ],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
         index: 0,
         retainedRouteKeys: [],
         routeNames: ['baz', 'bar', 'qux'],
@@ -2204,8 +2132,44 @@ test('handles pop action', () => {
   ).toBeNull();
 });
 
-test("doesn't pop routes above the source on pop with a count", () => {
+test.each([StackActions.pop(), CommonActions.goBack()])(
+  'goes back from the source with $type',
+  (action) => {
+    const router = StackRouter({});
+
+    const options: RouterConfigOptions = {
+      routeNames: ['baz', 'bar', 'qux'],
+      routeParamList: {},
+      routeGetIdList: {},
+    };
+
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 2,
+      retainedRouteKeys: [],
+      routeNames: ['baz', 'bar', 'qux'],
+      routes: [
+        { key: 'baz', name: 'baz' },
+        { key: 'bar', name: 'bar' },
+        { key: 'qux', name: 'qux' },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(state, { ...action, source: 'bar' }, options)
+    ).toEqual({
+      ...state,
+      index: 0,
+      routes: [{ key: 'baz', name: 'baz' }],
+    });
+  }
+);
+
+test('removes routes above the source without counting them towards the pop count', () => {
   const router = StackRouter({});
+
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux', 'quy'],
     routeParamList: {},
@@ -2229,8 +2193,7 @@ test("doesn't pop routes above the source on pop with a count", () => {
         ],
       },
       {
-        ...StackActions.pop(3),
-        target: 'root',
+        ...StackActions.pop(2),
         source: 'qux-0',
       },
       options
@@ -2239,18 +2202,49 @@ test("doesn't pop routes above the source on pop with a count", () => {
     stale: false,
     type: 'stack',
     key: 'root',
-    index: 1,
+    index: 0,
     retainedRouteKeys: [],
     routeNames: ['baz', 'bar', 'qux', 'quy'],
-    routes: [
-      { key: 'baz-0', name: 'baz' },
-      { key: 'quy-0', name: 'quy' },
-    ],
+    routes: [{ key: 'baz-0', name: 'baz' }],
   });
 });
 
+test.each([StackActions.pop(), CommonActions.goBack()])(
+  "doesn't handle $type from the first screen without history when screens exist above it",
+  (action) => {
+    const router = StackRouter({});
+
+    const options: RouterConfigOptions = {
+      routeNames: ['baz', 'bar', 'qux'],
+      routeParamList: {},
+      routeGetIdList: {},
+    };
+
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 2,
+      retainedRouteKeys: ['bar', 'retained'],
+      routeNames: ['baz', 'bar', 'qux'],
+      routes: [
+        { key: 'baz', name: 'baz' },
+        { key: 'bar', name: 'bar' },
+        { key: 'qux', name: 'qux' },
+        { key: 'retained', name: 'bar' },
+        { key: 'preloaded', name: 'qux' },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(state, { ...action, source: 'baz' }, options)
+    ).toBeNull();
+  }
+);
+
 test('pops params history of the source before the routes below it', () => {
   const router = StackRouter({});
+
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux', 'quy'],
     routeParamList: {},
@@ -2280,7 +2274,6 @@ test('pops params history of the source before the routes below it', () => {
       },
       {
         ...StackActions.pop(2),
-        target: 'root',
         source: 'qux-0',
       },
       options
@@ -2289,19 +2282,19 @@ test('pops params history of the source before the routes below it', () => {
     stale: false,
     type: 'stack',
     key: 'root',
-    index: 2,
+    index: 1,
     retainedRouteKeys: [],
     routeNames: ['baz', 'bar', 'qux', 'quy'],
     routes: [
       { key: 'baz-0', name: 'baz' },
       { key: 'bar-0', name: 'bar' },
-      { key: 'quy-0', name: 'quy' },
     ],
   });
 });
 
-test('restores params below the source and preserves routes above it', () => {
+test('restores params below the source and removes routes above it', () => {
   const router = StackRouter({});
+
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux', 'quy'],
     routeParamList: {},
@@ -2331,7 +2324,6 @@ test('restores params below the source and preserves routes above it', () => {
       },
       {
         ...StackActions.pop(2),
-        target: 'root',
         source: 'qux-0',
       },
       options
@@ -2340,7 +2332,7 @@ test('restores params below the source and preserves routes above it', () => {
     stale: false,
     type: 'stack',
     key: 'root',
-    index: 2,
+    index: 1,
     retainedRouteKeys: [],
     routeNames: ['baz', 'bar', 'qux', 'quy'],
     routes: [
@@ -2351,42 +2343,93 @@ test('restores params below the source and preserves routes above it', () => {
         params: { value: 1 },
         history: [],
       },
-      { key: 'quy-0', name: 'quy' },
     ],
   });
 });
 
-test("doesn't handle pop if source key isn't present when target is specified", () => {
-  const router = StackRouter({});
-  const options: RouterConfigOptions = {
-    routeNames: ['baz', 'bar', 'qux'],
-    routeParamList: {},
-    routeGetIdList: {},
-  };
+test.each([StackActions.pop(), CommonActions.goBack()])(
+  'restores source params and removes screens above it while preserving retained and preloaded screens with $type',
+  (action) => {
+    const router = StackRouter({});
 
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 1,
-        retainedRouteKeys: [],
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz', name: 'baz' },
-          { key: 'bar', name: 'bar' },
-        ],
-      },
-      {
-        ...StackActions.pop(),
-        source: 'magic',
-        target: 'root',
-      },
-      options
-    )
-  ).toBeNull();
-});
+    const options: RouterConfigOptions = {
+      routeNames: ['baz', 'bar', 'qux', 'quy'],
+      routeParamList: {},
+      routeGetIdList: {},
+    };
+
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 3,
+      retainedRouteKeys: ['qux', 'retained'],
+      routeNames: ['baz', 'bar', 'qux', 'quy'],
+      routes: [
+        { key: 'baz', name: 'baz' },
+        {
+          key: 'bar',
+          name: 'bar',
+          params: { value: 2 },
+          history: [{ type: 'params', params: { value: 1 } }],
+        },
+        { key: 'qux', name: 'qux' },
+        { key: 'quy', name: 'quy' },
+        { key: 'retained', name: 'qux' },
+        { key: 'preloaded', name: 'quy' },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(state, { ...action, source: 'bar' }, options)
+    ).toEqual({
+      ...state,
+      index: 1,
+      routes: [
+        { key: 'baz', name: 'baz' },
+        {
+          key: 'bar',
+          name: 'bar',
+          params: { value: 1 },
+          history: [],
+        },
+        { key: 'qux', name: 'qux' },
+        { key: 'retained', name: 'qux' },
+        { key: 'preloaded', name: 'quy' },
+      ],
+    });
+  }
+);
+
+test.each([StackActions.pop(), CommonActions.goBack()])(
+  "doesn't handle $type if source key isn't present",
+  (action) => {
+    const router = StackRouter({});
+
+    const options: RouterConfigOptions = {
+      routeNames: ['baz', 'bar'],
+      routeParamList: {},
+      routeGetIdList: {},
+    };
+
+    const state: StackNavigationState<ParamListBase> = {
+      stale: false,
+      type: 'stack',
+      key: 'root',
+      index: 1,
+      retainedRouteKeys: [],
+      routeNames: ['baz', 'bar'],
+      routes: [
+        { key: 'baz', name: 'baz' },
+        { key: 'bar', name: 'bar' },
+      ],
+    };
+
+    expect(
+      router.getStateForAction(state, { ...action, source: 'child' }, options)
+    ).toBeNull();
+  }
+);
 
 test('moves retained routes to inactive routes on pop', () => {
   const router = StackRouter({});
@@ -3457,8 +3500,9 @@ test('replaces focused screen with replace', () => {
   });
 });
 
-test('replaces active screen with replace', () => {
+test("doesn't handle replace from a preloaded source", () => {
   const router = StackRouter({});
+
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routeParamList: {},
@@ -3486,18 +3530,45 @@ test('replaces active screen with replace', () => {
       },
       options
     )
-  ).toEqual({
+  ).toBeNull();
+});
+
+test('replaces the source screen and preserves screens above it', () => {
+  const router = StackRouter({});
+
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: StackNavigationState<ParamListBase> = {
     stale: false,
     type: 'stack',
     key: 'root',
-    index: 1,
+    index: 2,
     routes: [
       { key: 'foo', name: 'foo' },
-      { key: 'qux-1', name: 'qux', params: { answer: 42 } },
+      { key: 'bar', name: 'bar' },
       { key: 'baz', name: 'baz' },
     ],
     retainedRouteKeys: [],
-    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeNames: options.routeNames,
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...StackActions.replace('qux', { answer: 42 }), source: 'bar' },
+      options
+    )
+  ).toEqual({
+    ...state,
+    routes: [
+      state.routes[0],
+      { key: 'qux-1', name: 'qux', params: { answer: 42 } },
+      state.routes[2],
+    ],
   });
 });
 
@@ -3543,8 +3614,9 @@ test('moves retained routes to inactive routes on replace', () => {
   });
 });
 
-test("handles replace if source key isn't present but target is not specified", () => {
+test("doesn't handle replace if source key isn't present", () => {
   const router = StackRouter({});
+
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routeParamList: {},
@@ -3569,51 +3641,6 @@ test("handles replace if source key isn't present but target is not specified", 
       {
         ...StackActions.replace('qux', { answer: 42 }),
         source: 'magic',
-      },
-      options
-    )
-  ).toEqual({
-    index: 1,
-    key: 'root',
-    retainedRouteKeys: [],
-    routeNames: ['foo', 'bar', 'baz', 'qux'],
-    routes: [
-      { key: 'foo', name: 'foo' },
-      { key: 'qux-1', name: 'qux', params: { answer: 42 } },
-      { key: 'baz', name: 'baz' },
-    ],
-    stale: false,
-    type: 'stack',
-  });
-});
-
-test("doesn't handle replace if source key isn't present when target is specified", () => {
-  const router = StackRouter({});
-  const options: RouterConfigOptions = {
-    routeNames: ['foo', 'bar', 'baz', 'qux'],
-    routeParamList: {},
-    routeGetIdList: {},
-  };
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 1,
-        routes: [
-          { key: 'foo', name: 'foo' },
-          { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
-          { key: 'baz', name: 'baz' },
-        ],
-        retainedRouteKeys: [],
-        routeNames: ['foo', 'bar', 'baz', 'qux'],
-      },
-      {
-        ...StackActions.replace('qux', { answer: 42 }),
-        source: 'magic',
-        target: 'root',
       },
       options
     )
@@ -4454,8 +4481,9 @@ test('merges params on popTo to an existing screen if merge: true', () => {
   });
 });
 
-test("handles popTo if source key isn't present but target is not specified", () => {
+test("doesn't handle popTo if source key isn't present", () => {
   const router = StackRouter({});
+
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routeParamList: {},
@@ -4483,62 +4511,45 @@ test("handles popTo if source key isn't present but target is not specified", ()
       },
       options
     )
-  ).toEqual({
-    index: 1,
-    key: 'root',
-    retainedRouteKeys: [],
-    routeNames: ['foo', 'bar', 'baz', 'qux'],
-    routes: [
-      { key: 'foo', name: 'foo' },
-      { key: 'qux-1', name: 'qux', params: { answer: 42 } },
-      { key: 'baz', name: 'baz' },
-    ],
-    stale: false,
-    type: 'stack',
-  });
+  ).toBeNull();
 });
 
-test('handles popTo when source and target match a route', () => {
+test('handles popTo from the source', () => {
   const router = StackRouter({});
+
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routeParamList: {},
     routeGetIdList: {},
   };
 
+  const state: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+    ],
+    retainedRouteKeys: [],
+    routeNames: options.routeNames,
+  };
+
   expect(
     router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 2,
-        routes: [
-          { key: 'foo', name: 'foo' },
-          { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
-          { key: 'baz', name: 'baz' },
-        ],
-        retainedRouteKeys: [],
-        routeNames: ['foo', 'bar', 'baz', 'qux'],
-      },
-      {
-        ...StackActions.popTo('qux', { answer: 42 }),
-        source: 'bar',
-        target: 'root',
-      },
+      state,
+      { ...StackActions.popTo('qux', { answer: 42 }), source: 'bar' },
       options
     )
   ).toEqual({
+    ...state,
     index: 1,
-    key: 'root',
-    retainedRouteKeys: [],
-    routeNames: ['foo', 'bar', 'baz', 'qux'],
     routes: [
-      { key: 'foo', name: 'foo' },
+      state.routes[0],
       { key: 'qux-1', name: 'qux', params: { answer: 42 } },
     ],
-    stale: false,
-    type: 'stack',
   });
 });
 
@@ -4675,39 +4686,6 @@ test('handles popTo with getId matching route history', () => {
       },
     ],
   });
-});
-
-test("doesn't handle popTo if source key isn't present when target is specified", () => {
-  const router = StackRouter({});
-  const options: RouterConfigOptions = {
-    routeNames: ['foo', 'bar', 'baz', 'qux'],
-    routeParamList: {},
-    routeGetIdList: {},
-  };
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 1,
-        routes: [
-          { key: 'foo', name: 'foo' },
-          { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
-          { key: 'baz', name: 'baz' },
-        ],
-        retainedRouteKeys: [],
-        routeNames: ['foo', 'bar', 'baz', 'qux'],
-      },
-      {
-        ...StackActions.popTo('qux', { answer: 42 }),
-        source: 'magic',
-        target: 'root',
-      },
-      options
-    )
-  ).toBeNull();
 });
 
 test('adds preloaded route with preload', () => {

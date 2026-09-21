@@ -106,6 +106,8 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
 
   /**
    * Pop a screen from the stack.
+   *
+   * @param [count] Number of history entries to remove. Defaults to 1.
    */
   pop(count?: number): void;
 
@@ -484,16 +486,16 @@ export function StackRouter(options: StackRouterOptions) {
 
       switch (action.type) {
         case 'REPLACE': {
+          if (!state.routeNames.includes(action.payload.name)) {
+            return null;
+          }
+
           const currentIndex =
-            action.target === state.key && action.source
+            action.source !== undefined
               ? routes.findIndex((r) => r.key === action.source)
               : state.index;
 
           if (currentIndex === -1) {
-            return null;
-          }
-
-          if (!state.routeNames.includes(action.payload.name)) {
             return null;
           }
 
@@ -711,7 +713,7 @@ export function StackRouter(options: StackRouterOptions) {
 
         case 'POP': {
           let currentIndex =
-            action.target === state.key && action.source
+            action.source !== undefined
               ? routes.findIndex((r) => r.key === action.source)
               : state.index;
 
@@ -734,14 +736,10 @@ export function StackRouter(options: StackRouterOptions) {
            * - We have popped the amount of items in count
            * - There are no more items to pop
            *
-           * Routes above the current route (e.g. above the source) are kept intact
+           * Routes above the current route are removed.
            */
           if (route.history?.length || currentIndex > 0) {
             let count = action.payload.count;
-
-            let removedFromIndex: number | undefined;
-
-            const sourceIndex = currentIndex;
 
             while (count > 0 && (route.history?.length || currentIndex > 0)) {
               if (route.history?.length) {
@@ -761,7 +759,6 @@ export function StackRouter(options: StackRouterOptions) {
 
               if (currentIndex > 0 && count > 0) {
                 count = count - 1;
-                removedFromIndex = currentIndex;
                 currentIndex = currentIndex - 1;
 
                 const currentRoute = routes[currentIndex];
@@ -776,18 +773,9 @@ export function StackRouter(options: StackRouterOptions) {
               }
             }
 
-            let nextRoutes =
-              removedFromIndex === undefined
-                ? routes
-                : routes
-                    .slice(0, removedFromIndex)
-                    .concat(routes.slice(sourceIndex + 1));
+            const nextRoutes = routes.slice(0, currentIndex + 1);
 
             if (route !== routes[currentIndex]) {
-              if (nextRoutes === routes) {
-                nextRoutes = [...routes];
-              }
-
               nextRoutes[currentIndex] = route;
             }
 
@@ -868,16 +856,16 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         case 'POP_TO': {
-          const currentIndex =
-            action.target === state.key && action.source
-              ? routes.findLastIndex((r) => r.key === action.source)
-              : state.index;
-
-          if (currentIndex === -1) {
+          if (!state.routeNames.includes(action.payload.name)) {
             return null;
           }
 
-          if (!state.routeNames.includes(action.payload.name)) {
+          const currentIndex =
+            action.source !== undefined
+              ? routes.findIndex((r) => r.key === action.source)
+              : state.index;
+
+          if (currentIndex === -1) {
             return null;
           }
 
@@ -1040,26 +1028,16 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         case 'GO_BACK': {
-          const route = routes[state.index];
-
-          if (route == null) {
-            throw new Error(`Couldn't find a route at index ${state.index}.`);
-          }
-
-          if (state.index > 0 || route.history?.length) {
-            return router.getStateForAction(
-              state,
-              {
-                type: 'POP',
-                payload: { count: 1 },
-                target: action.target,
-                source: action.source,
-              },
-              options
-            );
-          }
-
-          return null;
+          return router.getStateForAction(
+            state,
+            {
+              type: 'POP',
+              payload: { count: 1 },
+              target: action.target,
+              source: action.source,
+            },
+            options
+          );
         }
 
         case 'RETAIN': {
