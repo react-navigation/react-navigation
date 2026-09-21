@@ -3375,6 +3375,145 @@ test('overrides router with router prop', async () => {
   });
 });
 
+test('returns correct value for isFocused', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  let navigation: any;
+
+  const TestScreen = (props: any) => {
+    navigation = props.navigation;
+
+    return null;
+  };
+
+  await render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="second" component={TestScreen} />
+        <Screen name="third">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.isFocused()).toBe(false);
+
+  await act(() => navigation.navigate('second'));
+
+  expect(navigation.isFocused()).toBe(true);
+
+  await act(() => navigation.navigate('third'));
+
+  expect(navigation.isFocused()).toBe(false);
+
+  await act(() => navigation.navigate('second'));
+
+  expect(navigation.isFocused()).toBe(true);
+});
+
+test('returns correct value for isFocused after changing screens', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const router: NonNullable<
+    Parameters<typeof useNavigationBuilder>[1]['router']
+  > = () => {
+    return {
+      getStateForRouteNamesChange(state, { routeNames }) {
+        const routes = routeNames.map(
+          (name) =>
+            state.routes.find((r) => r.name === name) || {
+              name,
+              key: name,
+            }
+        );
+
+        return {
+          ...state,
+          routeNames,
+          routes,
+          index: routes.length - 1,
+        };
+      },
+    };
+  };
+
+  let navigation: any;
+
+  const TestScreen = (props: any) => {
+    navigation = props.navigation;
+
+    return null;
+  };
+
+  const root = await render(
+    <BaseNavigationContainer>
+      <TestNavigator router={router}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="second" component={TestScreen} />
+        <Screen name="third">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.isFocused()).toBe(false);
+
+  await root.rerender(
+    <BaseNavigationContainer>
+      <TestNavigator router={router}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="third">{() => null}</Screen>
+        <Screen name="second" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.isFocused()).toBe(true);
+
+  await root.rerender(
+    <BaseNavigationContainer>
+      <TestNavigator router={router}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="third">{() => null}</Screen>
+        <Screen name="fourth">{() => null}</Screen>
+        <Screen name="second" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.isFocused()).toBe(true);
+
+  await root.rerender(
+    <BaseNavigationContainer>
+      <TestNavigator router={router}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="third">{() => null}</Screen>
+        <Screen name="second" component={TestScreen} />
+        <Screen name="fourth">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.isFocused()).toBe(false);
+});
+
 test('gets immediate parent with getParent()', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, render } = useNavigationBuilder(
