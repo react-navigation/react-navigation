@@ -19,7 +19,7 @@ type Options<
 > = {
   routes: State['routes'];
   getState: () => State;
-  navigation: NavigationHelpers<ParamListBase> &
+  navigation: NavigationHelpers<ParamListBase, State> &
     Partial<NavigationProp<ParamListBase, string, any, any, any>>;
   setOptions: (
     cb: (

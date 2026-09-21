@@ -61,6 +61,7 @@ export type LabelPosition = 'beside-icon' | 'below-icon';
 
 export type BottomTabNavigationHelpers = NavigationHelpers<
   ParamListBase,
+  TabNavigationState<ParamListBase>,
   BottomTabNavigationEventMap
 > &
   TabActionHelpers<ParamListBase>;
@@ -685,7 +686,7 @@ export type BottomTabHeaderProps = {
 export type BottomTabBarProps = {
   state: TabNavigationState<ParamListBase>;
   descriptors: BottomTabDescriptorMap;
-  navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
+  navigation: BottomTabNavigationHelpers;
 };
 
 export type BottomTabBarButtonProps = Omit<
