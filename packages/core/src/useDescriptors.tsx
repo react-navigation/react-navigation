@@ -80,6 +80,7 @@ type Options<
   screenOptions: ScreenOptionsOrCallback<ScreenOptions> | undefined;
   screenLayout: ScreenLayout<ScreenOptions> | undefined;
   onAction: (action: NavigationAction) => boolean;
+  canGoBack: (source?: string) => boolean;
   getState: () => State;
   setState: (state: State) => void;
   subscribe: (callback: () => void) => () => void;
@@ -134,6 +135,7 @@ export function useDescriptors<
   screenOptions,
   screenLayout,
   onAction,
+  canGoBack,
   getState,
   setState,
   subscribe,
@@ -162,6 +164,7 @@ export function useDescriptors<
     () => ({
       navigation,
       onAction,
+      canGoBack,
       addListener,
       addKeyedListener,
       onRouteFocus,
@@ -176,6 +179,7 @@ export function useDescriptors<
     [
       navigation,
       onAction,
+      canGoBack,
       addListener,
       addKeyedListener,
       onRouteFocus,
@@ -196,6 +200,7 @@ export function useDescriptors<
     ActionHelpers
   >({
     routes: state.routes,
+    canGoBack,
     getState,
     navigation,
     setOptions,

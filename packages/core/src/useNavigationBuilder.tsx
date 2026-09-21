@@ -459,7 +459,11 @@ export function useNavigationBuilder<
     getIsInitial,
   } = React.use(NavigationStateContext);
 
-  const { onEmitEvent, getIsStateEmitted } = useNavigationBuilderContext();
+  const {
+    onEmitEvent,
+    getIsStateEmitted,
+    canGoBack: canGoBackParent,
+  } = useNavigationBuilderContext();
 
   const mountStateRef = React.useRef<'initial' | 'mounted' | 'unmounted'>(
     'initial'
@@ -1003,6 +1007,31 @@ export function useNavigationBuilder<
     onUnhandledActionParent?.(action);
   });
 
+  const canGoBack = useLatestCallback((source?: string) => {
+    const state = getState();
+
+    return (
+      router.getStateForAction(
+        state,
+        { ...CommonActions.goBack(), source },
+        {
+          routeNames: state.routeNames,
+          routeParamList: {},
+          routeGetIdList: {},
+        }
+      ) !== null ||
+      canGoBackParent?.(
+        // If the `source` belonged to the current navigator,
+        // rewrite the `source` to the parent screen's key when checking
+        // This mirrors the way actions bubble up to the parent
+        source !== undefined && state.routes.some((r) => r.key === source)
+          ? route?.key
+          : source
+      ) ||
+      false
+    );
+  });
+
   const navigation = useNavigationHelpers<
     State,
     ActionHelpers,
@@ -1011,6 +1040,7 @@ export function useNavigationBuilder<
   >({
     onAction,
     onUnhandledAction,
+    canGoBack,
     getState,
     emitter,
     router,
@@ -1040,6 +1070,7 @@ export function useNavigationBuilder<
     screenOptions,
     screenLayout,
     onAction,
+    canGoBack,
     getState,
     setState,
     subscribe,

@@ -19,6 +19,7 @@ PrivateValueStore;
 type Options<State extends NavigationState, Action extends NavigationAction> = {
   onAction: (action: NavigationAction) => boolean;
   onUnhandledAction: (action: NavigationAction) => void;
+  canGoBack: (source?: string) => boolean;
   getState: () => State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
@@ -36,11 +37,13 @@ export function useNavigationHelpers<
 >({
   onAction,
   onUnhandledAction,
+  canGoBack,
   getState,
   emitter,
   router,
 }: Options<State, Action>) {
   const parentNavigationHelpers = React.use(NavigationContext);
+
   const { withStackTrace } = useNavigationBuilderContext();
 
   return React.useMemo(() => {
@@ -82,27 +85,16 @@ export function useNavigationHelpers<
       isFocused: parentNavigationHelpers
         ? parentNavigationHelpers.isFocused
         : () => true,
-      canGoBack: () => {
-        const state = getState();
-
-        return (
-          router.getStateForAction(state, CommonActions.goBack() as Action, {
-            routeNames: state.routeNames,
-            routeParamList: {},
-            routeGetIdList: {},
-          }) !== null ||
-          parentNavigationHelpers?.canGoBack() ||
-          false
-        );
-      },
+      canGoBack: () => canGoBack(),
       getState,
     } as NavigationHelpers<ParamListBase, State, EventMap> & ActionHelpers;
 
     return navigationHelpers;
   }, [
-    router,
+    router.actionCreators,
     parentNavigationHelpers,
     emitter.emit,
+    canGoBack,
     getState,
     onAction,
     onUnhandledAction,
