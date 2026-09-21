@@ -11,6 +11,7 @@ import {
   SafeAreaProviderCompat,
 } from '@react-navigation/elements/internal';
 import {
+  CommonActions,
   NavigationProvider,
   type ParamListBase,
   StackActions,
@@ -570,19 +571,9 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
                 });
               }}
               onDismissed={(event) => {
-                const currentState = navigation.getState();
-                const currentActiveRoutes = currentState.routes.slice(
-                  0,
-                  currentState.index + 1
+                navigation.dispatch(
+                  dismiss(route, event.nativeEvent.dismissCount)
                 );
-
-                if (currentActiveRoutes.some((r) => r.key === route.key)) {
-                  navigation.dispatch({
-                    ...StackActions.pop(event.nativeEvent.dismissCount),
-                    source: route.key,
-                    target: currentState.key,
-                  });
-                }
 
                 setNextDismissedKey(route.key);
               }}
@@ -594,11 +585,9 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
                 });
               }}
               onNativeDismissCancelled={(event) => {
-                navigation.dispatch({
-                  ...StackActions.pop(event.nativeEvent.dismissCount),
-                  source: route.key,
-                  target: state.key,
-                });
+                navigation.dispatch(
+                  dismiss(route, event.nativeEvent.dismissCount)
+                );
               }}
               onGestureCancel={() => {
                 navigation.emit({
@@ -623,6 +612,44 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
     </SafeAreaProviderCompat>
   );
 }
+
+const dismiss =
+  (route: { key: string; name: string }, dismissCount: number) =>
+  (state: StackNavigationState<ParamListBase>) => {
+    const routes = state.routes.slice(0, state.index + 1);
+    const index = routes.findIndex((r) => r.key === route.key);
+
+    const count = Math.max(0, Math.min(dismissCount, index));
+
+    if (count === 1) {
+      return {
+        ...StackActions.remove(route.name),
+        source: route.key,
+        target: state.key,
+      };
+    }
+
+    const removedRoutes = routes.splice(index - count + 1, count);
+    const retainedRoutes = removedRoutes.filter((r) =>
+      state.retainedRouteKeys.includes(r.key)
+    );
+
+    const nextState = {
+      ...state,
+      index: routes.length - 1,
+      routes: [
+        ...routes,
+        ...retainedRoutes,
+        ...state.routes.slice(state.index + 1),
+      ],
+    };
+
+    return {
+      ...CommonActions.reset(nextState),
+      source: route.key,
+      target: state.key,
+    };
+  };
 
 const styles = StyleSheet.create({
   container: {
