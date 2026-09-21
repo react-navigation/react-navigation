@@ -96,7 +96,7 @@ export function useNavigationHelpers<
         );
       },
       getState,
-    } as NavigationHelpers<ParamListBase, EventMap> & ActionHelpers;
+    } as NavigationHelpers<ParamListBase, State, EventMap> & ActionHelpers;
 
     return navigationHelpers;
   }, [

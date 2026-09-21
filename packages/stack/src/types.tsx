@@ -52,6 +52,7 @@ export type StackNavigationEventMap = {
 
 export type StackNavigationHelpers = NavigationHelpers<
   ParamListBase,
+  StackNavigationState<ParamListBase>,
   StackNavigationEventMap
 > &
   StackActionHelpers<ParamListBase>;

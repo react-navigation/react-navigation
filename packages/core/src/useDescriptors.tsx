@@ -76,7 +76,7 @@ type Options<
     ScreenConfigWithParent<State, ScreenOptions, EventMap>
   >;
   state: State;
-  navigation: NavigationHelpers<ParamListBase>;
+  navigation: NavigationHelpers<ParamListBase, State>;
   screenOptions: ScreenOptionsOrCallback<ScreenOptions> | undefined;
   screenLayout: ScreenLayout<ScreenOptions> | undefined;
   onAction: (action: NavigationAction) => boolean;

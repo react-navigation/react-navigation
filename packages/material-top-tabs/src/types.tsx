@@ -44,6 +44,7 @@ export type MaterialTopTabNavigationEventMap = {
 
 export type MaterialTopTabNavigationHelpers = NavigationHelpers<
   ParamListBase,
+  TabNavigationState<ParamListBase>,
   MaterialTopTabNavigationEventMap
 > &
   TabActionHelpers<ParamListBase>;
@@ -343,6 +344,7 @@ export type MaterialTopTabBarProps = Pick<
   state: TabNavigationState<ParamListBase>;
   navigation: NavigationHelpers<
     ParamListBase,
+    TabNavigationState<ParamListBase>,
     MaterialTopTabNavigationEventMap
   >;
   descriptors: MaterialTopTabDescriptorMap;

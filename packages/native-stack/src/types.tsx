@@ -74,6 +74,7 @@ export type NativeStackOptionsArgs<
 
 export type NativeStackNavigationHelpers = NavigationHelpers<
   ParamListBase,
+  StackNavigationState<ParamListBase>,
   NativeStackNavigationEventMap
 >;
 

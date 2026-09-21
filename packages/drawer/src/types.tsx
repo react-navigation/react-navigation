@@ -273,6 +273,7 @@ export type DrawerNavigationEventMap = {
 
 export type DrawerNavigationHelpers = NavigationHelpers<
   ParamListBase,
+  DrawerNavigationState<ParamListBase>,
   DrawerNavigationEventMap
 > &
   DrawerActionHelpers<ParamListBase>;
