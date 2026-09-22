@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.38](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.37...@react-navigation/core@8.0.0-alpha.38) (2026-09-22)
+
+* feat!: use action source when handling navigation actions ([5ff8bbc](https://github.com/react-navigation/react-navigation/commit/5ff8bbcd472b835cdde0ff1790e7ca9c867fb9c6)) - by @
+
+### Bug Fixes
+
+* preserve navigator state types in navigation helpers ([34a1051](https://github.com/react-navigation/react-navigation/commit/34a105103e0f2c9f0dc1f1134dfe3202489c21a5)) - by @
+
+### BREAKING CHANGES
+
+* this reworks how `action.source` is handled
+
+previously, `source` was only used for param updates, or used in
+specific actions like `replace` and `pop` only when `target` was
+specified. in most cases, focused screen was treated as the calling
+screen.
+
+this changes the behavior to handle `action.source` more
+consistently throughout:
+
+- `canGoBack` checks whether we can go back from the screen where it was
+  called
+- `goBack` and `pop` now go back from the screen where it was called,
+  removing all active screens/history entries after the calling screen
+- `popTo` now searches downward from the calling scree instead of
+  focused screen
+- `navigate` now removes active screens after the calling screen instead
+  of pushing on top of focused screen in stacks
+- `replace` now replaces the screen it was called from instead of
+  focused screen
+
+when dispatching navigation actions from a screen, the `source` key is
+added to the action automatically, so this affects behavior of all
+navigations from screens (with `navigation` prop or `useNavigation`).
+
+actions dispatched from the ref, or `navigation` objects from navigators
+don't have a `source` unless explicitly added, so they treat the focused
+screen as the calling screen.
+
+internally, `source` is also rewritten when bubbling actions up when
+possible, so a router handling an action can see if an action belong to
+a screen in its navigation state.
+
 # [8.0.0-alpha.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.36...@react-navigation/core@8.0.0-alpha.37) (2026-09-19)
 
 ### Bug Fixes

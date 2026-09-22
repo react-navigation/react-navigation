@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.55](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.54...@react-navigation/drawer@8.0.0-alpha.55) (2026-09-22)
+
+### Bug Fixes
+
+* preserve navigator state types in navigation helpers ([34a1051](https://github.com/react-navigation/react-navigation/commit/34a105103e0f2c9f0dc1f1134dfe3202489c21a5)) - by @
+
 # [8.0.0-alpha.54](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.53...@react-navigation/drawer@8.0.0-alpha.54) (2026-09-19)
 
 ### Bug Fixes

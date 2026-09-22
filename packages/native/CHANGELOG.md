@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.48](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.47...@react-navigation/native@8.0.0-alpha.48) (2026-09-22)
+
+### Bug Fixes
+
+* handle browser back from committed navigation state ([6870eda](https://github.com/react-navigation/react-navigation/commit/6870eda74a9fe94a3c7207fa0d473df8d6a67a2a)) - by @
+
 # [8.0.0-alpha.47](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.46...@react-navigation/native@8.0.0-alpha.47) (2026-09-19)
 
 ### Bug Fixes
