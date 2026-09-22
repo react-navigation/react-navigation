@@ -141,14 +141,18 @@ async function runStep(page: Page, step: any) {
         });
       }
 
-      const locator = query(page, step.tapOn);
+      const locator = query(page, step.tapOn).and(
+        page.locator(':not([inert], [inert] *)')
+      );
 
-      const target = locator.filter({ visible: true }).last();
+      const target = locator
+        .filter({ visible: true })
+        .last()
+        .locator(
+          'xpath=ancestor-or-self::*[@tabindex][1] | self::*[not(ancestor-or-self::*[@tabindex])]'
+        );
 
-      const handle = await target.elementHandle();
-      await handle?.waitForElementState('stable');
-
-      await target.dispatchEvent('click');
+      await target.click();
 
       break;
     }
@@ -162,12 +166,12 @@ async function runStep(page: Page, step: any) {
     }
 
     case 'assertNotVisible': {
-      const locator = query(page, step.assertNotVisible);
-
-      if (await locator.isVisible()) {
-        await expect(locator).not.toBeInViewport();
-      } else {
-        await expect(locator).toBeHidden();
+      for (const locator of await query(page, step.assertNotVisible).all()) {
+        if (await locator.isVisible()) {
+          await expect(locator).not.toBeInViewport();
+        } else {
+          await expect(locator).toBeHidden();
+        }
       }
 
       break;
@@ -431,7 +435,7 @@ function query(page: Page, by: QueryBy) {
 
   if (typeof by !== 'string' && typeof by.selected === 'boolean') {
     return locator.locator(
-      `xpath=ancestor-or-self::*[@aria-selected="${by.selected}"]`
+      `xpath=self::*[ancestor-or-self::*[@aria-selected="${by.selected}"]]`
     );
   }
 

@@ -10,6 +10,8 @@ name: Native Bottom Tabs - Custom Tab Bar
     id: 'albums'
 - assertVisible:
     text: 'Albums'
+- assertNotVisible:
+    text: 'What is Lorem Ipsum?'
 - tapOn:
     text: 'Go to Contacts'
 - assertVisible:
@@ -18,6 +20,8 @@ name: Native Bottom Tabs - Custom Tab Bar
     id: 'albums'
 - assertVisible:
     text: 'Albums'
+- assertNotVisible:
+    text: 'Marissa Castillo'
 - tapOn:
     id: 'contacts'
 - assertVisible:

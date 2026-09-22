@@ -9,16 +9,18 @@ name: Drawer - Master Detail
 - tapOn:
     text: 'Feed'
 - assertVisible:
-    text: 'Feed'
+    text: 'Joke bot'
 - tapOn:
     text: 'Go back'
 - tapOn:
     text: 'Albums'
 - assertVisible:
     text: 'Albums'
+- assertNotVisible:
+    text: 'Joke bot'
 - tapOn:
     text: 'Go back'
 - tapOn:
     text: 'Article'
 - assertVisible:
-    text: 'Article'
+    text: 'What is Lorem Ipsum?'
