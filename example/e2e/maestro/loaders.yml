@@ -129,3 +129,43 @@ name: Loaders
     text: 'Try Again'
 - assertNotVisible:
     text: 'Stegosaurus'
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: loaders
+      TEXT: 'Tyrannosaurus rex'
+- tapOn:
+    text: 'Tyrannosaurus rex'
+- assertVisible:
+    text: 'Go to Pets'
+- tapOn:
+    text: 'Go to Pets'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'web'}
+    commands:
+      - tapOn:
+          text: 'Dinos, back'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'android'}
+    commands:
+      - tapOn:
+          text: 'Navigate up'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'ios'}
+    commands:
+      - tapOn:
+          text: 'Dinos'
+- assertVisible:
+    text: 'Velociraptor'
+- assertNotVisible:
+    text: 'Go to Pets'
+- tapOn:
+    text: 'Battle'
+- extendedWaitUntil:
+    timeout: 15000
+    visible: 'Brachiosaurus vs Spinosaurus'
+- assertNotVisible:
+    text: 'Ankylosaurus vs Diplodocus vs Parasaurolophus vs Allosaurus'

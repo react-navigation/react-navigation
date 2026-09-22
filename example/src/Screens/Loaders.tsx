@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 import {
   type ImageSourcePropType,
   Platform,
+  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
@@ -24,7 +25,11 @@ import {
 import iconBookOpen from '../../assets/icons/book-open.png';
 import iconPawPrint from '../../assets/icons/paw-print.png';
 import iconSwords from '../../assets/icons/swords.png';
+import allosaurus from '../../assets/showcase/dinos/allosaurus.png';
+import ankylosaurus from '../../assets/showcase/dinos/ankylosaurus.png';
 import brachiosaurus from '../../assets/showcase/dinos/brachiosaurus.png';
+import diplodocus from '../../assets/showcase/dinos/diplodocus.png';
+import parasaurolophus from '../../assets/showcase/dinos/parasaurolophus.png';
 import spinosaurus from '../../assets/showcase/dinos/spinosaurus.png';
 import stegosaurus from '../../assets/showcase/dinos/stegosaurus.png';
 import triceratops from '../../assets/showcase/dinos/triceratops.png';
@@ -86,10 +91,39 @@ const DINOS: Dino[] = [
       'A huge spinosaurid with a distinctive sail on its back and a long, crocodile-like snout. Evidence suggests it spent much of its time in and around water and fed heavily on fish.',
     image: spinosaurus,
   },
+  {
+    id: '7',
+    name: 'Ankylosaurus',
+    description:
+      'A plant-eating dinosaur covered in bony armor, with a heavy club at the end of its tail. It lived in North America during the late Cretaceous.',
+    image: ankylosaurus,
+  },
+  {
+    id: '8',
+    name: 'Diplodocus',
+    description:
+      'A long-necked, plant-eating sauropod with an especially long, whip-like tail. It lived in North America during the late Jurassic.',
+    image: diplodocus,
+  },
+  {
+    id: '9',
+    name: 'Parasaurolophus',
+    description:
+      'A duck-billed, plant-eating dinosaur with a long, hollow crest on its head. It lived in North America during the late Cretaceous.',
+    image: parasaurolophus,
+  },
+  {
+    id: '10',
+    name: 'Allosaurus',
+    description:
+      'A large meat-eating dinosaur with three-fingered hands and small horns above its eyes. It lived in North America during the late Jurassic.',
+    image: allosaurus,
+  },
 ];
 
 const TEAM_DINO_IDS = ['1', '2', '3', '4'] as const;
 const BATTLE_DINO_IDS = ['5', '6'] as const;
+const PET_DINO_IDS = ['7', '8', '9', '10'] as const;
 
 const dinoQuery = (id: string) =>
   queryOptions({
@@ -118,30 +152,23 @@ const dinoQuery = (id: string) =>
 
 function DinoCatalogScreen() {
   return (
-    <View style={styles.content}>
+    <ScrollView contentContainerStyle={styles.catalogContent}>
       <View style={styles.buttons}>
         {DINOS.map((item) => (
           <Button
             key={item.id}
-            screen="Loaders"
-            params={{ screen: 'DinoDetail', params: { id: item.id } }}
+            in="DinoCatalog"
+            screen="DinoDetail"
+            params={{ id: item.id }}
             style={styles.button}
           >
             {item.name}
           </Button>
         ))}
-        <Button
-          screen="Loaders"
-          params={{ screen: 'DinoCatalog', params: { screen: 'DinoTeam' } }}
-          style={styles.button}
-        >
+        <Button in="DinoList" screen="DinoTeam" style={styles.button}>
           Go to Team
         </Button>
-        <Button
-          screen="Loaders"
-          params={{ screen: 'DinoCatalog', params: { screen: 'DinoBattle' } }}
-          style={styles.button}
-        >
+        <Button in="DinoList" screen="DinoBattle" style={styles.button}>
           Go to Battle
         </Button>
         <Button
@@ -160,7 +187,7 @@ function DinoCatalogScreen() {
           Clear all cache
         </Button>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -173,6 +200,34 @@ function DinoDetailScreen() {
     <View style={styles.content}>
       <Text style={styles.heading}>{data.name}</Text>
       <Text style={styles.description}>{data.description}</Text>
+      <Button in="DinoDetail" screen="DinoPets" style={styles.button}>
+        Go to Pets
+      </Button>
+    </View>
+  );
+}
+
+function DinoPetsScreen() {
+  const data = useSuspenseQueries({
+    queries: PET_DINO_IDS.map(dinoQuery),
+  });
+
+  return (
+    <View style={styles.content}>
+      <Text style={styles.heading}>Pets</Text>
+      <Text style={styles.description}>
+        {data.map((item) => item.data.name).join(' vs ')}
+      </Text>
+      <Button
+        onPress={() => {
+          PET_DINO_IDS.forEach((id) => {
+            queryClient.removeQueries({ queryKey: dinoQuery(id).queryKey });
+          });
+        }}
+        style={styles.button}
+      >
+        Clear screen's cache
+      </Button>
     </View>
   );
 }
@@ -310,8 +365,11 @@ const LoaderTabs = createBottomTabNavigator({
 });
 
 const LoaderStack = createNativeStackNavigator({
-  layout: ({ children }) => <Provider>{children}</Provider>,
-  screenLayout: ({ children }) => <Layout>{children}</Layout>,
+  layout: ({ children }) => (
+    <Provider>
+      <Layout>{children}</Layout>
+    </Provider>
+  ),
   screens: {
     DinoCatalog: {
       screen: LoaderTabs,
@@ -328,10 +386,22 @@ const LoaderStack = createNativeStackNavigator({
         title: '',
         headerTransparent: true,
       },
+      layout: ({ children }) => <Layout>{children}</Layout>,
       UNSTABLE_loader: async ({ params }) => {
         await queryClient.ensureQueryData(dinoQuery(params.id)).catch(() => {});
       },
     }),
+    DinoPets: {
+      screen: DinoPetsScreen,
+      options: {
+        title: 'Pets',
+      },
+      UNSTABLE_loader: async () => {
+        await Promise.all(
+          PET_DINO_IDS.map((id) => queryClient.ensureQueryData(dinoQuery(id)))
+        ).catch(() => {});
+      },
+    },
   },
 });
 
@@ -341,6 +411,12 @@ export const Loaders = {
 };
 
 const styles = StyleSheet.create({
+  catalogContent: {
+    flexGrow: 1,
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   content: {
     flex: 1,
     padding: 16,
