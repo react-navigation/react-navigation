@@ -150,3 +150,9 @@ When releasing a stable version, we need to:
 ```sh
 pnpm lerna publish --conventional-commits --conventional-graduate
 ```
+
+If the publish process fails, but changes were already committed and pushed, we can retry publishing with:
+
+```sh
+PNPM_CONFIG_VERIFY_DEPS_BEFORE_RUN=false pnpm exec lerna publish from-git
+```

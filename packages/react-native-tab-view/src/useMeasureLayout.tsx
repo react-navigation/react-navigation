@@ -5,7 +5,7 @@ import useLatestCallback from 'use-latest-callback';
 import type { Layout } from './types';
 
 export function useMeasureLayout(
-  ref: React.RefObject<View | null>,
+  ref: React.RefObject<React.ComponentRef<typeof View> | null>,
   onMeasure?: (layout: Layout) => void
 ) {
   const [layout, setLayout] = React.useState<Layout>({ width: 0, height: 0 });

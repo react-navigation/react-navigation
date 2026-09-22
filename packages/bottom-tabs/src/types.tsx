@@ -618,14 +618,14 @@ export type TransitionSpec =
       animation: 'timing';
       config: Omit<
         Animated.TimingAnimationConfig,
-        'toValue' | keyof Animated.AnimationConfig
+        'toValue' | 'useNativeDriver'
       >;
     }
   | {
       animation: 'spring';
       config: Omit<
         Animated.SpringAnimationConfig,
-        'toValue' | keyof Animated.AnimationConfig
+        'toValue' | 'useNativeDriver'
       >;
     };
 

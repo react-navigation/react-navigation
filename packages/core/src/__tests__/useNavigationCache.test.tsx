@@ -1,84 +1,34 @@
 import { beforeEach, expect, test } from '@jest/globals';
+import { CommonActions, type ParamListBase } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
+import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { Screen } from '../Screen';
-import { useEventEmitter } from '../useEventEmitter';
+import type { NavigationProp, RouteProp } from '../types';
 import { useNavigationBuilder } from '../useNavigationBuilder';
-import { useNavigationCache } from '../useNavigationCache';
 import { MockRouter, MockRouterKey } from './__fixtures__/MockRouter';
+
+type ScreenProps = {
+  navigation: NavigationProp<ParamListBase>;
+  route: RouteProp<ParamListBase>;
+};
+
+const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+  const { state, descriptors, render } = useNavigationBuilder(
+    MockRouter,
+    props
+  );
+
+  return render(state.routes.map((route) => descriptors[route.key]?.render()));
+};
 
 beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('preserves reference for navigation objects', async () => {
-  expect.assertions(2);
-
-  const state = {
-    type: 'tab',
-    stale: false as const,
-    index: 1,
-    key: 'State',
-    routeNames: ['Foo', 'Bar'],
-    routes: [
-      { key: 'Foo', name: 'Foo' },
-      { key: 'Bar', name: 'Bar' },
-    ],
-  };
-
-  const getState = () => state;
-  const navigation = {} as any;
-  const setOptions = (() => {}) as any;
-  const router = MockRouter({});
-
-  const Test = () => {
-    const previous = React.useRef<any>(undefined);
-
-    const emitter = useEventEmitter();
-    const navigations = useNavigationCache({
-      routes: state.routes,
-      getState,
-      navigation,
-      setOptions,
-      router,
-      emitter,
-    });
-
-    if (previous.current) {
-      Object.keys(navigations).forEach((key) => {
-        // eslint-disable-next-line jest/no-conditional-expect
-        expect(navigations[key]).toBe(previous.current[key]);
-      });
-    }
-
-    React.useEffect(() => {
-      previous.current = navigations;
-    });
-
-    return null;
-  };
-
-  const root = await render(<Test />);
-
-  await root.rerender(<Test />);
-});
-
 test('returns correct value for isFocused', async () => {
-  const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
-      MockRouter,
-      props
-    );
-
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
-    );
-  };
-
   let navigation: any;
 
   const Test = (props: any) => {
@@ -113,14 +63,10 @@ test('returns correct value for isFocused', async () => {
 });
 
 test('returns correct value for isFocused after changing screens', async () => {
-  const TestRouter = (
-    options: Parameters<typeof MockRouter>[0]
-  ): ReturnType<typeof MockRouter> => {
-    const router = MockRouter(options);
-
+  const router: NonNullable<
+    Parameters<typeof useNavigationBuilder>[1]['router']
+  > = () => {
     return {
-      ...router,
-
       getStateForRouteNamesChange(state, { routeNames }) {
         const routes = routeNames.map(
           (name) =>
@@ -140,19 +86,6 @@ test('returns correct value for isFocused after changing screens', async () => {
     };
   };
 
-  const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
-      TestRouter,
-      props
-    );
-
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
-    );
-  };
-
   let navigation: any;
 
   const Test = (props: any) => {
@@ -163,7 +96,7 @@ test('returns correct value for isFocused after changing screens', async () => {
 
   const root = await render(
     <BaseNavigationContainer>
-      <TestNavigator>
+      <TestNavigator router={router}>
         <Screen name="first">{() => null}</Screen>
         <Screen name="second" component={Test} />
         <Screen name="third">{() => null}</Screen>
@@ -175,7 +108,7 @@ test('returns correct value for isFocused after changing screens', async () => {
 
   await root.rerender(
     <BaseNavigationContainer>
-      <TestNavigator>
+      <TestNavigator router={router}>
         <Screen name="first">{() => null}</Screen>
         <Screen name="third">{() => null}</Screen>
         <Screen name="second" component={Test} />
@@ -187,7 +120,7 @@ test('returns correct value for isFocused after changing screens', async () => {
 
   await root.rerender(
     <BaseNavigationContainer>
-      <TestNavigator>
+      <TestNavigator router={router}>
         <Screen name="first">{() => null}</Screen>
         <Screen name="third">{() => null}</Screen>
         <Screen name="fourth">{() => null}</Screen>
@@ -200,7 +133,7 @@ test('returns correct value for isFocused after changing screens', async () => {
 
   await root.rerender(
     <BaseNavigationContainer>
-      <TestNavigator>
+      <TestNavigator router={router}>
         <Screen name="first">{() => null}</Screen>
         <Screen name="third">{() => null}</Screen>
         <Screen name="second" component={Test} />
@@ -210,4 +143,230 @@ test('returns correct value for isFocused after changing screens', async () => {
   );
 
   expect(navigation.isFocused()).toBe(false);
+});
+
+test('keeps navigation objects stable across re-renders', async () => {
+  const screens: Record<string, ScreenProps> = {};
+
+  const Test = (props: ScreenProps & { label: string }) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const App = ({ label }: { label: string }) => (
+    <BaseNavigationContainer
+      initialState={{
+        index: 1,
+        routes: [{ name: 'First' }, { name: 'Second' }],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="First">
+          {(props) => <Test {...props} label={label} />}
+        </Screen>
+        <Screen name="Second">
+          {(props) => <Test {...props} label={label} />}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<App label="one" />);
+
+  const first = screens.First;
+  const second = screens.Second;
+
+  await root.rerender(<App label="two" />);
+
+  expect(screens.First?.navigation).toBe(first?.navigation);
+  expect(screens.Second?.navigation).toBe(second?.navigation);
+});
+
+test('preserves existing navigation objects when adding and removing routes', async () => {
+  const screens: Record<string, ScreenProps> = {};
+
+  const Test = (props: ScreenProps) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  await render(
+    <BaseNavigationContainer initialState={{ routes: [{ name: 'First' }] }}>
+      <TestNavigator>
+        <Screen name="First" component={Test} />
+        <Screen name="Second" component={Test} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const first = screens.First;
+
+  await act(() => first?.navigation.navigate('Second'));
+
+  expect(screens.First?.navigation).toBe(first?.navigation);
+
+  await act(() =>
+    first?.navigation.dispatch((state) =>
+      CommonActions.reset({
+        ...state,
+        index: 0,
+        routes: state.routes.filter((route) => route.name === 'First'),
+      })
+    )
+  );
+
+  expect(screens.First?.navigation).toBe(first?.navigation);
+});
+
+test('preserves navigation objects when route params change', async () => {
+  const screens: Record<string, ScreenProps> = {};
+
+  const Test = (props: ScreenProps) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  await render(
+    <BaseNavigationContainer
+      initialState={{
+        index: 1,
+        routes: [{ name: 'First' }, { name: 'Second' }],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="First" component={Test} />
+        <Screen name="Second" component={Test} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const first = screens.First;
+  const second = screens.Second;
+
+  await act(() => first?.navigation.setParams({ count: 1 }));
+
+  expect(screens.First?.navigation).toBe(first?.navigation);
+  expect(screens.Second?.navigation).toBe(second?.navigation);
+});
+
+test('preserves screen navigation objects while navigation is suspended', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const screens: Record<'First' | 'Second', ScreenProps[]> = {
+    First: [],
+    Second: [],
+  };
+
+  const Test = (props: ScreenProps) => {
+    if (props.route.name === 'First') {
+      screens.First.push(props);
+    } else {
+      screens.Second.push(props);
+    }
+
+    if (props.route.name === 'Second') {
+      React.use(promise);
+    }
+
+    return null;
+  };
+
+  await render(
+    <BaseNavigationContainer initialState={{ routes: [{ name: 'First' }] }}>
+      <React.Suspense fallback={null}>
+        <TestNavigator>
+          <Screen name="First" component={Test} />
+          <Screen name="Second" component={Test} />
+        </TestNavigator>
+      </React.Suspense>
+    </BaseNavigationContainer>
+  );
+
+  const first = screens.First.at(-1);
+
+  await act(() => first?.navigation.navigate('Second'));
+
+  expect(screens.Second.length).toBeGreaterThan(0);
+
+  await act(() => first?.navigation.setParams({ count: 1 }));
+
+  expect(screens.First.length).toBeGreaterThan(1);
+
+  await act(() => resolve());
+
+  for (const props of screens.First) {
+    expect(props.navigation).toBe(first?.navigation);
+  }
+});
+
+test('preserves the second screen navigation prop when a suspended reset is cancelled', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const screens: Record<string, ScreenProps> = {};
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = (props: ScreenProps) => {
+    screens[props.route.name] = props;
+
+    if (props.route.params && 'pending' in props.route.params) {
+      React.use(promise);
+    }
+
+    return null;
+  };
+
+  const App = () => (
+    <BaseNavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 1,
+        routes: [{ name: 'First' }, { name: 'Second' }],
+      }}
+    >
+      <React.Suspense fallback={null}>
+        <TestNavigator>
+          <Screen name="First">{(props) => <Test {...props} />}</Screen>
+          <Screen name="Second">{(props) => <Test {...props} />}</Screen>
+        </TestNavigator>
+      </React.Suspense>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<App />);
+
+  const initialState = navigation.getRootState();
+
+  if (initialState === undefined) {
+    throw new Error('Expected initialized navigation state');
+  }
+
+  const initial = screens.Second?.navigation;
+
+  await act(() =>
+    navigation.dispatch(
+      CommonActions.reset({
+        ...initialState,
+        index: 0,
+        routes: initialState.routes
+          .filter((route) => route.name === 'First')
+          .map((route) => ({ ...route, params: { pending: true } })),
+      })
+    )
+  );
+
+  expect(screens.First?.route.params).toEqual({ pending: true });
+
+  await act(() => navigation.dispatch(CommonActions.reset(initialState)));
+
+  await root.rerender(<App />);
+
+  expect(screens.Second?.navigation).toBe(initial);
+
+  await act(() => resolve());
+
+  expect(screens.Second?.navigation).toBe(initial);
 });

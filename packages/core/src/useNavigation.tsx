@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationContext } from './NavigationProvider';
+import { NavigationRootContext } from './NavigationRootContext';
 import type {
   GenericNavigation,
   NavigationListForNavigator,
@@ -30,7 +30,7 @@ export function useNavigation<
     keyof NavigationListForNested<Navigator>,
 >(name: RouteName): NavigationListForNested<Navigator>[RouteName];
 export function useNavigation(name?: string): unknown {
-  const root = React.use(NavigationContainerRefContext);
+  const root = React.use(NavigationRootContext);
   const navigation = React.use(NavigationContext);
 
   if (name === undefined) {

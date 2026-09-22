@@ -27,7 +27,7 @@ type Props = Omit<TextProps, 'style'> & {
   /**
    * Style object for the tab bar container.
    */
-  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>> | undefined;
+  style?: StyleProp<TextStyle> | undefined;
 };
 
 const useNativeDriver = Platform.OS !== 'web';
@@ -72,9 +72,8 @@ export function Badge({
     }
   }
 
-  // @ts-expect-error: backgroundColor definitely exists
   const { backgroundColor = colors.notification, ...restStyle } =
-    StyleSheet.flatten(style) || {};
+    StyleSheet.flatten(style) ?? {};
   const textColor = Color.foreground(backgroundColor);
 
   const borderRadius = size / 2;

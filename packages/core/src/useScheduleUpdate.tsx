@@ -1,6 +1,7 @@
 import * as React from 'react';
+import useLatestCallback from 'use-latest-callback';
 
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { useNavigationBuilderContext } from './NavigationBuilderContext';
 
 /**
  * When screen config changes, we want to update the navigator in the same update phase.
@@ -11,10 +12,12 @@ import { NavigationBuilderContext } from './NavigationBuilderContext';
  * This lets nested updates be applied from the root down without clobbering each other.
  */
 export function useScheduleUpdate(callback: () => void) {
-  const { scheduleUpdate, flushUpdates } = React.use(NavigationBuilderContext);
+  const { scheduleUpdate, flushUpdates } = useNavigationBuilderContext();
+
+  const latestCallback = useLatestCallback(callback);
 
   React.useInsertionEffect(() => {
-    scheduleUpdate(callback);
+    scheduleUpdate(latestCallback);
   });
 
   React.useLayoutEffect(flushUpdates);

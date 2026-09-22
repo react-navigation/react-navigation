@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.53](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.52...@react-navigation/bottom-tabs@8.0.0-alpha.53) (2026-09-19)
+
+### Bug Fixes
+
+* defer rendering lazy content with useDeferredValue ([fd840cf](https://github.com/react-navigation/react-navigation/commit/fd840cf1ad2e88a00290037c06c2d77e2e3cc2d9)) - by @satya164
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([5bc7014](https://github.com/react-navigation/react-navigation/commit/5bc7014deb66940e7c07c0ce4668fbcfbf687730)) - by @satya164
+
+# [8.0.0-alpha.52](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.51...@react-navigation/bottom-tabs@8.0.0-alpha.52) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [8.0.0-alpha.51](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.50...@react-navigation/bottom-tabs@8.0.0-alpha.51) (2026-09-14)
+
+* refactor!: use a render callback instead of NavigationContent for custom navigators (#13238) ([c9c119e](https://github.com/react-navigation/react-navigation/commit/c9c119e13716ab82862c0cdddab2c84a4d3832ad)), closes [#13238](https://github.com/react-navigation/react-navigation/issues/13238) - by @satya164
+
+### BREAKING CHANGES
+
+* this changes the API for custom navigators:
+
+```diff
+-const { NavigationContent } = useNavigationBuilder(Router, props);
++const { render } = useNavigationBuilder(Router, props);
+
+-return (
+-  <NavigationContent>
+-    <NavigatorView />
+-  </NavigationContent>
++return render(
++  <NavigatorView />
+ );
+```
+
+custom navigators now must use the returned `render` function from
+`useNavigationBuilder` instead of the `NavigationContent`.
+
+the previous API isn't feasible while maintaining concurrent safety.
+
+# [8.0.0-alpha.50](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.49...@react-navigation/bottom-tabs@8.0.0-alpha.50) (2026-08-26)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [8.0.0-alpha.49](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.48...@react-navigation/bottom-tabs@8.0.0-alpha.49) (2026-08-19)
+
+### Bug Fixes
+
+* read latest state to determine pop to top ([ca99c68](https://github.com/react-navigation/react-navigation/commit/ca99c6889fa99da70001f817df4af4896ab371c4)) - by @satya164
+
+# [8.0.0-alpha.48](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.47...@react-navigation/bottom-tabs@8.0.0-alpha.48) (2026-08-10)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [8.0.0-alpha.47](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.46...@react-navigation/bottom-tabs@8.0.0-alpha.47) (2026-08-06)
+
+### Bug Fixes
+
+* remove usage of deprecated APIs and prepare for strict api ([060c263](https://github.com/react-navigation/react-navigation/commit/060c263562a9ffb62393037238d180b44bdedd03)) - by @satya164
+
 # [8.0.0-alpha.46](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.45...@react-navigation/bottom-tabs@8.0.0-alpha.46) (2026-07-27)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

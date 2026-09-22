@@ -73,12 +73,6 @@ const WEB_COLORS = {
 let previousDirection = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr';
 
 if (Platform.OS === 'web') {
-  if (typeof document !== 'undefined' && document.documentElement) {
-    document
-      .getElementById('root')
-      ?.setAttribute('style', 'height: 100svh; overflow: auto;');
-  }
-
   if (
     typeof localStorage !== 'undefined' &&
     typeof document !== 'undefined' &&
@@ -453,17 +447,18 @@ export function App() {
             }}
             persistor={{
               async persist(state) {
-                await AsyncStorage.setItem(
-                  NAVIGATION_PERSISTENCE_KEY,
-                  JSON.stringify(state)
-                );
+                if (state == null) {
+                  await AsyncStorage.removeItem(NAVIGATION_PERSISTENCE_KEY);
+                } else {
+                  await AsyncStorage.setItem(NAVIGATION_PERSISTENCE_KEY, state);
+                }
               },
               async restore() {
                 const value = await AsyncStorage.getItem(
                   NAVIGATION_PERSISTENCE_KEY
                 );
 
-                return value ? JSON.parse(value) : undefined;
+                return value ?? undefined;
               },
             }}
             fallback={<Text>Loading…</Text>}

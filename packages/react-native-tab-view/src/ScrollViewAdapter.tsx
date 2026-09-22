@@ -57,8 +57,9 @@ export function ScrollViewAdapter({
 
   const listeners = React.useRef<Set<Listener>>(new Set()).current;
 
-  const scrollViewRef = React.useRef<ScrollView>(null);
-  const containerRef = React.useRef<View>(null);
+  const scrollViewRef =
+    React.useRef<React.ComponentRef<typeof ScrollView>>(null);
+  const containerRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
   const isInitialRef = React.useRef(true);
 

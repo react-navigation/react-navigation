@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.47](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.46...@react-navigation/native@8.0.0-alpha.47) (2026-09-19)
+
+### Bug Fixes
+
+* avoid loading fonts for cached material symbol images ([26209d0](https://github.com/react-navigation/react-navigation/commit/26209d0d71ad189fc10724e615e1677185d17ec2)) - by @satya164
+* handle AGP9's built-in kotlin support ([#13252](https://github.com/react-navigation/react-navigation/issues/13252)) ([273e688](https://github.com/react-navigation/react-navigation/commit/273e688fd32ec9c1a4332fa7ee7096633aa8d594)) - by @satya164
+
+# [8.0.0-alpha.46](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.45...@react-navigation/native@8.0.0-alpha.46) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [8.0.0-alpha.45](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.44...@react-navigation/native@8.0.0-alpha.45) (2026-09-14)
+
+* refactor!: use a render callback instead of NavigationContent for custom navigators (#13238) ([c9c119e](https://github.com/react-navigation/react-navigation/commit/c9c119e13716ab82862c0cdddab2c84a4d3832ad)), closes [#13238](https://github.com/react-navigation/react-navigation/issues/13238) - by @satya164
+
+### Bug Fixes
+
+* use reactApplicationContext.currentActivity in MaterialSymbolModule ([#13235](https://github.com/react-navigation/react-navigation/issues/13235)) ([b0352b5](https://github.com/react-navigation/react-navigation/commit/b0352b55aecce1aba921ec7a7b3ad66a23c038cb)) - by @eduardoborges
+
+### BREAKING CHANGES
+
+* this changes the API for custom navigators:
+
+```diff
+-const { NavigationContent } = useNavigationBuilder(Router, props);
++const { render } = useNavigationBuilder(Router, props);
+
+-return (
+-  <NavigationContent>
+-    <NavigatorView />
+-  </NavigationContent>
++return render(
++  <NavigatorView />
+ );
+```
+
+custom navigators now must use the returned `render` function from
+`useNavigationBuilder` instead of the `NavigationContent`.
+
+the previous API isn't feasible while maintaining concurrent safety.
+
+# [8.0.0-alpha.44](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.43...@react-navigation/native@8.0.0-alpha.44) (2026-08-26)
+
+### Bug Fixes
+
+* prevent state reset when history.go() takes longer than timeout on web ([#13217](https://github.com/react-navigation/react-navigation/issues/13217)) ([fc82c1b](https://github.com/react-navigation/react-navigation/commit/fc82c1b69797d169847f4950fc5f858830c2142f)), closes [#11145](https://github.com/react-navigation/react-navigation/issues/11145) - by @collectioneur
+
+# [8.0.0-alpha.43](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.42...@react-navigation/native@8.0.0-alpha.43) (2026-08-19)
+
+### Bug Fixes
+
+* ensure linking actions are handled by root navigator ([901b9bf](https://github.com/react-navigation/react-navigation/commit/901b9bff07a5aba9ac5fee7f4d9146ed564dbbb0)) - by @satya164
+* fix return type of getRootState ([ed851e7](https://github.com/react-navigation/react-navigation/commit/ed851e7ca42b07c96dd09903e475a2c3d50c3125)) - by @satya164
+* update useScrollToTop type so SectionList ref works under RN 0.87 strict types ([#13221](https://github.com/react-navigation/react-navigation/issues/13221)) ([2396be6](https://github.com/react-navigation/react-navigation/commit/2396be64da6c3be102b6e3e9e6bd7ba743d405bd)) - by @ErfanBagheri404
+* use namespace import for RCTFabricComponentsPlugins ([cec5e05](https://github.com/react-navigation/react-navigation/commit/cec5e05aa7f329f624a34858f8d89c27daa72a87)) - by @satya164
+* use root navigation for dispatching actions for links ([76b74cd](https://github.com/react-navigation/react-navigation/commit/76b74cdecafe32db9feb4427aa422b925b483b73)) - by @satya164
+
+# [8.0.0-alpha.42](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.41...@react-navigation/native@8.0.0-alpha.42) (2026-08-10)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [8.0.0-alpha.41](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.40...@react-navigation/native@8.0.0-alpha.41) (2026-08-06)
+
+### Bug Fixes
+
+* accept only plain style object for components ([66feaf2](https://github.com/react-navigation/react-navigation/commit/66feaf275e6244b8bdcde5372acdc3c94ef18742)) - by @satya164
+* remove usage of deprecated APIs and prepare for strict api ([060c263](https://github.com/react-navigation/react-navigation/commit/060c263562a9ffb62393037238d180b44bdedd03)) - by @satya164
+
+### Features
+
+* add support for custom stringify and parse in persistor ([5b8857d](https://github.com/react-navigation/react-navigation/commit/5b8857d29dec42b5a121081e0a4869aa125dc51a)) - by @satya164
+
 # [8.0.0-alpha.40](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.39...@react-navigation/native@8.0.0-alpha.40) (2026-07-27)
 
 ### Bug Fixes

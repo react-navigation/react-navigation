@@ -14,11 +14,9 @@ const { add, multiply } = Animated;
 export function forUIKit({
   current,
   next,
-  direction,
+  inverted,
   layouts,
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
-  const multiplier = direction === 'rtl' ? -1 : 1;
-
   const progress = add(
     current.progress.interpolate({
       inputRange: [0, 1],
@@ -45,7 +43,7 @@ export function forUIKit({
     });
 
     const translateX = multiply(
-      multiplier,
+      inverted,
       progress.interpolate({
         inputRange: [0, 1, 2],
         outputRange: [layouts.screen.width, 0, -layouts.screen.width * 0.3],
@@ -128,10 +126,9 @@ export function forFade({
 export function forSlideLeft({
   current,
   next,
-  direction,
+  inverted,
   layouts: { screen },
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
-  const isRTL = direction === 'rtl';
   const progress = add(
     current.progress.interpolate({
       inputRange: [0, 1],
@@ -147,12 +144,13 @@ export function forSlideLeft({
       : 0
   );
 
-  const translateX = progress.interpolate({
-    inputRange: [0, 1, 2],
-    outputRange: isRTL
-      ? [-screen.width, 0, screen.width]
-      : [screen.width, 0, -screen.width],
-  });
+  const translateX = multiply(
+    inverted,
+    progress.interpolate({
+      inputRange: [0, 1, 2],
+      outputRange: [screen.width, 0, -screen.width],
+    })
+  );
 
   const transform = [{ translateX }];
 
@@ -168,42 +166,13 @@ export function forSlideLeft({
  * Simple translate animation to translate the header to right.
  */
 export function forSlideRight({
-  current,
-  next,
-  direction,
-  layouts: { screen },
+  inverted,
+  ...rest
 }: StackHeaderInterpolationProps): StackHeaderInterpolatedStyle {
-  const isRTL = direction === 'rtl';
-  const progress = add(
-    current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 1],
-      extrapolate: 'clamp',
-    }),
-    next
-      ? next.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 1],
-          extrapolate: 'clamp',
-        })
-      : 0
-  );
-
-  const translateX = progress.interpolate({
-    inputRange: [0, 1, 2],
-    outputRange: isRTL
-      ? [screen.width, 0, -screen.width]
-      : [-screen.width, 0, screen.width],
+  return forSlideLeft({
+    ...rest,
+    inverted: inverted === 1 ? -1 : 1,
   });
-
-  const transform = [{ translateX }];
-
-  return {
-    leftButtonStyle: { transform },
-    rightButtonStyle: { transform },
-    titleStyle: { transform },
-    backgroundStyle: { transform },
-  };
 }
 
 /**

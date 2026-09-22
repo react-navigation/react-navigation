@@ -6,9 +6,9 @@ import { getLoaderForState } from '../DataLoading';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 
 const TestNavigator = (props: any) => {
-  const { NavigationContent } = useNavigationBuilder(StackRouter, props);
+  const { render } = useNavigationBuilder(StackRouter, props);
 
-  return <NavigationContent>{null}</NavigationContent>;
+  return render(null);
 };
 
 const createTestNavigator = createNavigatorFactory(TestNavigator);

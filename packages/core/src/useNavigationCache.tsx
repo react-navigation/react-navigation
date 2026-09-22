@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { useNavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContext } from './NavigationProvider';
 import type { NavigationHelpers, NavigationProp } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
@@ -72,145 +72,150 @@ export function useNavigationCache<
   router,
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
+  const { withStackTrace } = useNavigationBuilderContext();
+
   const parentNavigation = React.use(NavigationContext);
-  const { stackRef } = React.use(NavigationBuilderContext);
 
   // Cache object which holds navigation objects for each screen
   // We use `React.useMemo` instead of `React.useRef` coz we want to invalidate it when deps change
   // In reality, these deps will rarely change, if ever
-  const cache = React.useMemo(
-    () => ({
-      current: {} as NavigationCache<
-        State,
-        ScreenOptions,
-        EventMap,
-        ActionHelpers
-      >,
-    }),
+  const cache = React.useMemo<{
+    current: NavigationCache<State, ScreenOptions, EventMap, ActionHelpers>;
+    routeNames: Record<string, string>;
+  }>(
+    () => ({ current: {}, routeNames: {} }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [getState, parentNavigation, navigation, setOptions, emitter]
+    [
+      getState,
+      parentNavigation,
+      navigation,
+      setOptions,
+      router,
+      emitter,
+      withStackTrace,
+    ]
   );
 
-  const next = routes.reduce<
-    NavigationCache<State, ScreenOptions, EventMap, ActionHelpers>
-  >((acc, route) => {
-    const previous = cache.current[route.key];
+  const next = React.useMemo(() => {
+    return routes.reduce<
+      NavigationCache<State, ScreenOptions, EventMap, ActionHelpers>
+    >((acc, route) => {
+      const previous =
+        cache.routeNames[route.key] === route.name
+          ? cache.current[route.key]
+          : undefined;
 
-    if (previous) {
-      // If a cached navigation object already exists, reuse it
-      acc[route.key] = previous;
-    } else {
-      const withStack = (callback: () => void) => {
-        let isStackSet = false;
+      if (previous) {
+        // If a cached navigation object already exists, reuse it
+        acc[route.key] = previous;
+      } else {
+        const dispatch = (
+          thunk:
+            | NavigationAction
+            | ((state: State) => NavigationAction | null | undefined)
+        ) => {
+          withStackTrace(dispatch, () => {
+            React.startTransition(() => {
+              const action =
+                typeof thunk === 'function' ? thunk(getState()) : thunk;
 
-        try {
-          if (
-            process.env.NODE_ENV !== 'production' &&
-            stackRef &&
-            !stackRef.current
-          ) {
-            // Capture the stack trace for devtools
-            stackRef.current = new Error().stack;
-            isStackSet = true;
-          }
+              if (action != null) {
+                navigation.dispatch({ source: route.key, ...action });
+              }
+            });
+          });
+        };
 
-          callback();
-        } finally {
-          if (isStackSet && stackRef) {
-            stackRef.current = undefined;
-          }
-        }
-      };
+        const actions = {
+          ...router.actionCreators,
+          ...CommonActions,
+        };
 
-      const dispatch = (
-        thunk:
-          | NavigationAction
-          | ((state: State) => NavigationAction | null | undefined)
-      ) => {
-        withStack(() =>
-          React.startTransition(() => {
-            const action =
-              typeof thunk === 'function' ? thunk(getState()) : thunk;
-
-            if (action != null) {
-              navigation.dispatch({ source: route.key, ...action });
-            }
-          })
-        );
-      };
-
-      const actions = {
-        ...router.actionCreators,
-        ...CommonActions,
-      };
-
-      const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
-        (acc, name) => {
-          acc[name] = (...args: any) =>
-            // @ts-expect-error: name is a valid key, but TypeScript is dumb
-            dispatch(actions[name](...args));
-
-          return acc;
-        },
-        {}
-      );
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { emit, ...rest } = navigation;
-
-      acc[route.key] = {
-        ...rest,
-        ...helpers,
-        // FIXME: too much work to fix the types for now
-        ...(emitter.create(route.key) as any),
-        dispatch,
-        getParent: (routeName) => {
-          if (routeName === route.name) {
-            // If the passed route name is the same as the current route's name,
-            // we return the cached navigation object for the route
-            return acc[route.key];
-          }
-
-          if (routeName !== undefined) {
-            const parent = parentNavigation?.getParent(routeName);
-
-            if (parent === undefined) {
-              throw new Error(
-                `Couldn't find a navigation object for '${routeName}' in current or any parent screens. Is your component inside the correct screen?`
+        const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
+          (acc, name) => {
+            const helper = (...args: any) =>
+              withStackTrace(helper, () =>
+                // @ts-expect-error: name is a valid key, but TypeScript is dumb
+                dispatch(actions[name](...args))
               );
+
+            acc[name] = helper;
+
+            return acc;
+          },
+          {}
+        );
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { emit, ...rest } = navigation;
+
+        acc[route.key] = {
+          ...rest,
+          ...helpers,
+          // FIXME: too much work to fix the types for now
+          ...(emitter.create(route.key) as any),
+          dispatch,
+          getParent: (routeName) => {
+            if (routeName === route.name) {
+              // If the passed route name is the same as the current route's name,
+              // we return the cached navigation object for the route
+              return acc[route.key];
             }
 
-            return parent;
-          }
+            if (routeName !== undefined) {
+              const parent = parentNavigation?.getParent(routeName);
 
-          return parentNavigation;
-        },
-        setOptions: (options: Partial<ScreenOptions>) => {
-          setOptions((o) => ({
-            ...o,
-            [route.key]: { ...o[route.key], ...options },
-          }));
-        },
-        isFocused: () => {
-          const state = rest.getState();
+              if (parent === undefined) {
+                throw new Error(
+                  `Couldn't find a navigation object for '${routeName}' in current or any parent screens. Is your component inside the correct screen?`
+                );
+              }
 
-          if (state.routes[state.index]?.key !== route.key) {
-            return false;
-          }
+              return parent;
+            }
 
-          // If the current screen is focused, we also need to check if parent navigator is focused
-          // This makes sure that we return the focus state in the whole tree, not just this navigator
-          return navigation ? navigation.isFocused() : true;
-        },
-      };
-    }
+            return parentNavigation;
+          },
+          setOptions: (options: Partial<ScreenOptions>) => {
+            setOptions((o) => ({
+              ...o,
+              [route.key]: { ...o[route.key], ...options },
+            }));
+          },
+          isFocused: () => {
+            const state = rest.getState();
 
-    return acc;
-  }, {});
+            if (state.routes[state.index]?.key !== route.key) {
+              return false;
+            }
+
+            // If the current screen is focused, we also need to check if parent navigator is focused
+            // This makes sure that we return the focus state in the whole tree, not just this navigator
+            return navigation ? navigation.isFocused() : true;
+          },
+        };
+      }
+
+      return acc;
+    }, {});
+  }, [
+    cache,
+    routes,
+    getState,
+    navigation,
+    router,
+    withStackTrace,
+    emitter,
+    parentNavigation,
+    setOptions,
+  ]);
 
   React.useInsertionEffect(() => {
     cache.current = next;
-  });
+    cache.routeNames = Object.fromEntries(
+      routes.map((route) => [route.key, route.name])
+    );
+  }, [cache, next, routes]);
 
   return next;
 }

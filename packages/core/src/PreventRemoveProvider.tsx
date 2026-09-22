@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid/non-secure';
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
@@ -34,7 +33,8 @@ const transformPreventedRoutes = (
  * Component used for managing which routes have to be prevented from removal in native-stack.
  */
 export function PreventRemoveProvider({ children }: Props) {
-  const [parentId] = React.useState(() => nanoid());
+  const parentId = React.useId();
+
   const [preventedRoutesMap, setPreventedRoutesMap] =
     React.useState<PreventedRoutesMap>(() => new Map());
 
@@ -50,15 +50,9 @@ export function PreventRemoveProvider({ children }: Props) {
 
   const setPreventRemove = useLatestCallback(
     (id: string, routeKey: string, preventRemove: boolean): void => {
-      if (
-        preventRemove &&
-        (navigation == null ||
-          navigation
-            ?.getState()
-            .routes.every((route) => route.key !== routeKey))
-      ) {
+      if (preventRemove && navigation == null) {
         throw new Error(
-          `Couldn't find a route with the key ${routeKey}. Is your component inside NavigationContent?`
+          "Couldn't find a navigation object. This is likely a bug in the navigator.\n\nIf you're using a custom navigator, make sure that the navigator content is wrapped by the 'render' function returned by 'useNavigationBuilder'."
         );
       }
 

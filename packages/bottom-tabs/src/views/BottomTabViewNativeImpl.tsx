@@ -158,17 +158,21 @@ export function BottomTabViewNative({
       previousRouteKey !== focusedRouteKey &&
       descriptors[previousRouteKey]?.options.popToTopOnBlur
     ) {
-      const prevRoute = state.routes.find(
+      const currentState = navigation.getState();
+      const prevRoute = currentState.routes.find(
         (route) => route.key === previousRouteKey
       );
 
-      if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
-        const popToTopAction = {
+      if (
+        prevRoute?.state?.type === 'stack' &&
+        prevRoute.state.key &&
+        ((prevRoute.state.index ?? prevRoute.state.routes.length - 1) > 0 ||
+          prevRoute.state.routes[0]?.history?.length)
+      ) {
+        navigation.dispatch({
           ...StackActions.popToTop(),
           target: prevRoute.state.key,
-        };
-
-        navigation.dispatch(popToTopAction);
+        });
       }
     }
 
@@ -185,7 +189,7 @@ export function BottomTabViewNative({
     }, 32);
 
     return () => clearTimeout(timer);
-  }, [descriptors, focusedRouteKey, navigation, state.index, state.routes]);
+  }, [descriptors, focusedRouteKey, navigation]);
 
   const navigate = (
     route: (typeof state.routes)[number],
@@ -562,7 +566,10 @@ export function BottomTabViewNative({
           // An error is thrown for React Elements in `getIcon`
           // So we only call it when we actually render a native tab bar
           const icon = hasCustomTabBar ? undefined : getIcon(false);
-          const selectedIcon = hasCustomTabBar ? undefined : getIcon(true);
+          const selectedIcon =
+            !hasCustomTabBar && typeof tabBarIcon === 'function'
+              ? getIcon(true)
+              : icon;
 
           // For preloaded screens and if lazy is false,
           // Keep them active so that the effects can run

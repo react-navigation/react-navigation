@@ -17,7 +17,7 @@ export function CornerInset({ ref, ...rest }: Props) {
 
   const nativeRef =
     React.useRef<
-      React.ElementRef<typeof ReactNavigationCornerInsetViewNativeComponent>
+      React.ComponentRef<typeof ReactNavigationCornerInsetViewNativeComponent>
     >(null);
 
   const relayout = React.useCallback(() => {

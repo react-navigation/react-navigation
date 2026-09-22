@@ -133,16 +133,6 @@ export type NativeStackHeaderBackProps = NativeStackHeaderItemProps & {
   href?: string | undefined;
 };
 
-/**
- * @deprecated Use `NativeStackHeaderBackProps` instead.
- */
-export type NativeStackHeaderLeftProps = NativeStackHeaderBackProps;
-
-/**
- * @deprecated Use `NativeStackHeaderItemProps` instead.
- */
-export type NativeStackHeaderRightProps = NativeStackHeaderItemProps;
-
 export type NativeStackNavigationOptions = {
   /**
    * String that can be displayed in the header as a fallback for `headerTitle`.
@@ -310,8 +300,8 @@ export type NativeStackNavigationOptions = {
   headerBackground?: (() => React.ReactNode) | undefined;
   /**
    * Function which returns a React Element to display on the left side of the header.
-   * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
-   * Will be overriden by `headerLeftItems` on iOS.
+   * This replaces the back button. See `headerBackVisible` to show the back button alongside the left element.
+   * Will be overridden by `headerLeftItems` on iOS.
    */
   headerLeft?:
     | ((props: NativeStackHeaderBackProps) => React.ReactNode)
@@ -327,7 +317,7 @@ export type NativeStackNavigationOptions = {
   headerLeftBackgroundVisible?: boolean | undefined;
   /**
    * Function which returns a React Element to display on the right side of the header.
-   * Will be overriden by `headerRightItems` on iOS.
+   * Will be overridden by `headerRightItems` on iOS.
    */
   headerRight?:
     | ((props: NativeStackHeaderItemProps) => React.ReactNode)
@@ -584,7 +574,7 @@ export type NativeStackNavigationOptions = {
    */
   gestureResponseDistance?: ScreenProps['gestureResponseDistance'] | undefined;
   /**
-   * The type of animation to use when this screen replaces another screen. Defaults to `pop`.
+   * The type of animation to use when this screen replaces another screen. Defaults to `push`.
    *
    * Supported values:
    * - "push": the new screen will perform push animation.

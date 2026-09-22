@@ -18,32 +18,23 @@ import type { LinkingOptions } from '../types';
 type NavigatorProps = Parameters<typeof useNavigationBuilder>[1];
 
 const createStackNavigator = createNavigatorFactory((props: NavigatorProps) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     StackRouter,
     props
   );
 
   const route = state.routes[state.index];
 
-  return (
-    <NavigationContent>
-      <div>{route ? descriptors[route.key]?.render() : null}</div>
-    </NavigationContent>
-  );
+  return render(<div>{route ? descriptors[route.key]?.render() : null}</div>);
 });
 
 const createTabNavigator = createNavigatorFactory((props: NavigatorProps) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
-    TabRouter,
-    props
-  );
+  const { state, descriptors, render } = useNavigationBuilder(TabRouter, props);
 
-  return (
-    <NavigationContent>
-      {state.routes.map((route) => (
-        <div key={route.key}>{descriptors[route.key]?.render()}</div>
-      ))}
-    </NavigationContent>
+  return render(
+    state.routes.map((route) => (
+      <div key={route.key}>{descriptors[route.key]?.render()}</div>
+    ))
   );
 });
 
@@ -161,7 +152,7 @@ test('preserves the linked path while a nested navigator hydrates', async () => 
   expect(onReady).toHaveBeenCalledTimes(1);
   expect(navigation.isReady()).toBe(true);
 
-  expect(navigation.getRootState().routes[0]?.state).toBeUndefined();
+  expect(navigation.getRootState()?.routes[0]?.state).toBeUndefined();
   expect(navigation.getState().routes[0]?.state).toBeDefined();
 
   expect(window.location.pathname).toBe('/details/42');
@@ -392,7 +383,7 @@ test('preserves the linked path while the focused route chain hydrates', async (
   expect(onReady).toHaveBeenCalledTimes(1);
   expect(navigation.isReady()).toBe(true);
 
-  expect(navigation.getRootState().routes[0]?.state).toBeUndefined();
+  expect(navigation.getRootState()?.routes[0]?.state).toBeUndefined();
 
   expect(window.location.pathname).toBe('/details/42');
 

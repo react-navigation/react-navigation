@@ -3,24 +3,31 @@ import {
   type InitialState,
   type NavigationAction,
   type NavigationState,
+  type ParamListBase,
   type PartialState,
   type Route,
 } from '@react-navigation/routers';
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
+import warnOnce from 'warn-once';
 
 import { checkDuplicateRouteNames } from './checkDuplicateRouteNames';
-import { checkSerializable } from './checkSerializable';
 import { ConsumedParamsContext } from './ConsumedParamsContext';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
 import { findFocusedRoute } from './findFocusedRoute';
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import {
+  NavigationBuilderContext,
+  type WithStackTrace,
+} from './NavigationBuilderContext';
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
+import { NavigationRootContext } from './NavigationRootContext';
 import { NavigationStateContext } from './NavigationStateContext';
 import { ThemeProvider } from './theming/ThemeProvider';
 import type {
+  EventListenerCallback,
+  GenericNavigation,
   NavigationContainerEventMap,
   NavigationContainerProps,
   NavigationContainerRef,
@@ -36,9 +43,6 @@ import { useOptionsGetters } from './useOptionsGetters';
 import { useSyncState } from './useSyncState';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
-
-const serializableWarnings: string[] = [];
-const duplicateNameWarnings: string[] = [];
 
 type Props<ParamList extends {}> = NavigationContainerProps & {
   ref?: React.Ref<NavigationContainerRef<ParamList>>;
@@ -125,6 +129,41 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
 
+  const stackRef = React.useRef<string | undefined>(undefined);
+
+  const withStackTrace = React.useCallback<WithStackTrace>(
+    (entry, callback) => {
+      if (process.env.NODE_ENV === 'production' || stackRef.current != null) {
+        callback();
+        return;
+      }
+
+      const error = new Error();
+
+      if (Error.captureStackTrace) {
+        // Available on V8 and Hermes, omits the frames of `entry` and what it called
+        Error.captureStackTrace(error, entry);
+
+        stackRef.current = error.stack;
+      } else {
+        // Other engines always include them, so we drop the frames up to `entry` ourselves
+        const frames = error.stack?.split('\n') ?? [];
+        const index = frames.findIndex((frame) =>
+          frame.includes(`${entry.name}@`)
+        );
+
+        stackRef.current = frames.slice(index + 1).join('\n');
+      }
+
+      try {
+        callback();
+      } finally {
+        stackRef.current = undefined;
+      }
+    },
+    []
+  );
+
   const dispatch = useLatestCallback(
     (
       action: NavigationAction | ((state: NavigationState) => NavigationAction)
@@ -134,11 +173,13 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       if (listener == null) {
         console.error(NOT_INITIALIZED_ERROR);
       } else {
-        listener((navigation) =>
-          React.startTransition(() => {
-            navigation.dispatch(action);
-          })
-        );
+        withStackTrace(dispatch, () => {
+          listener((navigation) =>
+            React.startTransition(() => {
+              navigation.dispatch(action);
+            })
+          );
+        });
       }
     }
   );
@@ -199,29 +240,28 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   const { addOptionsGetter, getCurrentOptions } = useOptionsGetters({});
 
-  const navigation: NavigationContainerRef<ParamList> = React.useMemo(
+  const container: NavigationContainerRef<ParamList> = React.useMemo(
     () => ({
       ...Object.keys(CommonActions).reduce<any>((acc, name) => {
-        acc[name] = (...args: any[]) =>
-          // @ts-expect-error: this is ok
-          dispatch(CommonActions[name](...args));
+        const helper = (...args: any[]) =>
+          withStackTrace(helper, () =>
+            // @ts-expect-error: this is ok
+            dispatch(CommonActions[name](...args))
+          );
+
+        acc[name] = helper;
 
         return acc;
       }, {}),
       ...emitter.create('root'),
       dispatch,
       resetRoot,
-      isFocused: () => true,
       canGoBack,
-      getParent: () => undefined,
       getState,
       getRootState,
       getCurrentRoute,
       getCurrentOptions,
       isReady,
-      setOptions: () => {
-        throw new Error('Cannot call setOptions outside a screen');
-      },
     }),
     [
       canGoBack,
@@ -233,10 +273,112 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       getState,
       isReady,
       resetRoot,
+      withStackTrace,
     ]
   );
 
-  React.useImperativeHandle(ref, () => navigation, [navigation]);
+  const navigation: GenericNavigation<ParamListBase> = React.useMemo(() => {
+    const events = emitter.create('root');
+
+    const dispatch = (
+      thunk: NavigationAction | ((state: NavigationState) => NavigationAction)
+    ) => {
+      const root = keyedListeners.getNavigation.root?.();
+
+      if (root == null) {
+        console.error(NOT_INITIALIZED_ERROR);
+        return;
+      }
+
+      withStackTrace(dispatch, () => {
+        React.startTransition(() => {
+          root.dispatch(thunk);
+        });
+      });
+    };
+
+    const helpers = Object.keys(CommonActions).reduce<any>((acc, name) => {
+      const helper = (...args: any) => {
+        if (
+          name === 'setParams' ||
+          name === 'replaceParams' ||
+          name === 'pushParams'
+        ) {
+          throw new Error(`Cannot call ${name} outside a screen`);
+        }
+
+        withStackTrace(helper, () =>
+          // @ts-expect-error name is a valid key, but TypeScript cannot infer it.
+          dispatch(CommonActions[name](...args))
+        );
+      };
+
+      acc[name] = helper;
+
+      return acc;
+    }, {});
+
+    const listeners = new WeakMap<
+      (...args: never[]) => void,
+      EventListenerCallback<NavigationContainerEventMap, 'state'>
+    >();
+
+    return {
+      ...helpers,
+      dispatch,
+      addListener: (type, callback) => {
+        if (type === 'state') {
+          let listener = listeners.get(callback);
+
+          if (listener === undefined) {
+            // Root's state change events can contain stale and undefined state
+            // But navigation objects should only receive non-stale state
+            // So we add a wrapper to filter out stale events
+            listener = (event) => {
+              if (event.data.state?.stale === false) {
+                // @ts-expect-error TypeScript doesn't narrow the generic event callback with its type.
+                callback(event);
+              }
+            };
+
+            listeners.set(callback, listener);
+          }
+
+          return events.addListener('state', listener);
+        }
+
+        return () => {};
+      },
+      removeListener: (type, callback) => {
+        if (type === 'state') {
+          const listener = listeners.get(callback);
+
+          if (listener) {
+            events.removeListener('state', listener);
+            listeners.delete(callback);
+          }
+        }
+      },
+      canGoBack: () =>
+        keyedListeners.getNavigation.root?.().canGoBack() ?? false,
+      getState: () => keyedListeners.getState.root?.(),
+      getParent: (routeName?: string) => {
+        if (routeName !== undefined) {
+          throw new Error(
+            `Couldn't find a navigation object for '${routeName}' because it's called outside a screen. Is your component inside a screen?`
+          );
+        }
+
+        return undefined;
+      },
+      setOptions: () => {
+        throw new Error('Cannot call setOptions outside a screen');
+      },
+      isFocused: () => true,
+    };
+  }, [emitter, keyedListeners, withStackTrace]);
+
+  React.useImperativeHandle(ref, () => container, [container]);
 
   const onDispatchAction = useLatestCallback(
     (action: NavigationAction, noop: boolean) => {
@@ -261,10 +403,17 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     }
   );
 
+  const isOptionsListenerReadyRef = React.useRef(false);
   const lastEmittedOptionsRef = React.useRef<object | undefined>(undefined);
 
-  const onOptionsChange = useLatestCallback((options: object) => {
-    if (lastEmittedOptionsRef.current === options) {
+  const onOptionsChange = useLatestCallback(() => {
+    if (!isOptionsListenerReadyRef.current) {
+      return;
+    }
+
+    const options = getCurrentOptions();
+
+    if (options == null || lastEmittedOptionsRef.current === options) {
       return;
     }
 
@@ -276,7 +425,15 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     });
   });
 
-  const stackRef = React.useRef<string | undefined>(undefined);
+  React.useEffect(() => {
+    isOptionsListenerReadyRef.current = true;
+
+    onOptionsChange();
+
+    return () => {
+      isOptionsListenerReadyRef.current = false;
+    };
+  }, [onOptionsChange]);
 
   const lastEmittedStateRef = React.useRef<State>(undefined);
 
@@ -294,7 +451,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
-      stackRef,
+      withStackTrace,
     }),
     [
       addListener,
@@ -305,6 +462,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
+      withStackTrace,
     ]
   );
 
@@ -355,63 +513,10 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
   }, [state, isReady, emitter]);
 
   React.useEffect(() => {
-    const hydratedState = getRootState();
-
     if (process.env.NODE_ENV !== 'production') {
+      const hydratedState = getRootState();
+
       if (hydratedState !== undefined) {
-        const serializableResult = checkSerializable(hydratedState);
-
-        if (!serializableResult.serializable) {
-          const { location, reason } = serializableResult;
-
-          let path = '';
-          let pointer: Record<any, any> = hydratedState;
-          let params = false;
-
-          for (let i = 0; i < location.length; i++) {
-            const curr = location[i];
-            const prev = location[i - 1];
-
-            if (curr == null) {
-              continue;
-            }
-
-            pointer = pointer[curr];
-
-            if (!params && curr === 'state') {
-              continue;
-            } else if (!params && curr === 'routes') {
-              if (path) {
-                path += ' > ';
-              }
-            } else if (
-              !params &&
-              typeof curr === 'number' &&
-              prev === 'routes'
-            ) {
-              path += pointer?.name;
-            } else if (!params) {
-              path += ` > ${curr}`;
-              params = true;
-            } else {
-              if (typeof curr === 'number' || /^[0-9]+$/.test(curr)) {
-                path += `[${curr}]`;
-              } else if (/^[a-z$_]+$/i.test(curr)) {
-                path += `.${curr}`;
-              } else {
-                path += `[${JSON.stringify(curr)}]`;
-              }
-            }
-          }
-
-          const message = `Non-serializable values were found in the navigation state. Check:\n\n${path} (${reason})\n\nThis can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/troubleshooting#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state for more details.`;
-
-          if (!serializableWarnings.includes(message)) {
-            serializableWarnings.push(message);
-            console.warn(message);
-          }
-        }
-
         const duplicateRouteNamesResult =
           checkDuplicateRouteNames(hydratedState);
 
@@ -420,10 +525,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
             (locations) => `\n${locations.join(', ')}`
           )}\n\nThis can cause confusing behavior during navigation. Consider using unique names for each screen instead.`;
 
-          if (!duplicateNameWarnings.includes(message)) {
-            duplicateNameWarnings.push(message);
-            console.warn(message);
-          }
+          warnOnce(true, message);
         }
       }
     }
@@ -433,6 +535,8 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     emitter.emit({ type: 'state', data: { state } });
 
     if (!isFirstMountRef.current && onStateChangeRef.current) {
+      const hydratedState = getRootState();
+
       onStateChangeRef.current(hydratedState);
     }
 
@@ -485,20 +589,22 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   return (
     <NavigationIndependentTreeContext.Provider value={false}>
-      <NavigationContainerRefContext.Provider value={navigation}>
-        <NavigationBuilderContext.Provider value={builderContext}>
-          <NavigationStateContext.Provider value={context}>
-            <ConsumedParamsContext.Provider value={consumedParams}>
-              <UnhandledActionContext.Provider
-                value={onUnhandledAction ?? defaultOnUnhandledAction}
-              >
-                <EnsureSingleNavigator>
-                  <ThemeProvider value={theme}>{children}</ThemeProvider>
-                </EnsureSingleNavigator>
-              </UnhandledActionContext.Provider>
-            </ConsumedParamsContext.Provider>
-          </NavigationStateContext.Provider>
-        </NavigationBuilderContext.Provider>
+      <NavigationContainerRefContext.Provider value={container}>
+        <NavigationRootContext.Provider value={navigation}>
+          <NavigationBuilderContext.Provider value={builderContext}>
+            <NavigationStateContext.Provider value={context}>
+              <ConsumedParamsContext.Provider value={consumedParams}>
+                <UnhandledActionContext.Provider
+                  value={onUnhandledAction ?? defaultOnUnhandledAction}
+                >
+                  <EnsureSingleNavigator>
+                    <ThemeProvider value={theme}>{children}</ThemeProvider>
+                  </EnsureSingleNavigator>
+                </UnhandledActionContext.Provider>
+              </ConsumedParamsContext.Provider>
+            </NavigationStateContext.Provider>
+          </NavigationBuilderContext.Provider>
+        </NavigationRootContext.Provider>
       </NavigationContainerRefContext.Provider>
     </NavigationIndependentTreeContext.Provider>
   );

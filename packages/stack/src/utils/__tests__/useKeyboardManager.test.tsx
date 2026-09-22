@@ -2,10 +2,9 @@ import { describe, expect, jest, test } from '@jest/globals';
 import { act, renderHook } from '@testing-library/react-native';
 import type { RefObject } from 'react';
 import {
-  type EmitterSubscription,
   type HostInstance,
   Keyboard,
-  type KeyboardEventListener,
+  type KeyboardEvent,
   type KeyboardEventName,
   TextInput,
 } from 'react-native';
@@ -174,11 +173,15 @@ describe('useKeyboardManager', () => {
   describe('input focus on unfocused screen', () => {
     test('blurs focused input in an unfocused screen when keyboard is shown', async () => {
       const listeners: Partial<
-        Record<KeyboardEventName, KeyboardEventListener[] | undefined>
+        Record<
+          KeyboardEventName,
+          Parameters<typeof Keyboard.addListener>[1][] | undefined
+        >
       > = {};
 
       const addListenerSpy = jest
         .spyOn(Keyboard, 'addListener')
+        // @ts-expect-error:  types require private fields.
         .mockImplementation((name, callback) => {
           listeners[name] = [...(listeners[name] ?? []), callback];
 
@@ -188,7 +191,7 @@ describe('useKeyboardManager', () => {
                 (listener) => listener !== callback
               );
             },
-          } as EmitterSubscription;
+          };
         });
 
       const blurMock = jest.fn();
@@ -209,7 +212,7 @@ describe('useKeyboardManager', () => {
 
       await act(() => {
         listeners.keyboardDidShow?.forEach((listener) =>
-          listener({} as Parameters<KeyboardEventListener>[0])
+          listener({} as KeyboardEvent)
         );
       });
 

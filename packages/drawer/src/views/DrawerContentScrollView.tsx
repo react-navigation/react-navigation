@@ -12,7 +12,7 @@ import { DrawerPositionContext } from '../utils/DrawerPositionContext';
 
 type Props = ScrollViewProps & {
   children: React.ReactNode;
-  ref?: React.Ref<ScrollView>;
+  ref?: React.Ref<React.ComponentRef<typeof ScrollView>>;
 };
 
 const SPACING = 12;

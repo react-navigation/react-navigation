@@ -10,6 +10,7 @@ import type {
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
+import type { Theme as InternalTheme } from './internal';
 import type {
   FlatType,
   KeyOf,
@@ -51,8 +52,7 @@ export interface RootNavigator {}
  * }
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Theme {}
+export interface Theme extends InternalTheme {}
 
 export type RootParamList =
   RootNavigator extends PrivateValueStore<
@@ -1360,7 +1360,7 @@ type NavigationListForGroups<ParentList, Groups> = Groups extends {}
 
 export type NavigationContainerRef<ParamList extends {}> = Omit<
   NavigationHelpers<ParamList>,
-  keyof NavigationHelpersRoute<{}>
+  keyof NavigationHelpersRoute<{}> | 'isFocused'
 > &
   NavigationHelpersRoute<{}> &
   EventConsumer<NavigationContainerEventMap> & {
@@ -1373,7 +1373,7 @@ export type NavigationContainerRef<ParamList extends {}> = Omit<
     /**
      * Get the rehydrated navigation state of the navigation tree.
      */
-    getRootState(): NavigationState;
+    getRootState(): NavigationState | undefined;
     /**
      * Get the currently focused navigation route.
      */
@@ -1386,10 +1386,6 @@ export type NavigationContainerRef<ParamList extends {}> = Omit<
      * Whether the navigation container is ready to handle actions.
      */
     isReady(): boolean;
-    /**
-     * Stub function for setOptions on navigation object for use with useNavigation.
-     */
-    setOptions(): never;
   };
 
 export type NavigationContainerRefWithCurrent<ParamList extends {}> =

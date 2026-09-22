@@ -1,15 +1,15 @@
 import {
   CommonActions,
   type FocusedRouteState,
+  type GenericNavigation,
   getPathFromState,
   type NavigationAction,
-  type NavigationContainerRef,
-  NavigationContainerRefContext,
   NavigationContext,
   NavigationFocusedRouteStateContext,
   type NavigationHelpers,
   NavigationHelpersContext,
   type NavigationProp,
+  NavigationRootContext,
   type NavigatorScreenParams,
   type ParamListBase,
   type ParamListForNavigator,
@@ -274,12 +274,12 @@ export function useLinkProps<
   action,
   ...rest
 }: LinkProps<NoInfer<ParamList>, RouteName>) {
-  const root = React.use(NavigationContainerRefContext);
+  const root = React.use(NavigationRootContext);
 
   let navigation:
+    | GenericNavigation<ParamListBase>
     | NavigationHelpers<ParamListBase>
     | NavigationProp<ParamListBase>
-    | NavigationContainerRef<ParamListBase>
     | undefined = React.use(NavigationContext);
 
   if (parent != null) {
@@ -290,16 +290,7 @@ export function useLinkProps<
     // Handle custom actions in the immediate parent
     navigation = helpers ?? navigation ?? root;
   } else {
-    // The ref dispatches in currently focused screen
-    // So prefer the top-most navigator if available
-    let parent = navigation?.getParent();
-
-    while (parent !== undefined) {
-      navigation = parent;
-      parent = navigation.getParent();
-    }
-
-    navigation = navigation ?? root;
+    navigation = root;
   }
 
   if (navigation == null) {

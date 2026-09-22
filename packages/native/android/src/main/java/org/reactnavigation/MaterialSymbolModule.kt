@@ -46,13 +46,13 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     }
 
     val resolvedColor = ColorPropConverter.getColor(
-      colorValue, currentActivity ?: reactApplicationContext
+      colorValue, reactApplicationContext.currentActivity ?: reactApplicationContext
     ) ?: throw IllegalArgumentException("Could not resolve color")
 
     val density = reactApplicationContext.resources.displayMetrics.density
     val scaledSize = (size * density).roundToInt().coerceAtLeast(1)
 
-    val (resolvedTypeface, typefaceSuffix) = MaterialSymbolTypeface.get(
+    val typefaceSuffix = MaterialSymbolTypeface.getSuffix(
       reactApplicationContext, variant, weight?.toInt()
     )
 
@@ -81,6 +81,10 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     }
 
     cacheDir.mkdirs()
+
+    val resolvedTypeface = MaterialSymbolTypeface.get(
+      reactApplicationContext, variant, weight?.toInt()
+    ).typeface
 
     val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
       typeface = resolvedTypeface

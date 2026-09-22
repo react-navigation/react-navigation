@@ -4,7 +4,7 @@ import * as React from 'react';
 import {
   type FocusedNavigationCallback,
   type FocusedNavigationListener,
-  NavigationBuilderContext,
+  useNavigationBuilderContext,
 } from './NavigationBuilderContext';
 import type { NavigationHelpers } from './types';
 
@@ -20,7 +20,7 @@ export function useFocusedListenersChildrenAdapter({
   navigation,
   focusedListeners,
 }: Options) {
-  const { addListener } = React.use(NavigationBuilderContext);
+  const { addListener } = useNavigationBuilderContext();
 
   const listener = React.useCallback(
     (callback: FocusedNavigationCallback<any>) => {

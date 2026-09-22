@@ -223,6 +223,19 @@ async function runStep(page: Page, step: any) {
       break;
     }
 
+    case 'scroll': {
+      const viewport = page.viewportSize();
+
+      if (!viewport) {
+        throw new Error('Viewport size is not available');
+      }
+
+      await page.mouse.move(viewport.width / 2, viewport.height / 2);
+      await page.mouse.wheel(0, viewport.height * 0.75);
+
+      break;
+    }
+
     case 'swipe': {
       const duration = step.swipe.duration || 300;
 

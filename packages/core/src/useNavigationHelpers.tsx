@@ -7,6 +7,7 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
+import { useNavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContext } from './NavigationProvider';
 import { type NavigationHelpers, PrivateValueStore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
@@ -19,7 +20,6 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
   onAction: (action: NavigationAction) => boolean;
   onUnhandledAction: (action: NavigationAction) => void;
   getState: () => State;
-  state: State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
 };
@@ -37,38 +37,23 @@ export function useNavigationHelpers<
   onAction,
   onUnhandledAction,
   getState,
-  state,
   emitter,
   router,
 }: Options<State, Action>) {
   const parentNavigationHelpers = React.use(NavigationContext);
-
-  // In some cases (e.g. route names change), internal state might have changed
-  // But it hasn't been committed yet, so hasn't propagated to any listeners
-  // During this time, we need to return the internal state in `getState`
-  // Otherwise it can return an inconsistent state during render in children
-  // This may affect hooks like `useNavigationState` that need to read the state during render
-  // To avoid this, we use a ref for render phase, and immediately clear it on commit
-  // The ref won't be cleared if the render is discarded, e.g. when interrupted
-  // So we also track the stored state the render was based on
-  // Then ignore the ref once the stored state changes due to another dispatch
-  const stateRef = React.useRef<{ state: State; base: State } | null>(null);
-
-  stateRef.current = { state, base: getState() };
-
-  React.useInsertionEffect(() => {
-    stateRef.current = null;
-  });
+  const { withStackTrace } = useNavigationBuilderContext();
 
   return React.useMemo(() => {
     const dispatch = (op: Action | ((state: State) => Action)) => {
-      const action = typeof op === 'function' ? op(getState()) : op;
+      withStackTrace(dispatch, () => {
+        const action = typeof op === 'function' ? op(getState()) : op;
 
-      const handled = onAction(action);
+        const handled = onAction(action);
 
-      if (!handled) {
-        onUnhandledAction?.(action);
-      }
+        if (!handled) {
+          onUnhandledAction?.(action);
+        }
+      });
     };
 
     const actions = {
@@ -77,8 +62,15 @@ export function useNavigationHelpers<
     };
 
     const helpers = Object.keys(actions).reduce((acc, name) => {
+      const helper = (...args: any) =>
+        withStackTrace(helper, () =>
+          // @ts-expect-error: name is a valid key, but TypeScript is dumb
+          dispatch(actions[name](...args))
+        );
+
       // @ts-expect-error: name is a valid key, but TypeScript is dumb
-      acc[name] = (...args: any) => dispatch(actions[name](...args));
+      acc[name] = helper;
+
       return acc;
     }, {} as ActionHelpers);
 
@@ -103,18 +95,7 @@ export function useNavigationHelpers<
           false
         );
       },
-      getState: (): State => {
-        const current = getState();
-        const pending = stateRef.current;
-
-        // FIXME: Workaround for when the state is read during render
-        // Apart from subscriptions, `getState` should never be called during render
-        if (pending != null && pending.base === current) {
-          return pending.state;
-        }
-
-        return current;
-      },
+      getState,
     } as NavigationHelpers<ParamListBase, EventMap> & ActionHelpers;
 
     return navigationHelpers;
@@ -125,6 +106,6 @@ export function useNavigationHelpers<
     getState,
     onAction,
     onUnhandledAction,
-    stateRef,
+    withStackTrace,
   ]);
 }

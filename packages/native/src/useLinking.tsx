@@ -268,14 +268,15 @@ export function useLinking<ParamList extends ParamListBase>(
   });
 
   const validateRoutesNotExistInRootState = React.useCallback(
-    (state: PartialState<NavigationState>) => {
-      const navigation = ref.current;
-      const rootState = navigation?.getRootState();
+    (
+      state: PartialState<NavigationState> | undefined,
+      rootState: NavigationState | undefined
+    ) => {
       // Make sure that the routes in the state exist in the root navigator
       // Otherwise there's an error in the linking configuration
       return state?.routes.some((r) => !rootState?.routeNames.includes(r.name));
     },
-    [ref]
+    []
   );
 
   const getInitialState = React.useCallback(() => {
@@ -465,14 +466,12 @@ export function useLinking<ParamList extends ParamListBase>(
         return;
       }
 
+      const rootState = navigation.getRootState();
+
       let state: PartialState<NavigationState> | undefined;
 
       try {
-        state = getStateFromPathRef.current(
-          path,
-          configRef.current,
-          navigation.getRootState()
-        );
+        state = getStateFromPathRef.current(path, configRef.current, rootState);
       } catch (e) {
         console.error(e);
 
@@ -484,7 +483,7 @@ export function useLinking<ParamList extends ParamListBase>(
       if (state) {
         // Make sure that the routes in the state exist in the root navigator
         // Otherwise there's an error in the linking configuration
-        if (validateRoutesNotExistInRootState(state)) {
+        if (validateRoutesNotExistInRootState(state, rootState)) {
           return;
         }
 
@@ -496,7 +495,13 @@ export function useLinking<ParamList extends ParamListBase>(
 
           if (action !== undefined) {
             try {
-              dispatch(action, 'replace');
+              dispatch(
+                {
+                  target: rootState?.key,
+                  ...action,
+                },
+                'replace'
+              );
             } catch (e) {
               // Ignore any errors from deep linking.
               // This could happen in case of malformed links, navigation object not being initialized etc.

@@ -29,34 +29,31 @@ function BottomTabNavigator({
   router,
   ...rest
 }: BottomTabNavigatorProps) {
-  const { state, navigation, descriptors, NavigationContent } =
-    useNavigationBuilder<
-      TabNavigationState<ParamListBase>,
-      TabRouterOptions,
-      TabActionHelpers<ParamListBase>,
-      BottomTabNavigationOptions,
-      BottomTabNavigationEventMap
-    >(TabRouter, {
-      initialRouteName,
-      backBehavior,
-      routeNamesChangeBehavior,
-      children,
-      layout,
-      screenListeners,
-      screenOptions,
-      screenLayout,
-      router,
-    });
+  const { state, navigation, descriptors, render } = useNavigationBuilder<
+    TabNavigationState<ParamListBase>,
+    TabRouterOptions,
+    TabActionHelpers<ParamListBase>,
+    BottomTabNavigationOptions,
+    BottomTabNavigationEventMap
+  >(TabRouter, {
+    initialRouteName,
+    backBehavior,
+    routeNamesChangeBehavior,
+    children,
+    layout,
+    screenListeners,
+    screenOptions,
+    screenLayout,
+    router,
+  });
 
-  return (
-    <NavigationContent>
-      <BottomTabView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-      />
-    </NavigationContent>
+  return render(
+    <BottomTabView
+      {...rest}
+      state={state}
+      navigation={navigation}
+      descriptors={descriptors}
+    />
   );
 }
 

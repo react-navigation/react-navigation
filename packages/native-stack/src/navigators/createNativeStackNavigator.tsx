@@ -32,23 +32,22 @@ function NativeStackNavigator({
   router,
   ...rest
 }: NativeStackNavigatorProps) {
-  const { state, descriptors, navigation, NavigationContent } =
-    useNavigationBuilder<
-      StackNavigationState<ParamListBase>,
-      StackRouterOptions,
-      StackActionHelpers<ParamListBase>,
-      NativeStackNavigationOptions,
-      NativeStackNavigationEventMap
-    >(StackRouter, {
-      initialRouteName,
-      routeNamesChangeBehavior,
-      children,
-      layout,
-      screenListeners,
-      screenOptions,
-      screenLayout,
-      router,
-    });
+  const { state, descriptors, navigation, render } = useNavigationBuilder<
+    StackNavigationState<ParamListBase>,
+    StackRouterOptions,
+    StackActionHelpers<ParamListBase>,
+    NativeStackNavigationOptions,
+    NativeStackNavigationEventMap
+  >(StackRouter, {
+    initialRouteName,
+    routeNamesChangeBehavior,
+    children,
+    layout,
+    screenListeners,
+    screenOptions,
+    screenLayout,
+    router,
+  });
 
   const meta = React.use(NavigationMetaContext);
 
@@ -59,38 +58,47 @@ function NativeStackNavigator({
       return;
     }
 
+    let handle: ReturnType<typeof requestAnimationFrame> | undefined;
+
     // @ts-expect-error: there may not be a tab navigator in parent
-    return navigation?.addListener?.('tabPress', (e: any) => {
+    const unsubscribe = navigation.addListener?.('tabPress', (e) => {
       const isFocused = navigation.isFocused();
+
+      cancelAnimationFrame(handle);
 
       // Run the operation in the next frame so we're sure all listeners have been run
       // This is necessary to know if preventDefault() has been called
-      requestAnimationFrame(() => {
+      handle = requestAnimationFrame(() => {
+        const currentState = navigation.getState();
+
         if (
-          state.index > 0 &&
           isFocused &&
+          (currentState.index > 0 || currentState.routes[0]?.history?.length) &&
           !(e as EventArg<'tabPress', true>).defaultPrevented
         ) {
           // When user taps on already focused tab and we're inside the tab,
           // reset the stack to replicate native behaviour
           navigation.dispatch({
             ...StackActions.popToTop(),
-            target: state.key,
+            target: currentState.key,
           });
         }
       });
     });
-  }, [meta, navigation, state.index, state.key]);
 
-  return (
-    <NavigationContent>
-      <NativeStackView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-      />
-    </NavigationContent>
+    return () => {
+      cancelAnimationFrame(handle);
+      unsubscribe?.();
+    };
+  }, [meta, navigation]);
+
+  return render(
+    <NativeStackView
+      {...rest}
+      state={state}
+      navigation={navigation}
+      descriptors={descriptors}
+    />
   );
 }
 

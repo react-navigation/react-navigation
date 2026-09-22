@@ -15,6 +15,7 @@ export type ListenerMap = {
 
 export type KeyedListenerMap = {
   getState: GetStateListener;
+  getNavigation: GetNavigationListener;
   beforeRemove: ChildBeforeRemoveListener;
 };
 
@@ -47,15 +48,19 @@ export type FocusedNavigationListener = <T>(
 
 export type GetStateListener = () => NavigationState;
 
+export type GetNavigationListener = () => NavigationHelpers<ParamListBase>;
+
+export type WithStackTrace = (
+  entry: (...args: never[]) => void,
+  callback: () => void
+) => void;
+
 export type ChildBeforeRemoveListener = (
   action: NavigationAction,
   nextState: NavigationState | PartialState<NavigationState> | undefined
 ) => boolean;
 
-/**
- * Context which holds the required helpers needed to build nested navigators.
- */
-export const NavigationBuilderContext = React.createContext<{
+type NavigationBuilderContextValue = {
   onAction?:
     | ((action: NavigationAction, visitedNavigators?: Set<string>) => boolean)
     | undefined;
@@ -69,20 +74,28 @@ export const NavigationBuilderContext = React.createContext<{
     target: string | undefined;
     data: unknown;
   }) => void;
-  onOptionsChange: (options: object) => void;
+  onOptionsChange: () => void;
   getIsStateEmitted: () => boolean;
   scheduleUpdate: (callback: () => void) => void;
   flushUpdates: () => void;
-  stackRef?: React.RefObject<string | undefined> | undefined;
-}>({
-  onDispatchAction: () => undefined,
-  onEmitEvent: () => undefined,
-  onOptionsChange: () => undefined,
-  getIsStateEmitted: () => false,
-  scheduleUpdate: () => {
-    throw new Error("Couldn't find a context for scheduling updates.");
-  },
-  flushUpdates: () => {
-    throw new Error("Couldn't find a context for flushing updates.");
-  },
-});
+  withStackTrace: WithStackTrace;
+};
+
+/**
+ * Context which holds the required helpers needed to build nested navigators.
+ */
+export const NavigationBuilderContext = React.createContext<
+  NavigationBuilderContextValue | undefined
+>(undefined);
+
+export function useNavigationBuilderContext() {
+  const value = React.use(NavigationBuilderContext);
+
+  if (value == null) {
+    throw new Error(
+      "Couldn't find a navigation builder context. Is your component inside NavigationContainer?"
+    );
+  }
+
+  return value;
+}

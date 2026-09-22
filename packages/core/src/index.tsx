@@ -19,10 +19,12 @@ export { NavigationHelpersContext } from './NavigationHelpersContext';
 export { NavigationIndependentTree } from './NavigationIndependentTree';
 export { NavigationMetaContext } from './NavigationMetaContext';
 export {
+  IsScreenContext,
   NavigationContext,
   NavigationProvider,
   NavigationRouteContext,
 } from './NavigationProvider';
+export { NavigationRootContext } from './NavigationRootContext';
 export { PreventRemoveContext } from './PreventRemoveContext';
 export { PreventRemoveProvider } from './PreventRemoveProvider';
 export {

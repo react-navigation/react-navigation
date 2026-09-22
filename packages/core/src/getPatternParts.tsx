@@ -1,8 +1,11 @@
+export type PatternPartRepeat = 'zero-or-more' | 'one-or-more';
+
 export type PatternPart = {
   segment: string;
-  param?: string;
-  regex?: string;
+  name?: string;
+  pattern?: string;
   optional?: boolean;
+  repeat?: PatternPartRepeat;
 };
 
 /**
@@ -15,6 +18,7 @@ export function getPatternParts(path: string): PatternPart[] {
 
   let isRegex = false;
   let isParam = false;
+  let hasRepeat = false;
   let isEscaped = false;
   let isInCharClass = false;
   let regexInnerParens = 0;
@@ -55,7 +59,7 @@ export function getPatternParts(path: string): PatternPart[] {
           // The ')' is part of the regex if we're already inside one
           regexInnerParens--;
         } else {
-          current.regex += char;
+          current.pattern += char;
           isRegex = false;
           isParam = false;
         }
@@ -65,7 +69,7 @@ export function getPatternParts(path: string): PatternPart[] {
         );
       }
     } else if (char === '?' && !isRegex) {
-      if (current.param) {
+      if (current.name) {
         isParam = false;
 
         current.optional = true;
@@ -74,6 +78,27 @@ export function getPatternParts(path: string): PatternPart[] {
           `Encountered '?' without preceding ':' in path: ${path}`
         );
       }
+    } else if (
+      current.name &&
+      !isRegex &&
+      (char === '*' || char === '+') &&
+      (path[i + 1] == null ||
+        path[i + 1] === '/' ||
+        path[i + 1] === '?' ||
+        path[i + 1] === '*' ||
+        path[i + 1] === '+')
+    ) {
+      if (
+        current.optional ||
+        (path[i + 1] !== undefined && path[i + 1] !== '/')
+      ) {
+        throw new Error(`Cannot combine path param modifiers in path: ${path}`);
+      }
+
+      isParam = false;
+
+      current.repeat = char === '*' ? 'zero-or-more' : 'one-or-more';
+      hasRepeat = true;
     } else if (char == null || (char === '/' && !isRegex)) {
       isParam = false;
 
@@ -84,12 +109,12 @@ export function getPatternParts(path: string): PatternPart[] {
         continue;
       }
 
-      if (current.param) {
-        current.param = current.param.replace(/^:/, '');
+      if (current.name) {
+        current.name = current.name.replace(/^:/, '');
       }
 
-      if (current.regex) {
-        current.regex = current.regex.replace(/^\(/, '').replace(/\)$/, '');
+      if (current.pattern) {
+        current.pattern = current.pattern.replace(/^\(/, '').replace(/\)$/, '');
       }
 
       parts.push(current);
@@ -102,8 +127,8 @@ export function getPatternParts(path: string): PatternPart[] {
     }
 
     if (isRegex) {
-      current.regex = current.regex || '';
-      current.regex += char;
+      current.pattern = current.pattern || '';
+      current.pattern += char;
 
       // Track escapes and character classes so parens inside them are not special
       if (isEscaped) {
@@ -118,8 +143,8 @@ export function getPatternParts(path: string): PatternPart[] {
     }
 
     if (isParam && !isRegex) {
-      current.param = current.param || '';
-      current.param += char;
+      current.name = current.name || '';
+      current.name += char;
     }
   }
 
@@ -127,7 +152,7 @@ export function getPatternParts(path: string): PatternPart[] {
     throw new Error(`Could not find closing ')' in path: ${path}`);
   }
 
-  const params = parts.map((part) => part.param).filter(Boolean);
+  const params = parts.map((part) => part.name).filter(Boolean);
 
   for (const [index, param] of params.entries()) {
     if (params.indexOf(param) !== index) {
@@ -135,7 +160,34 @@ export function getPatternParts(path: string): PatternPart[] {
     }
   }
 
+  if (hasRepeat) {
+    validateRepeatedParts(parts, path);
+  }
+
   return parts;
+}
+
+function validateRepeatedParts(parts: PatternPart[], path: string) {
+  let variablePart: PatternPart | undefined;
+
+  for (const part of parts) {
+    if (!part.name && part.segment !== '*') {
+      variablePart = undefined;
+      continue;
+    }
+
+    if (!part.repeat && !part.optional && part.segment !== '*') {
+      continue;
+    }
+
+    if (variablePart && (variablePart.repeat || part.repeat)) {
+      throw new Error(
+        `A repeated param must be separated from optional, repeated, or wildcard segments by a static segment: ${path}`
+      );
+    }
+
+    variablePart = part;
+  }
 }
 
 export function combinePatternParts<T extends PatternPart>(
@@ -143,5 +195,14 @@ export function combinePatternParts<T extends PatternPart>(
   parts: T[],
   exact = false
 ): T[] {
-  return exact ? parts : [...parentParts, ...parts];
+  const combined = exact ? parts : [...parentParts, ...parts];
+
+  if (combined.some((part) => part.repeat)) {
+    validateRepeatedParts(
+      combined,
+      combined.map((part) => part.segment).join('/')
+    );
+  }
+
+  return combined;
 }

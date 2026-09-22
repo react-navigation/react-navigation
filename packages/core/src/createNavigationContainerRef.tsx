@@ -19,11 +19,9 @@ export function createNavigationContainerRef<
     'removeListener',
     'resetRoot',
     'dispatch',
-    'isFocused',
     'canGoBack',
     'getRootState',
     'getState',
-    'getParent',
     'getCurrentRoute',
     'getCurrentOptions',
   ] as const;

@@ -309,7 +309,7 @@ export function BottomTabItem({
     ? activeBackgroundColor
     : inactiveBackgroundColor;
 
-  const { flex } = StyleSheet.flatten(style || {});
+  const flex = StyleSheet.flatten(style)?.flex;
   const borderRadius =
     variant === 'material'
       ? horizontal

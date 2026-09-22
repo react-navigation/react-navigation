@@ -3,6 +3,97 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.56](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.55...@react-navigation/stack@8.0.0-alpha.56) (2026-09-19)
+
+### Bug Fixes
+
+* clip shadow visible for inactive cards in stack ([#13255](https://github.com/react-navigation/react-navigation/issues/13255)) ([95ba05f](https://github.com/react-navigation/react-navigation/commit/95ba05fad5aa2a6950610b0ec01d129b14c70943)) - by @BartekObudzinski
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([5bc7014](https://github.com/react-navigation/react-navigation/commit/5bc7014deb66940e7c07c0ce4668fbcfbf687730)) - by @satya164
+* remove height workaround on chrome so address bar can collapse ([27c5992](https://github.com/react-navigation/react-navigation/commit/27c59922d79117d4df056f44a20b4aebc718092f)) - by @satya164
+
+# [8.0.0-alpha.55](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.54...@react-navigation/stack@8.0.0-alpha.55) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [8.0.0-alpha.54](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.53...@react-navigation/stack@8.0.0-alpha.54) (2026-09-14)
+
+* refactor!: use a render callback instead of NavigationContent for custom navigators (#13238) ([c9c119e](https://github.com/react-navigation/react-navigation/commit/c9c119e13716ab82862c0cdddab2c84a4d3832ad)), closes [#13238](https://github.com/react-navigation/react-navigation/issues/13238) - by @satya164
+
+### Bug Fixes
+
+* avoid deprecated shadow style on web in stack ([#13246](https://github.com/react-navigation/react-navigation/issues/13246)) ([d0b41e7](https://github.com/react-navigation/react-navigation/commit/d0b41e77d2b7724e5c5833647968333af5b687e7)) - by @satya164
+
+### BREAKING CHANGES
+
+* this changes the API for custom navigators:
+
+```diff
+-const { NavigationContent } = useNavigationBuilder(Router, props);
++const { render } = useNavigationBuilder(Router, props);
+
+-return (
+-  <NavigationContent>
+-    <NavigatorView />
+-  </NavigationContent>
++return render(
++  <NavigatorView />
+ );
+```
+
+custom navigators now must use the returned `render` function from
+`useNavigationBuilder` instead of the `NavigationContent`.
+
+the previous API isn't feasible while maintaining concurrent safety.
+
+# [8.0.0-alpha.53](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.52...@react-navigation/stack@8.0.0-alpha.53) (2026-08-26)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [8.0.0-alpha.52](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.51...@react-navigation/stack@8.0.0-alpha.52) (2026-08-19)
+
+### Bug Fixes
+
+* avoid restarting animation unnecessarily in stack ([2ecbf72](https://github.com/react-navigation/react-navigation/commit/2ecbf7277eaf9da84be9fc555bd605d3f331f8a4)) - by @satya164
+* read latest state to determine pop to top ([ca99c68](https://github.com/react-navigation/react-navigation/commit/ca99c6889fa99da70001f817df4af4896ab371c4)) - by @satya164
+
+### Features
+
+* add new animations and update existing animations in stack ([#13209](https://github.com/react-navigation/react-navigation/issues/13209)) ([46c37f5](https://github.com/react-navigation/react-navigation/commit/46c37f59f95ebbc2bda5b280f9d3f82a2364dae8)) - by @satya164
+
+### BREAKING CHANGES
+
+* **
+
+Card style interpolator functions now receive `closing` in
+`current.closing` instead of top-level. There is also `next.closing`
+now.
+
+Header style interpolators now receive `inverted` instead of `direction`
+to be consistent with Stack. Unlike `direction` which represented locale
+direction, `inverted` can represent animation direction.
+
+New transition presets:
+- `DialogAndroid`
+- `ModalFlipIOS`
+- `CrossDissolveIOS`
+
+Additions to named animations:
+- `flip`
+- `ios_from_left`
+- `ios_from_right`
+
+# [8.0.0-alpha.51](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.50...@react-navigation/stack@8.0.0-alpha.51) (2026-08-10)
+
+### Bug Fixes
+
+* fix gestures not working in some scenarios ([95eb60c](https://github.com/react-navigation/react-navigation/commit/95eb60cdd93ff7a06e643b1d8741863e0d918704)), closes [#13208](https://github.com/react-navigation/react-navigation/issues/13208) - by @satya164
+
+# [8.0.0-alpha.50](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.49...@react-navigation/stack@8.0.0-alpha.50) (2026-08-06)
+
+### Bug Fixes
+
+* remove usage of deprecated APIs and prepare for strict api ([060c263](https://github.com/react-navigation/react-navigation/commit/060c263562a9ffb62393037238d180b44bdedd03)) - by @satya164
+
 # [8.0.0-alpha.49](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.48...@react-navigation/stack@8.0.0-alpha.49) (2026-07-27)
 
 ### Bug Fixes

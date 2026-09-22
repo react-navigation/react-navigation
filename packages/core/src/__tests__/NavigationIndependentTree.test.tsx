@@ -29,16 +29,12 @@ const TestNavigator = (
     unknown
   >
 ) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     MockRouter,
     props
   );
 
-  return (
-    <NavigationContent>
-      {state.routes.map((route) => descriptors[route.key]?.render())}
-    </NavigationContent>
-  );
+  return render(state.routes.map((route) => descriptors[route.key]?.render()));
 };
 
 const App = ({
@@ -125,6 +121,32 @@ test("doesn't inherit outer tree's navigation object", async () => {
     )
   ).rejects.toThrow(
     "Couldn't find a navigation object for 'Outer' in current or any parent screens. Is your component inside the correct screen?"
+  );
+});
+
+test("doesn't inherit outer tree's root navigation object", async () => {
+  const Test = () => {
+    useNavigation();
+
+    return null;
+  };
+
+  await expect(
+    render(
+      <BaseNavigationContainer>
+        <TestNavigator>
+          <Screen name="Outer">
+            {() => (
+              <NavigationIndependentTree>
+                <Test />
+              </NavigationIndependentTree>
+            )}
+          </Screen>
+        </TestNavigator>
+      </BaseNavigationContainer>
+    )
+  ).rejects.toThrow(
+    "Couldn't find a navigation object. Is your component inside NavigationContainer?"
   );
 });
 

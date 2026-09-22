@@ -13,8 +13,11 @@ import {
   validatePathConfig,
 } from '@react-navigation/core';
 import * as React from 'react';
+import warnOnce from 'warn-once';
 
+import { checkSerializable } from './checkSerializable';
 import { DEFAULT_DIRECTION, IS_NATIVE } from './constants';
+import { getStateBreadcrumb } from './getStateBreadcrumb';
 import { LinkingContext } from './LinkingContext';
 import { LocaleDirContext } from './LocaleDirContext';
 import { LightTheme } from './theming/LightTheme';
@@ -78,12 +81,16 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
    * ```ts
    * const persistor = {
    *   async persist(state) {
-   *     await AsyncStorage.setItem('state-key-v1', JSON.stringify(state));
+   *     if (state == null) {
+   *       await AsyncStorage.removeItem('state-key-v1');
+   *     } else {
+   *       await AsyncStorage.setItem('state-key-v1', state);
+   *     }
    *   },
    *   async restore() {
    *     const state = await AsyncStorage.getItem('state-key-v1');
    *
-   *     return state ? JSON.parse(state) : undefined;
+   *     return state ?? undefined;
    *   },
    * };
    *
@@ -113,6 +120,14 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
 
 const RESTORE_STATE_ERROR =
   'Failed to restore navigation state. The state will be initialized based on the navigation tree.';
+
+const PARSE_STATE_ERROR =
+  'Failed to parse the restored navigation state. The state will be initialized based on the navigation tree.';
+
+const PERSIST_STATE_ERROR = 'Failed to persist the navigation state.';
+
+const STRINGIFY_STATE_ERROR =
+  'Failed to stringify the navigation state. The state will not be persisted.';
 
 /**
  * Container component that manages the navigation state.
@@ -191,7 +206,7 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
   const isPersistenceSupported = IS_NATIVE || !linkingConfig.options.enabled;
 
   const [isPersistedStateResolved, initialStateFromPersisted] = useThenable(
-    () => {
+    (): InitialState | undefined | Thenable<InitialState | undefined> => {
       if (
         isPersistenceSupported === false ||
         rest.initialState != null ||
@@ -200,42 +215,88 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
         return undefined;
       }
 
-      let restoredState;
+      const parse = (
+        serializedState: string | undefined
+      ): InitialState | undefined => {
+        if (serializedState == null) {
+          return undefined;
+        }
+
+        try {
+          return persistor.parse
+            ? persistor.parse(serializedState)
+            : JSON.parse(serializedState);
+        } catch (e) {
+          console.error(PARSE_STATE_ERROR, e);
+
+          return undefined;
+        }
+      };
 
       try {
-        restoredState = persistor.restore();
+        const result = persistor.restore();
+
+        return result != null && typeof result === 'object' && 'then' in result
+          ? result.then(parse, (e) => {
+              console.error(RESTORE_STATE_ERROR, e);
+
+              return undefined;
+            })
+          : parse(result);
       } catch (e) {
         console.error(RESTORE_STATE_ERROR, e);
 
         return undefined;
       }
-
-      if (restoredState == null) {
-        return undefined;
-      }
-
-      if ('then' in restoredState) {
-        return restoredState.then(
-          (state) => state,
-          (error) => {
-            console.error(RESTORE_STATE_ERROR, error);
-
-            return undefined;
-          }
-        );
-      }
-
-      const thenable: Thenable<InitialState | undefined> = {
-        then(onfulfilled) {
-          return Promise.resolve(
-            onfulfilled ? onfulfilled(restoredState) : restoredState
-          );
-        },
-      };
-
-      return thenable;
     }
   );
+
+  const onPersistState = (state: Readonly<NavigationState> | undefined) => {
+    if (persistor == null) {
+      return;
+    }
+
+    let serializedState: string | undefined;
+
+    try {
+      serializedState = persistor.stringify
+        ? persistor.stringify(state)
+        : JSON.stringify(state);
+    } catch (e) {
+      console.error(STRINGIFY_STATE_ERROR, e);
+
+      return;
+    }
+
+    try {
+      const value = persistor.persist(serializedState);
+
+      if (value != null && typeof value === 'object' && 'then' in value) {
+        // eslint-disable-next-line promise/catch-or-return
+        value.then(undefined, (e) => {
+          console.error(PERSIST_STATE_ERROR, e);
+        });
+      }
+    } catch (e) {
+      console.error(PERSIST_STATE_ERROR, e);
+    }
+  };
+
+  const onSerializableCheck = (
+    state: Readonly<NavigationState> | undefined
+  ) => {
+    if (process.env.NODE_ENV !== 'production' && state != null) {
+      const result = checkSerializable(state);
+
+      if (!result.serializable) {
+        const breadcrumb = getStateBreadcrumb(state, result.location);
+
+        const message = `Non-serializable values were found in the navigation state. Check:\n\n${breadcrumb} (${result.reason})\n\nThis can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/troubleshooting#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state for more details.`;
+
+        warnOnce(true, message);
+      }
+    }
+  };
 
   // FIXME
   // @ts-expect-error not sure why this is not working
@@ -266,7 +327,8 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
           }
           onStateChange={(state) => {
             onStateChange?.(state);
-            persistor?.persist(state);
+            onPersistState(state);
+            onSerializableCheck(state);
           }}
           ref={refContainer}
         />

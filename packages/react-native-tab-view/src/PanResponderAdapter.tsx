@@ -41,7 +41,7 @@ export function PanResponderAdapter({
 }: PanResponderAdapterProps) {
   const { routes, index } = navigationState;
 
-  const containerRef = React.useRef<View>(null);
+  const containerRef = React.useRef<React.ComponentRef<typeof View>>(null);
   const [layout, onLayout] = useMeasureLayout(containerRef);
 
   const panX = useAnimatedValue(0);

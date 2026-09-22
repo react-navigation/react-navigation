@@ -237,7 +237,8 @@ const SceneView = ({
     headerBack,
   });
 
-  const headerContainerRef = React.useRef<View>(null);
+  const headerContainerRef =
+    React.useRef<React.ComponentRef<typeof View>>(null);
 
   React.useLayoutEffect(() => {
     headerContainerRef.current?.measure((_x, _y, _width, height) => {
@@ -569,11 +570,19 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
                 });
               }}
               onDismissed={(event) => {
-                navigation.dispatch({
-                  ...StackActions.pop(event.nativeEvent.dismissCount),
-                  source: route.key,
-                  target: state.key,
-                });
+                const currentState = navigation.getState();
+                const currentActiveRoutes = currentState.routes.slice(
+                  0,
+                  currentState.index + 1
+                );
+
+                if (currentActiveRoutes.some((r) => r.key === route.key)) {
+                  navigation.dispatch({
+                    ...StackActions.pop(event.nativeEvent.dismissCount),
+                    source: route.key,
+                    target: currentState.key,
+                  });
+                }
 
                 setNextDismissedKey(route.key);
               }}

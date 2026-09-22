@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.18...react-native-drawer-layout@5.0.0-alpha.19) (2026-09-19)
+
+### Bug Fixes
+
+* use stable onOpen and onClose for drawer callbacks ([f599852](https://github.com/react-navigation/react-navigation/commit/f599852bde0331932c346890807a9cca3222b19c)), closes [#13258](https://github.com/react-navigation/react-navigation/issues/13258) - by @satya164
+
+# [5.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.17...react-native-drawer-layout@5.0.0-alpha.18) (2026-08-19)
+
+### Bug Fixes
+
+* ensure drawer peek only starts in small area ([894b7ec](https://github.com/react-navigation/react-navigation/commit/894b7ecd24c2b8e2189a43d1b30901b98f6a706c)) - by @satya164
+
+# [5.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.16...react-native-drawer-layout@5.0.0-alpha.17) (2026-08-10)
+
+### Bug Fixes
+
+* match native android distance for drawer peek ([8424429](https://github.com/react-navigation/react-navigation/commit/8424429fe0b124f61f2da0f992c71d4ffb217014)) - by @
+
+# [5.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.15...react-native-drawer-layout@5.0.0-alpha.16) (2026-08-06)
+
+### Bug Fixes
+
+* remove usage of deprecated APIs and prepare for strict api ([060c263](https://github.com/react-navigation/react-navigation/commit/060c263562a9ffb62393037238d180b44bdedd03)) - by @satya164
+
+### Features
+
+* support long press gesture to peek drawer ([dcc79c0](https://github.com/react-navigation/react-navigation/commit/dcc79c0bef849568210f8ace65a939f8fc710ea7)) - by @satya164
+
 # [5.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.14...react-native-drawer-layout@5.0.0-alpha.15) (2026-07-27)
 
 ### Bug Fixes

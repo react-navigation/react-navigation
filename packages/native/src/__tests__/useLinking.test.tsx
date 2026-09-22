@@ -2,20 +2,20 @@ import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
   createNavigatorFactory,
+  type NavigatorScreenParams,
   type ParamListBase,
   StackRouter,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, render, waitFor } from '@testing-library/react-native';
-import { type EmitterSubscription, Linking, Text } from 'react-native';
+import { Linking, Text } from 'react-native';
 
 import { NavigationContainer } from '../NavigationContainer';
 
 beforeEach(() => {
   jest.mocked(Linking.getInitialURL).mockResolvedValue(null);
-  jest
-    .mocked(Linking.addEventListener)
-    .mockReturnValue({ remove: () => {} } as EmitterSubscription);
+  // @ts-expect-error:  types require private fields.
+  jest.mocked(Linking.addEventListener).mockReturnValue({ remove: () => {} });
 });
 
 afterEach(() => {
@@ -23,18 +23,14 @@ afterEach(() => {
 });
 
 const createStackNavigator = createNavigatorFactory((props: any) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     StackRouter,
     props
   );
 
   const route = state.routes[state.index];
 
-  return (
-    <NavigationContent>
-      {route ? descriptors[route.key]?.render() : null}
-    </NavigationContent>
-  );
+  return render(route ? descriptors[route.key]?.render() : null);
 });
 
 const TestScreen = ({ route }: any): any => (
@@ -103,10 +99,11 @@ test('handles Linking URL events', async () => {
 
   let listener: ((event: { url: string }) => void) | undefined;
 
+  // @ts-expect-error:  types require private fields.
   jest.mocked(Linking.addEventListener).mockImplementation((_, callback) => {
     listener = callback;
 
-    return { remove: () => {} } as EmitterSubscription;
+    return { remove: () => {} };
   });
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -140,6 +137,151 @@ test('handles Linking URL events', async () => {
     name: 'Profile',
     params: { user: 'jane' },
   });
+});
+
+test('handles URL action in the root navigator', async () => {
+  type NestedParamList = {
+    Home: undefined;
+    Target: undefined;
+  };
+
+  type RootParamList = {
+    Nested: NavigatorScreenParams<NestedParamList>;
+    Target: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootParamList>();
+  const NestedStack = createStackNavigator<NestedParamList>();
+
+  let listener: ((url: string) => void) | undefined;
+
+  const linking = {
+    subscribe: (callback: (url: string) => void) => {
+      listener = callback;
+
+      return () => {
+        listener = undefined;
+      };
+    },
+    config: {
+      screens: {
+        Nested: {
+          screens: {
+            Home: '',
+            Target: 'nested-target',
+          },
+        },
+        Target: 'target',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<RootParamList>();
+
+  const root = await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Nested">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen name="Home" component={TestScreen} />
+              <NestedStack.Screen name="Target">
+                {() => <Text>Nested target</Text>}
+              </NestedStack.Screen>
+            </NestedStack.Navigator>
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="Target">
+          {() => <Text>Root target</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  await act(() => {
+    listener?.('example://target');
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      Root target
+    </Text>
+  `);
+});
+
+test('handles reset action in the root navigator', async () => {
+  type NestedParamList = {
+    Home: undefined;
+    Target: undefined;
+  };
+
+  type RootParamList = {
+    Nested: NavigatorScreenParams<NestedParamList>;
+    Target: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootParamList>();
+  const NestedStack = createStackNavigator<NestedParamList>();
+
+  let listener: ((url: string) => void) | undefined;
+
+  const linking = {
+    subscribe: (callback: (url: string) => void) => {
+      listener = callback;
+
+      return () => {
+        listener = undefined;
+      };
+    },
+    config: {
+      screens: {
+        Nested: {
+          screens: {
+            Home: '',
+            Target: 'nested-target',
+          },
+        },
+        Target: 'target',
+      },
+    },
+    getActionFromState: () => undefined,
+  };
+
+  const navigation = createNavigationContainerRef<RootParamList>();
+
+  const root = await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Nested">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen name="Home" component={TestScreen} />
+              <NestedStack.Screen name="Target">
+                {() => <Text>Nested target</Text>}
+              </NestedStack.Screen>
+            </NestedStack.Navigator>
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="Target">
+          {() => <Text>Root target</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  await act(() => {
+    listener?.('example://target');
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      Root target
+    </Text>
+  `);
 });
 
 test('handles custom initial URL', async () => {

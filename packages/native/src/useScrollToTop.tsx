@@ -6,7 +6,6 @@ import {
   useRoute,
 } from '@react-navigation/core';
 import * as React from 'react';
-import type { ScrollView } from 'react-native';
 
 type ScrollOptions = { x?: number; y?: number; animated?: boolean };
 
@@ -17,8 +16,7 @@ type ScrollableView =
   | { scrollResponderScrollTo(options: ScrollOptions): void };
 
 type ScrollableWrapper =
-  | { getScrollResponder(): React.ReactNode | ScrollView }
-  | { getNode(): ScrollableView }
+  | { getScrollResponder(): React.ReactNode | ScrollableView }
   | ScrollableView
   | null;
 
@@ -39,12 +37,6 @@ function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
     // If the view is a wrapper like FlatList, SectionList etc.
     // We need to use `getScrollResponder` to get access to the scroll responder
     return ref.current.getScrollResponder();
-  } else if ('getNode' in ref.current) {
-    // When a `ScrollView` is wrapped in `Animated.createAnimatedComponent`
-    // we need to use `getNode` to get the ref to the actual scrollview.
-    // Note that `getNode` is deprecated in newer versions of react-native
-    // this is why we check if we already have a scrollable node above.
-    return ref.current.getNode();
   } else {
     return ref.current;
   }

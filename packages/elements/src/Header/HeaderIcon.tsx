@@ -1,19 +1,18 @@
 import { useLocale } from '@react-navigation/native';
 import {
   type ColorValue,
-  type ImageStyle,
   Platform,
   type StyleProp,
   StyleSheet,
 } from 'react-native';
 
-import { PlatformIcon } from '../PlatformIcon';
+import { PlatformIcon, type PlatformIconStyle } from '../PlatformIcon';
 import type { Icon } from '../types';
 
 type Props = {
   icon: Icon;
   color: ColorValue;
-  style?: StyleProp<ImageStyle> | undefined;
+  style?: StyleProp<PlatformIconStyle> | undefined;
 };
 
 export function HeaderIcon({ icon, color, style }: Props) {

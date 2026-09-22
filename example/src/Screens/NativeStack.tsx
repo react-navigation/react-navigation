@@ -269,10 +269,15 @@ const NativeStackNavigator = createNativeStackNavigator({
                     source: Platform.select({
                       // Avoid calling `Image.resolveAssetSource` on Web to prevent crash
                       get ios() {
+                        const source = Image.resolveAssetSource(messageCircle);
+
+                        if (source == null) {
+                          return null;
+                        }
+
                         return {
-                          ...Image.resolveAssetSource(messageCircle),
-                          scale:
-                            Image.resolveAssetSource(messageCircle).scale * 1.4,
+                          ...source,
+                          scale: source.scale * 1.4,
                         };
                       },
                       default: messageCircle,

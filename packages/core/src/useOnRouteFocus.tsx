@@ -5,7 +5,7 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { useNavigationBuilderContext } from './NavigationBuilderContext';
 
 type Options<State extends NavigationState, Action extends NavigationAction> = {
   router: Router<State, Action>;
@@ -23,9 +23,7 @@ export function useOnRouteFocus<
   State extends NavigationState,
   Action extends NavigationAction,
 >({ router, getState, key: sourceRouteKey, setState }: Options<State, Action>) {
-  const { onRouteFocus: onRouteFocusParent } = React.use(
-    NavigationBuilderContext
-  );
+  const { onRouteFocus: onRouteFocusParent } = useNavigationBuilderContext();
 
   return React.useCallback(
     (key: string) => {

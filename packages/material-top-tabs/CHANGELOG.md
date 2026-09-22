@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.52](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.51...@react-navigation/material-top-tabs@8.0.0-alpha.52) (2026-09-19)
+
+### Bug Fixes
+
+* improve memoization for material top tabs ([f7fbf6f](https://github.com/react-navigation/react-navigation/commit/f7fbf6f0ced6b35247c09374bc674ac40a123f38)) - by @
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([5bc7014](https://github.com/react-navigation/react-navigation/commit/5bc7014deb66940e7c07c0ce4668fbcfbf687730)) - by @satya164
+
+# [8.0.0-alpha.51](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.50...@react-navigation/material-top-tabs@8.0.0-alpha.51) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.50](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.49...@react-navigation/material-top-tabs@8.0.0-alpha.50) (2026-09-14)
+
+* refactor!: use a render callback instead of NavigationContent for custom navigators (#13238) ([c9c119e](https://github.com/react-navigation/react-navigation/commit/c9c119e13716ab82862c0cdddab2c84a4d3832ad)), closes [#13238](https://github.com/react-navigation/react-navigation/issues/13238) - by @satya164
+
+### BREAKING CHANGES
+
+* this changes the API for custom navigators:
+
+```diff
+-const { NavigationContent } = useNavigationBuilder(Router, props);
++const { render } = useNavigationBuilder(Router, props);
+
+-return (
+-  <NavigationContent>
+-    <NavigatorView />
+-  </NavigationContent>
++return render(
++  <NavigatorView />
+ );
+```
+
+custom navigators now must use the returned `render` function from
+`useNavigationBuilder` instead of the `NavigationContent`.
+
+the previous API isn't feasible while maintaining concurrent safety.
+
+# [8.0.0-alpha.49](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.48...@react-navigation/material-top-tabs@8.0.0-alpha.49) (2026-08-26)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.48](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.47...@react-navigation/material-top-tabs@8.0.0-alpha.48) (2026-08-19)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.47](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.46...@react-navigation/material-top-tabs@8.0.0-alpha.47) (2026-08-10)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.46](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.45...@react-navigation/material-top-tabs@8.0.0-alpha.46) (2026-08-06)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
 # [8.0.0-alpha.45](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.44...@react-navigation/material-top-tabs@8.0.0-alpha.45) (2026-07-27)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

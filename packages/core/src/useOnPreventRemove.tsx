@@ -9,7 +9,7 @@ import * as React from 'react';
 
 import {
   type ChildBeforeRemoveListener,
-  NavigationBuilderContext,
+  useNavigationBuilderContext,
 } from './NavigationBuilderContext';
 import { NavigationRouteContext } from './NavigationProvider';
 import type { EventMapCore } from './types';
@@ -107,8 +107,10 @@ export function useOnPreventRemove({
   emitter,
   beforeRemoveListeners,
 }: Options) {
-  const { addKeyedListener } = React.use(NavigationBuilderContext);
+  const { addKeyedListener } = useNavigationBuilderContext();
+
   const route = React.use(NavigationRouteContext);
+
   const routeKey = route?.key;
 
   React.useInsertionEffect(() => {

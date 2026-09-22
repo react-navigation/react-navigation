@@ -9,14 +9,7 @@ import {
 } from '@react-navigation/native';
 import { act, render, screen, userEvent } from '@testing-library/react-native';
 import { useEffect } from 'react';
-import {
-  type EmitterSubscription,
-  Keyboard,
-  type KeyboardEventListener,
-  type KeyboardEventName,
-  Text,
-  View,
-} from 'react-native';
+import { Keyboard, type KeyboardEventName, Text, View } from 'react-native';
 
 import { type BottomTabScreenProps, createBottomTabNavigator } from '../index';
 
@@ -89,13 +82,17 @@ test('handles screens preloading', async () => {
 
 test('tab bar cannot be tapped when hidden', async () => {
   // @ts-expect-error: mock implementation for testing
-  const listeners: Record<KeyboardEventName, KeyboardEventListener[]> = {
+  const listeners: Record<
+    KeyboardEventName,
+    Parameters<typeof Keyboard.addListener>[1][]
+  > = {
     keyboardWillShow: [],
     keyboardWillHide: [],
   };
 
   const spy = jest
     .spyOn(Keyboard, 'addListener')
+    // @ts-expect-error: types require private fields.
     .mockImplementation((name, callback) => {
       listeners[name].push(callback);
 
@@ -103,7 +100,7 @@ test('tab bar cannot be tapped when hidden', async () => {
         remove: () => {
           listeners[name] = listeners[name].filter((c) => c !== callback);
         },
-      } as EmitterSubscription;
+      };
     });
 
   const Test = ({ route }: BottomTabScreenProps<BottomTabParamList>) => (
@@ -305,25 +302,23 @@ test('lazy=false pre-renders screen with effects active, pauses after first visi
 test('pops nested stack to top on blur even when tab transition animation is interrupted', async () => {
   const createStackNavigator = createNavigatorFactory(
     (props: Parameters<typeof useNavigationBuilder>[1]) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => {
-            const descriptor = descriptors[route.key];
+      return render(
+        state.routes.map((route) => {
+          const descriptor = descriptors[route.key];
 
-            if (descriptor == null) {
-              throw new Error(
-                `Couldn't find a descriptor for route '${route.key}'.`
-              );
-            }
+          if (descriptor == null) {
+            throw new Error(
+              `Couldn't find a descriptor for route '${route.key}'.`
+            );
+          }
 
-            return descriptor.render();
-          })}
-        </NavigationContent>
+          return descriptor.render();
+        })
       );
     }
   );

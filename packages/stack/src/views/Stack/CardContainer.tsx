@@ -29,6 +29,8 @@ type Props = {
   focused: boolean;
   opening: boolean;
   closing: boolean;
+  closingAnimated: Animated.Value;
+  nextClosingAnimated: Animated.Value | undefined;
   modal: boolean;
   layout: Layout;
   gesture: Animated.Value;
@@ -66,6 +68,8 @@ function CardContainerInner({
   active,
   opening,
   closing,
+  closingAnimated,
+  nextClosingAnimated,
   gesture,
   focused,
   modal,
@@ -97,7 +101,7 @@ function CardContainerInner({
 
   const { options } = scene.descriptor;
   const enabled = options.keyboardHandlingEnabled !== false;
-  const contentRef = React.useRef<View>(null);
+  const contentRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
   const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
     useKeyboardManager({
@@ -207,6 +211,17 @@ function CardContainerInner({
 
   const animated = animation !== 'none';
 
+  const { current, next } = React.useMemo(
+    () => ({
+      current: { progress: scene.progress.current, closing: closingAnimated },
+      next:
+        scene.progress.next && nextClosingAnimated
+          ? { progress: scene.progress.next, closing: nextClosingAnimated }
+          : undefined,
+    }),
+    [closingAnimated, nextClosingAnimated, scene.progress]
+  );
+
   return (
     <Card
       animated={animated}
@@ -216,8 +231,8 @@ function CardContainerInner({
       insets={insets}
       direction={direction}
       gesture={gesture}
-      current={scene.progress.current}
-      next={scene.progress.next}
+      current={current}
+      next={next}
       opening={opening}
       closing={closing}
       onOpen={handleOpen}
@@ -234,7 +249,17 @@ function CardContainerInner({
       gestureVelocityImpact={gestureVelocityImpact}
       transitionSpec={transitionSpec}
       styleInterpolator={cardStyleInterpolator}
-      pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
+      pageOverflowEnabled={
+        // Avoid unfocused larger pages increasing scroll area
+        // e.g. when a smaller screen is pushed over a larger one on web
+        active &&
+        // Float header disables full-page scrolling in browsers
+        // So we don't need to keep overflow enabled
+        headerMode !== 'float' &&
+        // Avoid modals scrolling the whole page
+        // Modal content should be scrollable within the modal
+        presentation !== 'modal'
+      }
       preloaded={preloaded}
       contentStyle={[
         {

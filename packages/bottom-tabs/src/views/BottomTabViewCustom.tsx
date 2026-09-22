@@ -4,7 +4,6 @@ import {
   SafeAreaProviderCompat,
 } from '@react-navigation/elements/internal';
 import {
-  type NavigationAction,
   type ParamListBase,
   StackActions,
   type TabNavigationState,
@@ -119,25 +118,6 @@ export function BottomTabViewCustom({
   React.useEffect(() => {
     const previousRouteKey = previousRouteKeyRef.current;
 
-    let popToTopAction: NavigationAction | undefined;
-
-    if (
-      previousRouteKey &&
-      previousRouteKey !== focusedRouteKey &&
-      descriptors[previousRouteKey]?.options.popToTopOnBlur
-    ) {
-      const prevRoute = state.routes.find(
-        (route) => route.key === previousRouteKey
-      );
-
-      if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
-        popToTopAction = {
-          ...StackActions.popToTop(),
-          target: prevRoute.state.key,
-        };
-      }
-    }
-
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     const animateToIndex = () => {
@@ -192,8 +172,27 @@ export function BottomTabViewCustom({
       });
 
       Animated.parallel(animations).start(({ finished }) => {
-        if (popToTopAction) {
-          navigation.dispatch(popToTopAction);
+        if (
+          previousRouteKey &&
+          previousRouteKey !== focusedRouteKey &&
+          descriptors[previousRouteKey]?.options.popToTopOnBlur
+        ) {
+          const currentState = navigation.getState();
+          const prevRoute = currentState.routes.find(
+            (route) => route.key === previousRouteKey
+          );
+
+          if (
+            prevRoute?.state?.type === 'stack' &&
+            prevRoute.state.key &&
+            ((prevRoute.state.index ?? prevRoute.state.routes.length - 1) > 0 ||
+              prevRoute.state.routes[0]?.history?.length)
+          ) {
+            navigation.dispatch({
+              ...StackActions.popToTop(),
+              target: prevRoute.state.key,
+            });
+          }
         }
 
         if (previousRouteKey !== focusedRouteKey) {
@@ -205,7 +204,7 @@ export function BottomTabViewCustom({
 
         if (finished && animations.length) {
           // Delay clearing `animating` state
-          // This will give time for `popToAction` to get handled before pause
+          // This will give time for `popToTop` to get handled before pause
           timer = setTimeout(() => {
             setLastUpdate((update) =>
               update.animating ? { ...update, animating: false } : update

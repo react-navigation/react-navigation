@@ -12,7 +12,7 @@ import { getLoaderForStateChange } from './DataLoading';
 import {
   type ChildActionListener,
   type ChildBeforeRemoveListener,
-  NavigationBuilderContext,
+  useNavigationBuilderContext,
 } from './NavigationBuilderContext';
 import { StaticTreeContext } from './StaticTreeContext';
 import type { EventMapCore } from './types';
@@ -55,7 +55,7 @@ export function useOnAction<State extends NavigationState>({
     addListener: addListenerParent,
     onDispatchAction,
     flushUpdates,
-  } = React.use(NavigationBuilderContext);
+  } = useNavigationBuilderContext();
 
   const tree = React.use(StaticTreeContext);
   const consumedParams = React.use(ConsumedParamsContext);
@@ -95,9 +95,10 @@ export function useOnAction<State extends NavigationState>({
         );
 
         // If a target is specified and set to current navigator, the action shouldn't bubble
-        // So instead of `null`, we use the state object for such cases to signal that action was handled
-        result =
-          result === null && action.target === state.key ? state : result;
+        // So we immediately return `false` to mark it as unhandled
+        if (result === null && action.target === state.key) {
+          return false;
+        }
 
         if (result !== null && result.stale !== false) {
           // Some actions (e.g. `RESET`) may return a stale state from the router

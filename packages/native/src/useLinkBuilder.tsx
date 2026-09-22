@@ -1,11 +1,9 @@
 import {
   CommonActions,
-  findFocusedRoute,
   getActionFromState,
   getPathFromState,
+  IsScreenContext,
   NavigationContainerRefContext,
-  NavigationHelpersContext,
-  NavigationRouteContext,
   useStateForPath,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -27,8 +25,7 @@ type MinimalState = {
  * Helper to build a href for a screen based on the linking options.
  */
 export function useBuildHref() {
-  const navigation = React.use(NavigationHelpersContext);
-  const route = React.use(NavigationRouteContext);
+  const isScreen = React.use(IsScreenContext);
 
   const { options } = React.use(LinkingContext);
 
@@ -41,17 +38,6 @@ export function useBuildHref() {
       if (options?.enabled === false) {
         return undefined;
       }
-
-      // Check that we're inside:
-      // - navigator's context
-      // - route context of the navigator (could be a screen, tab, etc.)
-      // - route matches the state for path (from the screen's context)
-      // This ensures that we're inside a screen
-      const isScreen =
-        navigation && route?.key && focusedRouteState
-          ? route.key === findFocusedRoute(focusedRouteState)?.key &&
-            navigation.getState().routes.some((r) => r.key === route.key)
-          : false;
 
       const stateForRoute: MinimalState = {
         routes: [{ name, params }],
@@ -96,8 +82,7 @@ export function useBuildHref() {
     [
       options?.enabled,
       options?.config,
-      route?.key,
-      navigation,
+      isScreen,
       focusedRouteState,
       getPathFromStateHelper,
     ]
@@ -111,6 +96,13 @@ export function useBuildHref() {
  */
 export function useBuildAction() {
   const navigation = React.use(NavigationContainerRefContext);
+
+  if (navigation === undefined) {
+    throw new Error(
+      "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+    );
+  }
+
   const { options } = React.use(LinkingContext);
 
   const getActionFromStateHelper =
@@ -118,12 +110,16 @@ export function useBuildAction() {
 
   const buildAction = React.useCallback(
     (href: string) => {
-      const state = getStateFromHref(href, options, navigation?.getRootState());
+      const rootState = navigation.getRootState();
+
+      const state = getStateFromHref(href, options, rootState);
 
       if (state) {
-        const action = getActionFromStateHelper(state, options?.config);
+        const action =
+          getActionFromStateHelper(state, options?.config) ??
+          CommonActions.reset(state);
 
-        return action ?? CommonActions.reset(state);
+        return { target: rootState?.key, ...action };
       } else {
         throw new Error(
           `Failed to parse href '${href}' to a navigation state.`

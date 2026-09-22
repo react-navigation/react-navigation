@@ -12,7 +12,10 @@ import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { createNavigatorFactory } from '../createNavigatorFactory';
 import { getStateFromPath } from '../getStateFromPath';
-import { createPathConfigForStaticNavigation } from '../StaticNavigation';
+import {
+  createPathConfigForStaticNavigation,
+  createScreenFactory,
+} from '../StaticNavigation';
 import type {
   DefaultNavigatorOptions,
   EventMapBase,
@@ -37,7 +40,7 @@ type TestNavigatorProps = DefaultNavigatorOptions<
 >;
 
 const TestNavigator = (props: TestNavigatorProps) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder<
+  const { state, descriptors, render } = useNavigationBuilder<
     NavigationState,
     DefaultRouterOptions,
     {},
@@ -45,24 +48,22 @@ const TestNavigator = (props: TestNavigatorProps) => {
     EventMapBase
   >(MockRouter, props);
 
-  return (
-    <NavigationContent>
-      <main>
-        {state.routes.map((route) => {
-          const descriptor = descriptors[route.key];
+  return render(
+    <main>
+      {state.routes.map((route) => {
+        const descriptor = descriptors[route.key];
 
-          return (
-            <div
-              key={route.key}
-              className={descriptor?.options?.className}
-              data-testid={descriptor?.options?.testId}
-            >
-              {descriptor?.render()}
-            </div>
-          );
-        })}
-      </main>
-    </NavigationContent>
+        return (
+          <div
+            key={route.key}
+            className={descriptor?.options?.className}
+            data-testid={descriptor?.options?.testId}
+          >
+            {descriptor?.render()}
+          </div>
+        );
+      })}
+    </main>
   );
 };
 
@@ -84,6 +85,251 @@ const TestScreen = ({ route }: any) => {
     </Text>
   );
 };
+
+test('does not read getter screens until rendering them', async () => {
+  const reads = {
+    Account: 0,
+    Details: 0,
+    Settings: 0,
+    NestedFeed: 0,
+    NestedProfile: 0,
+  };
+
+  const FocusedTestNavigator = (props: TestNavigatorProps) => {
+    const { state, descriptors, render } = useNavigationBuilder<
+      NavigationState,
+      DefaultRouterOptions,
+      {},
+      TestNavigatorScreenOptions,
+      EventMapBase
+    >(MockRouter, props);
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return render(<main>{descriptors[route.key]?.render()}</main>);
+  };
+
+  interface FocusedTestNavigatorTypeBag extends NavigatorTypeBagBase {
+    ScreenOptions: TestNavigatorScreenOptions;
+    Navigator: typeof FocusedTestNavigator;
+  }
+
+  const createFocusedTestNavigator =
+    createNavigatorFactory<FocusedTestNavigatorTypeBag>(FocusedTestNavigator);
+  const createFocusedTestScreen =
+    createScreenFactory<FocusedTestNavigatorTypeBag>();
+
+  const Nested = createFocusedTestNavigator({
+    screens: {
+      Feed: {
+        get screen() {
+          reads.NestedFeed++;
+
+          return TestScreen;
+        },
+      },
+      Profile: {
+        get screen() {
+          reads.NestedProfile++;
+
+          return TestScreen;
+        },
+        linking: 'u/:id',
+      },
+    },
+  });
+
+  const Root = createFocusedTestNavigator({
+    initialRouteName: 'Home',
+    screens: {
+      Home: TestScreen,
+      Account: createFocusedTestScreen({
+        get screen() {
+          reads.Account++;
+
+          return TestScreen;
+        },
+      }),
+      Details: {
+        get screen() {
+          reads.Details++;
+
+          return TestScreen;
+        },
+        linking: 'details/:id',
+      },
+      Settings: {
+        get screen() {
+          reads.Settings++;
+
+          return TestScreen;
+        },
+      },
+      Nested,
+    },
+  });
+
+  const navigation = React.createRef<any>();
+
+  expect(createPathConfigForStaticNavigation(Root, {}, true)).toEqual({
+    Details: {
+      path: 'details/:id',
+    },
+    Settings: {
+      path: 'settings',
+    },
+    Account: {
+      path: 'account',
+    },
+    Home: {
+      path: '',
+    },
+    Nested: {
+      screens: {
+        Feed: {
+          path: 'feed',
+        },
+        Profile: {
+          path: 'u/:id',
+        },
+      },
+    },
+  });
+
+  expect(reads).toEqual({
+    Account: 0,
+    Details: 0,
+    Settings: 0,
+    NestedFeed: 0,
+    NestedProfile: 0,
+  });
+
+  const RootComponent = Root.getComponent();
+
+  expect(reads).toEqual({
+    Account: 0,
+    Details: 0,
+    Settings: 0,
+    NestedFeed: 0,
+    NestedProfile: 0,
+  });
+
+  const element = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <RootComponent />
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`
+<main>
+  <Text>
+    Screen:
+    Home
+    (focused)
+  </Text>
+</main>
+`);
+
+  expect(reads).toEqual({
+    Account: 0,
+    Details: 0,
+    Settings: 0,
+    NestedFeed: 0,
+    NestedProfile: 0,
+  });
+
+  await act(() => navigation.current.navigate('Account'));
+
+  expect(element).toMatchInlineSnapshot(`
+<main>
+  <Text>
+    Screen:
+    Account
+    (focused)
+  </Text>
+</main>
+`);
+
+  expect(reads).toEqual({
+    Account: 1,
+    Details: 0,
+    Settings: 0,
+    NestedFeed: 0,
+    NestedProfile: 0,
+  });
+
+  await act(() => navigation.current.navigate('Home'));
+  await act(() => navigation.current.navigate('Account'));
+
+  expect(reads).toEqual({
+    Account: 1,
+    Details: 0,
+    Settings: 0,
+    NestedFeed: 0,
+    NestedProfile: 0,
+  });
+});
+
+test('throws if getter screen returns an invalid component', async () => {
+  const Root = createTestNavigator({
+    initialRouteName: 'Home',
+    screens: {
+      Home: {
+        // @ts-expect-error: intentionally invalid for test
+        get screen() {
+          return undefined;
+        },
+      },
+    },
+  });
+
+  const RootComponent = Root.getComponent();
+
+  await expect(
+    render(
+      <BaseNavigationContainer>
+        <RootComponent />
+      </BaseNavigationContainer>
+    )
+  ).rejects.toThrow(
+    "Got an invalid screen component for the screen 'Home'. This can happen if you passed 'undefined'."
+  );
+});
+
+test('throws if getter screen returns a nested navigator', async () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Profile: TestScreen,
+    },
+  });
+
+  const Root = createTestNavigator({
+    initialRouteName: 'Nested',
+    screens: {
+      Nested: {
+        get screen() {
+          return Nested;
+        },
+      },
+    },
+  });
+
+  const RootComponent = Root.getComponent();
+
+  await expect(
+    render(
+      <BaseNavigationContainer>
+        <RootComponent />
+      </BaseNavigationContainer>
+    )
+  ).rejects.toThrow(
+    "Got a navigator object for the screen 'Nested' instead of a component. A navigator cannot be specified when using a getter."
+  );
+});
 
 test('renders the specified nested navigator configuration', async () => {
   const Nested = createTestNavigator({
@@ -815,10 +1061,10 @@ test('renders wrapped navigator and merges options and listeners callbacks', asy
 
   const RootComponent = Root.getComponent();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = await render(
-    <BaseNavigationContainer ref={ref}>
+    <BaseNavigationContainer ref={navigation}>
       <RootComponent />
     </BaseNavigationContainer>
   );
@@ -860,7 +1106,7 @@ test('renders wrapped navigator and merges options and listeners callbacks', asy
 </section>
 `);
 
-  await act(() => ref.current?.navigate('Feed'));
+  await act(() => navigation.navigate('Feed'));
 
   expect(configFocusListener).toHaveBeenCalled();
   expect(navigatorBlurListener).toHaveBeenCalled();

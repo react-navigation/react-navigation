@@ -170,33 +170,35 @@ export function useLinking<ParamList extends ParamListBase>(
 
   React.useEffect(() => {
     const listener = (url: string) => {
-      if (!enabled) {
+      const navigation = ref.current;
+
+      if (!enabled || !navigation) {
         return;
       }
 
-      const navigation = ref.current;
-      const state = navigation
-        ? getStateFromURL(url, navigation.getRootState())
-        : undefined;
+      const rootState = navigation.getRootState();
 
-      if (navigation) {
-        REACT_NAVIGATION_DEVTOOLS.get(navigation)?.listeners.forEach(
-          (listener) => {
-            listener({
-              type: 'link',
-              url,
-              state,
-            });
-          }
-        );
-      }
+      const state = getStateFromURL(url, rootState);
 
-      if (navigation && state) {
+      REACT_NAVIGATION_DEVTOOLS.get(navigation)?.listeners.forEach(
+        (listener) => {
+          listener({
+            type: 'link',
+            url,
+            state,
+          });
+        }
+      );
+
+      if (state) {
         const action = getActionFromStateRef.current(state, configRef.current);
 
         if (action !== undefined) {
           try {
-            navigation.dispatch(action);
+            navigation.dispatch({
+              target: rootState?.key,
+              ...action,
+            });
           } catch (e) {
             // Ignore any errors from deep linking.
             // This could happen in case of malformed links, navigation object not being initialized etc.

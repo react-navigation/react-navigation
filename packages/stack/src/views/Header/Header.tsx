@@ -11,6 +11,7 @@ import { HeaderSegment } from './HeaderSegment';
 export const Header = React.memo(function Header({
   back,
   progress,
+  inverted,
   options,
   route,
   navigation,
@@ -54,6 +55,7 @@ export const Header = React.memo(function Header({
   return (
     <HeaderSegment
       {...options}
+      inverted={inverted}
       title={getHeaderTitle(options, route.name)}
       progress={progress}
       modal={isModal}

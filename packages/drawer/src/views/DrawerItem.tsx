@@ -130,7 +130,7 @@ export function DrawerItem(props: Props) {
     ...rest
   } = props;
 
-  const { borderRadius = 56 } = StyleSheet.flatten(style || {});
+  const { borderRadius = 56 } = StyleSheet.flatten(style) || {};
   const color: ColorValue = focused
     ? activeTintColor
     : (inactiveTintColor ??

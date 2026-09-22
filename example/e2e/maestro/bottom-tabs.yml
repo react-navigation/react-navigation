@@ -7,6 +7,10 @@ name: Bottom Tabs - Basic
       LINK: bottom-tabs
       TEXT: 'Article by Gandalf'
 - tapOn:
+    text: 'Navigate to feed'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
     id: 'albums'
 - assertVisible:
     text: 'Albums'
@@ -17,7 +21,24 @@ name: Bottom Tabs - Basic
 - tapOn:
     id: 'contacts'
 - assertVisible:
-    text: 'Contacts'
+    text: 'Marissa Castillo'
+- scroll
+- assertNotVisible:
+    text: 'Marissa Castillo'
+- tapOn:
+    id: 'contacts'
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 5000
+- tapOn:
+    id: 'article'
+- assertVisible:
+    text: 'Article by Gandalf'
+- tapOn:
+    text: 'Navigate to feed'
+- assertVisible:
+    text: 'Feed'
 - tapOn:
     id: 'article'
 - assertVisible:

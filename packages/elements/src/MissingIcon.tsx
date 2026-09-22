@@ -8,8 +8,8 @@ import {
 import { Text } from './Text';
 
 type Props = {
-  color?: ColorValue;
-  size?: number;
+  color: ColorValue;
+  size: number;
   style?: StyleProp<TextStyle>;
 };
 

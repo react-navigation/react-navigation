@@ -16,7 +16,7 @@ import {
   useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 
 import type {
   NativeStackDescriptorMap,
@@ -134,6 +134,10 @@ export function NativeStackView({ state, descriptors }: Props) {
             navigation={navigation}
             headerShown={headerShown}
             headerTransparent={headerTransparent}
+            pageOverflowEnabled={
+              presentation == null || presentation === 'card'
+            }
+            contentStyle={contentStyle}
             header={
               header !== undefined ? (
                 header({
@@ -171,7 +175,6 @@ export function NativeStackView({ state, descriptors }: Props) {
               )
             }
             style={{
-              ...StyleSheet.absoluteFill,
               ...(presentation != null &&
               TRANSPARENT_PRESENTATIONS.includes(presentation)
                 ? { backgroundColor: 'transparent' }
@@ -180,9 +183,7 @@ export function NativeStackView({ state, descriptors }: Props) {
           >
             <HeaderBackContext.Provider value={headerBack}>
               <AnimatedHeaderHeightProvider>
-                <View style={[styles.contentContainer, contentStyle]}>
-                  {render()}
-                </View>
+                {render()}
               </AnimatedHeaderHeightProvider>
             </HeaderBackContext.Provider>
           </Screen>
@@ -223,9 +224,3 @@ const AnimatedHeaderHeightProvider = ({
     </AnimatedHeaderHeightContext.Provider>
   );
 };
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
-  },
-});

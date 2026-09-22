@@ -41,6 +41,7 @@ type Props<ParamList extends {}> = Omit<
  */
 export function createStaticNavigation(tree: StaticNavigation<any>) {
   const Component = tree.getComponent();
+  const element = <Component />;
 
   function Navigation<ParamList extends {} = RootParamList>({
     linking,
@@ -92,7 +93,7 @@ export function createStaticNavigation(tree: StaticNavigation<any>) {
 
     return (
       <NavigationContainer {...rest} ref={ref} linking={memoizedLinking}>
-        <Component />
+        {element}
       </NavigationContainer>
     );
   }

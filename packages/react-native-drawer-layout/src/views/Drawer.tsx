@@ -34,7 +34,7 @@ export function Drawer({
     progress.set(open ? 1 : 0);
   }, [open, progress]);
 
-  const drawerRef = React.useRef<View>(null);
+  const drawerRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
   const onTransitionStartLatest = useLatestCallback((e: TransitionEvent) => {
     if (e.target === e.currentTarget && e.propertyName === 'transform') {
@@ -49,7 +49,11 @@ export function Drawer({
   });
 
   React.useEffect(() => {
-    const element = drawerRef.current as HTMLDivElement | null;
+    const element =
+      typeof HTMLElement !== 'undefined' &&
+      drawerRef.current instanceof HTMLElement
+        ? drawerRef.current
+        : null;
 
     element?.addEventListener('transitionstart', onTransitionStartLatest);
     element?.addEventListener('transitionend', onTransitionEndLatest);

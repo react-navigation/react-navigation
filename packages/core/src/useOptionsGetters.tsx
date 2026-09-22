@@ -1,45 +1,40 @@
-import type { ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
 import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationStateContext } from './NavigationStateContext';
-import type { NavigationProp } from './types';
+import { IsFocusedContext } from './useIsFocused';
 
 type Options = {
   key?: string;
-  navigation?: NavigationProp<ParamListBase>;
   options?: object | undefined;
+  getFocusedRouteKey?: () => string | undefined;
 };
 
-export function useOptionsGetters({ key, options, navigation }: Options) {
+export function useOptionsGetters({
+  key,
+  options,
+  getFocusedRouteKey,
+}: Options) {
+  const isFocused = React.use(IsFocusedContext) ?? true;
+
   const optionsRef = React.useRef<object | undefined>(options);
   const optionsGettersFromChildRef = React.useRef<
     Record<string, () => object | undefined | null>
   >({});
 
-  const { onOptionsChange } = React.use(NavigationBuilderContext);
+  const onOptionsChange = React.use(NavigationBuilderContext)?.onOptionsChange;
+
   const { addOptionsGetter: parentAddOptionsGetter } = React.use(
     NavigationStateContext
   );
-
-  const optionsChangeListener = React.useCallback(() => {
-    const isFocused = navigation?.isFocused() ?? true;
-    const hasChildren = Object.keys(optionsGettersFromChildRef.current).length;
-
-    if (isFocused && !hasChildren) {
-      onOptionsChange(optionsRef.current ?? {});
-    }
-  }, [navigation, onOptionsChange]);
 
   React.useInsertionEffect(() => {
     optionsRef.current = options;
   }, [options]);
 
   React.useEffect(() => {
-    optionsChangeListener();
-
-    return navigation?.addListener('focus', optionsChangeListener);
-  }, [navigation, options, optionsChangeListener]);
+    onOptionsChange?.();
+  }, [isFocused, onOptionsChange, options]);
 
   const getOptionsFromListener = React.useCallback(() => {
     for (const key in optionsGettersFromChildRef.current) {
@@ -57,9 +52,11 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
   }, []);
 
   const getCurrentOptions = React.useCallback(() => {
-    const isFocused = navigation?.isFocused() ?? true;
-
-    if (!isFocused) {
+    // We use focused route key from the navigator instead of `isFocused`
+    // Because `isFocused` may reflect the value the screen last rendered with,
+    // e.g. if `Activity` hides the screen before it rendered the new value,
+    // it updates at a lower priority, so it may be delayed.
+    if (key != null && getFocusedRouteKey?.() !== key) {
       return null;
     }
 
@@ -70,7 +67,7 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
     }
 
     return optionsRef.current;
-  }, [navigation, getOptionsFromListener]);
+  }, [key, getFocusedRouteKey, getOptionsFromListener]);
 
   React.useInsertionEffect(() => {
     // We don't have a parent at the root
@@ -82,15 +79,25 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
   const addOptionsGetter = React.useCallback(
     (key: string, getter: () => object | undefined | null) => {
       optionsGettersFromChildRef.current[key] = getter;
-      optionsChangeListener();
+
+      // Hidden screens may register without running their passive effects.
+      // Wait until the commit finishes before reporting their options.
+      if (onOptionsChange !== undefined) {
+        void Promise.resolve().then(onOptionsChange);
+      }
 
       return () => {
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete optionsGettersFromChildRef.current[key];
-        optionsChangeListener();
+
+        // Other getters and the focused route may still change during cleanup.
+        // Wait until the commit finishes before reporting the remaining options.
+        if (onOptionsChange !== undefined) {
+          void Promise.resolve().then(onOptionsChange);
+        }
       };
     },
-    [optionsChangeListener]
+    [onOptionsChange]
   );
 
   return {

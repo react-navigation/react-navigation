@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.36...@react-navigation/core@8.0.0-alpha.37) (2026-09-19)
+
+### Bug Fixes
+
+* don't build root state unless we have a listener ([69043be](https://github.com/react-navigation/react-navigation/commit/69043be6f520ac7144f6679f2a2921dde8e0444b)) - by @satya164
+
+# [8.0.0-alpha.36](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.35...@react-navigation/core@8.0.0-alpha.36) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/core
+
+# [8.0.0-alpha.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.34...@react-navigation/core@8.0.0-alpha.35) (2026-09-14)
+
+* refactor!: use a render callback instead of NavigationContent for custom navigators (#13238) ([c9c119e](https://github.com/react-navigation/react-navigation/commit/c9c119e13716ab82862c0cdddab2c84a4d3832ad)), closes [#13238](https://github.com/react-navigation/react-navigation/issues/13238) - by @satya164
+
+### Bug Fixes
+
+* allow removal prevention when navigation was suspended ([#13244](https://github.com/react-navigation/react-navigation/issues/13244)) ([75ac425](https://github.com/react-navigation/react-navigation/commit/75ac425f6931cda8e793baaa2e6ca2b03ed14f01)) - by @satya164
+* avoid stale options events & notify when nested navigators are removed ([#13245](https://github.com/react-navigation/react-navigation/issues/13245)) ([be48fea](https://github.com/react-navigation/react-navigation/commit/be48feaea76f999e55f9f4d058ca36d45b87d308)) - by @satya164
+* deduplicate scheduled navigation updates ([#13241](https://github.com/react-navigation/react-navigation/issues/13241)) ([92e57ea](https://github.com/react-navigation/react-navigation/commit/92e57eabb98efb78014cb66b988ea821bdab7aa1)) - by @satya164
+* fix more concurrent rendering issues in useNavigationState ([#13239](https://github.com/react-navigation/react-navigation/issues/13239)) ([7685418](https://github.com/react-navigation/react-navigation/commit/7685418c0794e98751fd1bf13f4cab2185dec360)) - by @satya164
+* keep navigation and route stable after suspense ([#13240](https://github.com/react-navigation/react-navigation/issues/13240)) ([6db6331](https://github.com/react-navigation/react-navigation/commit/6db6331ceda72a3e51aecbfa1f04371ecaf62907)) - by @satya164
+* preserve navigator state across hidden activity updates ([#13242](https://github.com/react-navigation/react-navigation/issues/13242)) ([2f02e12](https://github.com/react-navigation/react-navigation/commit/2f02e1297513cff3cbebc724281c6865e40b12d1)) - by @satya164
+* use committed focus for events and effects ([#13243](https://github.com/react-navigation/react-navigation/issues/13243)) ([c386bf0](https://github.com/react-navigation/react-navigation/commit/c386bf0ad1725324a0438f69b4485f8307ee9566)) - by @satya164
+
+### BREAKING CHANGES
+
+* this changes the API for custom navigators:
+
+```diff
+-const { NavigationContent } = useNavigationBuilder(Router, props);
++const { render } = useNavigationBuilder(Router, props);
+
+-return (
+-  <NavigationContent>
+-    <NavigatorView />
+-  </NavigationContent>
++return render(
++  <NavigatorView />
+ );
+```
+
+custom navigators now must use the returned `render` function from
+`useNavigationBuilder` instead of the `NavigationContent`.
+
+the previous API isn't feasible while maintaining concurrent safety.
+
+# [8.0.0-alpha.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.33...@react-navigation/core@8.0.0-alpha.34) (2026-08-19)
+
+### Bug Fixes
+
+* cleanup more contexts in NavigationIndependentTree ([999fc2c](https://github.com/react-navigation/react-navigation/commit/999fc2c914f592618921923bbe6e986a7f78ec9a)) - by @satya164
+* fix return type of getRootState ([ed851e7](https://github.com/react-navigation/react-navigation/commit/ed851e7ca42b07c96dd09903e475a2c3d50c3125)) - by @satya164
+* properly mark unhandled actions that have target ([3a76dfb](https://github.com/react-navigation/react-navigation/commit/3a76dfbed95eb8b502d44918dff2e4e54620f6eb)) - by @satya164
+* use root navigation for dispatching actions for links ([76b74cd](https://github.com/react-navigation/react-navigation/commit/76b74cdecafe32db9feb4427aa422b925b483b73)) - by @satya164
+
+### Features
+
+* support repeated path params ([32c4333](https://github.com/react-navigation/react-navigation/commit/32c4333a6d87efbbb5c0d52a054927c0a0b11e50)) - by @satya164
+
+# [8.0.0-alpha.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.32...@react-navigation/core@8.0.0-alpha.33) (2026-08-10)
+
+### Bug Fixes
+
+* fix typo with using fallback index when parsing paths ([b172d15](https://github.com/react-navigation/react-navigation/commit/b172d1588bf9d8a5b115d82f733b5302c1288e21)) - by @satya164
+
+# [8.0.0-alpha.32](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.31...@react-navigation/core@8.0.0-alpha.32) (2026-08-06)
+
+### Bug Fixes
+
+* capture stack traces for devtools at the call site ([bf9f7b2](https://github.com/react-navigation/react-navigation/commit/bf9f7b2e029ce12c12161456d5c289fa64fff347)) - by @satya164
+* throw when getParent doesn't find navigation object for a screen ([ed576a0](https://github.com/react-navigation/react-navigation/commit/ed576a01375a038864c54f56f654d45173a06030)) - by @satya164
+* use a separate navigation object for useNavigation instead of using ref ([5b87c09](https://github.com/react-navigation/react-navigation/commit/5b87c094c4334c215bb679aec2067e04342a76d0)) - by @satya164
+* workaround VSCode autoimport not working for `useNavigation` etc ([70d4465](https://github.com/react-navigation/react-navigation/commit/70d4465e74cd0d5d39afde52dfa1c523eeb14be2)), closes [#13204](https://github.com/react-navigation/react-navigation/issues/13204) - by @satya164
+
+### Features
+
+* add getter support to screens for lazy requires ([#13141](https://github.com/react-navigation/react-navigation/issues/13141)) ([f79217a](https://github.com/react-navigation/react-navigation/commit/f79217a1f2b8cb5866ac62bfc36dff5e41451a89)) - by @satya164
+
 # [8.0.0-alpha.31](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.30...@react-navigation/core@8.0.0-alpha.31) (2026-07-27)
 
 ### Bug Fixes

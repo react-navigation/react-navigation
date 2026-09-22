@@ -385,7 +385,7 @@ export function TabBar<T extends Route>({
   android_ripple,
   options,
 }: Props<T>) {
-  const containerRef = React.useRef<View>(null);
+  const containerRef = React.useRef<React.ComponentRef<typeof View>>(null);
   const [layout, onLayout] = useMeasureLayout(containerRef);
 
   // Prioritize measuring tabs upto focused item

@@ -6,6 +6,7 @@ import type { NavigationListForNested, RootNavigator } from './types';
 type NavigationStateEvent = 'update' | 'commit';
 
 type NavigationStateListener = {
+  initialStateContext: React.Context<NavigationState<ParamListBase>>;
   getState: () => NavigationState<ParamListBase>;
   getSnapshot: () => NavigationState<ParamListBase>;
   subscribe: (callback: (event: NavigationStateEvent) => void) => () => void;
@@ -83,6 +84,25 @@ export function useNavigationState(...args: unknown[]): unknown {
 
   const { getState, getSnapshot, subscribe } = listener;
 
+  const initialRef = React.useRef(true);
+
+  // We read the initial state from context on mount instead of using getState
+  // This ensures that we get proper state for the current render,
+  // even if the external store has been updated.
+  // We conditionally use `use` to avoid more unnecessary re-renders after first mount.
+  // The context subscription is removed on the next render, which can cause one extra render.
+  const initialState = initialRef.current
+    ? React.use(listener.initialStateContext)
+    : undefined;
+
+  // We track the last committed reducer entry, navigation state, and selector,
+  // so we can check if an update changes the value the component last committed.
+  const committedRef = React.useRef<{
+    entry: NavigationStateEntry | null;
+    state: NavigationState<ParamListBase>;
+    select: (state: NavigationState<ParamListBase>) => unknown;
+  }>({ entry: null, state: initialState ?? getSnapshot(), select });
+
   // The store can contain state from a transition that hasn't committed yet.
   // Reading it during render can show state that doesn't match the navigator in that render.
   // The reducer lets React process state in the same render lane as the navigator.
@@ -92,11 +112,28 @@ export function useNavigationState(...args: unknown[]): unknown {
       // Reading here ensures the processed event uses the state for that render.
       const state = event === 'update' ? getState() : getSnapshot();
 
+      // If we're processing the same reducer entry as the last commit,
+      // we compare against the state last committed by the component.
+      // We keep the reducer entry to avoid re-renders for unchanged selections.
+      // This means the reducer entry can still hold older navigation state.
+      // If a parent causes another render,
+      // we use the latest snapshot so the selector doesn't read stale state.
+      // We leave the reducer entry unchanged to avoid an extra render.
+      // We save that snapshot in committedRef when the render commits,
+      // so later updates compare against the state we actually rendered,
+      // including when the selector changed.
+      // If the reducer entry is different, we use its own navigation state,
+      // so comparisons include updates already processed in the pending render.
+      const previousState =
+        previous === committedRef.current.entry
+          ? committedRef.current.state
+          : previous.state;
+
       if (
         previous.listener === listener &&
-        (previous.state === state ||
+        (previousState === state ||
           (event === 'update' &&
-            Object.is(select(previous.state), select(state))))
+            Object.is(select(previousState), select(state))))
       ) {
         return previous;
       }
@@ -104,36 +141,23 @@ export function useNavigationState(...args: unknown[]): unknown {
       return { listener, state };
     },
     undefined,
-    () => ({ listener, state: getState() })
+    () => ({ listener, state: initialState ?? getSnapshot() })
   );
 
-  let state = entry.state;
-
-  const committedRef = React.useRef<{
-    entry: NavigationStateEntry | null;
-    state: NavigationState<ParamListBase>;
-    select: (state: NavigationState<ParamListBase>) => unknown;
-  }>({ entry: null, state, select });
-
-  React.useInsertionEffect(() => {
-    committedRef.current = { entry, state, select };
-  });
-
-  const snapshot = getSnapshot();
-
-  const behind =
-    state !== snapshot &&
+  const state =
     // A different listener means the state belongs to another navigator.
     // This can happen when the passed route name changes.
-    (entry.listener !== listener ||
-      // An entry that advanced past the last commit is at least as new as the snapshot.
-      // An entry that didn't advance while the committed state changed is older.
-      entry === committedRef.current.entry);
+    entry.listener !== listener ||
+    // An entry that advanced past the last commit is at least as new as the snapshot.
+    // An entry that didn't advance while the committed state changed is older.
+    entry === committedRef.current.entry
+      ? getSnapshot()
+      : entry.state;
 
-  if (behind) {
-    state = snapshot;
-    dispatch('commit');
-  }
+  React.useInsertionEffect(() => {
+    initialRef.current = false;
+    committedRef.current = { entry, state, select };
+  });
 
   React.useLayoutEffect(() => {
     const check = (event: NavigationStateEvent) => {
@@ -161,21 +185,21 @@ export function useNavigationState(...args: unknown[]): unknown {
 }
 
 export function NavigationStateListenerProvider({
+  isSynced,
   state,
   getState,
   subscribe,
   children,
 }: {
+  isSynced: boolean;
   state: NavigationState<ParamListBase>;
   getState: () => NavigationState<ParamListBase>;
   subscribe: (callback: () => void) => () => void;
   children: React.ReactNode;
 }) {
-  const snapshotRef = React.useRef(state);
-
-  React.useInsertionEffect(() => {
-    snapshotRef.current = state;
-  }, [state]);
+  const [InitialStateContext] = React.useState(() =>
+    React.createContext(state)
+  );
 
   const [listeners] = React.useState(
     () => new Set<(event: NavigationStateEvent) => void>()
@@ -185,10 +209,23 @@ export function NavigationStateListenerProvider({
     listeners.forEach((listener) => listener('commit'));
   }, [listeners, state]);
 
+  const snapshotRef = React.useRef(state);
+
+  React.useInsertionEffect(() => {
+    snapshotRef.current = state;
+  }, [state]);
+
+  // Route config or nested params can produce new state during render.
+  // If the scheduled update hasn't synced that state to the store yet,
+  // We need to expose the rendered state so consumers match the navigator.
+  // We keep this `undefined` for other scenarios, so the context isn't recreated.
+  const nextState = isSynced ? undefined : state;
+
   const context = React.useMemo(
     () => ({
+      initialStateContext: InitialStateContext,
       getState,
-      getSnapshot: () => snapshotRef.current,
+      getSnapshot: () => nextState ?? snapshotRef.current,
       subscribe: (callback: (event: NavigationStateEvent) => void) => {
         const unsubscribe = subscribe(() => callback('update'));
 
@@ -200,12 +237,14 @@ export function NavigationStateListenerProvider({
         };
       },
     }),
-    [getState, listeners, subscribe]
+    [InitialStateContext, getState, listeners, nextState, subscribe]
   );
 
   return (
     <NavigationStateListenerContext.Provider value={context}>
-      {children}
+      <InitialStateContext.Provider value={state}>
+        {children}
+      </InitialStateContext.Provider>
     </NavigationStateListenerContext.Provider>
   );
 }
@@ -221,7 +260,7 @@ export function NamedNavigationStateListenerProvider({
 
   if (listener == null) {
     throw new Error(
-      "Couldn't find a navigation state listener. This is likely because the navigator doesn't render its content under 'NavigationContent'."
+      "Couldn't find a navigation state listener. This is likely a bug in the navigator.\n\nIf you're using a custom navigator, make sure that the navigator content is wrapped by the 'render' function returned by 'useNavigationBuilder'."
     );
   }
 
