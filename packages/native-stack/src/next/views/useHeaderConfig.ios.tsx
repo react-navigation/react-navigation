@@ -1,12 +1,14 @@
 import * as React from 'react';
 import {
   type StackHeaderConfigProps,
+  type StackHeaderItemVisibilityPriorityIOS,
   type StackHeaderMenuElementIOS,
   type StackHeaderMenuIOS,
 } from 'react-native-screens';
 
 import type {
   NativeStackHeaderItem,
+  NativeStackHeaderItemButton,
   NativeStackHeaderItemMenu,
   NativeStackHeaderItemMenuSubmenu,
   NativeStackNavigationOptions,
@@ -129,6 +131,7 @@ function getIOSHeaderItems(
         type: 'item',
         title: item.label,
         icon: getIOSHeaderIcon(item.icon),
+        visibilityPriority: getIOSVisibilityPriority(item.visibilityPriority),
         onPress: item.onPress,
       };
     }
@@ -141,6 +144,7 @@ function getIOSHeaderItems(
         type: 'item',
         title: item.label,
         icon: getIOSHeaderIcon(item.icon),
+        visibilityPriority: getIOSVisibilityPriority(item.visibilityPriority),
         menu: {
           ...getIOSHeaderMenu(item.menu, `${id}-menu`),
           title: item.menu.title,
@@ -163,6 +167,12 @@ function getIOSHeaderItems(
       render: () => item.element,
     };
   });
+}
+
+function getIOSVisibilityPriority(
+  visibilityPriority: NativeStackHeaderItemButton['visibilityPriority']
+): StackHeaderItemVisibilityPriorityIOS | undefined {
+  return visibilityPriority === 'default' ? 'standard' : visibilityPriority;
 }
 
 function getIOSHeaderMenu(

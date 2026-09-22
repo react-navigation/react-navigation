@@ -1,5 +1,9 @@
 import type { Icon } from '@react-navigation/elements';
-import { MaterialSymbol } from '@react-navigation/native';
+import {
+  type LocaleDirection,
+  MaterialSymbol,
+  useLocale,
+} from '@react-navigation/native';
 import * as React from 'react';
 import type { ColorValue } from 'react-native';
 import {
@@ -38,6 +42,8 @@ export function useHeaderConfig({
   headerTitleElement,
   tintColor,
 }: HeaderConfigOptions): HeaderConfigResult {
+  const { direction } = useLocale();
+
   const toolbarMenu = options.unstable_headerToolbarMenu;
   const headerConfigRef = React.useRef<StackHeaderConfigRef>(null);
   const iconStateByIdentifierRef = React.useRef(
@@ -77,6 +83,7 @@ export function useHeaderConfig({
           options: getAndroidToolbarMenuElementOptions(
             options,
             tintColor,
+            direction,
             currentIconState,
             nextIconState
           ),
@@ -85,7 +92,7 @@ export function useHeaderConfig({
         iconStateByIdentifierRef.current.set(identifier, nextIconState);
       },
     }),
-    [tintColor]
+    [direction, tintColor]
   );
 
   const usesHeaderLeftElement = headerLeftElement != null;
@@ -152,9 +159,12 @@ export function useHeaderConfig({
         ? options.unstable_headerBackButtonTintColorFocused
         : undefined,
       backButtonIcon:
+        hasCustomHeader ||
+        options.headerShown === false ||
+        options.headerBackVisible === false ||
         options.headerBackIcon == null
           ? undefined
-          : getAndroidIcon(options.headerBackIcon, tintColor),
+          : getAndroidIcon(options.headerBackIcon, tintColor, direction),
       scrollFlagScroll: headerScroll?.enabled,
       scrollFlagEnterAlways: isHeaderScrollDisabled
         ? false
@@ -171,7 +181,7 @@ export function useHeaderConfig({
       toolbarMenu:
         toolbarMenu == null
           ? undefined
-          : getAndroidToolbarMenu(toolbarMenu, tintColor),
+          : getAndroidToolbarMenu(toolbarMenu, tintColor, direction),
       toolbarMenuGroupDividerEnabled:
         options.unstable_headerToolbarMenuGroupDividerEnabled,
     },
@@ -191,7 +201,8 @@ export function useHeaderConfig({
 
 function getAndroidIcon(
   icon: Icon,
-  tintColor: ColorValue
+  tintColor: ColorValue,
+  direction: LocaleDirection
 ): StackHeaderConfigAndroid['backButtonIcon'] {
   if (icon.type === 'image') {
     return { type: 'imageSource', imageSource: icon.source };
@@ -204,7 +215,9 @@ function getAndroidIcon(
         name: icon.name,
         variant: icon.variant,
         weight: icon.weight,
+        fill: icon.fill,
         color: tintColor,
+        direction,
       }),
     };
   }
@@ -220,7 +233,8 @@ function isAndroidIconTintEnabled(icon: Icon | null | undefined) {
 
 function getAndroidToolbarMenu(
   menu: Pick<NativeStackHeaderToolbarMenu, 'groups' | 'items'>,
-  tintColor: ColorValue
+  tintColor: ColorValue,
+  direction: LocaleDirection
 ): StackHeaderToolbarMenuAndroid {
   return {
     groups: menu.groups?.map((group) => ({
@@ -234,7 +248,7 @@ function getAndroidToolbarMenu(
       ? null
       : {
           children: menu.items.map((item) =>
-            getAndroidToolbarMenuElement(item, tintColor)
+            getAndroidToolbarMenuElement(item, tintColor, direction)
           ),
         }),
   };
@@ -242,7 +256,8 @@ function getAndroidToolbarMenu(
 
 function getAndroidToolbarMenuElement(
   item: NativeStackHeaderToolbarMenuElement,
-  tintColor: ColorValue
+  tintColor: ColorValue,
+  direction: LocaleDirection
 ): StackHeaderToolbarMenuElementAndroid {
   const isIconTintEnabled = isAndroidIconTintEnabled(item.icon);
   const usesTintedImage = item.icon?.type === 'image' && isIconTintEnabled;
@@ -256,7 +271,10 @@ function getAndroidToolbarMenuElement(
     hidden: item.hidden,
     disabled: item.disabled,
     showAsAction: item.showAsAction,
-    icon: item.icon == null ? undefined : getAndroidIcon(item.icon, tintColor),
+    icon:
+      item.icon == null
+        ? undefined
+        : getAndroidIcon(item.icon, tintColor, direction),
     // Image icons are tinted by default unless `tinted` is disabled. The
     // normal tint also keeps the icon visible when a state tint is present,
     // since the native header otherwise uses a transparent normal tint.
@@ -295,13 +313,14 @@ function getAndroidToolbarMenuElement(
     ...base,
     type: 'menu',
     menuTitle: item.menuLabel,
-    ...getAndroidToolbarMenu(item, tintColor),
+    ...getAndroidToolbarMenu(item, tintColor, direction),
   };
 }
 
 function getAndroidToolbarMenuElementOptions(
   options: NativeStackHeaderToolbarMenuElementOptions,
   tintColor: ColorValue,
+  direction: LocaleDirection,
   currentIconState: AndroidToolbarMenuIconState,
   nextIconState: AndroidToolbarMenuIconState
 ): StackHeaderToolbarMenuElementOptionsAndroid {
@@ -369,7 +388,12 @@ function getAndroidToolbarMenuElementOptions(
       : null),
     ...('tooltip' in options ? { tooltipText: tooltip } : null),
     ...('icon' in options
-      ? { icon: icon == null ? undefined : getAndroidIcon(icon, tintColor) }
+      ? {
+          icon:
+            icon == null
+              ? undefined
+              : getAndroidIcon(icon, tintColor, direction),
+        }
       : null),
     ...iconTintOptions,
     ...('menuLabel' in options ? { menuTitle: menuLabel } : null),

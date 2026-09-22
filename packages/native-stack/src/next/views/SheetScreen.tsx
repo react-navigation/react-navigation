@@ -20,11 +20,14 @@ type Props = {
   isFocused: boolean;
   isPopped: boolean;
   onRemovePoppedRoute: (key: string) => void;
-  onNativeDismiss: (markNativelyDismissed: boolean) => void;
-  onNativeDismissPrevented: () => void;
+  onNativeDismiss: (options: {
+    key: string;
+    markNativelyDismissed: boolean;
+  }) => void;
+  onNativeDismissPrevented: (key: string) => void;
 };
 
-export function SheetScreen({
+export const SheetScreen = React.memo(function SheetScreen({
   descriptor,
   navigation,
   isFocused,
@@ -93,9 +96,14 @@ export function SheetScreen({
         });
       }}
       onNativeDismiss={() => {
-        onNativeDismiss(!isRemovePrevented);
+        onNativeDismiss({
+          key: route.key,
+          markNativelyDismissed: !isRemovePrevented,
+        });
       }}
-      onNativeDismissPrevented={onNativeDismissPrevented}
+      onNativeDismissPrevented={() => {
+        onNativeDismissPrevented(route.key);
+      }}
     >
       <View
         style={[
@@ -118,7 +126,7 @@ export function SheetScreen({
       </View>
     </FormSheet>
   );
-}
+});
 
 const styles = StyleSheet.create({
   fit: {

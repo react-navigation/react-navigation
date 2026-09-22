@@ -23,12 +23,16 @@ type Props = {
   isBeforeLast: boolean;
   isPopped: boolean;
   isDetached: boolean;
+  hasNestedState: boolean;
   onRemovePoppedRoute: (key: string) => void;
-  onNativeDismiss: () => void;
-  onNativeDismissPrevented: () => void;
+  onNativeDismiss: (options: {
+    key: string;
+    markNativelyDismissed: boolean;
+  }) => void;
+  onNativeDismissPrevented: (key: string) => void;
 };
 
-export function CardScreen({
+export const CardScreen = React.memo(function CardScreen({
   descriptor,
   previousDescriptor,
   navigation,
@@ -36,6 +40,7 @@ export function CardScreen({
   isBeforeLast,
   isPopped,
   isDetached,
+  hasNestedState,
   onRemovePoppedRoute,
   onNativeDismiss,
   onNativeDismissPrevented,
@@ -120,7 +125,13 @@ export function CardScreen({
   });
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
-  const hasNestedState = 'state' in route && route.state != null;
+  // Nested navigators clean up `route.state` when the screen is paused with `Activity`
+  // So we remember if the route had state until the screen is removed
+  const [hadNestedState, setHadNestedState] = React.useState(hasNestedState);
+
+  if (hasNestedState && !hadNestedState) {
+    setHadNestedState(true);
+  }
 
   let activityMode: 'normal' | 'inert' | 'paused' | 'unmounted';
 
@@ -143,7 +154,7 @@ export function CardScreen({
         activityMode = 'normal';
         break;
       case 'unmount':
-        activityMode = hasNestedState ? 'paused' : 'unmounted';
+        activityMode = hadNestedState ? 'paused' : 'unmounted';
         break;
       case 'pause':
         activityMode = 'paused';
@@ -185,8 +196,12 @@ export function CardScreen({
         })
       }
       onDismiss={onRemovePoppedRoute}
-      onNativeDismiss={onNativeDismiss}
-      onNativeDismissPrevented={onNativeDismissPrevented}
+      onNativeDismiss={() => {
+        onNativeDismiss({ key: route.key, markNativelyDismissed: true });
+      }}
+      onNativeDismissPrevented={() => {
+        onNativeDismissPrevented(route.key);
+      }}
     >
       <NavigationProvider navigation={descriptor.navigation} route={route}>
         <CardContent
@@ -220,4 +235,4 @@ export function CardScreen({
       </NavigationProvider>
     </Stack.Screen>
   );
-}
+});

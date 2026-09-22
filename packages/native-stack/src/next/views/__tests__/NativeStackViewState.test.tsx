@@ -45,6 +45,7 @@ const navigation = {
     routes: [],
     retainedRouteKeys: [],
   }),
+  dismiss: () => {},
   goBack: () => {},
   isFocused: () => true,
   navigate: () => {},
