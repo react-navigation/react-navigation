@@ -289,6 +289,16 @@ export type NativeStackNavigationOptions = {
    */
   headerBlurEffect?: ScreenStackHeaderConfigProps['blurEffect'] | undefined;
   /**
+   * Interface style to render the header with, e.g. the material of the bar button items on iOS 26.
+   * By default it follows the `dark` property of the navigation theme.
+   * Set it when a screen's content doesn't match the theme, e.g. a dark screen in a light app.
+   *
+   * Only supported on iOS.
+   *
+   * @platform ios
+   */
+  headerUserInterfaceStyle?: 'light' | 'dark' | undefined;
+  /**
    * Tint color for the header. Changes the color of back button and title.
    */
   headerTintColor?: ColorValue | undefined;
