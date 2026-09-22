@@ -54,6 +54,7 @@ const navigation = {
   preload: () => {},
   push: () => {},
   pushParams: () => {},
+  remove: () => {},
   removeListener: () => {},
   replace: () => {},
   replaceParams: () => {},

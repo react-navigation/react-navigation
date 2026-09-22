@@ -64,8 +64,9 @@ function NativeStackViewContent({
   }) => {
     const currentState = navigation.getState();
     const index = currentState.routes.findIndex((route) => route.key === key);
+    const route = currentState.routes[index];
 
-    if (index === -1) {
+    if (route == null) {
       return;
     }
 
@@ -85,7 +86,7 @@ function NativeStackViewContent({
     }
 
     navigation.dispatch({
-      ...StackActions.pop(dismissCount),
+      ...StackActions.remove(route.name, dismissCount),
       source: key,
       target: currentState.key,
     });
@@ -97,9 +98,14 @@ function NativeStackViewContent({
 
   const onNativeDismissPrevented = (key: string) => {
     const currentState = navigation.getState();
+    const route = currentState.routes.find((route) => route.key === key);
+
+    if (route == null) {
+      return;
+    }
 
     navigation.dispatch({
-      ...StackActions.pop(),
+      ...StackActions.remove(route.name),
       source: key,
       target: currentState.key,
     });
