@@ -206,9 +206,7 @@ export function BottomTabViewCustom({
           // Delay clearing `animating` state
           // This will give time for `popToTop` to get handled before pause
           timer = setTimeout(() => {
-            setLastUpdate((update) =>
-              update.animating ? { ...update, animating: false } : update
-            );
+            setLastUpdate({ current: focusedRouteKey, animating: false });
           }, 32);
         }
       });
