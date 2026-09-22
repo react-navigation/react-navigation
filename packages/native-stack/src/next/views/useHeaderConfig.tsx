@@ -25,7 +25,7 @@ export type HeaderConfigResult = {
   headerBackgroundMode: 'native' | 'screen' | 'none';
 };
 
-// eslint-disable-next-line @eslint-react/hooks-extra/no-unnecessary-use-prefix, @eslint-react/hooks-extra/ensure-custom-hooks-using-other-hooks
+// eslint-disable-next-line @eslint-react/no-unnecessary-use-prefix
 export function useHeaderConfig({
   headerLeftElement,
 }: HeaderConfigOptions): HeaderConfigResult {

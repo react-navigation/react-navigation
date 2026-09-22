@@ -4,7 +4,7 @@ import {
   StackActions,
   type StackNavigationState,
 } from '@react-navigation/native';
-import type { Dispatch, ReactElement } from 'react';
+import * as React from 'react';
 import { Platform } from 'react-native';
 import { Stack } from 'react-native-screens';
 
@@ -30,7 +30,7 @@ type Props = {
 
 type NativeStackViewContentProps = Props &
   Pick<NativeStackViewState, 'renderedRoutes' | 'poppedByKey'> & {
-    dispatch: Dispatch<NativeStackViewStateAction>;
+    dispatch: React.Dispatch<NativeStackViewStateAction>;
   };
 
 const SUPPORTS_FORM_SHEET = Platform.OS === 'android' || Platform.OS === 'ios';
@@ -51,63 +51,72 @@ function NativeStackViewContent({
     state.routes.map((route, index) => [route.key, index])
   );
 
-  const onRemovePoppedRoute = (key: string) => {
-    dispatch({ type: 'REMOVE_POPPED_ROUTE', key });
-  };
+  const onRemovePoppedRoute = React.useCallback(
+    (key: string) => {
+      dispatch({ type: 'REMOVE_POPPED_ROUTE', key });
+    },
+    [dispatch]
+  );
 
-  const onNativeDismiss = ({
-    key,
-    markNativelyDismissed,
-  }: {
-    key: string;
-    markNativelyDismissed: boolean;
-  }) => {
-    const currentState = navigation.getState();
-    const index = currentState.routes.findIndex((route) => route.key === key);
+  const onNativeDismiss = React.useCallback(
+    ({
+      key,
+      markNativelyDismissed,
+    }: {
+      key: string;
+      markNativelyDismissed: boolean;
+    }) => {
+      const currentState = navigation.getState();
+      const index = currentState.routes.findIndex((route) => route.key === key);
+      const route = currentState.routes[index];
 
-    if (index === -1) {
-      return;
-    }
+      if (route == null || index > currentState.index) {
+        return;
+      }
 
-    const dismissCount = currentState.index - index + 1;
+      if (markNativelyDismissed) {
+        dispatch({
+          type: 'ADD_NATIVELY_DISMISSED_ROUTES',
+          keys: currentState.routes
+            .slice(index, currentState.index + 1)
+            .map((route) => route.key),
+        });
+      }
 
-    if (dismissCount < 1) {
-      return;
-    }
-
-    if (markNativelyDismissed) {
-      dispatch({
-        type: 'ADD_NATIVELY_DISMISSED_ROUTES',
-        keys: currentState.routes
-          .slice(index, currentState.index + 1)
-          .map((route) => route.key),
+      navigation.dispatch({
+        ...StackActions.dismiss(),
+        source: key,
+        target: currentState.key,
       });
-    }
 
-    navigation.dispatch({
-      ...StackActions.pop(dismissCount),
-      source: key,
-      target: currentState.key,
-    });
+      if (markNativelyDismissed) {
+        setNextDismissedKey(key);
+      }
+    },
+    [dispatch, navigation, setNextDismissedKey]
+  );
 
-    if (markNativelyDismissed) {
-      setNextDismissedKey(key);
-    }
-  };
+  const onNativeDismissPrevented = React.useCallback(
+    (key: string) => {
+      const currentState = navigation.getState();
+      const route = currentState.routes.find((route) => route.key === key);
 
-  const onNativeDismissPrevented = (key: string) => {
-    const currentState = navigation.getState();
+      if (route == null) {
+        return;
+      }
 
-    navigation.dispatch({
-      ...StackActions.pop(),
-      source: key,
-      target: currentState.key,
-    });
-  };
+      navigation.dispatch({
+        ...StackActions.dismiss(),
+        source: key,
+        target: currentState.key,
+      });
+    },
+    [navigation]
+  );
 
   const { cards, sheets } = renderedRoutes.reduce<{
-    cards: ReactElement[];
-    sheets: ReactElement[];
+    cards: React.ReactElement[];
+    sheets: React.ReactElement[];
   }>(
     (result, route) => {
       const index = routeIndexByKey.get(route.key);
@@ -137,9 +146,8 @@ function NativeStackViewContent({
         isFocused: index === state.index,
         isPopped,
         onRemovePoppedRoute,
-        onNativeDismissPrevented: () => {
-          onNativeDismissPrevented(route.key);
-        },
+        onNativeDismiss,
+        onNativeDismissPrevented,
       };
 
       if (isSheet) {
@@ -171,18 +179,7 @@ function NativeStackViewContent({
           }
         }
 
-        result.sheets.push(
-          <SheetScreen
-            key={route.key}
-            {...props}
-            onNativeDismiss={(markNativelyDismissed) => {
-              onNativeDismiss({
-                key: route.key,
-                markNativelyDismissed,
-              });
-            }}
-          />
-        );
+        result.sheets.push(<SheetScreen key={route.key} {...props} />);
       } else {
         const previousRoute =
           index == null ? undefined : state.routes[index - 1];
@@ -200,12 +197,7 @@ function NativeStackViewContent({
             previousDescriptor={previousDescriptor}
             isBeforeLast={index === state.index - 1}
             isDetached={index != null && index > state.index}
-            onNativeDismiss={() => {
-              onNativeDismiss({
-                key: route.key,
-                markNativelyDismissed: true,
-              });
-            }}
+            hasNestedState={index != null && state.routes[index]?.state != null}
           />
         );
       }
