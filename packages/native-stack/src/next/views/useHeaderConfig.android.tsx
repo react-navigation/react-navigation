@@ -152,6 +152,9 @@ export function useHeaderConfig({
         ? options.unstable_headerBackButtonTintColorFocused
         : undefined,
       backButtonIcon:
+        hasCustomHeader ||
+        options.headerShown === false ||
+        options.headerBackVisible === false ||
         options.headerBackIcon == null
           ? undefined
           : getAndroidIcon(options.headerBackIcon, tintColor),
