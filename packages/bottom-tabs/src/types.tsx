@@ -55,6 +55,15 @@ export type BottomTabNavigationEventMap = {
    * Event which fires when a transition animation ends.
    */
   transitionEnd: { data: undefined };
+  /**
+   * Event which fires when the placement of the `bottomAccessory` changes,
+   * e.g. when the tab bar minimizes and the accessory moves inline with it.
+   *
+   * Only supported with `native` implementation on iOS 26 and above.
+   */
+  bottomAccessoryPlacementChange: {
+    data: { placement: 'regular' | 'inline' };
+  };
 };
 
 export type LabelPosition = 'beside-icon' | 'below-icon';
