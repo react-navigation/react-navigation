@@ -28,6 +28,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
+  NativeScreensModule,
   type ScreenProps,
   ScreenStack,
   ScreenStackItem,
@@ -46,6 +47,26 @@ import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveEr
 import { useHeaderConfigProps } from './useHeaderConfigProps';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
+
+// The height table in `getDefaultHeaderHeight` is the spec for the header that `elements` draws
+// itself, and it goes stale whenever an OS or a new form factor moves the native bar. Ask screens
+// for the height UIKit lays out in the current window instead — the same number
+// `onHeaderHeightChange` reports later — and keep the table as the fallback. Cached per
+// orientation, since the answer changes with it.
+const nativeHeaderHeights = new Map<boolean, number | undefined>();
+
+function getNativeHeaderHeight(landscape: boolean) {
+  if (!nativeHeaderHeights.has(landscape)) {
+    const measured = NativeScreensModule?.getHeaderHeight?.();
+
+    nativeHeaderHeights.set(
+      landscape,
+      typeof measured === 'number' && measured > 0 ? measured : undefined
+    );
+  }
+
+  return nativeHeaderHeights.get(landscape);
+}
 
 type SceneViewProps = {
   index: number;
@@ -174,8 +195,19 @@ const SceneView = ({
       ? 0
       : insets.top;
 
-  const defaultHeaderHeight = useFrameSize((frame) =>
-    Platform.select({
+  const defaultHeaderHeight = useFrameSize((frame) => {
+    // A modally presented bar is not what screens measures, so modals keep the table.
+    const nativeHeaderHeight =
+      Platform.OS === 'ios' && !isModal
+        ? getNativeHeaderHeight(frame.width > frame.height)
+        : undefined;
+
+    if (nativeHeaderHeight != null) {
+      // Already includes the status bar / top inset, as UIKit placed the bar.
+      return nativeHeaderHeight;
+    }
+
+    return Platform.select({
       // FIXME: Currently screens isn't using Material 3
       // So our `getDefaultHeaderHeight` doesn't return the correct value
       // So we hardcode the value here for now until screens is updated
@@ -185,8 +217,8 @@ const SceneView = ({
         modalPresentation: isModal,
         topInset,
       }),
-    })
-  );
+    });
+  });
 
   const { preventedRoutes } = usePreventRemoveContext();
 
