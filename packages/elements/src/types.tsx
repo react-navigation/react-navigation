@@ -36,6 +36,13 @@ type IconImage = {
    * Defaults to `true`.
    */
   tinted?: boolean;
+  /**
+   * Width to height ratio for non-square images.
+   * The image renders at `size * aspectRatio` × `size` of the consumer's icon size.
+   *
+   * Defaults to `1`.
+   */
+  aspectRatio?: number;
 };
 
 type IconSfSymbol = {
