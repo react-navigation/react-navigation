@@ -130,9 +130,20 @@ export type MaterialTopTabNavigationOptions = {
   tabBarShowIcon?: boolean | undefined;
 
   /**
-   * Function that returns a React element to use as a badge for the tab.
+   * Text to show in a badge on the tab.
+   *
+   * You can also specify a function that returns a React element
+   * to render a custom badge.
    */
-  tabBarBadge?: (() => React.ReactElement) | undefined;
+  tabBarBadge?: number | string | (() => React.ReactElement) | undefined;
+
+  /**
+   * Style object for the tab bar badge.
+   * You can specify a background color or text color here.
+   *
+   * This is not applied if `tabBarBadge` is a function.
+   */
+  tabBarBadgeStyle?: StyleProp<TextStyle> | undefined;
 
   /**
    * Function that returns a React element as the tab bar indicator.
