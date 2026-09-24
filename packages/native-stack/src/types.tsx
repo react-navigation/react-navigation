@@ -479,7 +479,7 @@ export type NativeStackNavigationOptions = {
   navigationBarHidden?: boolean | undefined;
   /**
    * Sets the status bar animation (similar to the `StatusBar` component).
-   * On Android, setting either `fade` or `slide` will set the transition of status bar color. On iOS, this option applies to appereance animation of the status bar.
+   * On Android, setting either `fade` or `slide` will set the transition of status bar color. On iOS, this option applies to appearance animation of the status bar.
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
    *
    * Defaults to `fade` on iOS and `none` on Android.
@@ -649,7 +649,7 @@ export type NativeStackNavigationOptions = {
    * There is also possibility to specify `fitToContents` literal, which intents to set the sheet height
    * to the height of its contents.
    *
-   * Note that the array **must** be sorted in ascending order. This invariant is verified only in developement mode,
+   * Note that the array **must** be sorted in ascending order. This invariant is verified only in development mode,
    * where violation results in error.
    *
    * **Android is limited to up 3 values in the array** -- any surplus values, beside first three are ignored.
