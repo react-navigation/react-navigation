@@ -351,7 +351,7 @@ export function useNavigationBuilder<
 
   const isNestedParamsConsumed =
     typeof route?.params === 'object' && route.params != null
-      ? consumedParams?.has(route.params)
+      ? (consumedParams?.get(route.params)?.has(route.key) ?? false)
       : false;
 
   const {
@@ -790,9 +790,12 @@ export function useNavigationBuilder<
       typeof route?.params === 'object' &&
       route.params != null
     ) {
-      consumedParams.set(route.params, true);
+      const consumedBy = consumedParams.get(route.params) ?? new Set();
+
+      consumedBy.add(route.key);
+      consumedParams.set(route.params, consumedBy);
     }
-  }, [consumedParams, didConsumeNestedParams, route?.params]);
+  }, [consumedParams, didConsumeNestedParams, route?.key, route?.params]);
 
   const shouldUpdate = state !== nextState;
 
