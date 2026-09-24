@@ -119,7 +119,7 @@ const NAVIGATE_ACTION_TYPES = [
  * Nested params are tracked as consumed after handling
  * So navigating with same params again won't work
  * This can happen if the action or params are memoized
- * Or component hasn't re-renderd to re-create inline objects
+ * Or component hasn't re-rendered to re-create inline objects
  * So we clone the action and params when necessary before dispatch
  */
 function clone<T>(value: T): T;
