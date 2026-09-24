@@ -78,7 +78,7 @@ export function getLoaderForStateChange(
   tree: TreeForPathConfig,
   state: PartialState<NavigationState> | NavigationState | undefined,
   previousState: PartialState<NavigationState> | NavigationState | undefined,
-  consumedParams: WeakMap<object, true> | undefined
+  consumedParams: WeakMap<object, Set<string>> | undefined
 ): (() => Promise<void>) | undefined {
   const focusedRoute = state?.routes[state.index ?? state.routes.length - 1];
   const previousFocusedRoute =
@@ -145,7 +145,9 @@ export function getLoaderForStateChange(
     const initialRouteName = findInitialRouteName(nested.config);
 
     const stateFromParams =
-      focusedRoute.params != null && consumedParams?.has(focusedRoute.params)
+      focusedRoute.params != null &&
+      focusedRoute.key != null &&
+      consumedParams?.get(focusedRoute.params)?.has(focusedRoute.key)
         ? undefined
         : getStateFromRouteParams(params);
 
@@ -170,7 +172,9 @@ export function getLoaderForStateChange(
           ? { ...initialParams, ...previousRouteParams }
           : undefined;
       const previousStateFromParams =
-        previousRouteParams != null && consumedParams?.has(previousRouteParams)
+        previousRouteParams != null &&
+        previousFocusedRoute?.key != null &&
+        consumedParams?.get(previousRouteParams)?.has(previousFocusedRoute.key)
           ? undefined
           : getStateFromRouteParams(previousParams);
 
