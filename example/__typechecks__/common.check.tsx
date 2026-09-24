@@ -1587,7 +1587,7 @@ useNavigation('Invalid');
 }
 
 /**
- * Routes from dynamic dynamic navigator should return generic navigation
+ * Routes from dynamic navigator should return generic navigation
  */
 {
   const navigation = useNavigation('TabChat');
