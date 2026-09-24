@@ -377,7 +377,7 @@ export type NativeStackNavigationOptions = {
       }) => React.ReactNode)
     | undefined;
   /**
-   * How to align the the header title.
+   * How to align the header title.
    * Defaults to `left` on platforms other than iOS.
    *
    * Not supported on iOS. It's always `center` on iOS and cannot be changed.
@@ -708,7 +708,7 @@ export type NativeStackNavigationOptions = {
    * The largest sheet detent for which a view underneath won't be dimmed.
    * Works only when `presentation` is set to `formSheet`.
    *
-   * This prop can be set to an number, which indicates index of detent in `sheetAllowedDetents` array for which
+   * This prop can be set to a number, which indicates index of detent in `sheetAllowedDetents` array for which
    * there won't be a dimming view beneath the sheet.
    *
    * Additionaly there are following options available:
@@ -717,7 +717,7 @@ export type NativeStackNavigationOptions = {
    * * `last` - there won't be a dimming view for any detent level.
    *
    * @remark
-   * On iOS, the native implementation might resize the the sheet w/o explicitly changing the detent level, e.g. in case of keyboard appearance.
+   * On iOS, the native implementation might resize the sheet w/o explicitly changing the detent level, e.g. in case of keyboard appearance.
    * In case after such resize the sheet exceeds height for which in regular scenario a dimming view would be applied - it will be applied,
    * even if the detent has not effectively been changed.
    *

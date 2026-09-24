@@ -151,7 +151,7 @@ export type HeaderOptions = {
     | ((props: HeaderTitleProps) => React.ReactNode)
     | undefined;
   /**
-   * How to align the the header title.
+   * How to align the header title.
    * Defaults to `center` on iOS and `left` on Android.
    */
   headerTitleAlign?: 'left' | 'center' | undefined;
