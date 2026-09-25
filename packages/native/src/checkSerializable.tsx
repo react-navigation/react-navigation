@@ -1,3 +1,7 @@
+import type { PathConfigMap } from '@react-navigation/core';
+
+import { hasStringify, isRecord, visitState } from './visitState';
+
 type Success = { serializable: true };
 
 type Failure = {
@@ -25,7 +29,11 @@ const isSerializablePrimitive = (o: unknown) =>
   typeof o === 'string' ||
   (typeof o === 'number' && Number.isFinite(o) && !Object.is(o, -0));
 
-const checkValue = (o: unknown, ancestors: object[]): Failure | undefined => {
+const checkValue = (
+  o: unknown,
+  ancestors: object[],
+  paramsToSkip: Map<object, Set<string>> | undefined
+): Failure | undefined => {
   switch (typeof o) {
     case 'boolean':
     case 'string':
@@ -179,7 +187,7 @@ const checkValue = (o: unknown, ancestors: object[]): Failure | undefined => {
         continue;
       }
 
-      const childResult = checkValue(value, ancestors);
+      const childResult = checkValue(value, ancestors, paramsToSkip);
 
       if (childResult) {
         childResult.location.push(i);
@@ -212,14 +220,20 @@ const checkValue = (o: unknown, ancestors: object[]): Failure | undefined => {
       };
     }
 
+    const skippedKeys = paramsToSkip?.get(o);
+
     for (const key of keys) {
+      if (skippedKeys?.has(key)) {
+        continue;
+      }
+
       const value = o[key];
 
       if (value == null || isSerializablePrimitive(value)) {
         continue;
       }
 
-      const childResult = checkValue(value, ancestors);
+      const childResult = checkValue(value, ancestors, paramsToSkip);
 
       if (childResult) {
         childResult.location.push(key);
@@ -233,8 +247,61 @@ const checkValue = (o: unknown, ancestors: object[]): Failure | undefined => {
   return undefined;
 };
 
-export function checkSerializable(o: unknown): Result {
-  const result = checkValue(o, []);
+export function checkSerializable(
+  o: unknown,
+  config?: { screens?: PathConfigMap<{}> | undefined }
+): Result {
+  let paramsToSkip: Map<object, Set<string>> | undefined;
+
+  const screens = config?.screens;
+
+  if (isRecord(screens) && hasStringify(screens)) {
+    // Param values with a custom `stringify` in the linking config
+    // are excluded from the check as serialization is user-defined
+    const skip = new Map<object, Set<string>>();
+    const seenParams = new Set<object>();
+
+    visitState(o, screens, (params, screenConfig) => {
+      const stringify = screenConfig.stringify;
+
+      const keys = new Set(
+        isRecord(stringify)
+          ? Object.keys(stringify).filter(
+              (key) => typeof stringify[key] === 'function'
+            )
+          : []
+      );
+
+      if (seenParams.has(params)) {
+        // Params shared between routes only skip keys covered by every config
+        const skippedKeys = skip.get(params);
+
+        if (skippedKeys) {
+          for (const key of skippedKeys) {
+            if (!keys.has(key)) {
+              skippedKeys.delete(key);
+            }
+          }
+
+          if (skippedKeys.size === 0) {
+            skip.delete(params);
+          }
+        }
+      } else {
+        seenParams.add(params);
+
+        if (keys.size > 0) {
+          skip.set(params, keys);
+        }
+      }
+    });
+
+    if (skip.size > 0) {
+      paramsToSkip = skip;
+    }
+  }
+
+  const result = checkValue(o, [], paramsToSkip);
 
   if (!result) {
     return SERIALIZABLE;
