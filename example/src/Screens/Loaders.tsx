@@ -21,6 +21,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-screens/experimental';
 
 import iconBookOpen from '../../assets/icons/book-open.png';
 import iconPawPrint from '../../assets/icons/paw-print.png';
@@ -318,6 +319,12 @@ const LoaderTabs = createBottomTabNavigator({
   screens: {
     DinoList: {
       screen: DinoCatalogScreen,
+      layout: ({ children }) =>
+        Platform.OS === 'android' ? (
+          <SafeAreaView edges={{ bottom: true }}>{children}</SafeAreaView>
+        ) : (
+          children
+        ),
       options: {
         title: 'Catalog',
         tabBarIcon: Platform.select<Icon>({
