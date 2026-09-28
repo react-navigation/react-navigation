@@ -311,6 +311,7 @@ function Provider({ children }: { children: React.ReactNode }) {
 }
 
 const LoaderTabs = createBottomTabNavigator({
+  layout: ({ children }) => <Layout>{children}</Layout>,
   screenOptions: {
     lazy: true,
   },
