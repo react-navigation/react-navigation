@@ -7,7 +7,6 @@ import {
 import {
   CommonActions,
   MaterialSymbol,
-  NavigationMetaContext,
   type ParamListBase,
   type Route,
   StackActions,
@@ -88,10 +87,6 @@ const ICON_SIZE = Platform.select({
   ios: 25,
   default: 24,
 });
-
-const meta = {
-  type: 'native-tabs',
-};
 
 function reducer(state: NativeState, action: NativeAction): NativeState {
   switch (action.type) {
@@ -232,10 +227,26 @@ export function BottomTabViewNative({
     }
 
     if (actionOrigin === 'user') {
+      const { tabBarRepeatedPressBehavior } =
+        descriptors[route.key]?.options ?? {};
+
+      const isRepeatedPress = focusedRouteKey === route.key;
+
       const event = navigation.emit({
         type: 'tabPress',
         target: route.key,
         canPreventDefault: true,
+        data: {
+          origin: 'native',
+          behavior: {
+            scrollToTop:
+              isRepeatedPress &&
+              tabBarRepeatedPressBehavior?.scrollToTop !== false,
+            popToTop:
+              isRepeatedPress &&
+              tabBarRepeatedPressBehavior?.popToTop !== false,
+          },
+        },
       });
 
       if (event.defaultPrevented) {
@@ -311,6 +322,13 @@ export function BottomTabViewNative({
       type: 'tabPress',
       target: preventedScreenKey,
       canPreventDefault: true,
+      data: {
+        origin: 'native',
+        behavior: {
+          scrollToTop: false,
+          popToTop: false,
+        },
+      },
     });
   };
 
@@ -482,6 +500,7 @@ export function BottomTabViewNative({
             inactiveBehavior = 'pause',
             tabBarLabel,
             tabBarSelectionEnabled,
+            tabBarRepeatedPressBehavior,
             tabBarBadgeStyle,
             tabBarIcon,
             tabBarBadge,
@@ -594,8 +613,9 @@ export function BottomTabViewNative({
               nativeContainerStyle={{ backgroundColor: colors.background }}
               specialEffects={{
                 repeatedTabSelection: {
-                  popToRoot: true,
-                  scrollToTop: true,
+                  popToRoot: tabBarRepeatedPressBehavior?.popToTop !== false,
+                  scrollToTop:
+                    tabBarRepeatedPressBehavior?.scrollToTop !== false,
                 },
               }}
               android={{
@@ -680,9 +700,7 @@ export function BottomTabViewNative({
                   >
                     <AnimatedScreenContent isFocused={isFocused}>
                       <BottomTabBarHeightContext.Provider value={0}>
-                        <NavigationMetaContext.Provider value={meta}>
-                          {render()}
-                        </NavigationMetaContext.Provider>
+                        {render()}
                       </BottomTabBarHeightContext.Provider>
                     </AnimatedScreenContent>
                   </ScreenContent>

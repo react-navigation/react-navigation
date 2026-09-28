@@ -21,6 +21,12 @@ import type {
 } from '../types';
 import { StackView } from '../views/Stack/StackView';
 
+type TabPressEventArg = EventArg<
+  'tabPress',
+  true,
+  { behavior?: { popToTop?: boolean } } | undefined
+>;
+
 function StackNavigator({
   initialRouteName,
   routeNamesChangeBehavior,
@@ -64,11 +70,13 @@ function StackNavigator({
       // This is necessary to know if preventDefault() has been called
       handle = requestAnimationFrame(() => {
         const currentState = navigation.getState();
+        const event = e as TabPressEventArg;
 
         if (
           isFocused &&
+          event.data?.behavior?.popToTop !== false &&
           (currentState.index > 0 || currentState.routes[0]?.history?.length) &&
-          !(e as EventArg<'tabPress', true>).defaultPrevented
+          !event.defaultPrevented
         ) {
           // When user taps on already focused tab and we're inside the tab,
           // reset the stack to replicate native behaviour
