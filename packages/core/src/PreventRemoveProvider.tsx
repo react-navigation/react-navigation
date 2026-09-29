@@ -50,15 +50,9 @@ export function PreventRemoveProvider({ children }: Props) {
 
   const setPreventRemove = useLatestCallback(
     (id: string, routeKey: string, preventRemove: boolean): void => {
-      if (
-        preventRemove &&
-        (navigation == null ||
-          navigation
-            ?.getState()
-            .routes.every((route) => route.key !== routeKey))
-      ) {
+      if (preventRemove && navigation == null) {
         throw new Error(
-          `Couldn't find a route with the key ${routeKey}. This is likely a bug in the navigator.\n\nIf you're using a custom navigator, make sure that the navigator content is wrapped by the 'render' function returned by 'useNavigationBuilder'.`
+          "Couldn't find a navigation object. This is likely a bug in the navigator.\n\nIf you're using a custom navigator, make sure that the navigator content is wrapped by the 'render' function returned by 'useNavigationBuilder'."
         );
       }
 
