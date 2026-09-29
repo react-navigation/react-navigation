@@ -45,7 +45,7 @@ import { useSyncState } from './useSyncState';
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
 type Props<ParamList extends {}> = NavigationContainerProps & {
-  ref?: React.Ref<NavigationContainerRef<ParamList>>;
+  ref?: React.Ref<NavigationContainerRef<ParamList>> | undefined;
 };
 
 /**

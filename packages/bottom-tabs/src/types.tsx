@@ -110,18 +110,22 @@ export type BottomTabOptionsArgs<
 
 export type TimingKeyboardAnimationConfig = {
   animation: 'timing';
-  config?: Omit<
-    Partial<Animated.TimingAnimationConfig>,
-    'toValue' | 'useNativeDriver'
-  >;
+  config?:
+    | Omit<
+        Partial<Animated.TimingAnimationConfig>,
+        'toValue' | 'useNativeDriver'
+      >
+    | undefined;
 };
 
 export type SpringKeyboardAnimationConfig = {
   animation: 'spring';
-  config?: Omit<
-    Partial<Animated.SpringAnimationConfig>,
-    'toValue' | 'useNativeDriver'
-  >;
+  config?:
+    | Omit<
+        Partial<Animated.SpringAnimationConfig>,
+        'toValue' | 'useNativeDriver'
+      >
+    | undefined;
 };
 
 export type TabBarVisibilityAnimationConfig =
@@ -141,21 +145,21 @@ type BottomTabCustomOptions = {
    *
    * Only supported with `custom` implementation.
    */
-  animation?: TabAnimationName;
+  animation?: TabAnimationName | undefined;
 
   /**
    * Function which specifies interpolated styles for bottom-tab scenes.
    *
    * Only supported with `custom` implementation.
    */
-  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
+  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator | undefined;
 
   /**
    * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
    *
    * Only supported with `custom` implementation.
    */
-  transitionSpec?: TransitionSpec;
+  transitionSpec?: TransitionSpec | undefined;
 
   /**
    * Whether the label is shown below the icon or beside the icon.
@@ -176,7 +180,7 @@ type BottomTabCustomOptions = {
    *
    * Only supported with `custom` implementation.
    */
-  tabBarAllowFontScaling?: boolean;
+  tabBarAllowFontScaling?: boolean | undefined;
 
   /**
    * Style object for the tab item container.
@@ -199,24 +203,26 @@ type BottomTabCustomOptions = {
    *
    * Only supported with `custom` implementation.
    */
-  tabBarHideOnKeyboard?: boolean;
+  tabBarHideOnKeyboard?: boolean | undefined;
 
   /**
    * Animation config for showing and hiding the tab bar when the keyboard is shown/hidden.
    *
    * Only supported with `custom` implementation.
    */
-  tabBarVisibilityAnimationConfig?: {
-    show?: TabBarVisibilityAnimationConfig;
-    hide?: TabBarVisibilityAnimationConfig;
-  };
+  tabBarVisibilityAnimationConfig?:
+    | {
+        show?: TabBarVisibilityAnimationConfig | undefined;
+        hide?: TabBarVisibilityAnimationConfig | undefined;
+      }
+    | undefined;
 
   /**
    * Variant of the tab bar. Defaults to `uikit`.
    *
    * Only supported with `custom` implementation.
    */
-  tabBarVariant?: Variant;
+  tabBarVariant?: Variant | undefined;
 
   /**
    * Style object for the tab bar container.
@@ -234,28 +240,28 @@ type BottomTabCustomOptions = {
    *
    * Only supported with `custom` implementation.
    */
-  tabBarBackground?: () => React.ReactNode;
+  tabBarBackground?: (() => React.ReactNode) | undefined;
 
   /**
    * Position of the tab bar on the screen. Defaults to `bottom`.
    *
    * Only supported with `custom` implementation or if custom tab bar is provided.
    */
-  tabBarPosition?: 'bottom' | 'left' | 'right' | 'top';
+  tabBarPosition?: 'bottom' | 'left' | 'right' | 'top' | undefined;
 
   /**
    * Background color for the active tab.
    *
    * Only supported with `custom` implementation.
    */
-  tabBarActiveBackgroundColor?: ColorValue;
+  tabBarActiveBackgroundColor?: ColorValue | undefined;
 
   /**
    * Background color for the inactive tabs.
    *
    * Only supported with `custom` implementation.
    */
-  tabBarInactiveBackgroundColor?: ColorValue;
+  tabBarInactiveBackgroundColor?: ColorValue | undefined;
 
   /**
    * Function which returns a React element to render as the tab bar button.
@@ -263,7 +269,9 @@ type BottomTabCustomOptions = {
    *
    * Only supported with `custom` implementation.
    */
-  tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
+  tabBarButton?:
+    | ((props: BottomTabBarButtonProps) => React.ReactNode)
+    | undefined;
 };
 
 type BottomTabNativeOptions = {
@@ -277,7 +285,7 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  tabBarSystemItem?: TabsScreenSystemItem;
+  tabBarSystemItem?: TabsScreenSystemItem | undefined;
 
   /**
    * Blur effect applied to the tab bar when tab screen is selected.
@@ -299,7 +307,7 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  tabBarBlurEffect?: TabsScreenBlurEffect;
+  tabBarBlurEffect?: TabsScreenBlurEffect | undefined;
 
   /**
    * Minimize behavior for the tab bar.
@@ -322,7 +330,12 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  tabBarMinimizeBehavior?: 'auto' | 'none' | 'onScrollDown' | 'onScrollUp';
+  tabBarMinimizeBehavior?:
+    | 'auto'
+    | 'none'
+    | 'onScrollDown'
+    | 'onScrollUp'
+    | undefined;
 
   /**
    * Background color of the active indicator.
@@ -331,7 +344,7 @@ type BottomTabNativeOptions = {
    *
    * @platform android
    */
-  tabBarActiveIndicatorColor?: ColorValue;
+  tabBarActiveIndicatorColor?: ColorValue | undefined;
 
   /**
    * Specifies if the active indicator should be used. Defaults to `true`.
@@ -340,7 +353,7 @@ type BottomTabNativeOptions = {
    *
    * @platform android
    */
-  tabBarActiveIndicatorEnabled?: boolean;
+  tabBarActiveIndicatorEnabled?: boolean | undefined;
 
   /**
    * Function which returns a React element to display as an accessory view.
@@ -358,9 +371,9 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  bottomAccessory?: (options: {
-    placement: 'regular' | 'inline';
-  }) => React.ReactNode;
+  bottomAccessory?:
+    | ((options: { placement: 'regular' | 'inline' }) => React.ReactNode)
+    | undefined;
 
   /**
    * Specifies whether `contentInsetAdjustmentBehavior` of the `ScrollView`
@@ -381,14 +394,14 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  overrideScrollViewContentInsetAdjustmentBehavior?: boolean;
+  overrideScrollViewContentInsetAdjustmentBehavior?: boolean | undefined;
 };
 
 export type BottomTabNavigationOptions = {
   /**
    * Title text for the screen.
    */
-  title?: string;
+  title?: string | undefined;
 
   /**
    * Title string of the tab displayed in the tab bar
@@ -399,7 +412,7 @@ export type BottomTabNavigationOptions = {
    * - The system values are used if `tabBarSystemItem` is set on iOS.
    * - Otherwise, it falls back to the `title` or route name.
    */
-  tabBarLabel?: string;
+  tabBarLabel?: string | undefined;
 
   /**
    * Label visibility mode for the tab bar items.
@@ -416,15 +429,17 @@ export type BottomTabNavigationOptions = {
    * Supported on all platforms with `custom` implementation.
    * Only supported on Android with `native` implementation.
    */
-  tabBarLabelVisibilityMode?: TabBarItemLabelVisibilityMode;
+  tabBarLabelVisibilityMode?: TabBarItemLabelVisibilityMode | undefined;
 
   /**
    * Style object for the tab label.
    */
-  tabBarLabelStyle?: Pick<
-    TextStyle,
-    'fontFamily' | 'fontSize' | 'fontWeight' | 'fontStyle' | 'color'
-  >;
+  tabBarLabelStyle?:
+    | Pick<
+        TextStyle,
+        'fontFamily' | 'fontSize' | 'fontWeight' | 'fontStyle' | 'color'
+      >
+    | undefined;
 
   /**
    * Icon to display for the tab.
@@ -445,7 +460,8 @@ export type BottomTabNavigationOptions = {
         focused: boolean;
         color: ColorValue;
         size: number;
-      }) => Icon | React.ReactNode);
+      }) => Icon | React.ReactNode)
+    | undefined;
 
   /**
    * Text to show in a badge on the tab icon.
@@ -460,10 +476,12 @@ export type BottomTabNavigationOptions = {
    * - on iOS, you can only set the background color.
    * - on Android, you can set both background and text colors.
    */
-  tabBarBadgeStyle?: {
-    backgroundColor?: ColorValue;
-    color?: ColorValue;
-  };
+  tabBarBadgeStyle?:
+    | {
+        backgroundColor?: ColorValue | undefined;
+        color?: ColorValue | undefined;
+      }
+    | undefined;
 
   /**
    * Color for the icon and label in the active tab.
@@ -473,14 +491,14 @@ export type BottomTabNavigationOptions = {
   /**
    * Color for the icon and label in the inactive tabs.
    */
-  tabBarInactiveTintColor?: ColorValue;
+  tabBarInactiveTintColor?: ColorValue | undefined;
 
   /**
    * Color of tab bar item's ripple effect.
    *
    * @platform android
    */
-  tabBarRippleColor?: ColorValue;
+  tabBarRippleColor?: ColorValue | undefined;
 
   /**
    * Display mode for the tab bar.
@@ -499,41 +517,43 @@ export type BottomTabNavigationOptions = {
    * Supported on iOS 18 and above with `native` implementation.
    * Not supported on tvOS.
    */
-  tabBarControllerMode?: 'auto' | 'tabBar' | 'tabSidebar';
+  tabBarControllerMode?: 'auto' | 'tabBar' | 'tabSidebar' | undefined;
 
   /**
    * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
    * It's recommended to set this if you don't have a label for the tab.
    */
-  tabBarAccessibilityLabel?: string;
+  tabBarAccessibilityLabel?: string | undefined;
 
   /**
    * ID to locate this tab button in tests.
    */
-  tabBarButtonTestID?: string;
+  tabBarButtonTestID?: string | undefined;
 
   /**
    * Style object for the tab bar container.
    */
-  tabBarStyle?: {
-    /**
-     * Background color of the tab bar.
-     *
-     * Only supported on Android and iOS 18 and below.
-     */
-    backgroundColor?: ColorValue;
-    /**
-     * Shadow color of the tab bar.
-     *
-     * Only supported on iOS 18 and below.
-     */
-    shadowColor?: ColorValue;
-    /**
-     * Whether the tab bar is visible.
-     * Setting this to `'none'` hides the tab bar.
-     */
-    display?: 'flex' | 'none';
-  };
+  tabBarStyle?:
+    | {
+        /**
+         * Background color of the tab bar.
+         *
+         * Only supported on Android and iOS 18 and below.
+         */
+        backgroundColor?: ColorValue | undefined;
+        /**
+         * Shadow color of the tab bar.
+         *
+         * Only supported on iOS 18 and below.
+         */
+        shadowColor?: ColorValue | undefined;
+        /**
+         * Whether the tab bar is visible.
+         * Setting this to `'none'` hides the tab bar.
+         */
+        display?: 'flex' | 'none' | undefined;
+      }
+    | undefined;
 
   /**
    * Whether this tab can be selected.
@@ -542,7 +562,7 @@ export type BottomTabNavigationOptions = {
    *
    * Defaults to `true`.
    */
-  tabBarSelectionEnabled?: boolean;
+  tabBarSelectionEnabled?: boolean | undefined;
 
   /**
    * Behavior when pressing the tab in the tab bar while it's already focused.
@@ -554,8 +574,8 @@ export type BottomTabNavigationOptions = {
    */
   tabBarRepeatedPressBehavior?:
     | {
-        scrollToTop?: boolean;
-        popToTop?: boolean;
+        scrollToTop?: boolean | undefined;
+        popToTop?: boolean | undefined;
       }
     | undefined;
 
@@ -569,13 +589,13 @@ export type BottomTabNavigationOptions = {
    * Enabling in native implementation may result in flicker
    * as React renders after native transition is already finished.
    */
-  lazy?: boolean;
+  lazy?: boolean | undefined;
 
   /**
    * Whether any nested stack should be popped to top when navigating away from the tab.
    * Defaults to `false`.
    */
-  popToTopOnBlur?: boolean; // TODO: handle natively
+  popToTopOnBlur?: boolean | undefined; // TODO: handle natively
 
   /**
    * Style object for the component wrapping the screen content.
@@ -585,14 +605,14 @@ export type BottomTabNavigationOptions = {
   /**
    * Function that returns a React Element to display as a header.
    */
-  header?: (props: BottomTabHeaderProps) => React.ReactNode;
+  header?: ((props: BottomTabHeaderProps) => React.ReactNode) | undefined;
 
   /**
    * Whether to show the header.
    *
    * Defaults to `false` unless a header is provided.
    */
-  headerShown?: boolean;
+  headerShown?: boolean | undefined;
 
   /**
    * What should happen when screens become inactive.
@@ -605,7 +625,7 @@ export type BottomTabNavigationOptions = {
    * It won't be paused until after the first time it becomes focused.
    * This makes sure that effects are run to initialize the screen.
    */
-  inactiveBehavior?: 'pause' | 'none';
+  inactiveBehavior?: 'pause' | 'none' | undefined;
 } & HeaderOptions &
   BottomTabNativeOptions &
   BottomTabCustomOptions;
@@ -690,12 +710,12 @@ export type BottomTabNavigationConfig = {
    *
    * On other platforms, it's always `custom` and this option has no effect.
    */
-  implementation?: 'native' | 'custom';
+  implementation?: 'native' | 'custom' | undefined;
 
   /**
    * Function that returns a React element to display as the tab bar.
    */
-  tabBar?: (props: BottomTabBarProps) => React.ReactNode;
+  tabBar?: ((props: BottomTabBarProps) => React.ReactNode) | undefined;
 };
 
 export type BottomTabHeaderProps = {
@@ -726,9 +746,13 @@ export type BottomTabBarButtonProps = Omit<
   href?: string | undefined;
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
-  onPress?: (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
-  ) => void;
+  onPress?:
+    | ((
+        e:
+          | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+          | GestureResponderEvent
+      ) => void)
+    | undefined;
 };
 
 export type BottomTabNavigatorProps = DefaultNavigatorOptions<

@@ -136,7 +136,8 @@ export type MaterialTopTabNavigationOptions = {
         focused: boolean;
         color: ColorValue;
         size: number;
-      }) => Icon | React.ReactNode);
+      }) => Icon | React.ReactNode)
+    | undefined;
 
   /**
    * Whether the tab icon should be visible. Defaults to `false`.

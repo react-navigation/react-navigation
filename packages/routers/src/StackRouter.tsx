@@ -130,12 +130,12 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
         ? [
             screen: RouteName,
             params?: ParamList[RouteName],
-            options?: { merge?: boolean },
+            options?: { merge?: boolean | undefined },
           ]
         : [
             screen: RouteName,
             params: ParamList[RouteName],
-            options?: { merge?: boolean },
+            options?: { merge?: boolean | undefined },
           ]
       : never
   ): void;
@@ -183,7 +183,11 @@ export const StackActions = {
   popToTop() {
     return { type: 'POP_TO_TOP' } as const satisfies StackActionType;
   },
-  popTo(name: string, params?: object, options?: { merge?: boolean }) {
+  popTo(
+    name: string,
+    params?: object,
+    options?: { merge?: boolean | undefined }
+  ) {
     return {
       type: 'POP_TO',
       payload: {
