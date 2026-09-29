@@ -5270,6 +5270,7 @@ __metadata:
     react-native-tab-view: "npm:^4.3.2"
     react-test-renderer: "npm:19.2.3"
     typescript: "npm:~6.0.3"
+    use-latest-callback: "npm:^0.2.4"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
     react: ">= 18.2.0"

@@ -48,7 +48,8 @@
   "dependencies": {
     "@react-navigation/elements": "^2.9.43",
     "color": "^4.2.3",
-    "react-native-tab-view": "^4.3.2"
+    "react-native-tab-view": "^4.3.2",
+    "use-latest-callback": "^0.2.4"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.0",
