@@ -344,9 +344,9 @@ export const BaseNavigationContainer = React.forwardRef(
     }, [state, isReady, emitter]);
 
     React.useEffect(() => {
-      const hydratedState = getRootState();
-
       if (process.env.NODE_ENV !== 'production') {
+        const hydratedState = getRootState();
+
         if (hydratedState !== undefined) {
           const serializableResult = checkSerializable(hydratedState);
 
@@ -418,6 +418,8 @@ export const BaseNavigationContainer = React.forwardRef(
       emitter.emit({ type: 'state', data: { state } });
 
       if (!isFirstMountRef.current && onStateChangeRef.current) {
+        const hydratedState = getRootState();
+
         onStateChangeRef.current(hydratedState);
       }
 
