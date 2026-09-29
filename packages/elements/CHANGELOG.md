@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.53](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.52...@react-navigation/elements@3.0.0-alpha.53) (2026-09-29)
+
+### Bug Fixes
+
+* support `| undefined` to better work with `exactOptionalPropertyTypes` ([a9f81b8](https://github.com/react-navigation/react-navigation/commit/a9f81b8cf26260f1caeb7a89bfb214eb9483eb69)) - by @satya164
+
 # [3.0.0-alpha.52](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.51...@react-navigation/elements@3.0.0-alpha.52) (2026-09-22)
 
 **Note:** Version bump only for package @react-navigation/elements

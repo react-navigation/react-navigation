@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.18...@react-navigation/routers@8.0.0-alpha.19) (2026-09-29)
+
+### Bug Fixes
+
+* handle source for navigate and jumpTo in tab and drawer ([f3da8cd](https://github.com/react-navigation/react-navigation/commit/f3da8cda03457599c3272f49f0553ac933902a83)) - by @satya164
+* support `| undefined` to better work with `exactOptionalPropertyTypes` ([a9f81b8](https://github.com/react-navigation/react-navigation/commit/a9f81b8cf26260f1caeb7a89bfb214eb9483eb69)) - by @satya164
+
 # [8.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.17...@react-navigation/routers@8.0.0-alpha.18) (2026-09-22)
 
 * feat!: use action source when handling navigation actions ([5ff8bbc](https://github.com/react-navigation/react-navigation/commit/5ff8bbcd472b835cdde0ff1790e7ca9c867fb9c6)) - by @

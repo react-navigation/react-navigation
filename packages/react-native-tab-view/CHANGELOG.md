@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.16...react-native-tab-view@5.0.0-alpha.17) (2026-09-29)
+
+### Bug Fixes
+
+* support `| undefined` to better work with `exactOptionalPropertyTypes` ([a9f81b8](https://github.com/react-navigation/react-navigation/commit/a9f81b8cf26260f1caeb7a89bfb214eb9483eb69)) - by @satya164
+
 # [5.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.15...react-native-tab-view@5.0.0-alpha.16) (2026-09-19)
 
 ### Bug Fixes
