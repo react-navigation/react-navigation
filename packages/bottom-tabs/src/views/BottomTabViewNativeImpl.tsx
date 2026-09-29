@@ -209,7 +209,8 @@ export function BottomTabViewNative({
   // JS sends a requested tab with the native provenance it was based on.
   // Native replies with the selected tab and its new provenance.
   const onTabSelected = (event: NativeSyntheticEvent<TabSelectedEvent>) => {
-    const { selectedScreenKey, provenance, actionOrigin } = event.nativeEvent;
+    const { selectedScreenKey, provenance, actionOrigin, isRepeated } =
+      event.nativeEvent;
 
     const confirmed = {
       routeKey: selectedScreenKey,
@@ -230,8 +231,6 @@ export function BottomTabViewNative({
       const { tabBarRepeatedPressBehavior } =
         descriptors[route.key]?.options ?? {};
 
-      const isRepeatedPress = focusedRouteKey === route.key;
-
       const event = navigation.emit({
         type: 'tabPress',
         target: route.key,
@@ -240,11 +239,9 @@ export function BottomTabViewNative({
           origin: 'native',
           behavior: {
             scrollToTop:
-              isRepeatedPress &&
-              tabBarRepeatedPressBehavior?.scrollToTop !== false,
+              isRepeated && tabBarRepeatedPressBehavior?.scrollToTop !== false,
             popToTop:
-              isRepeatedPress &&
-              tabBarRepeatedPressBehavior?.popToTop !== false,
+              isRepeated && tabBarRepeatedPressBehavior?.popToTop !== false,
           },
         },
       });
