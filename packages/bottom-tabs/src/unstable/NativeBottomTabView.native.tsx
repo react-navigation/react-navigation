@@ -149,7 +149,8 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
   // JS sends a requested tab with the native provenance it was based on.
   // Native replies with the selected tab and its new provenance.
   const onTabSelected = (event: NativeSyntheticEvent<TabSelectedEvent>) => {
-    const { selectedScreenKey, provenance, actionOrigin } = event.nativeEvent;
+    const { selectedScreenKey, provenance, actionOrigin, isRepeated } =
+      event.nativeEvent;
 
     const confirmed = {
       routeKey: selectedScreenKey,
@@ -167,9 +168,20 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
     }
 
     if (actionOrigin === 'user') {
+      const { tabBarRepeatedPressBehavior } = descriptors[route.key].options;
+
       navigation.emit({
         type: 'tabPress',
         target: route.key,
+        data: {
+          origin: 'native',
+          behavior: {
+            scrollToTop:
+              isRepeated && tabBarRepeatedPressBehavior?.scrollToTop !== false,
+            popToTop:
+              isRepeated && tabBarRepeatedPressBehavior?.popToTop !== false,
+          },
+        },
       });
     }
 
@@ -236,6 +248,13 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
     navigation.emit({
       type: 'tabPress',
       target: preventedScreenKey,
+      data: {
+        origin: 'native',
+        behavior: {
+          scrollToTop: false,
+          popToTop: false,
+        },
+      },
     });
   };
 
@@ -349,6 +368,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
             lazy = false,
             tabBarLabel,
             tabBarSelectionEnabled,
+            tabBarRepeatedPressBehavior,
             tabBarBadgeStyle,
             tabBarIcon,
             tabBarBadge,
@@ -430,8 +450,9 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
               nativeContainerStyle={{ backgroundColor: colors.background }}
               specialEffects={{
                 repeatedTabSelection: {
-                  popToRoot: true,
-                  scrollToTop: true,
+                  popToRoot: tabBarRepeatedPressBehavior?.popToTop !== false,
+                  scrollToTop:
+                    tabBarRepeatedPressBehavior?.scrollToTop !== false,
                 },
               }}
               android={{

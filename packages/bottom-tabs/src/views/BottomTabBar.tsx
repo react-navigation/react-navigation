@@ -401,6 +401,16 @@ export function BottomTabBar({
               type: 'tabPress',
               target: route.key,
               canPreventDefault: true,
+              data: {
+                behavior: {
+                  scrollToTop:
+                    focused &&
+                    options.tabBarRepeatedPressBehavior?.scrollToTop !== false,
+                  popToTop:
+                    focused &&
+                    options.tabBarRepeatedPressBehavior?.popToTop !== false,
+                },
+              },
             });
 
             if (!focused && !event.defaultPrevented) {

@@ -28,8 +28,22 @@ export type NativeBottomTabNavigationEventMap = {
    * Event which fires on tapping on the tab in the tab bar.
    *
    * Use the `tabBarSelectionEnabled: false` option to prevent the tab from being selected.
+   * The `data` object contains the following properties:
+   * - `origin`: always `native`.
+   * - `behavior`: specifies how consumers should handle the tab press:
+   *   - `scrollToTop`: whether the content should scroll to top.
+   *   - `popToTop`: whether a nested stack should pop to top.
    */
-  tabPress: { data: undefined; canPreventDefault: false };
+  tabPress: {
+    data: {
+      origin: 'native';
+      behavior: {
+        scrollToTop: boolean;
+        popToTop: boolean;
+      };
+    };
+    canPreventDefault: false;
+  };
   /**
    * Event which fires when a transition animation starts.
    */
@@ -252,6 +266,21 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    * Defaults to `true`.
    */
   tabBarSelectionEnabled?: boolean;
+
+  /**
+   * Behavior when pressing the tab in the tab bar while it's already focused.
+   *
+   * - `scrollToTop`: scroll the first scroll view in the screen to top
+   * - `popToTop`: pop a nested stack to its first screen
+   *
+   * Both default to `true`.
+   */
+  tabBarRepeatedPressBehavior?:
+    | {
+        scrollToTop?: boolean;
+        popToTop?: boolean;
+      }
+    | undefined;
 
   /**
    * Blur effect applied to the tab bar when tab screen is selected.

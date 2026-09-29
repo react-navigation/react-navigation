@@ -21,6 +21,7 @@ import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
+// eslint-disable-next-line import-x/no-deprecated
 import { NavigationMetaContext } from './NavigationMetaContext';
 import { NavigationRouteContext } from './NavigationProvider';
 import { NavigationStateContext } from './NavigationStateContext';

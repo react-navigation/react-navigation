@@ -150,10 +150,23 @@ export function MaterialTopTabBar({
   const onTabPress = useLatestCallback<
     NonNullable<TabBarProps<Route>['onTabPress']>
   >(({ route, preventDefault }) => {
+    const { tabBarRepeatedPressBehavior } =
+      descriptors[route.key]?.options ?? {};
+    const isRepeatedPress = state.routes[state.index].key === route.key;
+
     const event = navigation.emit({
       type: 'tabPress',
       target: route.key,
       canPreventDefault: true,
+      data: {
+        behavior: {
+          scrollToTop:
+            isRepeatedPress &&
+            tabBarRepeatedPressBehavior?.scrollToTop !== false,
+          popToTop:
+            isRepeatedPress && tabBarRepeatedPressBehavior?.popToTop !== false,
+        },
+      },
     });
 
     if (event.defaultPrevented) {
