@@ -187,9 +187,7 @@ export function BottomTabView(props: Props) {
           // Delay clearing so the previous screen stays attached
           // This will give time for any native logic to run
           timer = setTimeout(() => {
-            setLastUpdate((update) =>
-              update.animating ? { ...update, animating: false } : update
-            );
+            setLastUpdate({ current: focusedRouteKey, animating: false });
           }, 32);
         }
       });
