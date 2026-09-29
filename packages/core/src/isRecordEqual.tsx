@@ -16,5 +16,7 @@ export function isRecordEqual(
     return false;
   }
 
-  return aKeys.every((key) => Object.is(a[key], b[key]));
+  return aKeys.every(
+    (key) => Object.hasOwn(b, key) && Object.is(a[key], b[key])
+  );
 }
