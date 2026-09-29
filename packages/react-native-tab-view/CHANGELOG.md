@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.3.2...react-native-tab-view@4.3.3) (2026-09-29)
+
+### Bug Fixes
+
+* improve memoization for material top tabs ([4465bbe](https://github.com/react-navigation/react-navigation/commit/4465bbe5cf87c8f8adf4451b726510e1a5f2977a)) - by @satya164
+
 ## [4.3.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.3.1...react-native-tab-view@4.3.2) (2026-07-16)
 
 ### Bug Fixes

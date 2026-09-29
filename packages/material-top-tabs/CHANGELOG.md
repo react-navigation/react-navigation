@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.7.2...@react-navigation/material-top-tabs@7.8.0) (2026-09-29)
+
+### Bug Fixes
+
+* improve memoization for material top tabs ([4465bbe](https://github.com/react-navigation/react-navigation/commit/4465bbe5cf87c8f8adf4451b726510e1a5f2977a)) - by @satya164
+
+### Features
+
+* add tabBarRepeatedPressBehavior to tabs ([78bfeb9](https://github.com/react-navigation/react-navigation/commit/78bfeb9562ddaf8a1a353a478addd51bda07c0da)) - by @satya164
+
 ## [7.7.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.7.1...@react-navigation/material-top-tabs@7.7.2) (2026-09-17)
 
 ### Bug Fixes

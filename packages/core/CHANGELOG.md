@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.23.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.22.1...@react-navigation/core@7.23.0) (2026-09-29)
+
+### Bug Fixes
+
+* allow removal prevention when navigation was suspended ([e5ca0bb](https://github.com/react-navigation/react-navigation/commit/e5ca0bb5d505545594b749f923b36f0878770bfd)) - by @satya164
+* don't build root state unless we have a listener ([3757cd0](https://github.com/react-navigation/react-navigation/commit/3757cd0253ae5dcdde790e55878f0a869dcadd08)) - by @satya164
+
+### Features
+
+* add tabBarRepeatedPressBehavior to tabs ([78bfeb9](https://github.com/react-navigation/react-navigation/commit/78bfeb9562ddaf8a1a353a478addd51bda07c0da)) - by @satya164
+
 ## [7.22.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.22.0...@react-navigation/core@7.22.1) (2026-09-15)
 
 **Note:** Version bump only for package @react-navigation/core
