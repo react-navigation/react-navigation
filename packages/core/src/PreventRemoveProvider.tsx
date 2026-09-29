@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid/non-secure';
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
@@ -34,7 +33,8 @@ const transformPreventedRoutes = (
  * Component used for managing which routes have to be prevented from removal in native-stack.
  */
 export function PreventRemoveProvider({ children }: Props) {
-  const [parentId] = React.useState(() => nanoid());
+  const parentId = React.useId();
+
   const [preventedRoutesMap, setPreventedRoutesMap] =
     React.useState<PreventedRoutesMap>(() => new Map());
 
