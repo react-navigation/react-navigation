@@ -156,8 +156,6 @@ export type SceneProgress = {
 
 export type StackHeaderMode = 'float' | 'screen';
 
-export type StackPresentationMode = 'card' | 'modal';
-
 export type StackHeaderOptions = Omit<
   HeaderOptions,
   'headerLeft' | 'headerTitle' | 'headerRight'

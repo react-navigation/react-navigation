@@ -9,20 +9,11 @@ import type {
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
-  Route,
   RouteProp,
   Theme,
 } from '@react-navigation/native';
 import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type { PanGestureConfig } from 'react-native-gesture-handler';
-
-export type Scene = {
-  route: Route<string>;
-  focused: boolean;
-  color?: ColorValue;
-};
-
-export type Layout = { width: number; height: number };
 
 export type DrawerNavigationConfig = {
   /**
@@ -318,27 +309,6 @@ export type DrawerDescriptor = Descriptor<
 >;
 
 export type DrawerDescriptorMap = Record<string, DrawerDescriptor>;
-
-export type DrawerProps = {
-  drawerPosition: 'left' | 'right';
-  drawerStyle?: StyleProp<ViewStyle>;
-  drawerType: 'front' | 'back' | 'slide' | 'permanent';
-  configureGestureHandler?: (gesture: PanGestureConfig) => PanGestureConfig;
-  hideStatusBarOnOpen: boolean;
-  keyboardDismissMode: 'none' | 'on-drag';
-  onClose: () => void;
-  onOpen: () => void;
-  open: boolean;
-  overlayStyle?: StyleProp<ViewStyle>;
-  renderDrawerContent: () => React.ReactNode;
-  renderSceneContent: () => React.ReactNode;
-  statusBarAnimation: 'slide' | 'none' | 'fade';
-  swipeDistanceThreshold: number;
-  swipeEdgeWidth: number;
-  swipeEnabled: boolean;
-  swipeVelocityThreshold: number;
-  overlayAccessibilityLabel?: string;
-};
 
 export type DrawerNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
