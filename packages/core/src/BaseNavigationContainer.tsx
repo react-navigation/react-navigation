@@ -572,6 +572,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
         case 'GO_BACK':
         case 'POP':
         case 'POP_TO_TOP':
+        case 'DISMISS':
           message += `\n\nIs there any screen to go back to?`;
           break;
         case 'OPEN_DRAWER':

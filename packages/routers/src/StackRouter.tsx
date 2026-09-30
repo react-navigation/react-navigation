@@ -53,8 +53,8 @@ export type StackActionType =
       target?: string | undefined;
     }
   | {
-      type: 'REMOVE';
-      payload: { name: string; count: number };
+      type: 'DISMISS';
+      payload: { count: number };
       source?: string | undefined;
       target?: string | undefined;
     };
@@ -77,7 +77,7 @@ export type StackNavigationState<ParamList extends ParamListBase> =
 
 export type StackActionHelpers<ParamList extends ParamListBase> = {
   /**
-   * Replace the current route with a new one.
+   * Replace the current screen with a new one.
    *
    * @param screen Name of the new route that will replace the current one.
    * @param [params] Params object for the new route.
@@ -106,13 +106,14 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
 
   /**
    * Pop a history entry from the stack.
+   * Also dismisses any screens above the current one.
    *
    * @param [count=1] Number of history entries to pop. Defaults to 1.
    */
   pop(count?: number): void;
 
   /**
-   * Pop to the first route in the stack, dismissing all other screens.
+   * Pop to the first screen in the stack, dismissing all other screens.
    */
   popToTop(): void;
 
@@ -151,14 +152,11 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   retain(enable: boolean): void;
 
   /**
-   * Remove the specified screen from the stack.
+   * Dismiss a screen from the stack.
    *
-   * The `count` parameter has no effect when removing preloaded or retained screens.
-   *
-   * @param screen Name of the route to remove.
-   * @param [count=1] Number of screens to remove. Defaults to 1.
+   * @param [count=1] Number of screens to dismiss. Defaults to 1.
    */
-  remove(screen: keyof ParamList, count?: number): void;
+  dismiss(count?: number): void;
 };
 
 export const StackActions = {
@@ -203,10 +201,10 @@ export const StackActions = {
       payload: { enable },
     } as const satisfies StackActionType;
   },
-  remove(name: string, count: number = 1) {
+  dismiss(count: number = 1) {
     return {
-      type: 'REMOVE',
-      payload: { name, count },
+      type: 'DISMISS',
+      payload: { count },
     } as const satisfies StackActionType;
   },
 };
@@ -766,41 +764,11 @@ export function StackRouter(options: StackRouterOptions) {
           return null;
         }
 
-        case 'REMOVE': {
-          if (!state.routeNames.includes(action.payload.name)) {
-            return null;
-          }
-
-          let currentIndex =
+        case 'DISMISS': {
+          const currentIndex =
             action.source !== undefined
-              ? state.routes.findIndex((r) => r.key === action.source)
+              ? routes.findIndex((route) => route.key === action.source)
               : state.index;
-
-          if (currentIndex === -1) {
-            return null;
-          }
-
-          if (currentIndex > state.index) {
-            const route = state.routes[currentIndex];
-
-            if (route?.name !== action.payload.name) {
-              return null;
-            }
-
-            return {
-              ...state,
-              routes: state.routes.filter((r) => r.key !== route.key),
-              retainedRouteKeys: state.retainedRouteKeys.filter(
-                (key) => key !== route.key
-              ),
-            };
-          }
-
-          if (routes[currentIndex]?.name !== action.payload.name) {
-            currentIndex = routes.findLastIndex(
-              (route) => route.name === action.payload.name
-            );
-          }
 
           if (
             currentIndex === -1 ||
