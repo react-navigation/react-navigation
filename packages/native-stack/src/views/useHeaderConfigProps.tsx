@@ -205,7 +205,9 @@ export function useHeaderConfigProps({
   headerLargeTitleStyle,
   headerBackground,
   headerLeft,
+  headerLeftBackgroundVisible,
   headerRight,
+  headerRightBackgroundVisible,
   headerShown,
   headerStyle,
   headerBlurEffect,
@@ -407,7 +409,9 @@ export function useHeaderConfigProps({
               return null;
             })
           ) : headerLeftElement != null ? (
-            <ScreenStackHeaderLeftView>
+            <ScreenStackHeaderLeftView
+              hidesSharedBackground={headerLeftBackgroundVisible === false}
+            >
               {headerLeftElement}
             </ScreenStackHeaderLeftView>
           ) : null}
@@ -481,7 +485,9 @@ export function useHeaderConfigProps({
           return null;
         })
       ) : headerRightElement != null ? (
-        <ScreenStackHeaderRightView>
+        <ScreenStackHeaderRightView
+          hidesSharedBackground={headerRightBackgroundVisible === false}
+        >
           {headerRightElement}
         </ScreenStackHeaderRightView>
       ) : null}

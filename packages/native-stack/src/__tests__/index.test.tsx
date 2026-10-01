@@ -677,3 +677,62 @@ describe('useHeaderHeight in native-stack', () => {
     expect(headerHeight).toBe(0);
   });
 });
+
+describe('header item background on iOS', () => {
+  const renderWithHeaderItems = (options: {
+    headerLeftBackgroundVisible?: boolean;
+    headerRightBackgroundVisible?: boolean;
+  }) => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+
+    const Empty = () => null;
+    const Stack = createNativeStackNavigator<StackParamList>();
+
+    const { UNSAFE_root } = render(
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="A"
+            component={Empty}
+            options={{
+              headerLeft: () => <Text>Left</Text>,
+              headerRight: () => <Text>Right</Text>,
+              ...options,
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+
+    const subviews = (type: 'left' | 'right') =>
+      UNSAFE_root.findAll(
+        (node) =>
+          node.props.type === type && 'hidesSharedBackground' in node.props
+      );
+
+    return { left: subviews('left'), right: subviews('right') };
+  };
+
+  test('keeps the shared background by default', () => {
+    const { left, right } = renderWithHeaderItems({});
+
+    expect(left.length).toBeGreaterThan(0);
+    expect(right.length).toBeGreaterThan(0);
+    [...left, ...right].forEach((node) => {
+      expect(node.props.hidesSharedBackground).toBe(false);
+    });
+  });
+
+  test('hides the shared background when the options are false', () => {
+    const { left, right } = renderWithHeaderItems({
+      headerLeftBackgroundVisible: false,
+      headerRightBackgroundVisible: false,
+    });
+
+    expect(left.length).toBeGreaterThan(0);
+    expect(right.length).toBeGreaterThan(0);
+    [...left, ...right].forEach((node) => {
+      expect(node.props.hidesSharedBackground).toBe(true);
+    });
+  });
+});
