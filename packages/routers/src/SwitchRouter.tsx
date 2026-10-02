@@ -461,8 +461,11 @@ export function SwitchRouter<Type extends SwitchRouterType>({
 
           const getId = routeGetIdList[route.name];
 
-          const currentId = getId?.({ params: route.params });
-          const nextId = getId?.({ params: action.payload.params });
+          const currentId = getId?.({ params: route.params, path: route.path });
+          const nextId = getId?.({
+            params: action.payload.params,
+            path: action.type === 'NAVIGATE' ? action.payload.path : undefined,
+          });
 
           const key =
             currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
@@ -665,7 +668,7 @@ export function SwitchRouter<Type extends SwitchRouterType>({
 
           const getId = routeGetIdList[route.name];
 
-          const currentId = getId?.({ params: route.params });
+          const currentId = getId?.({ params: route.params, path: route.path });
           const nextId = getId?.({ params: action.payload.params });
 
           const key =

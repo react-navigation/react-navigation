@@ -513,7 +513,7 @@ export function StackRouter(options: StackRouterOptions) {
           let route = inactiveRoutes.find(
             (route) =>
               route.name === action.payload.name &&
-              id === getId?.({ params: route.params })
+              id === getId?.({ params: route.params, path: route.path })
           );
 
           if (!route) {
@@ -543,7 +543,10 @@ export function StackRouter(options: StackRouterOptions) {
           }
 
           const getId = options.routeGetIdList[action.payload.name];
-          const id = getId?.({ params: action.payload.params });
+          const id = getId?.({
+            params: action.payload.params,
+            path: action.type === 'NAVIGATE' ? action.payload.path : undefined,
+          });
 
           let remainingRoutes = routes;
           let route: Route<string> | undefined;
@@ -569,7 +572,8 @@ export function StackRouter(options: StackRouterOptions) {
               (route, i) =>
                 i >= currentIndex &&
                 route.name === action.payload.name &&
-                (id === undefined || id === getId?.({ params: route.params }))
+                (id === undefined ||
+                  id === getId?.({ params: route.params, path: route.path }))
             );
 
             if (!route && action.payload.pop) {
@@ -585,7 +589,7 @@ export function StackRouter(options: StackRouterOptions) {
                     continue;
                   }
 
-                  if (id === getId?.({ params: r.params })) {
+                  if (id === getId?.({ params: r.params, path: r.path })) {
                     route = r;
                     break;
                   }
@@ -630,7 +634,7 @@ export function StackRouter(options: StackRouterOptions) {
             route = inactiveRoutes.find(
               (route) =>
                 route.name === action.payload.name &&
-                id === getId?.({ params: route.params })
+                id === getId?.({ params: route.params, path: route.path })
             );
           }
 
@@ -881,7 +885,7 @@ export function StackRouter(options: StackRouterOptions) {
                 continue;
               }
 
-              if (id === getId?.({ params: r.params })) {
+              if (id === getId?.({ params: r.params, path: r.path })) {
                 index = i;
                 break;
               }
@@ -946,7 +950,7 @@ export function StackRouter(options: StackRouterOptions) {
             let route = inactiveRoutes.find(
               (route) =>
                 route.name === action.payload.name &&
-                id === getId?.({ params: route.params })
+                id === getId?.({ params: route.params, path: route.path })
             );
 
             if (!route) {
@@ -1085,7 +1089,7 @@ export function StackRouter(options: StackRouterOptions) {
           const route = preloadedRoutes.findLast(
             (route) =>
               route.name === action.payload.name &&
-              id === getId?.({ params: route.params })
+              id === getId?.({ params: route.params, path: route.path })
           );
 
           if (route) {

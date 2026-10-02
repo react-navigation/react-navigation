@@ -362,14 +362,17 @@ export interface StaticScreenConfig<
 
   /**
    * Function to return an unique ID for this screen.
+   * Receives the route params and the path (if available).
    *
    * @example
    * ```js
    * getId: ({ params }) => params?.userId,
+   * getId: ({ path }) => path,
    * ```
    */
   getId?: (props: {
     params: AnyToUnknown<Params extends object ? Readonly<Params> : Params>;
+    path?: string | undefined;
   }) => string | undefined;
 
   /**
