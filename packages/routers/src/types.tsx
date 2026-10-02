@@ -154,6 +154,7 @@ export type RouterConfigOptions = {
     string,
     | ((options: {
         params?: Record<string, any> | undefined;
+        path?: string | undefined;
       }) => string | undefined)
     | undefined
   >;

@@ -1151,6 +1151,81 @@ test('getId is scoped to route name for navigate', () => {
   });
 });
 
+test('passes path to getId for navigate', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ path }) => path,
+    },
+  };
+
+  const state = {
+    stale: false as const,
+    type: 'stack' as const,
+    key: 'root',
+    index: 1,
+    retainedRouteKeys: [],
+    routeNames: ['baz', 'bar'],
+    routes: [
+      { key: 'baz-test', name: 'baz' },
+      {
+        key: 'bar-test',
+        name: 'bar',
+        path: '/bar/a',
+        params: { foo: 'a' },
+      },
+    ],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      {
+        type: 'NAVIGATE',
+        payload: { name: 'bar', params: { foo: 'b' }, path: '/bar/a' },
+      },
+      options
+    )
+  ).toEqual({
+    ...state,
+    routes: [
+      { key: 'baz-test', name: 'baz' },
+      {
+        key: 'bar-test',
+        name: 'bar',
+        path: '/bar/a',
+        params: { foo: 'b' },
+      },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      state,
+      {
+        type: 'NAVIGATE',
+        payload: { name: 'bar', params: { foo: 'a' }, path: '/bar/b' },
+      },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 2,
+    routes: [
+      { key: 'baz-test', name: 'baz' },
+      {
+        key: 'bar-test',
+        name: 'bar',
+        path: '/bar/a',
+        params: { foo: 'a' },
+      },
+      { key: 'bar-1', name: 'bar', path: '/bar/b', params: { foo: 'a' } },
+    ],
+  });
+});
+
 test('reuses the matching source route on navigate', () => {
   const router = StackRouter({});
 

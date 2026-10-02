@@ -815,15 +815,18 @@ export type RouteConfigProps<
 
   /**
    * Function to return an unique ID for this screen.
-   * Receives an object with the route params.
+   * Receives an object with the route params and the path (if available).
+   * The path is usually present when the screen was opened from a deep link or a URL.
    * For a given screen name, there will always be only one screen corresponding to an ID.
    * If `undefined` is returned, it acts same as no `getId` being specified.
    */
   getId?:
     | (({
         params,
+        path,
       }: {
         params: Readonly<ParamList[RouteName]>;
+        path?: string | undefined;
       }) => string | undefined)
     | undefined;
 
