@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.19...@react-navigation/routers@8.0.0-alpha.20) (2026-10-02)
+
+**Note:** Version bump only for package @react-navigation/routers
+
 # [8.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.18...@react-navigation/routers@8.0.0-alpha.19) (2026-09-29)
 
 ### Bug Fixes
