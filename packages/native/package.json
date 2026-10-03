@@ -31,6 +31,7 @@
       "types": "./lib/typescript/src/server/index.d.ts",
       "default": "./lib/module/server/index.js"
     },
+    "./assets/fonts/*": "./assets/fonts/*",
     "./package.json": "./package.json"
   },
   "files": [

@@ -48,6 +48,7 @@ export default defineConfig([
             '@react-navigation/*/*',
             '!@react-navigation/elements/internal',
             '!@react-navigation/native/server',
+            '!@react-navigation/native/assets',
           ],
 
           paths: [
@@ -117,7 +118,10 @@ export default defineConfig([
       'no-restricted-imports': [
         'error',
         {
-          patterns: ['@react-navigation/*/*'],
+          patterns: [
+            '@react-navigation/*/*',
+            '!@react-navigation/native/assets',
+          ],
           paths: [],
         },
       ],
