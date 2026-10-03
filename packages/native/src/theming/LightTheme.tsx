@@ -6,10 +6,10 @@ export const LightTheme = {
   dark: false,
   colors: {
     primary: 'rgb(0, 122, 255)',
-    background: 'rgb(242, 242, 247)',
+    background: 'rgb(242, 242, 242)',
     card: 'rgb(255, 255, 255)',
-    text: 'rgb(0, 0, 0)',
-    border: 'rgb(198, 198, 200)',
+    text: 'rgb(28, 28, 30)',
+    border: 'rgb(178, 178, 178)',
     notification: 'rgb(255, 59, 48)',
   },
   fonts,
