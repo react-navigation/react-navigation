@@ -11,6 +11,13 @@ export function useMeasureLayout(
   const [layout, setLayout] = React.useState<Layout>({ width: 0, height: 0 });
 
   const onMeasureLatest = useLatestCallback(({ width, height }: Layout) => {
+    // Ignore zero-dimension layout events that occur when the view is hidden
+    // (e.g. display: 'none' in ActivityView). These would overwrite valid
+    // dimensions and cause the tab bar to become invisible when shown again.
+    if (width === 0 && height === 0) {
+      return;
+    }
+
     setLayout((layout) =>
       layout.width === width && layout.height === height
         ? layout
