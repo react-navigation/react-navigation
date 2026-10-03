@@ -91,7 +91,11 @@ export function useFocusEffect(effect: EffectCallback) {
         cleanup();
       }
 
-      cleanup = callback();
+      const timer = setTimeout(() => {
+        cleanup = callback();
+      }, 1);
+      cleanup = () => clearTimeout(timer);
+
       isFocused = true;
     });
 
