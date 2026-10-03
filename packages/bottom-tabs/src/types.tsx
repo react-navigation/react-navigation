@@ -338,6 +338,19 @@ type BottomTabNativeOptions = {
     | undefined;
 
   /**
+   * Offset applied to the tab label relative to its default position.
+   * Positive `vertical` moves the label down, increasing the gap to the icon.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform ios
+   */
+  tabBarLabelPositionAdjustment?: {
+    vertical?: number;
+    horizontal?: number;
+  };
+
+  /**
    * Background color of the active indicator.
    *
    * Only supported with `native` implementation.

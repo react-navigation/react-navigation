@@ -496,6 +496,7 @@ export function BottomTabViewNative({
             lazy = false,
             inactiveBehavior = 'pause',
             tabBarLabel,
+            tabBarLabelPositionAdjustment,
             tabBarSelectionEnabled,
             tabBarRepeatedPressBehavior,
             tabBarBadgeStyle,
@@ -535,6 +536,7 @@ export function BottomTabViewNative({
             tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
             tabBarItemIconColor: inactiveTintColor,
             tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
+            tabBarItemTitlePositionAdjustment: tabBarLabelPositionAdjustment,
           };
 
           const normalTabItemAppearance: TabsScreenItemStateAppearanceAndroid =
