@@ -1,4 +1,7 @@
-import type { MaterialSymbolProps } from '@react-navigation/native';
+import type {
+  MaterialSymbolProps,
+  SFSymbolNames,
+} from '@react-navigation/native';
 import * as React from 'react';
 import type {
   Animated,
@@ -46,7 +49,7 @@ type IconSfSymbol = {
   /**
    * Name of the SF Symbol to use as the icon.
    */
-  name: SFSymbol;
+  name: SFSymbol | keyof SFSymbolNames;
 };
 
 type IconMaterialSymbol = {

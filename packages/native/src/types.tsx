@@ -58,6 +58,9 @@ declare module '@react-navigation/core' {
   interface Theme extends NativeTheme {}
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface SFSymbolNames {}
+
 export type LocaleDirection = 'ltr' | 'rtl';
 
 export type LinkingPrefix = '*' | (string & {});
