@@ -58,7 +58,7 @@ export function PlatformIcon({
           tintColor={icon.tinted === false ? undefined : color}
           style={[
             {
-              width: size,
+              width: size * (icon.aspectRatio ?? 1),
               height: size,
             },
             style,
