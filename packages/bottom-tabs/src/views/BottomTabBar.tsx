@@ -438,10 +438,23 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
           const { options } = descriptor;
 
           const onPress = () => {
+            const isRepeatedPress =
+              focused && options.tabBarSelectionEnabled !== false;
+
             const event = navigation.emit({
               type: 'tabPress',
               target: route.key,
               canPreventDefault: true,
+              data: {
+                behavior: {
+                  scrollToTop:
+                    isRepeatedPress &&
+                    options.tabBarRepeatedPressBehavior?.scrollToTop !== false,
+                  popToTop:
+                    isRepeatedPress &&
+                    options.tabBarRepeatedPressBehavior?.popToTop !== false,
+                },
+              },
             });
 
             if (

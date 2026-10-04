@@ -240,6 +240,18 @@ async function runStep(page: Page, step: any) {
       break;
     }
 
+    case 'scrollUntilVisible': {
+      const locator = query(page, step.scrollUntilVisible.element)
+        .filter({ visible: true })
+        .last();
+
+      await locator.scrollIntoViewIfNeeded({
+        timeout: step.scrollUntilVisible.timeout,
+      });
+
+      break;
+    }
+
     case 'swipe': {
       const duration = step.swipe.duration || 300;
 

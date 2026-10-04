@@ -447,11 +447,11 @@ export class StackView extends React.Component<Props, State> {
     const activeRoutes = state.routes.slice(0, state.index + 1);
 
     if (activeRoutes.some((r) => r.key === route.key)) {
-      // If a route exists in state, remove it
+      // If a route exists in state, dismiss it
       // This will happen in when the route was closed from the card component
       // e.g. When the close animation triggered from a gesture ends
       navigation.dispatch({
-        ...StackActions.remove(route.name),
+        ...StackActions.dismiss(),
         source: route.key,
         target: state.key,
       });

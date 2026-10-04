@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.57](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.56...@react-navigation/drawer@8.0.0-alpha.57) (2026-10-02)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+# [8.0.0-alpha.56](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.55...@react-navigation/drawer@8.0.0-alpha.56) (2026-09-29)
+
+### Bug Fixes
+
+* support `| undefined` to better work with `exactOptionalPropertyTypes` ([a9f81b8](https://github.com/react-navigation/react-navigation/commit/a9f81b8cf26260f1caeb7a89bfb214eb9483eb69)) - by @satya164
+
 # [8.0.0-alpha.55](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.54...@react-navigation/drawer@8.0.0-alpha.55) (2026-09-22)
 
 ### Bug Fixes
