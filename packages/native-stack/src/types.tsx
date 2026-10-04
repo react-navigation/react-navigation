@@ -453,12 +453,14 @@ export type NativeStackNavigationOptions = {
    *
    * @platform android
    */
-  unstable_headerInsets?: {
-    top?: boolean;
-    left?: boolean;
-    right?: boolean;
-    bottom?: boolean;
-  };
+  unstable_headerInsets?:
+    | {
+        top?: boolean | undefined;
+        left?: boolean | undefined;
+        right?: boolean | undefined;
+        bottom?: boolean | undefined;
+      }
+    | undefined;
   /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *

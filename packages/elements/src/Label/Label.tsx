@@ -9,8 +9,8 @@ import {
 import { Text } from '../Text';
 
 type Props = Omit<TextProps, 'style'> & {
-  tintColor?: ColorValue;
-  children?: string;
+  tintColor?: ColorValue | undefined;
+  children?: string | undefined;
   style?: StyleProp<TextStyle>;
 };
 

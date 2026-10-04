@@ -213,7 +213,7 @@ const isPoppingLastEntry = (
 /**
  * Run async function in series as it's called.
  */
-export const series = (cb: () => Promise<void>) => {
+const series = (cb: () => Promise<void>) => {
   let queue = Promise.resolve();
 
   const callback = () => {
