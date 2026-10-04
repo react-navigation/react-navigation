@@ -420,6 +420,39 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             return null;
           }
 
+          if (action.source !== undefined) {
+            const sourceIndex = state.routes.findIndex(
+              (route) => route.key === action.source
+            );
+
+            if (sourceIndex === -1) {
+              return null;
+            }
+
+            if (backBehavior === 'history' || backBehavior === 'fullHistory') {
+              const sourceHistoryIndex = state.history.findLastIndex(
+                (item) => item.type === 'route' && item.key === action.source
+              );
+
+              if (sourceHistoryIndex !== -1) {
+                const history = state.history.filter(
+                  (item, index) =>
+                    item.type !== 'route' || index <= sourceHistoryIndex
+                );
+
+                state = {
+                  ...state,
+                  ...changeIndex<Type>(
+                    { routes: state.routes, history },
+                    sourceIndex,
+                    backBehavior,
+                    initialRouteName
+                  ),
+                };
+              }
+            }
+          }
+
           const route = state.routes[index];
 
           if (route == null) {
