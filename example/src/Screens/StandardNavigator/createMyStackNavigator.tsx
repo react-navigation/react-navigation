@@ -18,7 +18,7 @@ import {
   type MyStackOptions,
 } from './MyStackNavigator';
 
-export type MyStackNavigationProp<
+type MyStackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
 > = NavigationProp<

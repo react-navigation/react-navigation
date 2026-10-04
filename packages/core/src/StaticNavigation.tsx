@@ -522,7 +522,7 @@ type StaticConfigCommon<Bag extends NavigatorTypeBagBase> = Omit<
   'screens' | 'children'
 >;
 
-export type StaticConfigBase<
+type StaticConfigBase<
   Bag extends NavigatorTypeBagBase,
   Screens = StaticConfigScreensForBag<Bag>,
   Groups = StaticConfigGroupsForBag<Bag>,

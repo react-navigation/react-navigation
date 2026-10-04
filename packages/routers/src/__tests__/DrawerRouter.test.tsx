@@ -1211,6 +1211,194 @@ test('go back closes drawer if it is open', () => {
   });
 });
 
+test('closes drawer on navigate from an unfocused source with backBehavior: history', () => {
+  const router = DrawerRouter({ backBehavior: 'history' });
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: DrawerNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'drawer',
+    key: 'root',
+    index: 2,
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'foo' },
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+      { type: 'drawer', status: 'open' },
+    ],
+    preloadedRouteKeys: [],
+    default: 'closed',
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...CommonActions.navigate('qux'), source: 'bar' },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 3,
+    history: [
+      { type: 'route', key: 'foo' },
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'qux' },
+    ],
+  });
+});
+
+test('closes drawer on jump to action from an unfocused source with backBehavior: history', () => {
+  const router = DrawerRouter({ backBehavior: 'history' });
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: DrawerNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'drawer',
+    key: 'root',
+    index: 2,
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'foo' },
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+      { type: 'drawer', status: 'open' },
+    ],
+    preloadedRouteKeys: [],
+    default: 'closed',
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...DrawerActions.jumpTo('qux'), source: 'bar' },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 3,
+    history: [
+      { type: 'route', key: 'foo' },
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'qux' },
+    ],
+  });
+});
+
+test('closes drawer on navigate from an unfocused source with backBehavior: fullHistory', () => {
+  const router = DrawerRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: DrawerNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'drawer',
+    key: 'root',
+    index: 2,
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'foo' },
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+      { type: 'drawer', status: 'open' },
+    ],
+    preloadedRouteKeys: [],
+    default: 'closed',
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...CommonActions.navigate('qux'), source: 'bar' },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 3,
+    history: [
+      { type: 'route', key: 'foo' },
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'qux' },
+    ],
+  });
+});
+
+test('closes drawer on jump to action from an unfocused source with backBehavior: fullHistory', () => {
+  const router = DrawerRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: DrawerNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'drawer',
+    key: 'root',
+    index: 2,
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'foo' },
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'baz' },
+      { type: 'drawer', status: 'open' },
+    ],
+    preloadedRouteKeys: [],
+    default: 'closed',
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      { ...DrawerActions.jumpTo('qux'), source: 'bar' },
+      options
+    )
+  ).toEqual({
+    ...state,
+    index: 3,
+    history: [
+      { type: 'route', key: 'foo' },
+      { type: 'route', key: 'bar' },
+      { type: 'route', key: 'qux' },
+    ],
+  });
+});
+
 test('closes an open drawer on goBack from an unfocused source', () => {
   const router = DrawerRouter({ backBehavior: 'history' });
   const options: RouterConfigOptions = {

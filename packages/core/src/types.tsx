@@ -259,7 +259,7 @@ export type EventEmitter<in out EventMap extends EventMapBase> = {
   emit<EventName extends KeyOf<EventMap>>(
     options: {
       type: EventName;
-      target?: string;
+      target?: string | undefined;
     } & (EventMap[EventName]['canPreventDefault'] extends true
       ? { canPreventDefault: true }
       : {}) &

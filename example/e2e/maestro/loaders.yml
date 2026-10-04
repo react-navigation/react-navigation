@@ -82,7 +82,10 @@ name: Loaders
     file: ../launch.yml
     env:
       LINK: loaders
-      TEXT: 'Make next load fail'
+      TEXT: 'Tyrannosaurus rex'
+- scrollUntilVisible:
+    element:
+      text: 'Make next load fail'
 - tapOn:
     text: 'Make next load fail'
 - tapOn:
@@ -109,7 +112,10 @@ name: Loaders
     file: ../launch.yml
     env:
       LINK: loaders
-      TEXT: 'Make next load fail'
+      TEXT: 'Tyrannosaurus rex'
+- scrollUntilVisible:
+    element:
+      text: 'Make next load fail'
 - tapOn:
     text: 'Make next load fail'
 - tapOn:

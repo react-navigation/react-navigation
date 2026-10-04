@@ -9,51 +9,44 @@ import type {
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
-  Route,
   RouteProp,
   Theme,
 } from '@react-navigation/native';
 import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type { PanGestureConfig } from 'react-native-gesture-handler';
 
-export type Scene = {
-  route: Route<string>;
-  focused: boolean;
-  color?: ColorValue;
-};
-
-export type Layout = { width: number; height: number };
-
 export type DrawerNavigationConfig = {
   /**
    * Function that returns React element to render as the content of the drawer, for example, navigation items.
    * Defaults to `DrawerContent`.
    */
-  drawerContent?: (props: DrawerContentComponentProps) => React.ReactNode;
+  drawerContent?:
+    | ((props: DrawerContentComponentProps) => React.ReactNode)
+    | undefined;
 };
 
 export type DrawerNavigationOptions = HeaderOptions & {
   /**
    * Title text for the screen.
    */
-  title?: string;
+  title?: string | undefined;
 
   /**
    * Whether this screens should render the first time it's accessed. Defaults to `true`.
    * Set it to `false` if you want to render the screen on initial render.
    */
-  lazy?: boolean;
+  lazy?: boolean | undefined;
 
   /**
    * Function that returns a React Element to display as a header.
    */
-  header?: (props: DrawerHeaderProps) => React.ReactNode;
+  header?: ((props: DrawerHeaderProps) => React.ReactNode) | undefined;
 
   /**
    * Whether to show the header. Setting this to `false` hides the header.
    * Defaults to `true`.
    */
-  headerShown?: boolean;
+  headerShown?: boolean | undefined;
 
   /**
    * Title string of a screen displayed in the drawer
@@ -62,7 +55,8 @@ export type DrawerNavigationOptions = HeaderOptions & {
    */
   drawerLabel?:
     | string
-    | ((props: { color: ColorValue; focused: boolean }) => React.ReactNode);
+    | ((props: { color: ColorValue; focused: boolean }) => React.ReactNode)
+    | undefined;
 
   /**
    * Icon to display for the drawer item.
@@ -73,32 +67,33 @@ export type DrawerNavigationOptions = HeaderOptions & {
         color: ColorValue;
         size: number;
         focused: boolean;
-      }) => Icon | React.ReactNode);
+      }) => Icon | React.ReactNode)
+    | undefined;
 
   /**
    * Color for the icon and label in the active item in the drawer.
    */
-  drawerActiveTintColor?: ColorValue;
+  drawerActiveTintColor?: ColorValue | undefined;
 
   /**
    * Background color for the active item in the drawer.
    */
-  drawerActiveBackgroundColor?: ColorValue;
+  drawerActiveBackgroundColor?: ColorValue | undefined;
 
   /**
    * Color for the icon and label in the inactive items in the drawer.
    */
-  drawerInactiveTintColor?: ColorValue;
+  drawerInactiveTintColor?: ColorValue | undefined;
 
   /**
    * Background color for the inactive items in the drawer.
    */
-  drawerInactiveBackgroundColor?: ColorValue;
+  drawerInactiveBackgroundColor?: ColorValue | undefined;
 
   /**
    * Whether label font should scale to respect Text Size accessibility settings.
    */
-  drawerAllowFontScaling?: boolean;
+  drawerAllowFontScaling?: boolean | undefined;
 
   /**
    * Style object for the single item, which can contain an icon and/or a label.
@@ -108,7 +103,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
   /**
    * ID to locate this drawer item in tests.
    */
-  drawerItemTestID?: string;
+  drawerItemTestID?: string | undefined;
 
   /**
    * Style object to apply to the `Text` inside content section which renders a label.
@@ -134,7 +129,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
   /**
    * Position of the drawer on the screen. Defaults to `left`.
    */
-  drawerPosition?: 'left' | 'right';
+  drawerPosition?: 'left' | 'right' | undefined;
 
   /**
    * Type of the drawer. It determines how the drawer looks and animates.
@@ -150,12 +145,12 @@ export type DrawerNavigationOptions = HeaderOptions & {
   /**
    * Whether the statusbar should be hidden when the drawer is pulled or opens,
    */
-  drawerHideStatusBarOnOpen?: boolean;
+  drawerHideStatusBarOnOpen?: boolean | undefined;
 
   /**
    * Animation of the statusbar when hiding it. use in combination with `drawerHideStatusBarOnOpen`.
    */
-  drawerStatusBarAnimation?: 'slide' | 'none' | 'fade';
+  drawerStatusBarAnimation?: 'slide' | 'none' | 'fade' | undefined;
 
   /**
    * Color of the overlay to be displayed on top of the content view when drawer gets open.
@@ -167,7 +162,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * Accessibility label for the overlay. This is read by the screen reader when the user taps the overlay.
    * Defaults to "Close drawer".
    */
-  overlayAccessibilityLabel?: string;
+  overlayAccessibilityLabel?: string | undefined;
 
   /**
    * Style object for the component wrapping the screen content.
@@ -177,37 +172,39 @@ export type DrawerNavigationOptions = HeaderOptions & {
   /**
    * Function to modify the pan gesture config.
    */
-  configureGestureHandler?: (gesture: PanGestureConfig) => PanGestureConfig;
+  configureGestureHandler?:
+    | ((gesture: PanGestureConfig) => PanGestureConfig)
+    | undefined;
 
   /**
    * Whether you can use swipe gestures to open or close the drawer.
    * Defaults to `true`.
    * Not supported on Web.
    */
-  swipeEnabled?: boolean;
+  swipeEnabled?: boolean | undefined;
 
   /**
    * How far from the edge of the screen the swipe gesture should activate.
    * Not supported on Web.
    */
-  swipeEdgeWidth?: number;
+  swipeEdgeWidth?: number | undefined;
 
   /**
    * Minimum swipe distance threshold that should activate opening the drawer.
    */
-  swipeMinDistance?: number;
+  swipeMinDistance?: number | undefined;
 
   /**
    * Whether the keyboard should be dismissed when the swipe gesture begins.
    * Defaults to `'on-drag'`. Set to `'none'` to disable keyboard handling.
    */
-  keyboardDismissMode?: 'on-drag' | 'none';
+  keyboardDismissMode?: 'on-drag' | 'none' | undefined;
 
   /**
    * Whether any nested stack should be popped to top when navigating away from the tab.
    * Defaults to `false`.
    */
-  popToTopOnBlur?: boolean;
+  popToTopOnBlur?: boolean | undefined;
 
   /**
    * What should happen when screens become inactive.
@@ -220,7 +217,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * It won't be paused until after the first time it becomes focused.
    * This makes sure that effects are run to initialize the screen.
    */
-  inactiveBehavior?: 'pause' | 'none';
+  inactiveBehavior?: 'pause' | 'none' | undefined;
 };
 
 export type DrawerContentComponentProps = {
@@ -312,27 +309,6 @@ export type DrawerDescriptor = Descriptor<
 >;
 
 export type DrawerDescriptorMap = Record<string, DrawerDescriptor>;
-
-export type DrawerProps = {
-  drawerPosition: 'left' | 'right';
-  drawerStyle?: StyleProp<ViewStyle>;
-  drawerType: 'front' | 'back' | 'slide' | 'permanent';
-  configureGestureHandler?: (gesture: PanGestureConfig) => PanGestureConfig;
-  hideStatusBarOnOpen: boolean;
-  keyboardDismissMode: 'none' | 'on-drag';
-  onClose: () => void;
-  onOpen: () => void;
-  open: boolean;
-  overlayStyle?: StyleProp<ViewStyle>;
-  renderDrawerContent: () => React.ReactNode;
-  renderSceneContent: () => React.ReactNode;
-  statusBarAnimation: 'slide' | 'none' | 'fade';
-  swipeDistanceThreshold: number;
-  swipeEdgeWidth: number;
-  swipeEnabled: boolean;
-  swipeVelocityThreshold: number;
-  overlayAccessibilityLabel?: string;
-};
 
 export type DrawerNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,

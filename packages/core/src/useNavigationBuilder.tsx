@@ -21,7 +21,6 @@ import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { useNavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
-import { NavigationMetaContext } from './NavigationMetaContext';
 import { IsScreenContext, NavigationRouteContext } from './NavigationProvider';
 import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
@@ -1103,24 +1102,22 @@ export function useNavigationBuilder<
         : children;
 
     return (
-      <NavigationMetaContext.Provider value={undefined}>
-        <NavigationHelpersContext.Provider value={navigation}>
-          <NavigationStateListenerProvider
-            isSynced={!shouldUpdate}
-            state={state}
-            getState={getState}
-            subscribe={subscribe}
-          >
-            <FocusedRouteKeyContext.Provider value={focusedRoute.key}>
-              <PreventRemoveProvider>
-                <IsScreenContext.Provider value={false}>
-                  {element}
-                </IsScreenContext.Provider>
-              </PreventRemoveProvider>
-            </FocusedRouteKeyContext.Provider>
-          </NavigationStateListenerProvider>
-        </NavigationHelpersContext.Provider>
-      </NavigationMetaContext.Provider>
+      <NavigationHelpersContext.Provider value={navigation}>
+        <NavigationStateListenerProvider
+          isSynced={!shouldUpdate}
+          state={state}
+          getState={getState}
+          subscribe={subscribe}
+        >
+          <FocusedRouteKeyContext.Provider value={focusedRoute.key}>
+            <PreventRemoveProvider>
+              <IsScreenContext.Provider value={false}>
+                {element}
+              </IsScreenContext.Provider>
+            </PreventRemoveProvider>
+          </FocusedRouteKeyContext.Provider>
+        </NavigationStateListenerProvider>
+      </NavigationHelpersContext.Provider>
     );
   };
 

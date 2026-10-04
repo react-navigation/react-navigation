@@ -13,9 +13,9 @@ import {
 } from 'react-native';
 
 type HoverEffectProps = {
-  color?: string;
-  hoverOpacity?: number;
-  activeOpacity?: number;
+  color?: string | undefined;
+  hoverOpacity?: number | undefined;
+  activeOpacity?: number | undefined;
 };
 
 export type Props = Omit<PressableProps, 'style' | 'onPress'> & {
