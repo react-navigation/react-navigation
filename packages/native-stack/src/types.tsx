@@ -19,6 +19,7 @@ import type {
   ScreenStackHeaderConfigProps,
   ScrollEdgeEffect,
   SearchBarProps,
+  SheetCommands,
 } from 'react-native-screens';
 
 export type NativeStackNavigationEventMap = {
@@ -698,6 +699,7 @@ export type NativeStackNavigationOptions = {
    * Defaults to `0` - which represents first detent in the detents array.
    */
   sheetInitialDetentIndex?: number | 'last' | undefined;
+  sheetRef?: React.Ref<SheetCommands> | undefined;
   /**
    * Boolean indicating whether the sheet shows a grabber at the top.
    * Works only when `presentation` is set to `formSheet`.
