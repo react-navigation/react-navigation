@@ -7,7 +7,7 @@ import * as hb from 'harfbuzzjs';
 import subsetFont from 'subset-font';
 
 const root = new URL('..', import.meta.url);
-const assets = new URL('packages/native/assets/fonts/', root);
+const assets = new URL('packages/material-symbols/assets/fonts/', root);
 
 const VARIANTS = ['Outlined', 'Rounded', 'Sharp'];
 const WEIGHTS = [100, 200, 300, 400, 500, 600, 700];

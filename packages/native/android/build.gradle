@@ -64,18 +64,42 @@ android {
 
 tasks.register('copyMaterialFonts', Copy) {
   def packageJsonFile = file(rootDir.path + "/../package.json")
+  def materialSymbolsConfig = null
   def fontsConfig = null
 
   if (packageJsonFile.exists()) {
     def packageJson = new JsonSlurper().parse(packageJsonFile)
 
-    fontsConfig = packageJson["react-navigation"]?.get("material-symbols")?.get("fonts")
+    materialSymbolsConfig = packageJson["react-navigation"]?.get("material-symbols")
+    fontsConfig = materialSymbolsConfig?.get("fonts")
   }
 
-  def assetsFontsDir = file("../assets/fonts")
+  def packageDir = projectDir.canonicalFile.parentFile
+  def materialSymbolsDir = [
+    new File(packageDir, "node_modules/@react-navigation/material-symbols"),
+    new File(packageDir.parentFile.parentFile, "@react-navigation/material-symbols")
+  ].find { it.exists() }
+
+  if (materialSymbolsDir == null) {
+    materialSymbolsDir = new File(
+      providers.exec {
+        workingDir(projectDir)
+        commandLine("node", "--print", "require.resolve('@react-navigation/material-symbols/package.json')")
+      }.standardOutput.asText.get().trim()
+    ).getParentFile()
+  }
+
+  def assetsFontsDir = new File(materialSymbolsDir, "assets/fonts")
   def availableFonts = assetsFontsDir.listFiles()
     ?.findAll { it.name.startsWith("MaterialSymbols") && it.name.endsWith(".ttf") }
     ?.collect { it.name.replaceFirst(/^MaterialSymbols/, '').replaceFirst(/\.ttf$/, '') } ?: []
+
+  if (!availableFonts && materialSymbolsConfig != null) {
+    throw new GradleException(
+      "Found \"react-navigation\" > \"material-symbols\" in package.json, but no fonts are available in \"@react-navigation/material-symbols\" at ${JsonOutput.toJson(materialSymbolsDir.path)}.\n\n" +
+        "If \"@react-navigation/material-symbols\" is overridden with an empty version, remove the override to use Material Symbols, or remove \"react-navigation\" > \"material-symbols\" from package.json."
+    )
+  }
 
   def validVariants = availableFonts.collect { it.split('_')[0].uncapitalize() }.unique().sort()
   def validWeights = availableFonts.collect { it.split('_')[1] as int }.unique().sort()
@@ -87,7 +111,11 @@ tasks.register('copyMaterialFonts', Copy) {
     errors << "Invalid fonts ${JsonOutput.toJson(fontsConfig)}. Expected an array."
   }
 
-  def fonts = fontsConfig instanceof List ? fontsConfig : [[:]]
+  def fonts = []
+
+  if (availableFonts) {
+    fonts = fontsConfig instanceof List ? fontsConfig : [[:]]
+  }
 
   fonts.each { font ->
     if (!(font instanceof Map)) {

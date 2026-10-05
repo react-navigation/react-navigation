@@ -570,6 +570,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
+  packages/material-symbols: {}
+
   packages/material-top-tabs:
     dependencies:
       '@react-navigation/elements':
@@ -624,6 +626,9 @@ importers:
       '@react-navigation/core':
         specifier: workspace:^
         version: link:../core
+      '@react-navigation/material-symbols':
+        specifier: workspace:^
+        version: link:../material-symbols
       escape-string-regexp:
         specifier: ^5.0.0
         version: 5.0.0
