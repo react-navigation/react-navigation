@@ -107,15 +107,17 @@ tasks.register('copyMaterialFonts', Copy) {
     font.weights.collect { weight -> "MaterialSymbols${variant}_${weight}.ttf" }
   }
 
-  if (fontFiles) {
-    from(assetsFontsDir) { include fontFiles }
+  def assetFiles = fontFiles ? fontFiles + "MaterialSymbols.codepoints" : []
+
+  if (assetFiles) {
+    from(assetsFontsDir) { include assetFiles }
   }
 
   into layout.buildDirectory.dir("intermediates/react-navigation/fonts")
 
   doFirst {
     if (destinationDir.exists()) {
-      def extraFiles = destinationDir.listFiles()?.findAll { file -> !fontFiles.contains(file.name) }
+      def extraFiles = destinationDir.listFiles()?.findAll { file -> !assetFiles.contains(file.name) }
 
       extraFiles?.each { file -> file.delete() }
     }
@@ -124,11 +126,11 @@ tasks.register('copyMaterialFonts', Copy) {
   doLast {
     def digest = java.security.MessageDigest.getInstance("MD5")
 
-    fontFiles.sort().each { name ->
-      def fontFile = new File(assetsFontsDir, name)
+    assetFiles.sort().each { name ->
+      def assetFile = new File(assetsFontsDir, name)
 
-      if (fontFile.exists()) {
-        digest.update(fontFile.bytes)
+      if (assetFile.exists()) {
+        digest.update(assetFile.bytes)
       }
     }
 

@@ -11,6 +11,7 @@ class MaterialSymbolView @JvmOverloads constructor(
 
   private var variant: String? = null
   private var weight: Int? = null
+  private var symbol: String? = null
 
   init {
     setColor(null)
@@ -18,7 +19,7 @@ class MaterialSymbolView @JvmOverloads constructor(
   }
 
   override fun onDraw(canvas: Canvas) {
-    val text = text?.toString() ?: return
+    val symbol = symbol ?: return
 
     paint.color = currentTextColor
     paint.textAlign = Paint.Align.CENTER
@@ -27,11 +28,12 @@ class MaterialSymbolView @JvmOverloads constructor(
     val x = width / 2f
     val y = (height - (fontMetrics.descent - fontMetrics.ascent)) / 2f - fontMetrics.ascent
 
-    canvas.drawText(text, x, y, paint)
+    canvas.drawText(symbol, x, y, paint)
   }
 
   fun setName(name: String?) {
     text = name
+    symbol = name?.let { MaterialSymbolTypeface.getSymbol(context, it) }
 
     invalidate()
   }

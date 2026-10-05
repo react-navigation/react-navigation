@@ -70,7 +70,7 @@ ac_unit eb3b
 access_alarm e855
 access_alarms e855
 access_time efd6
-access_time_filled efd6
+access_time_filled 100000
 accessibility e84e
 accessibility_new e92c
 accessible e914
@@ -82,7 +82,7 @@ account_box e851
 account_child e852
 account_child_invert e659
 account_circle f20b
-account_circle_filled f20b
+account_circle_filled 100001
 account_circle_off f7b3
 account_tree e97a
 action_key f502
@@ -260,6 +260,7 @@ approval_delegation f84a
 approval_delegation_off f2c5
 apps e5c3
 apps_outage e7cc
+apps_plus ffea7
 aq f55a
 aq_indoor f55b
 ar_on_you ef7c
@@ -315,7 +316,7 @@ arrows_output f393
 arrows_outward f72c
 arrows_up_down_circle eee3
 art_track e060
-article ef87
+article ef42
 article_person f368
 article_shortcut f587
 artist e01a
@@ -516,7 +517,7 @@ beenhere e52d
 beer_meal f285
 bento f1f4
 bia f6eb
-bid_landscape e678
+bid_landscape e667
 bid_landscape_disabled ef81
 bigtop_updates e669
 bike_dock f47b
@@ -638,6 +639,7 @@ bucket_check ef2a
 bug_report e868
 build f8cd
 build_circle ef48
+bullet_chart ffec7
 bungalow e591
 burst_mode e43c
 bus_alert e98f
@@ -722,6 +724,7 @@ car_lock f336
 car_mirror_heat f335
 car_rental ea55
 car_repair ea56
+car_seat_off ffebe
 car_tag f4e3
 card_giftcard e8f6
 card_membership e8f7
@@ -770,6 +773,7 @@ chat_bubble e0cb
 chat_bubble_off fffbb
 chat_bubble_outline e0cb
 chat_dashed eeed
+chat_display ffeac
 chat_error f7ac
 chat_info f52b
 chat_paste_go f6bd
@@ -779,7 +783,7 @@ check_alert fff85
 check_box e9de
 check_box_outline_blank e835
 check_circle f0be
-check_circle_filled f0be
+check_circle_filled 100002
 check_circle_outline f0be
 check_circle_unread f27e
 check_in_out f6f6
@@ -850,6 +854,7 @@ close_small f508
 closed_caption e996
 closed_caption_add f4ae
 closed_caption_disabled f1dc
+closed_caption_display ffeab
 closed_caption_off e996
 cloud f15c
 cloud_alert f3cc
@@ -862,7 +867,7 @@ cloud_queue f15c
 cloud_sync eb5a
 cloud_upload e2c3
 cloudy f15c
-cloudy_filled f15c
+cloudy_filled 100003
 cloudy_snowing e810
 co2 e7b0
 co_present eaf0
@@ -890,7 +895,7 @@ comments_disabled e7a2
 commit eaf5
 communication e27c
 communities eb16
-communities_filled eb16
+communities_filled 100004
 commute e940
 compare e3b9
 compare_arrows e915
@@ -914,7 +919,7 @@ contact_emergency f8d1
 contact_mail e0d0
 contact_page f22e
 contact_phone f0c0
-contact_phone_filled f0c0
+contact_phone_filled 100005
 contact_support e94c
 contactless ea71
 contactless_off f858
@@ -1096,6 +1101,7 @@ developer_mode_tv e874
 device_band f2f5
 device_hub e335
 device_reset e8b3
+device_swoosh_star ffeb8
 device_thermostat e1ff
 device_unknown f2e1
 devices e326
@@ -1126,20 +1132,20 @@ directions_alt f880
 directions_alt_off f881
 directions_bike e52f
 directions_boat eff5
-directions_boat_filled eff5
+directions_boat_filled 100006
 directions_bus eff6
-directions_bus_filled eff6
+directions_bus_filled 100007
 directions_car eff7
-directions_car_filled eff7
+directions_car_filled 100008
 directions_off f10f
 directions_railway eff8
 directions_railway_2 f462
-directions_railway_filled eff8
+directions_railway_filled 100009
 directions_run e566
 directions_subway effa
-directions_subway_filled effa
+directions_subway_filled 10000a
 directions_transit effa
-directions_transit_filled effa
+directions_transit_filled 10000a
 directions_walk e536
 directory_sync e394
 dirty_lens ef4b
@@ -1149,7 +1155,9 @@ disc_full e610
 discover_tune e018
 dishwasher e9a0
 dishwasher_gen e832
+display_add ffed2
 display_external_input f7e7
+display_group ffeaa
 display_settings eb97
 distance f6ea
 diversity_1 f8d7
@@ -1177,9 +1185,11 @@ docs_add_on f0c2
 docs_apps_script f0c3
 document_scanner e5fa
 document_search f385
+document_share ffea6
 domain e7ee
 domain_add eb62
 domain_disabled e0ef
+domain_disabled_check ffec6
 domain_verification ef4c
 domain_verification_off f7b0
 domino_mask f5e4
@@ -1203,7 +1213,7 @@ download_2 f523
 download_done f091
 download_for_offline f000
 downloading f001
-draft e674
+draft e66d
 draft_orders e7b3
 drafts e151
 drag_click f71f
@@ -1223,7 +1233,6 @@ drive_file_move_rtl e9a1
 drive_file_rename e676
 drive_file_rename_outline e9a2
 drive_folder_upload e9a3
-drive_fusiontable e678
 drone f25a
 drone_2 f259
 dropdown e9a4
@@ -1263,6 +1272,7 @@ edit_attributes e578
 edit_audio f42d
 edit_calendar e742
 edit_document f88c
+edit_line ffea5
 edit_location e568
 edit_location_alt e1c5
 edit_note e745
@@ -1469,6 +1479,7 @@ filter_alt ef4f
 filter_alt_off eb32
 filter_arrow_right f3d1
 filter_b_and_w e3db
+filter_cancel ffea4
 filter_center_focus e3dc
 filter_drama e3dd
 filter_frames e3de
@@ -1477,6 +1488,7 @@ filter_list e152
 filter_list_alt e94e
 filter_list_off eb57
 filter_none e3e0
+filter_plus ffea3
 filter_retrolux e3e1
 filter_tilt_shift e3e2
 filter_vintage e3e3
@@ -1505,7 +1517,7 @@ flag f0c6
 flag_2 f40f
 flag_check f3d8
 flag_circle eaf8
-flag_filled f0c6
+flag_filled 10000b
 flaky ef50
 flare e3e4
 flash_auto e3e5
@@ -1664,6 +1676,7 @@ fullscreen e5d0
 fullscreen_exit e5d1
 fullscreen_portrait f45a
 function f866
+function_search ffea2
 functions e24a
 funicular f477
 g_mobiledata f010
@@ -1725,6 +1738,7 @@ globe_2_cancel fffb7
 globe_2_question fffb6
 globe_asia f799
 globe_book f3c9
+globe_clock ffed1
 globe_location_pin f35d
 globe_uk f798
 glucose e4a0
@@ -1769,6 +1783,7 @@ grid_view e9b0
 grocery ef97
 group ea21
 group_add e7f0
+group_eye ffea1
 group_off e747
 group_remove e7ad
 group_search f3ce
@@ -1882,7 +1897,7 @@ holiday_village e58a
 home e9b2
 home_and_garden ef9f
 home_app_logo e295
-home_filled e9b2
+home_filled 10000c
 home_health e4b9
 home_improvement_and_tools efa0
 home_iot_device e283
@@ -1957,6 +1972,7 @@ imagesmode efa2
 immunology e0fb
 import_contacts e0e0
 import_export e8d5
+import_spark ffea9
 important_devices e912
 in_home_mode e833
 inactive_order e0fc
@@ -1984,10 +2000,10 @@ inpatient e0fe
 input e890
 input_circle f71a
 insert_chart f0cc
-insert_chart_filled f0cc
+insert_chart_filled 10000d
 insert_chart_outlined f0cc
 insert_comment e24c
-insert_drive_file e674
+insert_drive_file e66d
 insert_emoticon ea22
 insert_invitation e878
 insert_link e250
@@ -2165,7 +2181,8 @@ linked_services f535
 lips eeb2
 liquor ea60
 list e896
-list_alt e677
+list_2 ffeca
+list_alt e0ee
 list_alt_add f756
 list_alt_check f3de
 list_arrow fff33
@@ -2285,8 +2302,11 @@ mark_email_read f18c
 mark_email_unread f18a
 mark_unread_chat_alt eb9d
 markdown f552
+markdown_convert ffea0
 markdown_copy f553
+markdown_document ffe9f
 markdown_paste f554
+markdown_spark ffea8
 markunread e159
 markunread_mailbox e89b
 masked_transitions e72e
@@ -2345,7 +2365,7 @@ minimize e931
 minor_crash ebf1
 mintmark efa9
 missed_video_call f0ce
-missed_video_call_filled f0ce
+missed_video_call_filled 10000e
 missing_controller e701
 mist e188
 mitre f547
@@ -2397,6 +2417,7 @@ mobile_sound f2e8
 mobile_sound_2 f318
 mobile_sound_off f7aa
 mobile_speaker f320
+mobile_tap ffeb2
 mobile_text f2eb
 mobile_text_2 f2e6
 mobile_theft f2a9
@@ -2483,8 +2504,8 @@ move_selection_up f711
 move_to_inbox e168
 move_up eb64
 moved_location e594
-movie e684
-movie_creation e684
+movie e404
+movie_creation e404
 movie_edit f840
 movie_edit_off fff7d
 movie_filter e43a
@@ -2643,7 +2664,7 @@ not_accessible_forward f54a
 not_interested f08c
 not_listed_location e575
 not_started f0d1
-note e674
+note e66d
 note_add e89c
 note_alt f040
 note_stack f562
@@ -2763,7 +2784,7 @@ patient_list e653
 pattern f043
 pause e034
 pause_circle e1a2
-pause_circle_filled e1a2
+pause_circle_filled 10000f
 pause_circle_outline e1a2
 pause_presentation e0ea
 payment e8a1
@@ -2783,6 +2804,8 @@ pentagon eb50
 people ea21
 people_alt ea21
 people_outline ea21
+people_size_decrease ffeb1
+people_size_increase ffeb0
 percent eb58
 percent_discount f244
 performance_max e51a
@@ -2809,7 +2832,7 @@ person_cancel f566
 person_celebrate f7fe
 person_check f565
 person_edit f4fa
-person_filled f0d3
+person_filled 100010
 person_heart f290
 person_off e510
 person_outline f0d3
@@ -2881,7 +2904,7 @@ picture_in_picture_mobile f517
 picture_in_picture_off f52f
 picture_in_picture_small f54d
 pie_chart f0da
-pie_chart_filled f0da
+pie_chart_filled 100011
 pie_chart_outline f0da
 pie_chart_outlined f0da
 pill e11f
@@ -3090,7 +3113,7 @@ replay e042
 replay_10 e059
 replay_30 e05a
 replay_5 e05b
-replay_circle_filled e9d8
+replay_circle_filled 100012
 reply e15e
 reply_all e15f
 report f052
@@ -3132,7 +3155,7 @@ right_click f706
 right_panel_close f705
 right_panel_open f704
 ring_volume f0dd
-ring_volume_filled f0dd
+ring_volume_filled 100013
 ripples e9db
 road f472
 robot f882
@@ -3337,6 +3360,7 @@ share_off f6cb
 share_reviews f8a4
 share_windows f613
 shaved_ice f225
+sheets_column_swap ffe9d
 sheets_rtl f823
 shelf_auto_hide f703
 shelf_position f702
@@ -3414,6 +3438,7 @@ signpost eb91
 sim_card e32b
 sim_card_alert f057
 sim_card_download f068
+sim_card_lock ffec1
 simulation f3e1
 single_arrow ffed9
 single_bed ea48
@@ -3489,10 +3514,12 @@ space_dashboard e66b
 space_dashboard_2 fff8c
 spatial_audio ebeb
 spatial_audio_off ebe8
+spatial_gallery ffeb6
 spatial_speaker f4cf
 spatial_tracking ebea
 speaker e32d
 speaker_2 fff71
+speaker_3 ffeb7
 speaker_group e32e
 speaker_notes e8cd
 speaker_notes_off e92a
@@ -3500,6 +3527,7 @@ speaker_phone e0d2
 special_character f74a
 specific_gravity f872
 speech_to_text f8a7
+speech_to_text_2 ffec9
 speed e9e4
 speed_0_25 f4d4
 speed_0_2x f498
@@ -3604,6 +3632,7 @@ stay_current_landscape ed3e
 stay_current_portrait e7ba
 stay_primary_landscape ed3e
 stay_primary_portrait f2d3
+steering_wheel_cool ffebd
 steering_wheel_heat f32b
 step f6fe
 step_into f701
@@ -3767,6 +3796,7 @@ tamper_detection_on f8c8
 tap_and_play f2cc
 tapas f1e9
 target e719
+target_check ffeb3
 task f075
 task_alt e2e6
 tatami_seat ef33
@@ -3780,6 +3810,7 @@ temple_hindu eaaf
 tenancy f0e3
 terminal eb8e
 terminal_2 fff8e
+terminal_add ffed3
 terrain e564
 text_ad e728
 text_ad_off fff92
@@ -3830,12 +3861,12 @@ thread_unread f4f9
 threat_intelligence eaed
 thumb_down f578
 thumb_down_alt f578
-thumb_down_filled f578
+thumb_down_filled 100014
 thumb_down_off f578
 thumb_down_off_alt f578
 thumb_up f577
 thumb_up_alt f577
-thumb_up_filled f577
+thumb_up_filled 100015
 thumb_up_off f577
 thumb_up_off_alt f577
 thumbnail_bar f734
@@ -4178,7 +4209,7 @@ wc e63d
 weather_hail f67f
 weather_mix f60b
 weather_snowy e2cd
-web e681
+web e66a
 web_asset e069
 web_asset_off ef47
 web_stories e595

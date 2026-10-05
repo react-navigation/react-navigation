@@ -9,6 +9,24 @@ data class MaterialSymbolTypefaceResult(val typeface: Typeface, val suffix: Stri
 object MaterialSymbolTypeface {
   private val typefaces = ConcurrentHashMap<String, Typeface>()
   private var availableFonts: Map<String, Set<Int>>? = null
+  private var symbols: Map<String, String>? = null
+
+  fun getSymbol(context: Context, name: String): String? {
+    symbols?.let { return it[name] }
+
+    val result = context.assets.open("fonts/MaterialSymbols.codepoints").bufferedReader()
+      .useLines { lines ->
+        lines.associate { line ->
+          val (key, codepoint) = line.split(" ")
+
+          key to String(Character.toChars(codepoint.toInt(16)))
+        }
+      }
+
+    symbols = result
+
+    return result[name]
+  }
 
   fun get(context: Context, variant: String?, weight: Int?): MaterialSymbolTypefaceResult {
     val suffix = getSuffix(context, variant, weight)

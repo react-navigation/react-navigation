@@ -71,6 +71,9 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
       return cacheUri
     }
 
+    val symbol = MaterialSymbolTypeface.getSymbol(reactApplicationContext, name)
+      ?: throw IllegalArgumentException("Invalid Material Symbol name: $name")
+
     val cacheParent = cacheDir.parentFile
 
     if (cacheParent != null && cleanedCacheDirs.add(cacheParent.absolutePath)) {
@@ -101,7 +104,7 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
       val canvas = Canvas(bitmap)
       val y = (scaledSize - (fontMetrics.descent - fontMetrics.ascent)) / 2f - fontMetrics.ascent
 
-      canvas.drawText(name, scaledSize / 2f, y, paint)
+      canvas.drawText(symbol, scaledSize / 2f, y, paint)
 
       FileOutputStream(cacheFile).use {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
