@@ -401,6 +401,7 @@ export function useHeaderConfigProps({
         name: headerBackIcon.name,
         variant: headerBackIcon.variant,
         weight: headerBackIcon.weight,
+        fill: headerBackIcon.fill,
         color: tintColor,
         size: ICON_SIZE,
       });

@@ -764,6 +764,7 @@ function getPlatformIcon(icon: Icon): PlatformIcon {
             name: icon.name,
             variant: icon.variant,
             weight: icon.weight,
+            fill: icon.fill,
             size: ICON_SIZE,
           }),
         },

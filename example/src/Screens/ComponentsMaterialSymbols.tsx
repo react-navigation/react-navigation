@@ -7,7 +7,14 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { FlatList, Image, Platform, StyleSheet, View } from 'react-native';
+import {
+  FlatList,
+  Image,
+  Platform,
+  StyleSheet,
+  Switch,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MATERIAL_SYMBOL_NAMES } from '../material-symbol-names';
@@ -29,6 +36,7 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
 
   const [query, setQuery] = React.useState('');
   const [image, setImage] = React.useState(false);
+  const [fill, setFill] = React.useState(false);
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -93,10 +101,23 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
             value={image ? 'image' : 'font'}
             onValueChange={(value) => setImage(value === 'image')}
           />
+          <View style={styles.switch}>
+            <Text style={{ color: colors.text }}>Filled</Text>
+            <Switch
+              value={fill}
+              onValueChange={setFill}
+              accessibilityLabel="Filled"
+              trackColor={{
+                true: colors.primary,
+                false: 'rgba(0,0,0,0.23)',
+              }}
+              thumbColor={colors.background}
+            />
+          </View>
         </View>
       }
       renderItem={({ item }) => (
-        <MaterialSymbolRow items={item} image={image} />
+        <MaterialSymbolRow items={item} image={image} fill={fill} />
       )}
       keyExtractor={(item) => item.join(',')}
       contentContainerStyle={{
@@ -120,9 +141,11 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
 const MaterialSymbolRow = React.memo(function MaterialSymbolRow({
   items,
   image,
+  fill,
 }: {
   items: MaterialSymbolProps['name'][];
   image: boolean;
+  fill: boolean;
 }) {
   const { colors } = useTheme();
 
@@ -134,12 +157,13 @@ const MaterialSymbolRow = React.memo(function MaterialSymbolRow({
             <Image
               source={MaterialSymbol.getImageSource({
                 name: item,
+                fill,
                 size: ICON_SIZE,
                 color: colors.text,
               })}
             />
           ) : (
-            <MaterialSymbol name={item} size={ICON_SIZE} />
+            <MaterialSymbol name={item} fill={fill} size={ICON_SIZE} />
           )}
           <Text
             style={[styles.iconName, { color: colors.text }]}
@@ -169,6 +193,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 8,
     borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  switch: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   row: {
     flexDirection: 'row',

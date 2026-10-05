@@ -54,7 +54,7 @@ type IconMaterialSymbol = {
    * - `materialSymbol` - Use a Material Symbol as the icon on Android.
    */
   type: 'materialSymbol';
-} & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight'>;
+} & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight' | 'fill'>;
 
 export type Icon = IconSfSymbol | IconMaterialSymbol | IconImage;
 

@@ -21,6 +21,7 @@ export function MaterialSymbol({
   name,
   variant,
   weight,
+  fill,
   size = 24,
   color,
   style,
@@ -30,6 +31,7 @@ export function MaterialSymbol({
       name={name}
       variant={variant}
       weight={typeof weight === 'string' ? FONT_WEIGHTS[weight] : (weight ?? 0)}
+      fill={fill == null ? -1 : fill ? 1 : 0}
       size={size}
       color={color}
       style={[
@@ -47,19 +49,23 @@ MaterialSymbol.getImageSource = ({
   name,
   variant,
   weight,
+  fill,
   size = 24,
   color = 'black',
 }: MaterialSymbolOptions): ImageSourcePropType => {
   const processedColor = processColor(color);
 
   if (processedColor == null) {
-    throw new Error(`Invalid color value: ${String(color)}`);
+    throw new Error(
+      `Invalid color value ${JSON.stringify(color)} for Material Symbol "${name}".`
+    );
   }
 
   const uri = NativeMaterialSymbolModule.getImageSource(
     name,
     variant,
     typeof weight === 'string' ? FONT_WEIGHTS[weight] : weight,
+    fill,
     size,
     { value: processedColor }
   );

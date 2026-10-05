@@ -1,3 +1,4 @@
+import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
 buildscript {
@@ -71,51 +72,94 @@ tasks.register('copyMaterialFonts', Copy) {
     fontsConfig = packageJson["react-navigation"]?.get("material-symbols")?.get("fonts")
   }
 
-  fontsConfig = fontsConfig != null ? fontsConfig : [[variant: "outlined", weights: [400]]]
-
   def assetsFontsDir = file("../assets/fonts")
   def availableFonts = assetsFontsDir.listFiles()
     ?.findAll { it.name.startsWith("MaterialSymbols") && it.name.endsWith(".ttf") }
     ?.collect { it.name.replaceFirst(/^MaterialSymbols/, '').replaceFirst(/\.ttf$/, '') } ?: []
 
-  def validVariants = availableFonts.collect { it.split('_')[0].toLowerCase() }.unique().sort()
+  def validVariants = availableFonts.collect { it.split('_')[0].uncapitalize() }.unique().sort()
   def validWeights = availableFonts.collect { it.split('_')[1] as int }.unique().sort()
+  def validFills = availableFonts.collect { it.endsWith("_Filled") ? 1 : 0 }.unique().sort()
 
   def errors = [] as Set
 
-  fontsConfig.each { font ->
-    if (font.variant && !validVariants.contains(font.variant.toLowerCase())) {
-      errors << "Invalid font variant: ${font.variant}"
+  if (fontsConfig != null && !(fontsConfig instanceof List)) {
+    errors << "Invalid fonts ${JsonOutput.toJson(fontsConfig)}. Expected an array."
+  }
+
+  def fonts = fontsConfig instanceof List ? fontsConfig : [[:]]
+
+  fonts.each { font ->
+    if (!(font instanceof Map)) {
+      errors << "Invalid font ${JsonOutput.toJson(font)}. Expected an object."
+
+      return
     }
 
-    font.weights.each { weight ->
-      if (!validWeights.contains(weight)) {
-        errors << "Invalid font weight: ${weight}"
+    (font.keySet() - ["variant", "weights", "fills"]).each { key ->
+      errors << "Unknown key ${JsonOutput.toJson(key)}."
+    }
+
+    if (font.variant != null && !validVariants.contains(font.variant)) {
+      errors << "Invalid variant ${JsonOutput.toJson(font.variant)}."
+    }
+
+    if (font.weights != null && !(font.weights instanceof List)) {
+      errors << "Invalid weights ${JsonOutput.toJson(font.weights)}. Expected an array."
+    } else {
+      font.weights.each { weight ->
+        if (!validWeights.contains(weight)) {
+          errors << "Invalid weight ${JsonOutput.toJson(weight)}."
+        }
+      }
+    }
+
+    if (font.fills != null && !(font.fills instanceof List)) {
+      errors << "Invalid fills ${JsonOutput.toJson(font.fills)}. Expected an array."
+    } else {
+      font.fills.each { fill ->
+        if (!validFills.contains(fill)) {
+          errors << "Invalid fill ${JsonOutput.toJson(fill)}."
+        }
       }
     }
   }
 
   if (errors) {
     throw new GradleException(
-      errors.join("\n") + "\n\nAvailable variants: ${validVariants.join(", ")}.\nAvailable weights: ${validWeights.join(", ")}."
+      "Invalid Material Symbols fonts in \"react-navigation\" > \"material-symbols\" > \"fonts\" in package.json.\n\n" +
+        errors.join("\n") + "\n\n" +
+        "Available variants: ${validVariants.collect { JsonOutput.toJson(it) }.join(", ")}.\n" +
+        "Available weights: ${validWeights.join(", ")}.\n" +
+        "Available fills: ${validFills.join(", ")}."
     )
   }
 
-  def fontFiles = fontsConfig.collectMany { font ->
-    def variant = font.variant?.capitalize() ?: ""
+  def fontFiles = fonts.collectMany { font ->
+    def variant = (font.variant ?: "outlined").capitalize()
+    def weights = font.weights ?: [400]
+    def fills = font.fills ?: [0]
 
-    font.weights.collect { weight -> "MaterialSymbols${variant}_${weight}.ttf" }
+    weights.collectMany { weight ->
+      fills.collect { fill ->
+        def suffix = fill == 1 ? "_Filled" : ""
+
+        "MaterialSymbols${variant}_${weight}${suffix}.ttf"
+      }
+    }
   }
 
-  if (fontFiles) {
-    from(assetsFontsDir) { include fontFiles }
+  def assetFiles = fontFiles ? fontFiles + "MaterialSymbols.codepoints" : []
+
+  if (assetFiles) {
+    from(assetsFontsDir) { include assetFiles }
   }
 
   into layout.buildDirectory.dir("intermediates/react-navigation/fonts")
 
   doFirst {
     if (destinationDir.exists()) {
-      def extraFiles = destinationDir.listFiles()?.findAll { file -> !fontFiles.contains(file.name) }
+      def extraFiles = destinationDir.listFiles()?.findAll { file -> !assetFiles.contains(file.name) }
 
       extraFiles?.each { file -> file.delete() }
     }
@@ -124,11 +168,11 @@ tasks.register('copyMaterialFonts', Copy) {
   doLast {
     def digest = java.security.MessageDigest.getInstance("MD5")
 
-    fontFiles.sort().each { name ->
-      def fontFile = new File(assetsFontsDir, name)
+    assetFiles.sort().each { name ->
+      def assetFile = new File(assetsFontsDir, name)
 
-      if (fontFile.exists()) {
-        digest.update(fontFile.bytes)
+      if (assetFile.exists()) {
+        digest.update(assetFile.bytes)
       }
     }
 
