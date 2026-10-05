@@ -1,4 +1,5 @@
 import { Text } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import {
   MaterialSymbol,
   type MaterialSymbolProps,
@@ -11,14 +12,23 @@ import {
   FlatList,
   Image,
   Platform,
+  Pressable,
+  ScrollView,
   StyleSheet,
-  Switch,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MATERIAL_SYMBOL_NAMES } from '../material-symbol-names';
-import { SegmentedPicker } from '../Shared/SegmentedPicker';
+
+type MaterialSymbolVariant = NonNullable<MaterialSymbolProps['variant']>;
+type MaterialSymbolWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700;
+type MaterialSymbolSource = 'font' | 'image';
+
+type Choice<T extends string | number | boolean> = {
+  label: string;
+  value: T;
+};
 
 const COLUMN_COUNT = 4;
 const ICON_SIZE = 32;
@@ -29,14 +39,44 @@ const ROW_HEIGHT =
   ICON_SIZE +
   (ICON_PADDING_VERTICAL + ICON_NAME_MARGIN_TOP + ICON_NAME_FONT_SIZE) * 2;
 
+const VARIANTS: Choice<MaterialSymbolVariant>[] = [
+  { label: 'Outlined', value: 'outlined' },
+  { label: 'Rounded', value: 'rounded' },
+  { label: 'Sharp', value: 'sharp' },
+];
+
+const WEIGHTS: Choice<MaterialSymbolWeight>[] = [
+  { label: '100', value: 100 },
+  { label: '200', value: 200 },
+  { label: '300', value: 300 },
+  { label: '400', value: 400 },
+  { label: '500', value: 500 },
+  { label: '600', value: 600 },
+  { label: '700', value: 700 },
+];
+
+const FILLS: Choice<boolean>[] = [
+  { label: 'Unfilled', value: false },
+  { label: 'Filled', value: true },
+];
+
+const SOURCES: Choice<MaterialSymbolSource>[] = [
+  { label: 'Font', value: 'font' },
+  { label: 'Image', value: 'image' },
+];
+
 export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
   const navigation = useNavigation('ComponentsMaterialSymbols');
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
   const [query, setQuery] = React.useState('');
-  const [image, setImage] = React.useState(false);
+  const [variant, setVariant] =
+    React.useState<MaterialSymbolVariant>('outlined');
+  const [weight, setWeight] = React.useState<MaterialSymbolWeight>(400);
   const [fill, setFill] = React.useState(false);
+  const [source, setSource] = React.useState<MaterialSymbolSource>('font');
+  const [expanded, setExpanded] = React.useState(false);
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -52,10 +92,9 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
   }, [navigation]);
 
   const rows = React.useMemo(() => {
-    const icons = query.trim()
-      ? MATERIAL_SYMBOL_NAMES.filter((name) =>
-          name.toLowerCase().includes(query.toLowerCase())
-        )
+    const search = query.trim().toLowerCase();
+    const icons = search
+      ? MATERIAL_SYMBOL_NAMES.filter((name) => name.includes(search))
       : MATERIAL_SYMBOL_NAMES;
 
     // FlatList has performance issues with `numColumns`
@@ -79,45 +118,63 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
     );
   }
 
+  const image = source === 'image';
+
   return (
     <FlatList
       data={rows}
       stickyHeaderIndices={[0]}
       ListHeaderComponent={
-        <View
-          style={[
-            styles.header,
-            {
-              backgroundColor: colors.background,
-              borderBottomColor: colors.border,
-            },
-          ]}
-        >
-          <SegmentedPicker
-            choices={[
-              { label: 'Font', value: 'font' },
-              { label: 'Image', value: 'image' },
-            ]}
-            value={image ? 'image' : 'font'}
-            onValueChange={(value) => setImage(value === 'image')}
-          />
-          <View style={styles.switch}>
-            <Text style={{ color: colors.text }}>Filled</Text>
-            <Switch
-              value={fill}
-              onValueChange={setFill}
-              accessibilityLabel="Filled"
-              trackColor={{
-                true: colors.primary,
-                false: 'rgba(0,0,0,0.23)',
-              }}
-              thumbColor={colors.background}
+        <View style={{ backgroundColor: colors.card }}>
+          <Pressable
+            onPress={() => setExpanded((value) => !value)}
+            style={styles.headerToggle}
+          >
+            <Text style={{ color: colors.text }}>Customization</Text>
+            <MaterialSymbol
+              name={expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
+              size={18}
+              color={colors.text}
             />
-          </View>
+          </Pressable>
+          {expanded && (
+            <View style={styles.pickerColumn}>
+              <ControlGroup
+                label="Variant"
+                choices={VARIANTS}
+                value={variant}
+                onValueChange={setVariant}
+              />
+              <ControlGroup
+                label="Weight"
+                choices={WEIGHTS}
+                value={weight}
+                onValueChange={setWeight}
+              />
+              <ControlGroup
+                label="Fill"
+                choices={FILLS}
+                value={fill}
+                onValueChange={setFill}
+              />
+              <ControlGroup
+                label="Source"
+                choices={SOURCES}
+                value={source}
+                onValueChange={setSource}
+              />
+            </View>
+          )}
         </View>
       }
       renderItem={({ item }) => (
-        <MaterialSymbolRow items={item} image={image} fill={fill} />
+        <MaterialSymbolRow
+          items={item}
+          variant={variant}
+          weight={weight}
+          fill={fill}
+          image={image}
+        />
       )}
       keyExtractor={(item) => item.join(',')}
       contentContainerStyle={{
@@ -140,12 +197,16 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
 
 const MaterialSymbolRow = React.memo(function MaterialSymbolRow({
   items,
-  image,
+  variant,
+  weight,
   fill,
+  image,
 }: {
   items: MaterialSymbolProps['name'][];
-  image: boolean;
+  variant: MaterialSymbolVariant;
+  weight: MaterialSymbolWeight;
   fill: boolean;
+  image: boolean;
 }) {
   const { colors } = useTheme();
 
@@ -157,13 +218,22 @@ const MaterialSymbolRow = React.memo(function MaterialSymbolRow({
             <Image
               source={MaterialSymbol.getImageSource({
                 name: item,
+                variant,
+                weight,
                 fill,
                 size: ICON_SIZE,
                 color: colors.text,
               })}
             />
           ) : (
-            <MaterialSymbol name={item} fill={fill} size={ICON_SIZE} />
+            <MaterialSymbol
+              name={item}
+              variant={variant}
+              weight={weight}
+              fill={fill}
+              size={ICON_SIZE}
+              color={colors.text}
+            />
           )}
           <Text
             style={[styles.iconName, { color: colors.text }]}
@@ -177,6 +247,62 @@ const MaterialSymbolRow = React.memo(function MaterialSymbolRow({
   );
 });
 
+function ControlGroup<T extends string | number | boolean>({
+  label,
+  choices,
+  value,
+  onValueChange,
+}: {
+  label: string;
+  choices: Choice<T>[];
+  value: T;
+  onValueChange: (value: T) => void;
+}) {
+  const { colors, fonts } = useTheme();
+
+  return (
+    <View style={styles.controlGroup}>
+      <Text style={[styles.controlLabel, { color: colors.text }]}>{label}</Text>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.chipScroll}
+        contentContainerStyle={styles.chipRow}
+      >
+        {choices.map((option) => {
+          const selected = option.value === value;
+
+          return (
+            <Pressable
+              key={String(option.value)}
+              onPress={() => onValueChange(option.value)}
+              style={[
+                styles.chip,
+                { borderColor: colors.border },
+                selected && { backgroundColor: colors.primary },
+              ]}
+            >
+              <Text
+                style={[
+                  fonts.medium,
+                  styles.chipText,
+                  {
+                    color: selected
+                      ? Color.foreground(colors.primary)
+                      : colors.text,
+                  },
+                ]}
+              >
+                {option.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+}
+
 ComponentsMaterialSymbols.title = 'Components - Material Symbols';
 ComponentsMaterialSymbols.options = { headerShown: true };
 ComponentsMaterialSymbols.linking = {};
@@ -187,17 +313,43 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  header: {
+  headerToggle: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 8,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
   },
-  switch: {
+  pickerColumn: {
+    gap: 12,
+    paddingVertical: 8,
+  },
+  controlGroup: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 12,
+  },
+  controlLabel: {
+    width: 64,
+    fontSize: 12,
+    opacity: 0.7,
+    marginLeft: 16,
+  },
+  chipScroll: {
+    flex: 1,
+  },
+  chipRow: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  chip: {
+    borderRadius: 16,
+    borderWidth: StyleSheet.hairlineWidth,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+  },
+  chipText: {
+    fontSize: 12,
   },
   row: {
     flexDirection: 'row',
