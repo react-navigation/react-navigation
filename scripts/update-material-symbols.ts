@@ -12,6 +12,10 @@ const assets = new URL('packages/native/assets/fonts/', root);
 const VARIANTS = ['Outlined', 'Rounded', 'Sharp'];
 const WEIGHTS = [100, 200, 300, 400, 500, 600, 700];
 
+type IconsMetadata = {
+  icons: { name: string; unsupported_families: string[] }[];
+};
+
 process.stdout.write('Updating Material Symbols...\n\n');
 
 fs.mkdirSync(assets, { recursive: true });
@@ -59,10 +63,35 @@ const codepointsName = 'MaterialSymbols.codepoints';
 const codepointsBuffer = await download(codepointsUrl, codepointsName);
 const codepoints = codepointsBuffer.toString('utf-8');
 
+// The codepoints also include legacy names from Material Icons, such as `_filled` names
+// So we only keep the icons that are listed on fonts.google.com for Material Symbols
+const metadataBuffer = await download(
+  'https://fonts.google.com/metadata/icons?key=material_symbols&incomplete=true',
+  'icons metadata'
+);
+
+const metadataText = metadataBuffer.toString('utf-8');
+
+// The response starts with `)]}'` before the JSON to prevent JSON hijacking
+const metadata: IconsMetadata = JSON.parse(
+  metadataText.slice(metadataText.indexOf('{'))
+);
+
+const listedNames = new Set(
+  metadata.icons
+    .filter((icon) =>
+      VARIANTS.some(
+        (variant) =>
+          !icon.unsupported_families.includes(`Material Symbols ${variant}`)
+      )
+    )
+    .map((icon) => icon.name)
+);
+
 for (const line of codepoints.split('\n')) {
   const [name, codepoint] = line.trim().split(' ');
 
-  if (name && codepoint) {
+  if (name && codepoint && listedNames.has(name)) {
     mappings.set(name, parseInt(codepoint, 16));
   }
 }
@@ -132,7 +161,12 @@ process.stdout.write('\n');
 
 const names = [...mappings.keys()].sort((a, b) => a.localeCompare(b));
 
-fs.writeFileSync(new URL(codepointsName, assets), codepointsBuffer);
+fs.writeFileSync(
+  new URL(codepointsName, assets),
+  [...mappings]
+    .map(([name, codepoint]) => `${name} ${codepoint.toString(16)}\n`)
+    .join('')
+);
 
 fs.writeFileSync(
   new URL('packages/native/src/native/MaterialSymbolData.tsx', root),
