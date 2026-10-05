@@ -19,6 +19,7 @@
   },
   "homepage": "https://reactnavigation.org",
   "exports": {
+    "./assets/fonts/*": "./assets/fonts/*",
     "./package.json": "./package.json"
   },
   "files": [
