@@ -35,7 +35,7 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
   }
 
   override fun getImageSource(
-    name: String, variant: String?, weight: Double?, size: Double, color: ReadableMap
+    name: String, variant: String?, weight: Double?, fill: Boolean?, size: Double, color: ReadableMap
   ): String {
     val colorValue = color.getDynamic("value").let {
       when (it.type) {
@@ -47,13 +47,13 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
 
     val resolvedColor = ColorPropConverter.getColor(
       colorValue, reactApplicationContext.currentActivity ?: reactApplicationContext
-    ) ?: throw IllegalArgumentException("Could not resolve color")
+    ) ?: throw IllegalArgumentException("Invalid color value $colorValue for Material Symbol \"$name\".")
 
     val density = reactApplicationContext.resources.displayMetrics.density
     val scaledSize = (size * density).roundToInt().coerceAtLeast(1)
 
     val typefaceSuffix = MaterialSymbolTypeface.getSuffix(
-      reactApplicationContext, variant, weight?.toInt()
+      reactApplicationContext, variant, weight?.toInt(), fill
     )
 
     val cacheDir = File(
@@ -72,7 +72,7 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     }
 
     val symbol = MaterialSymbolTypeface.getSymbol(reactApplicationContext, name)
-      ?: throw IllegalArgumentException("Invalid Material Symbol name: $name")
+      ?: throw IllegalArgumentException("No Material Symbol found with the name \"$name\".")
 
     val cacheParent = cacheDir.parentFile
 
@@ -86,7 +86,7 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     cacheDir.mkdirs()
 
     val resolvedTypeface = MaterialSymbolTypeface.get(
-      reactApplicationContext, variant, weight?.toInt()
+      reactApplicationContext, variant, weight?.toInt(), fill
     ).typeface
 
     val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {

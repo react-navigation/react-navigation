@@ -11,11 +11,11 @@ class MaterialSymbolView @JvmOverloads constructor(
 
   private var variant: String? = null
   private var weight: Int? = null
+  private var fill: Boolean? = null
   private var symbol: String? = null
 
   init {
     setColor(null)
-    updateTypeface()
   }
 
   override fun onDraw(canvas: Canvas) {
@@ -39,31 +39,24 @@ class MaterialSymbolView @JvmOverloads constructor(
   }
 
   fun setVariant(variant: String?) {
-    if (this.variant == variant) {
-      return
-    }
-
     this.variant = variant
-
-    updateTypeface()
   }
 
   fun setWeight(weight: Int?) {
-    if (this.weight == weight) {
-      return
-    }
-
     this.weight = weight
-
-    updateTypeface()
   }
 
-  private fun updateTypeface() {
+  fun setFill(fill: Int) {
+    this.fill = if (fill == -1) null else fill == 1
+  }
+
+  fun updateTypeface() {
     setTypeface(
       MaterialSymbolTypeface.get(
         context,
         variant?.ifEmpty { null },
-        weight.takeIf { it != 0 }).typeface
+        weight.takeIf { it != 0 },
+        fill).typeface
     )
 
     invalidate()

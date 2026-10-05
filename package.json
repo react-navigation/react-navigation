@@ -54,6 +54,7 @@
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "fonteditor-core": "^2.6.3",
+    "harfbuzzjs": "^1.6.2",
     "jest": "~30.4.2",
     "jest-environment-node": "30.4.1",
     "jsdom": "26.1.0",

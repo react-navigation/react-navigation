@@ -7,8 +7,11 @@ import java.util.concurrent.ConcurrentHashMap
 data class MaterialSymbolTypefaceResult(val typeface: Typeface, val suffix: String)
 
 object MaterialSymbolTypeface {
+  private const val CONFIG_HINT =
+    "Configure the fonts in \"react-navigation\" > \"material-symbols\" > \"fonts\" in package.json and rebuild the app."
+
   private val typefaces = ConcurrentHashMap<String, Typeface>()
-  private var availableFonts: Map<String, Set<Int>>? = null
+  private var availableFonts: Map<String, Map<Int, Set<Boolean>>>? = null
   private var symbols: Map<String, String>? = null
 
   fun getSymbol(context: Context, name: String): String? {
@@ -28,8 +31,8 @@ object MaterialSymbolTypeface {
     return result[name]
   }
 
-  fun get(context: Context, variant: String?, weight: Int?): MaterialSymbolTypefaceResult {
-    val suffix = getSuffix(context, variant, weight)
+  fun get(context: Context, variant: String?, weight: Int?, fill: Boolean?): MaterialSymbolTypefaceResult {
+    val suffix = getSuffix(context, variant, weight, fill)
 
     val typeface = typefaces.getOrPut(suffix) {
       val path = "fonts/MaterialSymbols${suffix}.ttf"
@@ -37,49 +40,71 @@ object MaterialSymbolTypeface {
       try {
         Typeface.createFromAsset(context.assets, path)
       } catch (e: Exception) {
-        throw RuntimeException("$path not found.", e)
+        throw RuntimeException("Failed to load the Material Symbols font \"$path\".", e)
       }
     }
 
     return MaterialSymbolTypefaceResult(typeface, suffix)
   }
 
-  fun getSuffix(context: Context, variant: String?, weight: Int?): String {
+  fun getSuffix(context: Context, variant: String?, weight: Int?, fill: Boolean?): String {
     val fonts = getAvailableFonts(context)
 
     val resolvedVariant = if (variant != null) {
       when (variant) {
+        "outlined" -> "Outlined"
         "rounded" -> "Rounded"
         "sharp" -> "Sharp"
-        else -> "Outlined"
+        else -> throw IllegalArgumentException(
+          "Invalid Material Symbols variant \"$variant\". Expected \"outlined\", \"rounded\" or \"sharp\"."
+        )
       }
     } else {
       resolveDefaultVariant(fonts)
     }
 
-    val resolvedWeight = weight ?: resolveDefaultWeight(fonts, resolvedVariant)
+    val variantName = "\"${resolvedVariant.lowercase()}\""
 
-    return "${resolvedVariant}_$resolvedWeight"
+    val weights = fonts[resolvedVariant]
+      ?: throw RuntimeException("No Material Symbols font found for variant $variantName. $CONFIG_HINT")
+
+    val resolvedWeight = weight ?: resolveDefaultWeight(weights, resolvedVariant)
+
+    val fills = weights[resolvedWeight]
+      ?: throw RuntimeException(
+        "No Material Symbols font found for variant $variantName and weight $resolvedWeight. $CONFIG_HINT"
+      )
+
+    val resolvedFill = fill ?: fills.singleOrNull() ?: false
+
+    if (!fills.contains(resolvedFill)) {
+      throw RuntimeException(
+        "No Material Symbols font found for variant $variantName, weight $resolvedWeight and fill ${if (resolvedFill) 1 else 0}. $CONFIG_HINT"
+      )
+    }
+
+    return "${resolvedVariant}_$resolvedWeight" + if (resolvedFill) "_Filled" else ""
   }
 
-  private fun getAvailableFonts(context: Context): Map<String, Set<Int>> {
+  private fun getAvailableFonts(context: Context): Map<String, Map<Int, Set<Boolean>>> {
     availableFonts?.let { return it }
 
     val files = context.assets.list("fonts")
       ?.filter { it.startsWith("MaterialSymbols") && it.endsWith(".ttf") } ?: emptyList()
 
     if (files.isEmpty()) {
-      throw RuntimeException("No MaterialSymbols font found in assets.")
+      throw RuntimeException("No Material Symbols fonts found. $CONFIG_HINT")
     }
 
-    val fonts = mutableMapOf<String, MutableSet<Int>>()
+    val fonts = mutableMapOf<String, MutableMap<Int, MutableSet<Boolean>>>()
 
     for (file in files) {
-      val suffix = file.removePrefix("MaterialSymbols").removeSuffix(".ttf")
-      val variant = suffix.substringBefore("_")
-      val weight = suffix.substringAfter("_").toIntOrNull() ?: continue
+      val parts = file.removePrefix("MaterialSymbols").removeSuffix(".ttf").split("_")
+      val variant = parts[0]
+      val weight = parts.getOrNull(1)?.toIntOrNull() ?: continue
+      val fill = parts.getOrNull(2) == "Filled"
 
-      fonts.getOrPut(variant) { mutableSetOf() }.add(weight)
+      fonts.getOrPut(variant) { mutableMapOf() }.getOrPut(weight) { mutableSetOf() }.add(fill)
     }
 
     availableFonts = fonts
@@ -87,7 +112,7 @@ object MaterialSymbolTypeface {
     return fonts
   }
 
-  private fun resolveDefaultVariant(fonts: Map<String, Set<Int>>): String {
+  private fun resolveDefaultVariant(fonts: Map<String, Map<Int, Set<Boolean>>>): String {
     val variants = fonts.keys
 
     if (variants.size == 1) {
@@ -99,19 +124,14 @@ object MaterialSymbolTypeface {
     }
 
     throw RuntimeException(
-      "Multiple MaterialSymbols variants found: ${variants.joinToString()}. " + "Please specify a variant explicitly."
+      "Multiple Material Symbols variants found: ${variants.joinToString { "\"${it.lowercase()}\"" }}. " +
+        "Specify the \"variant\" to use."
     )
   }
 
-  private fun resolveDefaultWeight(fonts: Map<String, Set<Int>>, variant: String): Int {
-    val weights = fonts[variant]
-
-    if (weights.isNullOrEmpty()) {
-      throw RuntimeException("No MaterialSymbols font found for variant: $variant")
-    }
-
+  private fun resolveDefaultWeight(weights: Map<Int, Set<Boolean>>, variant: String): Int {
     if (weights.size == 1) {
-      return weights.first()
+      return weights.keys.first()
     }
 
     if (weights.contains(400)) {
@@ -119,7 +139,8 @@ object MaterialSymbolTypeface {
     }
 
     throw RuntimeException(
-      "Multiple MaterialSymbols weights found for variant $variant: ${weights.joinToString()}. " + "Please specify a weight explicitly."
+      "Multiple Material Symbols weights found for variant \"${variant.lowercase()}\": ${weights.keys.sorted().joinToString()}. " +
+        "Specify the \"weight\" to use."
     )
   }
 }

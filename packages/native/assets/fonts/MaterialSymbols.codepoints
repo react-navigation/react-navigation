@@ -70,7 +70,7 @@ ac_unit eb3b
 access_alarm e855
 access_alarms e855
 access_time efd6
-access_time_filled 100000
+access_time_filled efd6
 accessibility e84e
 accessibility_new e92c
 accessible e914
@@ -82,7 +82,7 @@ account_box e851
 account_child e852
 account_child_invert e659
 account_circle f20b
-account_circle_filled 100001
+account_circle_filled f20b
 account_circle_off f7b3
 account_tree e97a
 action_key f502
@@ -783,7 +783,7 @@ check_alert fff85
 check_box e9de
 check_box_outline_blank e835
 check_circle f0be
-check_circle_filled 100002
+check_circle_filled f0be
 check_circle_outline f0be
 check_circle_unread f27e
 check_in_out f6f6
@@ -867,7 +867,7 @@ cloud_queue f15c
 cloud_sync eb5a
 cloud_upload e2c3
 cloudy f15c
-cloudy_filled 100003
+cloudy_filled f15c
 cloudy_snowing e810
 co2 e7b0
 co_present eaf0
@@ -895,7 +895,7 @@ comments_disabled e7a2
 commit eaf5
 communication e27c
 communities eb16
-communities_filled 100004
+communities_filled eb16
 commute e940
 compare e3b9
 compare_arrows e915
@@ -919,7 +919,7 @@ contact_emergency f8d1
 contact_mail e0d0
 contact_page f22e
 contact_phone f0c0
-contact_phone_filled 100005
+contact_phone_filled f0c0
 contact_support e94c
 contactless ea71
 contactless_off f858
@@ -1132,20 +1132,20 @@ directions_alt f880
 directions_alt_off f881
 directions_bike e52f
 directions_boat eff5
-directions_boat_filled 100006
+directions_boat_filled eff5
 directions_bus eff6
-directions_bus_filled 100007
+directions_bus_filled eff6
 directions_car eff7
-directions_car_filled 100008
+directions_car_filled eff7
 directions_off f10f
 directions_railway eff8
 directions_railway_2 f462
-directions_railway_filled 100009
+directions_railway_filled eff8
 directions_run e566
 directions_subway effa
-directions_subway_filled 10000a
+directions_subway_filled effa
 directions_transit effa
-directions_transit_filled 10000a
+directions_transit_filled effa
 directions_walk e536
 directory_sync e394
 dirty_lens ef4b
@@ -1517,7 +1517,7 @@ flag f0c6
 flag_2 f40f
 flag_check f3d8
 flag_circle eaf8
-flag_filled 10000b
+flag_filled f0c6
 flaky ef50
 flare e3e4
 flash_auto e3e5
@@ -1897,7 +1897,7 @@ holiday_village e58a
 home e9b2
 home_and_garden ef9f
 home_app_logo e295
-home_filled 10000c
+home_filled e9b2
 home_health e4b9
 home_improvement_and_tools efa0
 home_iot_device e283
@@ -2000,7 +2000,7 @@ inpatient e0fe
 input e890
 input_circle f71a
 insert_chart f0cc
-insert_chart_filled 10000d
+insert_chart_filled f0cc
 insert_chart_outlined f0cc
 insert_comment e24c
 insert_drive_file e66d
@@ -2365,7 +2365,7 @@ minimize e931
 minor_crash ebf1
 mintmark efa9
 missed_video_call f0ce
-missed_video_call_filled 10000e
+missed_video_call_filled f0ce
 missing_controller e701
 mist e188
 mitre f547
@@ -2784,7 +2784,7 @@ patient_list e653
 pattern f043
 pause e034
 pause_circle e1a2
-pause_circle_filled 10000f
+pause_circle_filled e1a2
 pause_circle_outline e1a2
 pause_presentation e0ea
 payment e8a1
@@ -2832,7 +2832,7 @@ person_cancel f566
 person_celebrate f7fe
 person_check f565
 person_edit f4fa
-person_filled 100010
+person_filled f0d3
 person_heart f290
 person_off e510
 person_outline f0d3
@@ -2904,7 +2904,7 @@ picture_in_picture_mobile f517
 picture_in_picture_off f52f
 picture_in_picture_small f54d
 pie_chart f0da
-pie_chart_filled 100011
+pie_chart_filled f0da
 pie_chart_outline f0da
 pie_chart_outlined f0da
 pill e11f
@@ -3113,7 +3113,7 @@ replay e042
 replay_10 e059
 replay_30 e05a
 replay_5 e05b
-replay_circle_filled 100012
+replay_circle_filled e9d8
 reply e15e
 reply_all e15f
 report f052
@@ -3155,7 +3155,7 @@ right_click f706
 right_panel_close f705
 right_panel_open f704
 ring_volume f0dd
-ring_volume_filled 100013
+ring_volume_filled f0dd
 ripples e9db
 road f472
 robot f882
@@ -3861,12 +3861,12 @@ thread_unread f4f9
 threat_intelligence eaed
 thumb_down f578
 thumb_down_alt f578
-thumb_down_filled 100014
+thumb_down_filled f578
 thumb_down_off f578
 thumb_down_off_alt f578
 thumb_up f577
 thumb_up_alt f577
-thumb_up_filled 100015
+thumb_up_filled f577
 thumb_up_off f577
 thumb_up_off_alt f577
 thumbnail_bar f734

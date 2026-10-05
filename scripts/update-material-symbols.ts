@@ -3,6 +3,7 @@ import process from 'node:process';
 import { URL } from 'node:url';
 
 import { Font } from 'fonteditor-core';
+import * as hb from 'harfbuzzjs';
 import subsetFont from 'subset-font';
 
 const root = new URL('..', import.meta.url);
@@ -10,11 +11,6 @@ const assets = new URL('packages/native/assets/fonts/', root);
 
 const VARIANTS = ['Outlined', 'Rounded', 'Sharp'];
 const WEIGHTS = [100, 200, 300, 400, 500, 600, 700];
-
-// The filled glyphs need codepoints that Material Symbols doesn't use
-// Its codepoints go up to U+FFFFD, so the filled glyphs start at U+100000
-// It's the start of the next private use block (U+100000 to U+10FFFD)
-const FILLED_CODEPOINT_START = 0x100000;
 
 process.stdout.write('Updating Material Symbols...\n\n');
 
@@ -71,25 +67,8 @@ for (const line of codepoints.split('\n')) {
   }
 }
 
-// The `_filled` names use the same codepoints as their base icons
-// Google Fonts draws them filled by setting the `FILL` axis instead
-// We add the filled glyphs to the fonts under unused codepoints,
-// and point the `_filled` names to those codepoints
-const filledCodepoints = new Map<number, number>();
-
-for (const [name, codepoint] of mappings) {
-  if (name.endsWith('_filled')) {
-    const filledCodepoint =
-      filledCodepoints.get(codepoint) ??
-      FILLED_CODEPOINT_START + filledCodepoints.size;
-
-    filledCodepoints.set(codepoint, filledCodepoint);
-    mappings.set(name, filledCodepoint);
-  }
-}
-
-const chars = String.fromCodePoint(...new Set(mappings.values()));
-const filledChars = String.fromCodePoint(...filledCodepoints.keys());
+const uniqueCodepoints = [...new Set(mappings.values())];
+const chars = String.fromCodePoint(...uniqueCodepoints);
 
 for (const variant of VARIANTS) {
   const variableName = `MaterialSymbols${variant}[FILL,GRAD,opsz,wght].ttf`;
@@ -99,54 +78,53 @@ for (const variant of VARIANTS) {
   );
 
   for (const weight of WEIGHTS) {
-    const ttfName = `MaterialSymbols${variant}_${weight}.ttf`;
+    for (const fill of [0, 1]) {
+      const ttfName = `MaterialSymbols${variant}_${weight}${fill ? '_Filled' : ''}.ttf`;
 
-    process.stdout.write(`Generating ${ttfName}...`);
+      process.stdout.write(`Generating ${ttfName}...`);
 
-    // The variable fonts are too large to ship
-    // So we generate static fonts for each weight from them
-    // With the same axis values that Google Fonts uses for its static fonts
-    // This also drops the glyph names and the ligatures for the icon names
-    // As the native code draws the icons by codepoint instead of name
-    const ttfBuffer = await subsetFont(variableBuffer, chars, {
-      variationAxes: { FILL: 0, GRAD: 0, opsz: 24, wght: weight },
-    });
+      // The variable fonts are too large to ship, so we generate static fonts
+      // Subsetting also drops the glyph names and the ligatures for icon names
+      // As the native code draws the icons by codepoint instead of name
+      let ttfBuffer = await subsetFont(variableBuffer, chars, {
+        variationAxes: { FILL: fill, GRAD: 0, opsz: 24, wght: weight },
+      });
 
-    const filledTtfBuffer = await subsetFont(variableBuffer, filledChars, {
-      variationAxes: { FILL: 1, GRAD: 0, opsz: 24, wght: weight },
-    });
+      if (fill) {
+        // The filled glyphs are swapped in with the `rclt` feature
+        // Pointing the codepoints to them lets the unused glyphs be dropped
+        const hbFont = new hb.Font(new hb.Face(new hb.Blob(ttfBuffer)));
+        const hbBuffer = new hb.Buffer();
 
-    const font = Font.create(ttfBuffer, { type: 'ttf', hinting: true });
+        const font = Font.create(ttfBuffer, { type: 'ttf', hinting: true });
+        const glyphs = font.get().glyf;
 
-    // Copied glyphs can't reference components in the source font
-    // So convert composite glyphs to simple glyphs before copying them
-    const filledFont = Font.create(filledTtfBuffer, {
-      type: 'ttf',
-      compound2simple: true,
-    });
+        for (const glyph of glyphs) {
+          glyph.unicode = [];
+        }
 
-    const filledGlyphs = filledFont
-      .find({ unicode: [...filledCodepoints.keys()] })
-      .map((glyph) => ({
-        ...glyph,
-        unicode: glyph.unicode.flatMap(
-          (codepoint) => filledCodepoints.get(codepoint) ?? []
-        ),
-      }));
+        for (const codepoint of uniqueCodepoints) {
+          hbBuffer.reset();
+          hbBuffer.addCodePoints([codepoint]);
+          hbBuffer.guessSegmentProperties();
 
-    font.getHelper().appendGlyf(filledGlyphs);
+          hb.shape(hbFont, hbBuffer);
 
-    // fonteditor-core writes a wrong `usLastCharIndex` in the `OS/2` table
-    // As it doesn't handle codepoints above U+FFFF used for filled glyphs
-    // So we pass the font through subset-font again to recalculate it
-    const subsetBuffer = await subsetFont(
-      font.write({ type: 'ttf', hinting: true, toBuffer: true }),
-      chars
-    );
+          for (const info of hbBuffer.getGlyphInfos()) {
+            glyphs[info.codepoint]?.unicode.push(codepoint);
+          }
+        }
 
-    fs.writeFileSync(new URL(ttfName, assets), subsetBuffer);
+        ttfBuffer = await subsetFont(
+          font.write({ type: 'ttf', hinting: true, toBuffer: true }),
+          chars
+        );
+      }
 
-    process.stdout.write(' done.\n');
+      fs.writeFileSync(new URL(ttfName, assets), ttfBuffer);
+
+      process.stdout.write(' done.\n');
+    }
   }
 }
 
@@ -154,12 +132,7 @@ process.stdout.write('\n');
 
 const names = [...mappings.keys()].sort((a, b) => a.localeCompare(b));
 
-fs.writeFileSync(
-  new URL(codepointsName, assets),
-  [...mappings]
-    .map(([name, codepoint]) => `${name} ${codepoint.toString(16)}\n`)
-    .join('')
-);
+fs.writeFileSync(new URL(codepointsName, assets), codepointsBuffer);
 
 fs.writeFileSync(
   new URL('packages/native/src/native/MaterialSymbolData.tsx', root),

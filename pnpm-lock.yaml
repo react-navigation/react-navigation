@@ -71,6 +71,9 @@ importers:
       fonteditor-core:
         specifier: ^2.6.3
         version: 2.6.3
+      harfbuzzjs:
+        specifier: ^1.6.2
+        version: 1.6.2
       jest:
         specifier: ~30.4.2
         version: 30.4.2(@types/node@24.13.2)
