@@ -856,7 +856,14 @@ function getPlatformIcon(
   switch (icon.type) {
     case 'sfSymbol':
       return {
-        ios: icon,
+        ios: {
+          type: 'sfSymbol',
+          name: icon.name,
+          renderingMode:
+            icon.renderingMode === 'multicolor'
+              ? 'original'
+              : icon.renderingMode,
+        },
         android: undefined,
         shared: undefined,
       };
