@@ -614,7 +614,7 @@ function checkForDuplicatedConfigs(
   const a = existing.routeNames;
   const b = config.routeNames;
 
-  // It's not a problem if the path string omitted from a inner most screen
+  // It's not a problem if the path string omitted from an innermost screen
   // For example, it's ok if a path resolves to `A > B > C` or `A > B`
   const intersects =
     a.length > b.length ? arrayStartsWith(a, b) : arrayStartsWith(b, a);
