@@ -619,7 +619,7 @@ export function BottomTabViewNative({
               android={{
                 icon: icon?.android ?? icon?.shared,
                 selectedIcon: selectedIcon?.android ?? selectedIcon?.shared,
-                drawableIconSize: tabBarIconSize,
+                iconSize: tabBarIconSize,
                 standardAppearance: {
                   tabBarBackgroundColor:
                     tabBarBackgroundColor ?? backgroundColor,
@@ -802,7 +802,6 @@ function getPlatformIcon(icon: Icon): PlatformIcon {
             ? {
                 type: 'drawableResource',
                 name: drawableName,
-                tinted: icon.tinted,
               }
             : undefined,
         shared: {
