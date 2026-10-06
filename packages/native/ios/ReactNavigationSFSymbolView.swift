@@ -137,7 +137,7 @@ import UIKit
           imageView.tintColor = nil
           setImage(image, props: props, animated: shouldAnimate)
 
-        case "multicolor":
+        case "original":
           configuration = configuration.applying(
             UIImage.SymbolConfiguration.preferringMulticolor()
           )

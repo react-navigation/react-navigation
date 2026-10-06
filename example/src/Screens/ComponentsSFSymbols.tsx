@@ -93,7 +93,7 @@ const MODES: Choice<SFSymbolRenderingMode>[] = [
   { label: 'Mono', value: 'monochrome' },
   { label: 'Hierarchy', value: 'hierarchical' },
   { label: 'Palette', value: 'palette' },
-  { label: 'Multi', value: 'multicolor' },
+  { label: 'Original', value: 'original' },
 ];
 
 const VARIABLE_VALUES: Choice<SFSymbolVariableValue>[] = [
