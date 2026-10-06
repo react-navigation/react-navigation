@@ -520,7 +520,30 @@ export function BottomTabViewNative({
             tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
             tabBarItemIconColor: inactiveTintColor,
             tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
-            tabBarItemTitlePositionAdjustment: tabBarLabelPositionAdjustment,
+          };
+
+          const tabItemLayoutAppearance = {
+            stacked: {
+              normal: {
+                ...tabItemAppearance,
+                tabBarItemTitlePositionAdjustment:
+                  tabBarLabelPositionAdjustment?.stacked,
+              },
+            },
+            inline: {
+              normal: {
+                ...tabItemAppearance,
+                tabBarItemTitlePositionAdjustment:
+                  tabBarLabelPositionAdjustment?.inline,
+              },
+            },
+            compactInline: {
+              normal: {
+                ...tabItemAppearance,
+                tabBarItemTitlePositionAdjustment:
+                  tabBarLabelPositionAdjustment?.compactInline,
+              },
+            },
           };
 
           const normalTabItemAppearance: TabsScreenItemStateAppearanceAndroid =
@@ -631,29 +654,13 @@ export function BottomTabViewNative({
                   tabBarBackgroundColor,
                   tabBarShadowColor,
                   tabBarBlurEffect,
-                  stacked: {
-                    normal: tabItemAppearance,
-                  },
-                  inline: {
-                    normal: tabItemAppearance,
-                  },
-                  compactInline: {
-                    normal: tabItemAppearance,
-                  },
+                  ...tabItemLayoutAppearance,
                 },
                 standardAppearance: {
                   tabBarBackgroundColor,
                   tabBarShadowColor,
                   tabBarBlurEffect,
-                  stacked: {
-                    normal: tabItemAppearance,
-                  },
-                  inline: {
-                    normal: tabItemAppearance,
-                  },
-                  compactInline: {
-                    normal: tabItemAppearance,
-                  },
+                  ...tabItemLayoutAppearance,
                 },
                 overrideScrollViewContentInsetAdjustmentBehavior,
               }}

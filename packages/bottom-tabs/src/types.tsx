@@ -250,6 +250,11 @@ type BottomTabCustomOptions = {
   tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
 };
 
+type TabBarLabelOffset = {
+  horizontal?: number | undefined;
+  vertical?: number | undefined;
+};
+
 type BottomTabNativeOptions = {
   /**
    * Uses iOS built-in tab bar items with standard iOS styling and localized titles.
@@ -310,16 +315,25 @@ type BottomTabNativeOptions = {
 
   /**
    * Offset applied to the tab label relative to its default position.
-   * Positive `vertical` moves the label down, increasing the gap to the icon.
+   * Positive `vertical` moves the label down, positive `horizontal` moves it right.
+   *
+   * The offset is specified separately for each tab bar item layout:
+   *
+   * - `stacked` - icon above the label, e.g. on iPhone in portrait
+   * - `inline` - icon beside the label in regular width, e.g. on iPad
+   * - `compactInline` - icon beside the label in compact width, e.g. on iPhone in landscape
    *
    * Only supported with `native` implementation.
    *
    * @platform ios
    */
-  tabBarLabelPositionAdjustment?: {
-    vertical?: number;
-    horizontal?: number;
-  };
+  tabBarLabelPositionAdjustment?:
+    | {
+        stacked?: TabBarLabelOffset | undefined;
+        inline?: TabBarLabelOffset | undefined;
+        compactInline?: TabBarLabelOffset | undefined;
+      }
+    | undefined;
 
   /**
    * Background color of the active indicator.
