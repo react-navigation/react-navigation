@@ -1483,6 +1483,132 @@ test('navigates to nested child in a navigator', async () => {
 `);
 });
 
+test('navigates to nested child when reusing the same params object', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return render(descriptors[route.key]?.render());
+  };
+
+  const TestComponent = ({ route }: any): any => (
+    <Text>{`[${route.name}, ${JSON.stringify(route.params) ?? ''}]`}</Text>
+  );
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const element = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="home" component={TestComponent} />
+        <Screen name="parent">
+          {() => (
+            <TestNavigator>
+              <Screen name="list" component={TestComponent} />
+              <Screen name="details" component={TestComponent} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`
+<Text>
+  [home, ]
+</Text>
+`);
+
+  const params = { screen: 'details', params: { id: 123 } };
+
+  await act(() => navigation.navigate('parent', params));
+
+  expect(element).toMatchInlineSnapshot(`
+<Text>
+  [details, {"id":123}]
+</Text>
+`);
+
+  await act(() => navigation.goBack());
+
+  expect(element).toMatchInlineSnapshot(`
+<Text>
+  [home, ]
+</Text>
+`);
+
+  // Navigate again with the same params object
+  await act(() => navigation.navigate('parent', params));
+
+  expect(element).toMatchInlineSnapshot(`
+<Text>
+  [details, {"id":123}]
+</Text>
+`);
+});
+
+test('does not reapply nested params when navigator remounts under the same route', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return render(descriptors[route.key]?.render());
+  };
+
+  const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar">
+          {() => (
+            <TestNavigator>
+              <Screen name="baz" component={TestScreen} />
+              <Screen name="qux" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const params = { screen: 'qux' };
+
+  await act(() => navigation.navigate('bar', params));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('qux');
+
+  // Only the focused screen is rendered, so the nested navigator unmounts here
+  await act(() => navigation.navigate('foo'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('foo');
+
+  // The route for 'bar' still exists with the same params, so remounting the
+  // nested navigator must not navigate to 'qux' again
+  await act(() => navigation.navigate('bar'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('baz');
+});
+
 test('passes path to nested child navigation from route params', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, render } = useNavigationBuilder(

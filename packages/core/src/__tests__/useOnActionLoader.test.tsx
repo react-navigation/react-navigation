@@ -671,101 +671,108 @@ test.each([
       },
     },
   },
-])('uses each nested $type params object only once', async ({ params }) => {
-  const parentFn = jest.fn(async () => {});
-  const albumsFn = jest.fn(async () => {});
-  const contactsFn = jest.fn(async () => {});
+])(
+  'uses each nested $type params object only once for the same route',
+  async ({ params }) => {
+    const parentFn = jest.fn(async () => {});
+    const albumsFn = jest.fn(async () => {});
+    const contactsFn = jest.fn(async () => {});
 
-  const Child = createTestNavigator({
-    screens: {
-      Albums: {
-        screen: TestScreen,
-        UNSTABLE_loader: albumsFn,
+    const Child = createTestNavigator({
+      screens: {
+        Albums: {
+          screen: TestScreen,
+          UNSTABLE_loader: albumsFn,
+        },
+        Contacts: {
+          screen: TestScreen,
+          UNSTABLE_loader: contactsFn,
+        },
       },
-      Contacts: {
-        screen: TestScreen,
-        UNSTABLE_loader: contactsFn,
+    });
+
+    const Root = createTestNavigator({
+      initialRouteName: 'Nested',
+      screens: {
+        Home: TestScreen,
+        Nested: {
+          screen: Child,
+          UNSTABLE_loader: parentFn,
+        },
       },
-    },
-  });
+    });
 
-  const Root = createTestNavigator({
-    initialRouteName: 'Nested',
-    screens: {
-      Home: TestScreen,
-      Nested: {
-        screen: Child,
-        UNSTABLE_loader: parentFn,
-      },
-    },
-  });
+    const Component = Root.getComponent();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
-  const Component = Root.getComponent();
-  const navigation = createNavigationContainerRef<ParamListBase>();
+    await render(
+      <BaseNavigationContainer ref={navigation}>
+        <Component />
+      </BaseNavigationContainer>
+    );
 
-  await render(
-    <BaseNavigationContainer ref={navigation}>
-      <Component />
-    </BaseNavigationContainer>
-  );
+    await act(() => {
+      navigation.dispatch(CommonActions.navigate('Nested', params));
+    });
 
-  await act(() => {
-    navigation.dispatch(CommonActions.navigate('Nested', params));
-  });
+    const nestedRoute = navigation
+      .getRootState()
+      ?.routes.find((route) => route.name === 'Nested');
 
-  const consumedParams = navigation
-    .getRootState()
-    ?.routes.find((route) => route.name === 'Nested')?.params;
+    const consumedParams = nestedRoute?.params;
 
-  if (consumedParams == null) {
-    throw new Error('Expected nested params');
-  }
+    if (nestedRoute == null || consumedParams == null) {
+      throw new Error('Expected nested params');
+    }
 
-  parentFn.mockClear();
-  albumsFn.mockClear();
-  contactsFn.mockClear();
+    parentFn.mockClear();
+    albumsFn.mockClear();
+    contactsFn.mockClear();
 
-  await act(() => {
-    navigation.dispatch(CommonActions.navigate('Home'));
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [
-          {
-            name: 'Nested',
-            params: consumedParams,
-            state: {
-              index: 0,
-              routes: [{ name: 'Albums' }],
+    await act(() => {
+      navigation.dispatch(CommonActions.navigate('Home'));
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              // Same route key, so the params consumed by this route are not re-applied
+              key: nestedRoute.key,
+              name: 'Nested',
+              params: consumedParams,
+              state: {
+                index: 0,
+                routes: [{ name: 'Albums' }],
+              },
             },
-          },
-        ],
-      })
-    );
-  });
+          ],
+        })
+      );
+    });
 
-  expect(navigation.getCurrentRoute()?.name).toBe('Albums');
-  expect(parentFn).toHaveBeenCalledTimes(1);
-  expect(albumsFn).toHaveBeenCalledTimes(1);
-  expect(contactsFn).not.toHaveBeenCalled();
+    expect(navigation.getCurrentRoute()?.name).toBe('Albums');
+    expect(parentFn).toHaveBeenCalledTimes(1);
+    expect(albumsFn).toHaveBeenCalledTimes(1);
+    expect(contactsFn).not.toHaveBeenCalled();
 
-  parentFn.mockClear();
-  albumsFn.mockClear();
-  contactsFn.mockClear();
+    parentFn.mockClear();
+    albumsFn.mockClear();
+    contactsFn.mockClear();
 
-  await act(() => {
-    navigation.dispatch(
-      CommonActions.navigate('Nested', { ...consumedParams })
-    );
-  });
+    await act(() => {
+      navigation.dispatch(
+        CommonActions.navigate('Nested', { ...consumedParams })
+      );
+    });
 
-  expect(navigation.getCurrentRoute()?.name).toBe('Contacts');
-  expect(parentFn).not.toHaveBeenCalled();
-  expect(albumsFn).not.toHaveBeenCalled();
-  expect(contactsFn).toHaveBeenCalledTimes(1);
-});
+    expect(navigation.getCurrentRoute()?.name).toBe('Contacts');
+    expect(parentFn).not.toHaveBeenCalled();
+    expect(albumsFn).not.toHaveBeenCalled();
+    expect(contactsFn).toHaveBeenCalledTimes(1);
+  }
+);
 
-test('uses a consumed params object only once within a container', async () => {
+test('applies a consumed params object again when used for a different route', async () => {
   const firstContactsFn = jest.fn(async () => {});
   const secondParentFn = jest.fn(async () => {});
   const secondAlbumsFn = jest.fn(async () => {});
@@ -830,15 +837,17 @@ test('uses a consumed params object only once within a container', async () => {
 
   firstContactsFn.mockClear();
 
+  // Reusing the same params object for a different route should navigate to
+  // the nested screen again, and the loaders should agree with the navigator
   await act(() => {
     navigation.dispatch(CommonActions.navigate('Second', consumedParams));
   });
 
-  expect(navigation.getCurrentRoute()?.name).toBe('Albums');
+  expect(navigation.getCurrentRoute()?.name).toBe('Contacts');
   expect(firstContactsFn).not.toHaveBeenCalled();
   expect(secondParentFn).toHaveBeenCalledTimes(1);
-  expect(secondAlbumsFn).toHaveBeenCalledTimes(1);
-  expect(secondContactsFn).not.toHaveBeenCalled();
+  expect(secondAlbumsFn).not.toHaveBeenCalled();
+  expect(secondContactsFn).toHaveBeenCalledTimes(1);
 });
 
 test('fires loader when reset adds nested state under the same route key', async () => {
