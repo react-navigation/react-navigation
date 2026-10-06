@@ -439,7 +439,7 @@ export type BottomTabNavigationOptions = {
    * `native` implementation the largest value across tabs sets the bar's icon
    * box and smaller icons are inset to their own size (Android only).
    */
-  tabBarIconSize?: number;
+  tabBarIconSize?: number | undefined;
 
   /**
    * Width (in dp) of the active indicator. Bar-wide, taken from the focused
@@ -451,7 +451,7 @@ export type BottomTabNavigationOptions = {
    *
    * @platform android
    */
-  tabBarActiveIndicatorWidth?: number;
+  tabBarActiveIndicatorWidth?: number | undefined;
 
   /**
    * Height (in dp) of the active indicator. Bar-wide, taken from the focused
@@ -463,7 +463,7 @@ export type BottomTabNavigationOptions = {
    *
    * @platform android
    */
-  tabBarActiveIndicatorHeight?: number;
+  tabBarActiveIndicatorHeight?: number | undefined;
 
   /**
    * Style object for the tab label.
