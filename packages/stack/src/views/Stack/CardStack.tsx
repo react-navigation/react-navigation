@@ -506,6 +506,12 @@ export class CardStack extends React.Component<Props, State> {
         }
       }
 
+      const focusedRouteKey = props.state.routes[props.state.index]?.key;
+      const isSingleOpeningTransition =
+        props.openingRouteKeys.length === 1 &&
+        props.openingRouteKeys[0] === focusedRouteKey &&
+        props.closingRouteKeys.length === 0;
+
       activeStates = props.routes.map((_, index, self) => {
         // The activity state represents state of the screen:
         // 0 - inactive, the screen is detached
@@ -519,9 +525,21 @@ export class CardStack extends React.Component<Props, State> {
 
         const lastActiveState = state.activeStates[index];
         const activeAfterTransition = index >= self.length - activeScreensLimit;
+        // Recreate the activity interpolation below the active window after a
+        // route removal so the screen can appear during a later close.
+        const shouldReactivateBelowActiveWindow =
+          props.routes.length < state.routes.length &&
+          index === self.length - activeScreensLimit - 1;
 
-        if (lastActiveState === STATE_INACTIVE && !activeAfterTransition) {
-          // screen was inactive before and it will still be inactive after the transition
+        if (
+          (isSingleOpeningTransition &&
+            index < self.length - activeScreensLimit - 1) ||
+          (lastActiveState === STATE_INACTIVE &&
+            !activeAfterTransition &&
+            !shouldReactivateBelowActiveWindow)
+        ) {
+          // screen is deeply covered during an opening transition, or was
+          // inactive and will remain inactive
           activityState = STATE_INACTIVE;
         } else {
           const sceneForActivity = scenes[self.length - 1];
