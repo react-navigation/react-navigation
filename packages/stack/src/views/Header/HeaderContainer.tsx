@@ -125,7 +125,7 @@ export function HeaderContainer({
             // We still need to animate when coming back from next scene
             // A hacky way to check this is if the next scene exists
             !nextDescriptor) ||
-          // If next header is tranparent, we want to treat this header as static
+          // If next header is transparent, we want to treat this header as static
           // Otherwise it may show through the next header
           nextHeaderTransparent ||
           nextHeaderlessScene;
