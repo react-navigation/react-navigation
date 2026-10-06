@@ -836,7 +836,9 @@ export type NativeStackNavigationOptions = {
   inactiveBehavior?: 'pause' | 'unmount' | 'none' | undefined;
 };
 
-type IconIOS = Extract<Icon, { type: 'image' | 'sfSymbol' }>;
+type IconIOS =
+  | Extract<Icon, { type: 'image' }>
+  | Omit<Extract<Icon, { type: 'sfSymbol' }>, 'renderingMode'>;
 
 type SharedHeaderItem = {
   /**

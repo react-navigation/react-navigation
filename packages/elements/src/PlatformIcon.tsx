@@ -31,6 +31,7 @@ export function PlatformIcon({
       return (
         <SFSymbol
           name={icon.name}
+          renderingMode={icon.renderingMode}
           color={color}
           size={size}
           style={StyleSheet.flatten(style)}

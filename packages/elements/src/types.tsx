@@ -54,6 +54,14 @@ type IconSfSymbol = {
    * Name of the SF Symbol to use as the icon.
    */
   name: SFSymbol;
+  /**
+   * How to color the symbol.
+   * - `monochrome`: Single color, using the tint color.
+   * - `original`: Keeps the symbol's own colors (Apple's multicolor rendering).
+   *
+   * Defaults to a single color for system symbols.
+   */
+  renderingMode?: 'monochrome' | 'original' | undefined;
 };
 
 type IconMaterialSymbol = {
