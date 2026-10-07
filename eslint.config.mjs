@@ -130,4 +130,14 @@ export default defineConfig([
       'import-x/no-default-export': 'off',
     },
   },
+  {
+    files: ['scripts/**'],
+
+    rules: {
+      'import-x/no-extraneous-dependencies': [
+        'error',
+        { packageDir: import.meta.dirname },
+      ],
+    },
+  },
 ]);

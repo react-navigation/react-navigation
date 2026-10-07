@@ -21,7 +21,6 @@ import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { useNavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
-import { NavigationMetaContext } from './NavigationMetaContext';
 import { IsScreenContext, NavigationRouteContext } from './NavigationProvider';
 import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
@@ -459,7 +458,11 @@ export function useNavigationBuilder<
     getIsInitial,
   } = React.use(NavigationStateContext);
 
-  const { onEmitEvent, getIsStateEmitted } = useNavigationBuilderContext();
+  const {
+    onEmitEvent,
+    getIsStateEmitted,
+    canGoBack: canGoBackParent,
+  } = useNavigationBuilderContext();
 
   const mountStateRef = React.useRef<'initial' | 'mounted' | 'unmounted'>(
     'initial'
@@ -1003,6 +1006,31 @@ export function useNavigationBuilder<
     onUnhandledActionParent?.(action);
   });
 
+  const canGoBack = useLatestCallback((source?: string) => {
+    const state = getState();
+
+    return (
+      router.getStateForAction(
+        state,
+        { ...CommonActions.goBack(), source },
+        {
+          routeNames: state.routeNames,
+          routeParamList: {},
+          routeGetIdList: {},
+        }
+      ) !== null ||
+      canGoBackParent?.(
+        // If the `source` belonged to the current navigator,
+        // rewrite the `source` to the parent screen's key when checking
+        // This mirrors the way actions bubble up to the parent
+        source !== undefined && state.routes.some((r) => r.key === source)
+          ? route?.key
+          : source
+      ) ||
+      false
+    );
+  });
+
   const navigation = useNavigationHelpers<
     State,
     ActionHelpers,
@@ -1011,6 +1039,7 @@ export function useNavigationBuilder<
   >({
     onAction,
     onUnhandledAction,
+    canGoBack,
     getState,
     emitter,
     router,
@@ -1040,6 +1069,7 @@ export function useNavigationBuilder<
     screenOptions,
     screenLayout,
     onAction,
+    canGoBack,
     getState,
     setState,
     subscribe,
@@ -1069,24 +1099,22 @@ export function useNavigationBuilder<
         : children;
 
     return (
-      <NavigationMetaContext.Provider value={undefined}>
-        <NavigationHelpersContext.Provider value={navigation}>
-          <NavigationStateListenerProvider
-            isSynced={!shouldUpdate}
-            state={state}
-            getState={getState}
-            subscribe={subscribe}
-          >
-            <FocusedRouteKeyContext.Provider value={focusedRoute.key}>
-              <PreventRemoveProvider>
-                <IsScreenContext.Provider value={false}>
-                  {element}
-                </IsScreenContext.Provider>
-              </PreventRemoveProvider>
-            </FocusedRouteKeyContext.Provider>
-          </NavigationStateListenerProvider>
-        </NavigationHelpersContext.Provider>
-      </NavigationMetaContext.Provider>
+      <NavigationHelpersContext.Provider value={navigation}>
+        <NavigationStateListenerProvider
+          isSynced={!shouldUpdate}
+          state={state}
+          getState={getState}
+          subscribe={subscribe}
+        >
+          <FocusedRouteKeyContext.Provider value={focusedRoute.key}>
+            <PreventRemoveProvider>
+              <IsScreenContext.Provider value={false}>
+                {element}
+              </IsScreenContext.Provider>
+            </PreventRemoveProvider>
+          </FocusedRouteKeyContext.Provider>
+        </NavigationStateListenerProvider>
+      </NavigationHelpersContext.Provider>
     );
   };
 

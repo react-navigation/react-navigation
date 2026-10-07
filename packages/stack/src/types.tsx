@@ -52,6 +52,7 @@ export type StackNavigationEventMap = {
 
 export type StackNavigationHelpers = NavigationHelpers<
   ParamListBase,
+  StackNavigationState<ParamListBase>,
   StackNavigationEventMap
 > &
   StackActionHelpers<ParamListBase>;
@@ -155,8 +156,6 @@ export type SceneProgress = {
 
 export type StackHeaderMode = 'float' | 'screen';
 
-export type StackPresentationMode = 'card' | 'modal';
-
 export type StackHeaderOptions = Omit<
   HeaderOptions,
   'headerLeft' | 'headerTitle' | 'headerRight'
@@ -168,27 +167,30 @@ export type StackHeaderOptions = Omit<
    * It receives `allowFontScaling`, `tintColor`, `style` and `children` in the options object as an argument.
    * The title string is passed in `children`.
    */
-  headerTitle?: string | ((props: HeaderTitleProps) => React.ReactNode);
+  headerTitle?:
+    | string
+    | ((props: HeaderTitleProps) => React.ReactNode)
+    | undefined;
   /**
    * Function which returns a React Element to display on the left side of the header.
    */
-  headerLeft?: (props: StackHeaderLeftProps) => React.ReactNode;
+  headerLeft?: ((props: StackHeaderLeftProps) => React.ReactNode) | undefined;
   /**
    * Function which returns a React Element to display on the right side of the header.
    */
-  headerRight?: (props: StackHeaderRightProps) => React.ReactNode;
+  headerRight?: ((props: StackHeaderRightProps) => React.ReactNode) | undefined;
   /**
    * Whether back button title font should scale to respect Text Size accessibility settings. Defaults to `false`.
    */
-  headerBackAllowFontScaling?: boolean;
+  headerBackAllowFontScaling?: boolean | undefined;
   /**
    * Accessibility label for the header back button.
    */
-  headerBackAccessibilityLabel?: string;
+  headerBackAccessibilityLabel?: string | undefined;
   /**
    * ID to locate this back button in tests.
    */
-  headerBackTestID?: string;
+  headerBackTestID?: string | undefined;
   /**
    * Title string used by the back button on iOS.
    * Defaults to the previous screen's title, or "Back" if there's not enough space.
@@ -212,7 +214,7 @@ export type StackHeaderOptions = Omit<
    *
    * Defaults to "default" on iOS, and "minimal" on other platforms.
    */
-  headerBackButtonDisplayMode?: HeaderBackButtonDisplayMode;
+  headerBackButtonDisplayMode?: HeaderBackButtonDisplayMode | undefined;
   /**
    * Style object for the back title.
    */
@@ -240,7 +242,8 @@ export type StackHeaderOptions = Omit<
    */
   headerBackIcon?:
     | Icon
-    | ((props: { tintColor: ColorValue | undefined }) => React.ReactNode);
+    | ((props: { tintColor: ColorValue | undefined }) => React.ReactNode)
+    | undefined;
 };
 
 export type StackHeaderProps = {
@@ -324,22 +327,22 @@ export type StackNavigationOptions = StackHeaderOptions &
     /**
      * String that can be displayed in the header as a fallback for `headerTitle`.
      */
-    title?: string;
+    title?: string | undefined;
     /**
      * Function that given `HeaderProps` returns a React Element to display as a header.
      */
-    header?: (props: StackHeaderProps) => React.ReactNode;
+    header?: ((props: StackHeaderProps) => React.ReactNode) | undefined;
     /**
      * Whether the header floats above the screen or part of the screen.
      * Defaults to `float` on iOS for animations where the header transitions
      * separately, and `screen` otherwise.
      */
-    headerMode?: StackHeaderMode;
+    headerMode?: StackHeaderMode | undefined;
     /**
      * Whether to show the header. The header is shown by default.
      * Setting this to `false` hides the header.
      */
-    headerShown?: boolean;
+    headerShown?: boolean | undefined;
     /**
      * Whether a shadow is visible for the card during transitions.
      * Defaults to whether `cardStyleInterpolator` returns a `shadowStyle`.
@@ -355,9 +358,11 @@ export type StackNavigationOptions = StackHeaderOptions &
     /**
      * Function that returns a React Element to display as a overlay for the card.
      */
-    cardOverlay?: (props: {
-      style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-    }) => React.ReactNode;
+    cardOverlay?:
+      | ((props: {
+          style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+        }) => React.ReactNode)
+      | undefined;
     /**
      * Style object for the card in stack.
      * You can provide a custom background color to use instead of the default background here.
@@ -379,7 +384,7 @@ export type StackNavigationOptions = StackHeaderOptions &
      *
      * Defaults to 'card'.
      */
-    presentation?: 'card' | 'modal' | 'transparentModal';
+    presentation?: 'card' | 'modal' | 'transparentModal' | undefined;
     /**
      * How the screen should animate when pushed or popped.
      *
@@ -398,34 +403,34 @@ export type StackNavigationOptions = StackHeaderOptions &
      * - 'reveal_from_bottom': reveal screen in from bottom to top
      * - 'scale_from_center': scale screen in from center
      */
-    animation?: StackAnimationName;
+    animation?: StackAnimationName | undefined;
     /**
      * The type of animation to use when this screen replaces another screen. Defaults to `push`.
      * When `pop` is used, the `pop` animation is applied to the screen being replaced.
      */
-    animationTypeForReplace?: 'push' | 'pop';
+    animationTypeForReplace?: 'push' | 'pop' | undefined;
     /**
      * Whether you can use gestures to dismiss this screen. Defaults to `true`
      * on iOS for navigation-style transitions with an interactive dismissal,
      * and `false` otherwise.
      * Not supported on Web.
      */
-    gestureEnabled?: boolean;
+    gestureEnabled?: boolean | undefined;
     /**
      * Distance of touch start from the edge of the screen to recognize gestures.
      * Not supported on Web.
      */
-    gestureResponseDistance?: number;
+    gestureResponseDistance?: number | undefined;
     /**
      * Number which determines the relevance of velocity for the gesture. Defaults to 0.3.
      * Not supported on Web.
      */
-    gestureVelocityImpact?: number;
+    gestureVelocityImpact?: number | undefined;
     /**
      * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen from this screen.
      * Defaults to `true`.
      */
-    keyboardHandlingEnabled?: boolean;
+    keyboardHandlingEnabled?: boolean | undefined;
 
     /**
      * What should happen when screens become inactive.
@@ -587,19 +592,19 @@ export type StackHeaderInterpolatedStyle = {
   /**
    * Interpolated style for the left button (usually the back button).
    */
-  leftButtonStyle?: Animated.WithAnimatedValue<ViewStyle>;
+  leftButtonStyle?: Animated.WithAnimatedValue<ViewStyle> | undefined;
   /**
    * Interpolated style for the right button.
    */
-  rightButtonStyle?: Animated.WithAnimatedValue<ViewStyle>;
+  rightButtonStyle?: Animated.WithAnimatedValue<ViewStyle> | undefined;
   /**
    * Interpolated style for the header title text.
    */
-  titleStyle?: Animated.WithAnimatedValue<TextStyle>;
+  titleStyle?: Animated.WithAnimatedValue<TextStyle> | undefined;
   /**
    * Interpolated style for the header background.
    */
-  backgroundStyle?: Animated.WithAnimatedValue<ViewStyle>;
+  backgroundStyle?: Animated.WithAnimatedValue<ViewStyle> | undefined;
 };
 
 export type StackHeaderStyleInterpolator = (

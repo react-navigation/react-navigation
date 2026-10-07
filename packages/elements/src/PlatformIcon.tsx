@@ -43,6 +43,7 @@ export function PlatformIcon({
           name={icon.name}
           variant={icon.variant}
           weight={icon.weight}
+          fill={icon.fill}
           size={size}
           color={color}
           style={StyleSheet.flatten(style)}

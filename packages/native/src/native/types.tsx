@@ -15,12 +15,13 @@ export type MaterialSymbolOptions = {
    *
    * ```json
    * "react-navigation": {
-   *   "material-symbol": {
+   *   "material-symbols": {
    *     "fonts": [
    *       {
    *         "variant": "rounded",
-   *         "weight": 300,
-   *       },
+   *         "weights": [300],
+   *         "fills": [0, 1]
+   *       }
    *     ]
    *   }
    * }
@@ -38,12 +39,13 @@ export type MaterialSymbolOptions = {
    *
    * ```json
    * "react-navigation": {
-   *   "material-symbol": {
+   *   "material-symbols": {
    *     "fonts": [
    *       {
    *         "variant": "rounded",
-   *         "weight": 300,
-   *       },
+   *         "weights": [300],
+   *         "fills": [0, 1]
+   *       }
    *     ]
    *   }
    * }
@@ -71,6 +73,34 @@ export type MaterialSymbolOptions = {
     | 600
     | 700
     | undefined;
+  /**
+   * Whether to use the filled version of the symbol.
+   *
+   * Can be customized using `react-navigation` key in `package.json`:
+   *
+   * ```json
+   * "react-navigation": {
+   *   "material-symbols": {
+   *     "fonts": [
+   *       {
+   *         "variant": "rounded",
+   *         "weights": [300],
+   *         "fills": [0, 1]
+   *       }
+   *     ]
+   *   }
+   * }
+   * ```
+   *
+   * Here:
+   * - `0`: Unfilled version
+   * - `1`: Filled version
+   *
+   * Automatically set if a single fill is available.
+   *
+   * @default false
+   */
+  fill?: boolean | undefined;
   /**
    * The size of the symbol.
    *

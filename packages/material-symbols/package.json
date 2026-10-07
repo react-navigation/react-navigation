@@ -1,0 +1,32 @@
+{
+  "name": "@react-navigation/material-symbols",
+  "description": "Material Symbols fonts for React Navigation",
+  "version": "8.0.0-alpha.0",
+  "keywords": [
+    "react-native",
+    "react-navigation",
+    "android",
+    "material-symbols"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-navigation/react-navigation.git",
+    "directory": "packages/material-symbols"
+  },
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation/issues"
+  },
+  "homepage": "https://reactnavigation.org",
+  "exports": {
+    "./assets/fonts/*": "./assets/fonts/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "assets"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
+}

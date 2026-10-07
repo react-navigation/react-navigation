@@ -460,7 +460,7 @@ test('preloading a screen runs effects', async () => {
   expect(effectActive).toBe(true);
 });
 
-test('renders back button in the nested stack', async () => {
+test('goes back to the parent screen with the nested stack header button', async () => {
   const StackA = createStackNavigator<NestedStackParamList>();
 
   const StackAScreen = ({ route }: StackScreenProps<StackParamList>) => (
@@ -481,6 +481,7 @@ test('renders back button in the nested stack', async () => {
   );
 
   const StackB = createStackNavigator<StackParamList>();
+
   const user = userEvent.setup();
 
   await render(
@@ -497,4 +498,14 @@ test('renders back button in the nested stack', async () => {
   await user.press(screen.getByRole('button', { name: 'Go to B' }));
 
   expect(screen.getByRole('button', { name: 'A, back' })).not.toBeNull();
+
+  await act(() => jest.runAllTimers());
+
+  await user.press(screen.getByRole('button', { name: 'A, back' }));
+
+  await act(() => jest.runAllTimers());
+
+  expect(screen.getByRole('button', { name: 'Go to B' })).not.toBeNull();
+  expect(screen.queryByRole('button', { name: 'Go to A' })).toBeNull();
+  expect(screen.queryByRole('button', { name: 'A, back' })).toBeNull();
 });

@@ -401,6 +401,7 @@ export function useHeaderConfigProps({
         name: headerBackIcon.name,
         variant: headerBackIcon.variant,
         weight: headerBackIcon.weight,
+        fill: headerBackIcon.fill,
         color: tintColor,
         size: ICON_SIZE,
       });
@@ -446,7 +447,7 @@ export function useHeaderConfigProps({
         <>
           {headerLeftElement != null || typeof headerTitle === 'function' ? (
             // The style passed to header left, together with title element being wrapped
-            // in flex view is reqruied for proper header layout, in particular,
+            // in flex view is required for proper header layout, in particular,
             // for the text truncation to work.
             <ScreenStackHeaderLeftView
               style={!isCenterViewRenderedAndroid ? { flex: 1 } : null}

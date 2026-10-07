@@ -81,7 +81,7 @@ export type DefaultNavigatorOptions<
   layout?:
     | ((props: {
         state: State;
-        navigation: NavigationHelpers<ParamList>;
+        navigation: NavigationHelpers<ParamList, State>;
         descriptors: Record<
           string,
           Descriptor<
@@ -259,7 +259,7 @@ export type EventEmitter<in out EventMap extends EventMapBase> = {
   emit<EventName extends KeyOf<EventMap>>(
     options: {
       type: EventName;
-      target?: string;
+      target?: string | undefined;
     } & (EventMap[EventName]['canPreventDefault'] extends true
       ? { canPreventDefault: true }
       : {}) &
@@ -470,8 +470,9 @@ type NavigationHelpersRoute<
 
 export type NavigationHelpers<
   ParamList extends ParamListBase,
+  State extends NavigationState = NavigationState<ParamList>,
   EventMap extends EventMapBase = {},
-> = NavigationHelpersCommon<ParamList> &
+> = NavigationHelpersCommon<ParamList, State> &
   EventEmitter<EventMap> &
   NavigationHelpersRoute<ParamList, keyof ParamList> &
   PrivateValueStore<[ParamList, unknown, unknown, unknown]>;

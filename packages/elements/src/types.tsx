@@ -54,7 +54,7 @@ type IconMaterialSymbol = {
    * - `materialSymbol` - Use a Material Symbol as the icon on Android.
    */
   type: 'materialSymbol';
-} & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight'>;
+} & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight' | 'fill'>;
 
 export type Icon = IconSfSymbol | IconMaterialSymbol | IconImage;
 
@@ -151,7 +151,7 @@ export type HeaderOptions = {
     | ((props: HeaderTitleProps) => React.ReactNode)
     | undefined;
   /**
-   * How to align the the header title.
+   * How to align the header title.
    * Defaults to `center` on iOS and `left` on Android.
    */
   headerTitleAlign?: 'left' | 'center' | undefined;

@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.58](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.57...@react-navigation/native-stack@8.0.0-alpha.58) (2026-10-02)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [8.0.0-alpha.57](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.56...@react-navigation/native-stack@8.0.0-alpha.57) (2026-09-29)
+
+### Bug Fixes
+
+* support `| undefined` to better work with `exactOptionalPropertyTypes` ([a9f81b8](https://github.com/react-navigation/react-navigation/commit/a9f81b8cf26260f1caeb7a89bfb214eb9483eb69)) - by @satya164
+
+### Features
+
+* add a `tabBarRepeatedPressBehavior` option to tabs ([746e27b](https://github.com/react-navigation/react-navigation/commit/746e27bf0e2b290f8b974198218e6f58209c812c)) - by @satya164
+
+### BREAKING CHANGES
+
+* this also removes `NavigationMetaContext` as it's now
+unused.
+
+# [8.0.0-alpha.56](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.55...@react-navigation/native-stack@8.0.0-alpha.56) (2026-09-22)
+
+### Bug Fixes
+
+* preserve navigator state types in navigation helpers ([34a1051](https://github.com/react-navigation/react-navigation/commit/34a105103e0f2c9f0dc1f1134dfe3202489c21a5)) - by @
+* use the remove action when dismissing stack screens ([fa94afe](https://github.com/react-navigation/react-navigation/commit/fa94afe7964d98d3e69668ecf5370c281125617c)) - by @
+
 # [8.0.0-alpha.55](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.54...@react-navigation/native-stack@8.0.0-alpha.55) (2026-09-19)
 
 ### Bug Fixes

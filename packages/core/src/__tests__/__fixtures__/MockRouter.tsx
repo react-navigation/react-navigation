@@ -192,13 +192,18 @@ export function MockRouter(options: DefaultRouterOptions) {
         }
 
         case 'GO_BACK': {
-          if (state.index === 0) {
+          const index =
+            action.source !== undefined
+              ? state.routes.findIndex((route) => route.key === action.source)
+              : state.index;
+
+          if (index <= 0) {
             return null;
           }
 
           return {
             ...state,
-            index: state.index - 1,
+            index: index - 1,
           };
         }
 

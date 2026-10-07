@@ -3341,3 +3341,652 @@ test("keeps state from a 'beforeRemove' listener when the original action no lon
   expect(state?.routes.map((route) => route.name)).toEqual(['foo']);
   expect(state?.index).toBe(0);
 });
+
+test('navigates relative to the containing parent screen through multiple nested navigators', async () => {
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 1,
+        routes: [{ name: 'Parent' }, { name: 'Later' }],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator>
+              <Screen name="Nested">
+                {() => (
+                  <TestNavigator>
+                    <Screen name="Child" component={TestScreen} />
+                  </TestNavigator>
+                )}
+              </Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="Later" component={TestScreen} />
+        <Screen name="Destination" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => screens.Child?.navigation.navigate('Destination'));
+
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'Parent',
+    'Destination',
+  ]);
+});
+
+test('goes back from the containing parent of an unfocused child when another parent screen is focused', async () => {
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 1,
+        routes: [
+          { name: 'Home' },
+          {
+            name: 'Parent',
+            state: {
+              index: 1,
+              routes: [{ name: 'Child' }, { name: 'Next' }],
+            },
+          },
+        ],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="Home" component={TestScreen} />
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator>
+              <Screen name="Child" component={TestScreen} />
+              <Screen name="Next" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="Later" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Next');
+
+  await act(() => screens.Child?.navigation.navigate('Later'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Later');
+
+  await act(() => screens.Child?.navigation.goBack());
+
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'Home',
+  ]);
+});
+
+test('navigates from the specified parent screen when called from a child', async () => {
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 1,
+        routes: [{ name: 'Parent' }, { name: 'Later' }],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator>
+              <Screen name="Child" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="Later" component={TestScreen} />
+        <Screen name="Destination" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() =>
+    screens.Child?.navigation.dispatch({
+      ...CommonActions.navigate('Destination'),
+      source: screens.Later?.route.key,
+    })
+  );
+
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'Parent',
+    'Later',
+    'Destination',
+  ]);
+});
+
+test('preserves an unknown source when bubbling to a parent', async () => {
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const onUnhandledAction = jest.fn();
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      onUnhandledAction={onUnhandledAction}
+      initialState={{
+        index: 1,
+        routes: [{ name: 'Home' }, { name: 'Parent' }],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="Home" component={TestScreen} />
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator>
+              <Screen name="Child" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const state = navigation.getRootState();
+
+  const action = { ...CommonActions.goBack(), source: 'missing' };
+
+  await act(() => screens.Child?.navigation.dispatch(action));
+
+  expect(navigation.getRootState()).toEqual(state);
+
+  expect(onUnhandledAction).toHaveBeenCalledTimes(1);
+  expect(onUnhandledAction).toHaveBeenCalledWith(action);
+});
+
+test('reports the original screen source when action is unhandled', async () => {
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const onUnhandledAction = jest.fn();
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      onUnhandledAction={onUnhandledAction}
+      initialState={{
+        index: 0,
+        routes: [{ name: 'Parent' }],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="Home" component={TestScreen} />
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator>
+              <Screen name="Child" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const state = navigation.getRootState();
+
+  const source = screens.Child?.route.key;
+
+  await act(() => screens.Child?.navigation.goBack());
+
+  expect(navigation.getRootState()).toEqual(state);
+
+  expect(onUnhandledAction).toHaveBeenCalledTimes(1);
+  expect(onUnhandledAction).toHaveBeenCalledWith({
+    ...CommonActions.goBack(),
+    source,
+  });
+});
+
+test('navigates from the focused parent screen when source is explicitly undefined', async () => {
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 1,
+        routes: [{ name: 'Parent' }, { name: 'Later' }],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator>
+              <Screen name="Child" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="Later" component={TestScreen} />
+        <Screen name="Destination" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() =>
+    screens.Child?.navigation.dispatch(() => ({
+      ...CommonActions.navigate('Destination'),
+      source: undefined,
+    }))
+  );
+
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'Parent',
+    'Later',
+    'Destination',
+  ]);
+});
+
+test('navigates from the containing screen when targeting a parent navigator', async () => {
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 1,
+        routes: [{ name: 'Parent' }, { name: 'Later' }],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator>
+              <Screen name="Child" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="Later" component={TestScreen} />
+        <Screen name="Destination" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() =>
+    screens.Child?.navigation.dispatch({
+      ...CommonActions.navigate('Destination'),
+      target: navigation.getRootState()?.key,
+    })
+  );
+
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'Parent',
+    'Destination',
+  ]);
+});
+
+test('navigates in a targeted sibling navigator from its focused screen', async () => {
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 1,
+        routes: [
+          {
+            name: 'Left',
+            state: {
+              index: 1,
+              routes: [{ name: 'First' }, { name: 'Second' }],
+            },
+          },
+          { name: 'Right' },
+        ],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="Left">
+          {() => (
+            <TestNavigator>
+              <Screen name="First" component={TestScreen} />
+              <Screen name="Second" component={TestScreen} />
+              <Screen name="Destination" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="Right">
+          {() => (
+            <TestNavigator>
+              <Screen name="Child" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() =>
+    screens.Child?.navigation.dispatch({
+      ...CommonActions.navigate('Destination'),
+      target: screens.First?.navigation.getState().key,
+    })
+  );
+
+  expect(
+    screens.First?.navigation.getState().routes.map((route: any) => route.name)
+  ).toEqual(['First', 'Second', 'Destination']);
+});
+
+test('navigates from the specified child screen when targeting its navigator', async () => {
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 1,
+        routes: [
+          {
+            name: 'Parent',
+            state: {
+              index: 1,
+              routes: [{ name: 'First' }, { name: 'Second' }],
+            },
+          },
+          { name: 'Other' },
+        ],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator>
+              <Screen name="First" component={TestScreen} />
+              <Screen name="Second" component={TestScreen} />
+              <Screen name="Destination" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="Other" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() =>
+    screens.Other?.navigation.dispatch({
+      ...CommonActions.navigate('Destination'),
+      target: screens.First?.navigation.getState().key,
+      source: screens.First?.route.key,
+    })
+  );
+
+  expect(
+    screens.First?.navigation.getState().routes.map((route: any) => route.name)
+  ).toEqual(['First', 'Destination']);
+});
+
+test('bubbles actions to the parent even when the source is unknown', async () => {
+  function ParentRouter(options: DefaultRouterOptions) {
+    const router = MockRouter(options);
+    const parentRouter: Router<
+      NavigationState,
+      MockActions | { type: 'REVERSE' }
+    > = {
+      ...router,
+      getStateForAction(state, action, options) {
+        if (action.type === 'REVERSE') {
+          return {
+            ...state,
+            routes: state.routes.slice().reverse(),
+          };
+        }
+
+        return router.getStateForAction(state, action, options);
+      },
+    };
+
+    return parentRouter;
+  }
+
+  const ParentNavigator = (
+    props: Parameters<typeof useNavigationBuilder>[1]
+  ) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      ParentRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const ChildNavigator = (
+    props: Parameters<typeof useNavigationBuilder>[1]
+  ) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const onUnhandledAction = jest.fn();
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      onUnhandledAction={onUnhandledAction}
+    >
+      <ParentNavigator initialRouteName="Parent">
+        <Screen name="Home" component={TestScreen} />
+        <Screen name="Parent">
+          {() => (
+            <ChildNavigator>
+              <Screen name="Child" component={TestScreen} />
+            </ChildNavigator>
+          )}
+        </Screen>
+      </ParentNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Child');
+
+  await act(() =>
+    screens.Child?.navigation.dispatch({
+      type: 'REVERSE',
+      source: 'missing',
+    })
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+
+  expect(onUnhandledAction).not.toHaveBeenCalled();
+});

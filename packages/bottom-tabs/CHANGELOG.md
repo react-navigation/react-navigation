@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.56](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.55...@react-navigation/bottom-tabs@8.0.0-alpha.56) (2026-10-02)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [8.0.0-alpha.55](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.54...@react-navigation/bottom-tabs@8.0.0-alpha.55) (2026-09-29)
+
+### Bug Fixes
+
+* support `| undefined` to better work with `exactOptionalPropertyTypes` ([a9f81b8](https://github.com/react-navigation/react-navigation/commit/a9f81b8cf26260f1caeb7a89bfb214eb9483eb69)) - by @satya164
+* use isRepeated from the native event to check repeated press ([1f8cd35](https://github.com/react-navigation/react-navigation/commit/1f8cd35e63c9237e114570d04825c69d17235e4a)) - by @satya164
+
+### Features
+
+* add a `tabBarRepeatedPressBehavior` option to tabs ([746e27b](https://github.com/react-navigation/react-navigation/commit/746e27bf0e2b290f8b974198218e6f58209c812c)) - by @satya164
+
+### BREAKING CHANGES
+
+* this also removes `NavigationMetaContext` as it's now
+unused.
+
+# [8.0.0-alpha.54](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.53...@react-navigation/bottom-tabs@8.0.0-alpha.54) (2026-09-22)
+
+### Bug Fixes
+
+* fix animating state get stuck in bottom tabs in some scenarios ([341b962](https://github.com/react-navigation/react-navigation/commit/341b9627425ce045fbabfa4df1db893fca53ac81)) - by @
+* preserve navigator state types in navigation helpers ([34a1051](https://github.com/react-navigation/react-navigation/commit/34a105103e0f2c9f0dc1f1134dfe3202489c21a5)) - by @
+
 # [8.0.0-alpha.53](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.52...@react-navigation/bottom-tabs@8.0.0-alpha.53) (2026-09-19)
 
 ### Bug Fixes

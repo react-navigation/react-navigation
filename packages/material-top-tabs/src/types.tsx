@@ -26,8 +26,22 @@ import type { TabBar, TabBarProps, TabViewProps } from 'react-native-tab-view';
 export type MaterialTopTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
+   *
+   * The `data` object contains the following properties:
+   * - `origin`: set to `native` when event originated from the native tab bar.
+   * - `behavior`: specifies how consumers of the event should handle the tab press:
+   *   - `scrollToTop`: whether the content should scroll to top.
+   *   - `popToTop`: whether the nested stack should pop to top.
    */
-  tabPress: { data: undefined; canPreventDefault: true };
+  tabPress: {
+    data: {
+      behavior: {
+        scrollToTop: boolean;
+        popToTop: boolean;
+      };
+    };
+    canPreventDefault: true;
+  };
   /**
    * Event which fires on long press on the tab in the tab bar.
    */
@@ -44,6 +58,7 @@ export type MaterialTopTabNavigationEventMap = {
 
 export type MaterialTopTabNavigationHelpers = NavigationHelpers<
   ParamListBase,
+  TabNavigationState<ParamListBase>,
   MaterialTopTabNavigationEventMap
 > &
   TabActionHelpers<ParamListBase>;
@@ -121,7 +136,8 @@ export type MaterialTopTabNavigationOptions = {
         focused: boolean;
         color: ColorValue;
         size: number;
-      }) => Icon | React.ReactNode);
+      }) => Icon | React.ReactNode)
+    | undefined;
 
   /**
    * Whether the tab icon should be visible. Defaults to `false`.
@@ -222,7 +238,7 @@ export type MaterialTopTabNavigationOptions = {
   tabBarContentContainerStyle?: StyleProp<ViewStyle> | undefined;
 
   /**
-   * Style object for the the tab bar.
+   * Style object for the tab bar.
    */
   tabBarStyle?: StyleProp<ViewStyle> | undefined;
 
@@ -237,6 +253,21 @@ export type MaterialTopTabNavigationOptions = {
    * Default: `{ borderless: false, foreground: true }`
    */
   tabBarAndroidRipple?: PressableAndroidRippleConfig | undefined;
+
+  /**
+   * Behavior when pressing the tab in the tab bar while it's already focused.
+   *
+   * - `scrollToTop`: scroll the first scroll view in the screen to top
+   * - `popToTop`: pop a nested stack to its first screen
+   *
+   * Both default to `true`.
+   */
+  tabBarRepeatedPressBehavior?:
+    | {
+        scrollToTop?: boolean | undefined;
+        popToTop?: boolean | undefined;
+      }
+    | undefined;
 
   /**
    * Whether to enable swipe gestures when this screen is focused.
@@ -343,6 +374,7 @@ export type MaterialTopTabBarProps = Pick<
   state: TabNavigationState<ParamListBase>;
   navigation: NavigationHelpers<
     ParamListBase,
+    TabNavigationState<ParamListBase>,
     MaterialTopTabNavigationEventMap
   >;
   descriptors: MaterialTopTabDescriptorMap;

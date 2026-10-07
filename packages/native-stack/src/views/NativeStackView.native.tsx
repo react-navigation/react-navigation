@@ -570,19 +570,15 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
                 });
               }}
               onDismissed={(event) => {
-                const currentState = navigation.getState();
-                const currentActiveRoutes = currentState.routes.slice(
-                  0,
-                  currentState.index + 1
-                );
-
-                if (currentActiveRoutes.some((r) => r.key === route.key)) {
-                  navigation.dispatch({
-                    ...StackActions.pop(event.nativeEvent.dismissCount),
-                    source: route.key,
-                    target: currentState.key,
-                  });
+                if (index > state.index) {
+                  return;
                 }
+
+                navigation.dispatch({
+                  ...StackActions.dismiss(event.nativeEvent.dismissCount),
+                  source: route.key,
+                  target: state.key,
+                });
 
                 setNextDismissedKey(route.key);
               }}
@@ -595,7 +591,7 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
               }}
               onNativeDismissCancelled={(event) => {
                 navigation.dispatch({
-                  ...StackActions.pop(event.nativeEvent.dismissCount),
+                  ...StackActions.dismiss(event.nativeEvent.dismissCount),
                   source: route.key,
                   target: state.key,
                 });

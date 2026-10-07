@@ -17,9 +17,10 @@ function getStateForAction(
   switch (action.type) {
     case 'SET_PARAMS':
     case 'REPLACE_PARAMS': {
-      const index = action.source
-        ? state.routes.findIndex((r) => r.key === action.source)
-        : state.index;
+      const index =
+        action.source !== undefined
+          ? state.routes.findIndex((r) => r.key === action.source)
+          : state.index;
 
       if (index === -1) {
         return null;
@@ -42,9 +43,10 @@ function getStateForAction(
     }
 
     case 'PUSH_PARAMS': {
-      const index = action.source
-        ? state.routes.findIndex((r) => r.key === action.source)
-        : state.index;
+      const index =
+        action.source !== undefined
+          ? state.routes.findIndex((r) => r.key === action.source)
+          : state.index;
 
       if (index === -1) {
         return null;

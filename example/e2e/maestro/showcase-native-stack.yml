@@ -13,7 +13,7 @@ name: Showcase - Native Stack
 - tapOn:
     id: 'showcase-native-stack-place-1'
 - assertVisible:
-    text: 'Lake Tahoe'
+    text: '4.8 rating'
 - tapOn:
     text: 'Lake Tahoe'
 # The details sheet content is readable on Android and web, but not reliably on iOS.

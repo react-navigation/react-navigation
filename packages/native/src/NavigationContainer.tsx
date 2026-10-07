@@ -62,14 +62,14 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
   /**
    * Text direction of the components. Defaults to `'ltr'`.
    */
-  direction?: LocaleDirection;
+  direction?: LocaleDirection | undefined;
   /**
    * Options for deep linking.
    *
    * Deep link handling is enabled when this prop is provided,
    * unless `linking.enabled` is `false`.
    */
-  linking?: LinkingOptions<ParamList>;
+  linking?: LinkingOptions<ParamList> | undefined;
   /**
    * Persistor object to persist and restore navigation state.
    *
@@ -97,21 +97,21 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
    * <NavigationContainer persistor={persistor}>...</NavigationContainer>
    * ```
    */
-  persistor?: Persistor;
+  persistor?: Persistor | undefined;
   /**
    * Fallback element to render until initial state is resolved.
    * Used when deep link or persisted state is being restored asynchronously.
    *
    * Defaults to `null`.
    */
-  fallback?: React.ReactElement | null;
+  fallback?: React.ReactElement | null | undefined;
   /**
    * Options to configure the document title on Web.
    *
    * Updating document title is handled by default,
    * unless `documentTitle.enabled` is `false`.
    */
-  documentTitle?: DocumentTitleOptions;
+  documentTitle?: DocumentTitleOptions | undefined;
   /**
    * Ref object which refers to the navigation object containing helper methods.
    */

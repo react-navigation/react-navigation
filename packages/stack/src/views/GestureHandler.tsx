@@ -28,7 +28,4 @@ export function usePanGesture(_config: PanGestureConfig) {
 
 export const GestureHandlerRootView = View;
 
-export type {
-  PanGesture,
-  PanGestureActiveEvent,
-} from 'react-native-gesture-handler';
+export type { PanGesture } from 'react-native-gesture-handler';
