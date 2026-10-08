@@ -108,11 +108,11 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
     return result;
   }, [query]);
 
-  if (Platform.OS !== 'android') {
+  if (Platform.OS !== 'android' && Platform.OS !== 'web') {
     return (
       <View style={[styles.centered, { backgroundColor: colors.background }]}>
         <Text style={{ color: colors.text }}>
-          MaterialSymbol is only available on Android
+          MaterialSymbol is only available on Android and Web
         </Text>
       </View>
     );
@@ -157,12 +157,14 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
                 value={fill}
                 onValueChange={setFill}
               />
-              <ControlGroup
-                label="Source"
-                choices={SOURCES}
-                value={source}
-                onValueChange={setSource}
-              />
+              {Platform.OS === 'android' && (
+                <ControlGroup
+                  label="Source"
+                  choices={SOURCES}
+                  value={source}
+                  onValueChange={setSource}
+                />
+              )}
             </View>
           )}
         </View>

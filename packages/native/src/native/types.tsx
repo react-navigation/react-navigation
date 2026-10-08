@@ -11,7 +11,7 @@ export type MaterialSymbolOptions = {
   /**
    * The variant of the symbol.
    *
-   * Can be customized using `react-navigation` key in `package.json`:
+   * Can be customized for Android using `react-navigation` key in `package.json`:
    *
    * ```json
    * "react-navigation": {
@@ -29,13 +29,15 @@ export type MaterialSymbolOptions = {
    *
    * Automatically set if a single variant is available.
    *
+   * All variants are available on Web.
+   *
    * @default 'outlined'
    */
   variant?: 'outlined' | 'rounded' | 'sharp' | undefined;
   /**
    * The weight of the symbol.
    *
-   * Can be customized using `react-navigation` key in `package.json`:
+   * Can be customized for Android using `react-navigation` key in `package.json`:
    *
    * ```json
    * "react-navigation": {
@@ -54,6 +56,8 @@ export type MaterialSymbolOptions = {
    * Only numeric weights are supported in the configuration.
    *
    * Automatically set if a single weight is available.
+   *
+   * All weights are available on Web.
    *
    * @default 400
    */
@@ -76,7 +80,7 @@ export type MaterialSymbolOptions = {
   /**
    * Whether to use the filled version of the symbol.
    *
-   * Can be customized using `react-navigation` key in `package.json`:
+   * Can be customized for Android using `react-navigation` key in `package.json`:
    *
    * ```json
    * "react-navigation": {
@@ -97,6 +101,8 @@ export type MaterialSymbolOptions = {
    * - `1`: Filled version
    *
    * Automatically set if a single fill is available.
+   *
+   * All fills are available on Web.
    *
    * @default false
    */
