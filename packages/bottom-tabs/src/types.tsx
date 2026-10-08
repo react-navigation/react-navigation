@@ -442,10 +442,9 @@ export type BottomTabNavigationOptions = {
   tabBarIconSize?: number | undefined;
 
   /**
-   * Width (in dp) of the active indicator. Bar-wide, taken from the focused
-   * tab (like `tabBarActiveIndicatorColor`); set it in `screenOptions` for a
-   * consistent value. If unset, it auto-scales to wrap the icon box when icons
-   * are enlarged via `tabBarIconSize`.
+   * Width (in dp) of this tab's active indicator. Can be set globally via
+   * `screenOptions` and/or overridden per screen. If unset, it is this tab's
+   * icon size plus the default Material padding.
    *
    * Only supported with `native` implementation.
    *
@@ -454,10 +453,9 @@ export type BottomTabNavigationOptions = {
   tabBarActiveIndicatorWidth?: number | undefined;
 
   /**
-   * Height (in dp) of the active indicator. Bar-wide, taken from the focused
-   * tab (like `tabBarActiveIndicatorColor`); set it in `screenOptions` for a
-   * consistent value. If unset, it auto-scales to wrap the icon box when icons
-   * are enlarged via `tabBarIconSize`.
+   * Height (in dp) of this tab's active indicator. Can be set globally via
+   * `screenOptions` and/or overridden per screen. If unset, it is this tab's
+   * icon size plus the default Material padding.
    *
    * Only supported with `native` implementation.
    *
