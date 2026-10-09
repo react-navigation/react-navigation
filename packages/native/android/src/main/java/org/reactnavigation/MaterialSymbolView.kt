@@ -85,6 +85,6 @@ class MaterialSymbolView @JvmOverloads constructor(
   }
 
   fun setSize(size: Float) {
-    textSize = size
+    setTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, size)
   }
 }
