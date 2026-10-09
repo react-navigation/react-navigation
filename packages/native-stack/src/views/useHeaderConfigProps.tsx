@@ -50,7 +50,7 @@ const processBarButtonItems = (
   items: NativeStackHeaderItem[] | undefined,
   colors: Theme['colors'],
   fonts: Theme['fonts'],
-  tintColor: ColorValue | undefined
+  headerTintColor: ColorValue | undefined
 ) => {
   return items
     ?.map((item, index) => {
@@ -83,7 +83,7 @@ const processBarButtonItems = (
         const { badge, label, labelStyle, icon, ...rest } = item;
 
         const processedItemCommon = {
-          tintColor,
+          ...(headerTintColor != null ? { tintColor: headerTintColor } : null),
           ...rest,
           index,
           title: label,
@@ -573,13 +573,13 @@ export function useHeaderConfigProps({
       leftItems,
       colors,
       fonts,
-      tintColor
+      headerTintColor
     ),
     headerRightBarButtonItems: processBarButtonItems(
       rightItems,
       colors,
       fonts,
-      tintColor
+      headerTintColor
     ),
     experimental_userInterfaceStyle: dark ? 'dark' : 'light',
   } as const;
