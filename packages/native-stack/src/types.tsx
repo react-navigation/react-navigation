@@ -772,6 +772,11 @@ export type NativeStackNavigationOptions = {
    * - "landscape_left": landscape-left orientation is permitted.
    * - "landscape_right": landscape-right orientation is permitted.
    *
+   * If not set, the screen inherits the orientation of its parent screen on iOS,
+   * falling back to the supported orientations in the app's `Info.plist`.
+   *
+   * On Android, this lets the system decide the best orientation.
+   *
    * Only supported on iOS and Android.
    */
   orientation?: ScreenProps['screenOrientation'] | undefined;
@@ -903,6 +908,16 @@ type SharedHeaderItem = {
    */
   identifier?: string | undefined;
   /**
+   * Priority used when the items don't fit in the header.
+   * Items with lower priority are moved to the overflow menu first.
+   *
+   * Defaults to `default`.
+   * Only available from iOS 27.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitemvisibilitypriority
+   */
+  visibilityPriority?: 'low' | 'default' | 'high' | undefined;
+  /**
    * A badge to display on a item.
    * Only available from iOS 26.0 and later.
    *
@@ -1029,6 +1044,10 @@ export type NativeStackHeaderItemMenuSubmenu = {
    * Label for the submenu item.
    */
   label: string;
+  /**
+   * The secondary text displayed alongside the label of the submenu item.
+   */
+  description?: string | undefined;
   /**
    * Icon for the submenu item.
    */
