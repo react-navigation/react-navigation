@@ -3,7 +3,11 @@ import {
   type Icon,
   PlatformIcon,
 } from '@react-navigation/elements';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
+import {
+  DrawerActions,
+  MaterialSymbol,
+  useNavigation,
+} from '@react-navigation/native';
 import * as React from 'react';
 import { type ColorValue, Platform, StyleSheet } from 'react-native';
 
@@ -36,10 +40,15 @@ export function DrawerToggleButton({
         type: 'sfSymbol',
         name: 'line.3.horizontal',
       },
-      android: {
-        type: 'materialSymbol',
-        name: 'menu',
-      },
+      android: MaterialSymbol.isAvailable()
+        ? {
+            type: 'materialSymbol',
+            name: 'menu',
+          }
+        : {
+            type: 'image',
+            source: toggleDrawerIcon,
+          },
       default: {
         type: 'image',
         source: toggleDrawerIcon,

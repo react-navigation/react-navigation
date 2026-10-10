@@ -47,8 +47,16 @@ object MaterialSymbolTypeface {
     return MaterialSymbolTypefaceResult(typeface, suffix)
   }
 
+  fun isAvailable(context: Context): Boolean {
+    return getAvailableFonts(context).isNotEmpty()
+  }
+
   fun getSuffix(context: Context, variant: String?, weight: Int?, fill: Boolean?): String {
     val fonts = getAvailableFonts(context)
+
+    if (fonts.isEmpty()) {
+      throw RuntimeException("No Material Symbols fonts found. $CONFIG_HINT")
+    }
 
     val resolvedVariant = if (variant != null) {
       when (variant) {
@@ -91,10 +99,6 @@ object MaterialSymbolTypeface {
 
     val files = context.assets.list("fonts")
       ?.filter { it.startsWith("MaterialSymbols") && it.endsWith(".ttf") } ?: emptyList()
-
-    if (files.isEmpty()) {
-      throw RuntimeException("No Material Symbols fonts found. $CONFIG_HINT")
-    }
 
     val fonts = mutableMapOf<String, MutableMap<Int, MutableSet<Boolean>>>()
 

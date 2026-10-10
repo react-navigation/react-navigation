@@ -45,6 +45,10 @@ export function MaterialSymbol({
   );
 }
 
+MaterialSymbol.isAvailable = (): boolean => {
+  return NativeMaterialSymbolModule.isAvailable();
+};
+
 MaterialSymbol.getImageSource = ({
   name,
   variant,

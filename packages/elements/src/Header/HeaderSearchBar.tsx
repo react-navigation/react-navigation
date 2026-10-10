@@ -1,4 +1,9 @@
-import { SFSymbol, useNavigation, useTheme } from '@react-navigation/native';
+import {
+  MaterialSymbol,
+  SFSymbol,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -279,10 +284,15 @@ export function HeaderSearchBar({
         >
           <HeaderIcon
             icon={Platform.select({
-              android: {
-                type: 'materialSymbol',
-                name: 'close',
-              },
+              android: MaterialSymbol.isAvailable()
+                ? {
+                    type: 'materialSymbol',
+                    name: 'close',
+                  }
+                : {
+                    type: 'image',
+                    source: closeIcon,
+                  },
               default: {
                 type: 'image',
                 source: closeIcon,

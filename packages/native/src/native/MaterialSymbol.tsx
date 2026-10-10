@@ -13,6 +13,10 @@ export function MaterialSymbol(_: MaterialSymbolProps): React.ReactElement {
   throw new Error('MaterialSymbol is only supported on Android.');
 }
 
+MaterialSymbol.isAvailable = (): boolean => {
+  return false;
+};
+
 MaterialSymbol.getImageSource = (
   _: MaterialSymbolOptions
 ): ImageSourcePropType => {

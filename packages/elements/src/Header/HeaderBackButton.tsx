@@ -1,4 +1,4 @@
-import { useTheme } from '@react-navigation/native';
+import { MaterialSymbol, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -62,10 +62,15 @@ export function HeaderBackButton({
           type: 'sfSymbol',
           name: 'chevron.left',
         },
-        android: {
-          type: 'materialSymbol',
-          name: 'arrow_back',
-        },
+        android: MaterialSymbol.isAvailable()
+          ? {
+              type: 'materialSymbol',
+              name: 'arrow_back',
+            }
+          : {
+              type: 'image',
+              source: backIconImage,
+            },
         default: {
           type: 'image',
           source: backIconImage,

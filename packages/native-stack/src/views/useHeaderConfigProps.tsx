@@ -379,21 +379,19 @@ export function useHeaderConfigProps({
       return undefined;
     }
 
-    if (headerBackIcon == null && Platform.OS === 'android') {
-      try {
-        // Use Material Symbol as default back icon on Android
-        // So it's consistent with other material icons
-        // Based on the available variant and weight
-        return MaterialSymbol.getImageSource({
-          name: 'arrow_back',
-          color: tintColor,
-          size: ICON_SIZE,
-        });
-      } catch (e) {
-        // Fallback to default if symbol is not available
-        // This can happen if no font, or multiple fonts are available
-        // Or in tests where native module is not available
-      }
+    if (
+      headerBackIcon == null &&
+      Platform.OS === 'android' &&
+      MaterialSymbol.isAvailable()
+    ) {
+      // Use Material Symbol as default back icon on Android
+      // So it's consistent with other material icons
+      // Based on the available variant and weight
+      return MaterialSymbol.getImageSource({
+        name: 'arrow_back',
+        color: tintColor,
+        size: ICON_SIZE,
+      });
     } else if (headerBackIcon?.type === 'image') {
       return headerBackIcon.source;
     } else if (headerBackIcon?.type === 'materialSymbol') {

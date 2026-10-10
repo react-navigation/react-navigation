@@ -34,6 +34,10 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
       .trim()
   }
 
+  override fun isAvailable(): Boolean {
+    return MaterialSymbolTypeface.isAvailable(reactApplicationContext)
+  }
+
   override fun getImageSource(
     name: String, variant: String?, weight: Double?, fill: Boolean?, size: Double, color: ReadableMap
   ): String {

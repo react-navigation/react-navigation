@@ -1,4 +1,5 @@
 import {
+  MaterialSymbol,
   UNSTABLE_CornerInset,
   useNavigation,
   useTheme,
@@ -18,7 +19,7 @@ import searchIcon from '../assets/search-icon.png';
 import { Color } from '../Color';
 import { isLiquidGlassSupported } from '../LiquidGlassView';
 import { PlatformColor } from '../PlatformColor';
-import type { HeaderOptions } from '../types';
+import type { HeaderOptions, Icon } from '../types';
 import { useFrameSize } from '../useFrameSize';
 import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
 import { HeaderBackButton } from './HeaderBackButton';
@@ -463,11 +464,16 @@ export function Header(props: Props) {
                 }}
               >
                 <HeaderIcon
-                  icon={Platform.select({
-                    android: {
-                      type: 'materialSymbol',
-                      name: 'search',
-                    },
+                  icon={Platform.select<Icon>({
+                    android: MaterialSymbol.isAvailable()
+                      ? {
+                          type: 'materialSymbol',
+                          name: 'search',
+                        }
+                      : {
+                          type: 'image',
+                          source: searchIcon,
+                        },
                     ios: {
                       type: 'sfSymbol',
                       name: 'magnifyingglass',
