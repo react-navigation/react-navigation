@@ -1,4 +1,4 @@
-import { MaterialSymbol, useTheme } from '@react-navigation/native';
+import { MaterialSymbol, useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -45,6 +45,7 @@ export function HeaderBackButton({
   );
 
   const { colors } = useTheme();
+  const { direction } = useLocale();
 
   const isMinimal = displayMode === 'minimal' || measuredMinimal;
 
@@ -77,7 +78,20 @@ export function HeaderBackButton({
         },
       });
 
-    return <HeaderIcon icon={backIcon} color={color} style={styles.icon} />;
+    return (
+      <HeaderIcon
+        icon={backIcon}
+        color={color}
+        style={[
+          styles.icon,
+          direction === 'rtl' &&
+            // Material Symbols are mirrored natively in RTL layouts
+            // So we don't need to flip them
+            backIcon.type !== 'materialSymbol' &&
+            styles.flip,
+        ]}
+      />
+    );
   };
 
   const handlePress = () => {
@@ -290,5 +304,8 @@ const styles = StyleSheet.create({
     width: ICON_WIDTH,
     marginStart: ICON_SPACING_START,
     marginEnd: 0,
+  },
+  flip: {
+    transform: 'scaleX(-1)',
   },
 });

@@ -13,22 +13,21 @@ object MaterialSymbolTypeface {
   private val typefaces = ConcurrentHashMap<String, Typeface>()
   private var availableFonts: Map<String, Map<Int, Set<Boolean>>>? = null
   private var symbols: Map<String, String>? = null
+  private var autoMirroredSymbols: Set<String>? = null
 
-  fun getSymbol(context: Context, name: String): String? {
-    symbols?.let { return it[name] }
+  fun isAvailable(context: Context): Boolean {
+    return getAvailableFonts(context).isNotEmpty()
+  }
 
-    val result = context.assets.open("fonts/MaterialSymbols.codepoints").bufferedReader()
-      .useLines { lines ->
-        lines.associate { line ->
-          val (key, codepoint) = line.split(" ")
+  fun isAutoMirrored(context: Context, name: String): Boolean {
+    autoMirroredSymbols?.let { return it.contains(name) }
 
-          key to String(Character.toChars(codepoint.toInt(16)))
-        }
-      }
+    val result = context.assets.open("fonts/MaterialSymbols.mirrored").bufferedReader()
+      .useLines { lines -> lines.toSet() }
 
-    symbols = result
+    autoMirroredSymbols = result
 
-    return result[name]
+    return result.contains(name)
   }
 
   fun get(context: Context, variant: String?, weight: Int?, fill: Boolean?): MaterialSymbolTypefaceResult {
@@ -47,8 +46,21 @@ object MaterialSymbolTypeface {
     return MaterialSymbolTypefaceResult(typeface, suffix)
   }
 
-  fun isAvailable(context: Context): Boolean {
-    return getAvailableFonts(context).isNotEmpty()
+  fun getSymbol(context: Context, name: String): String? {
+    symbols?.let { return it[name] }
+
+    val result = context.assets.open("fonts/MaterialSymbols.codepoints").bufferedReader()
+      .useLines { lines ->
+        lines.associate { line ->
+          val (key, codepoint) = line.split(" ")
+
+          key to String(Character.toChars(codepoint.toInt(16)))
+        }
+      }
+
+    symbols = result
+
+    return result[name]
   }
 
   fun getSuffix(context: Context, variant: String?, weight: Int?, fill: Boolean?): String {

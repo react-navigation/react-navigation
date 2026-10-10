@@ -1812,7 +1812,6 @@ imagesearch_roller e9b4
 imagesmode efa2
 immunology e0fb
 import_contacts e0e0
-import_spark ffea9
 important_devices e912
 in_home_mode e833
 inactive_order e0fc
@@ -2052,10 +2051,14 @@ login ea77
 logo_dev ead6
 logout e9ba
 looks e3fc
+looks_0 ffe97
 looks_3 e3fb
 looks_4 e3fd
 looks_5 e3fe
 looks_6 e3ff
+looks_7 ffe9a
+looks_8 ffe99
+looks_9 ffe98
 looks_one e400
 looks_two e401
 loupe e402
@@ -2108,7 +2111,6 @@ markdown_convert ffea0
 markdown_copy f553
 markdown_document ffe9f
 markdown_paste f554
-markdown_spark ffea8
 markunread_mailbox e89b
 masked_transitions e72e
 masked_transitions_add f42b
