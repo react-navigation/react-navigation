@@ -1,7 +1,7 @@
 import { describe, expect, jest, test } from '@jest/globals';
 import { act, render, screen, userEvent } from '@testing-library/react-native';
 import * as React from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { SceneMap, TabView } from '../index';
 
@@ -49,8 +49,10 @@ const renderScene = SceneMap({
 
 const Test = ({
   onTabSelect,
+  options,
 }: {
   onTabSelect?: ((props: { index: number }) => void) | undefined;
+  options?: React.ComponentProps<typeof TabView>['options'] | undefined;
 }) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -64,6 +66,7 @@ const Test = ({
       renderScene={renderScene}
       onIndexChange={setIndex}
       onTabSelect={onTabSelect}
+      options={options}
     />
   );
 };
@@ -110,5 +113,63 @@ describe('iOS implementation', () => {
 
     expect(onTabSelect).toHaveBeenCalledTimes(1);
     expect(onTabSelect).toHaveBeenCalledWith({ index: 1 });
+  });
+});
+
+describe('badge', () => {
+  test('renders a badge from a string or a number', async () => {
+    await render(
+      <Test
+        options={{
+          first: { badge: 3 },
+          second: { badge: 'new' },
+        }}
+      />
+    );
+
+    await act(() => jest.runAllTimers());
+
+    expect(screen.getByText('3')).toBeTruthy();
+    expect(screen.getByText('new')).toBeTruthy();
+  });
+
+  test('renders a badge next to an icon', async () => {
+    await render(
+      <Test options={{ first: { badge: 3, icon: () => <Text>Icon</Text> } }} />
+    );
+
+    await act(() => jest.runAllTimers());
+
+    // The icon renders twice, as an active and an inactive copy that cross-fade.
+    expect(screen.getAllByText('Icon')).not.toHaveLength(0);
+    expect(screen.getByText('3')).toBeTruthy();
+  });
+
+  test('renders a badge from a function', async () => {
+    await render(
+      <Test
+        options={{
+          first: { badge: () => <Text>Custom badge</Text> },
+        }}
+      />
+    );
+
+    await act(() => jest.runAllTimers());
+
+    expect(screen.getByText('Custom badge')).toBeTruthy();
+  });
+
+  test('applies the badge style to the badge', async () => {
+    await render(
+      <Test
+        options={{
+          first: { badge: 3, badgeStyle: { backgroundColor: 'tomato' } },
+        }}
+      />
+    );
+
+    await act(() => jest.runAllTimers());
+
+    expect(screen.getByText('3')).toHaveStyle({ backgroundColor: 'tomato' });
   });
 });

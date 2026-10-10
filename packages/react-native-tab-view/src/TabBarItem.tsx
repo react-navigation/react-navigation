@@ -18,6 +18,7 @@ import {
   TAB_BAR_SECONDARY_ACTIVE_COLOR,
 } from './constants';
 import { PlatformPressable } from './PlatformPressable';
+import { TabBarItemBadge } from './TabBarItemBadge';
 import { TabBarItemLabel } from './TabBarItemLabel';
 import type { NavigationState, Route, TabDescriptor } from './types';
 
@@ -118,6 +119,7 @@ const TabBarItemInternal = <T extends Route>({
   pressOpacity,
   icon: customIcon,
   badge: customBadge,
+  badgeStyle,
   href,
   labelText,
   routesLength,
@@ -186,6 +188,25 @@ const TabBarItemInternal = <T extends Route>({
     inactiveOpacity,
     route,
   ]);
+
+  const badge = React.useMemo(() => {
+    if (customBadge == null) {
+      return null;
+    }
+
+    if (typeof customBadge === 'function') {
+      return customBadge({ route });
+    }
+
+    return (
+      <TabBarItemBadge
+        style={badgeStyle}
+        allowFontScaling={labelAllowFontScaling}
+      >
+        {customBadge}
+      </TabBarItemBadge>
+    );
+  }, [badgeStyle, customBadge, labelAllowFontScaling, route]);
 
   const renderLabel = React.useCallback(
     (focused: boolean) =>
@@ -277,22 +298,33 @@ const TabBarItemInternal = <T extends Route>({
           style,
         ]}
       >
-        <View ref={labelRef} onLayout={onLabelLayout} style={styles.content}>
-          {icon}
-          <View>
-            <Animated.View style={{ opacity: inactiveOpacity }}>
-              {renderLabel(false)}
-            </Animated.View>
-            <Animated.View
-              style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
-            >
-              {renderLabel(true)}
-            </Animated.View>
+        <View style={styles.contentRow}>
+          {/* The measured width sets the primary indicator width, so the
+              badge stays outside it to keep the indicator on the label. */}
+          <View ref={labelRef} onLayout={onLabelLayout} style={styles.content}>
+            {icon != null && badge != null ? (
+              <View>
+                {icon}
+                <View style={styles.badgeOnIcon}>{badge}</View>
+              </View>
+            ) : (
+              icon
+            )}
+            <View>
+              <Animated.View style={{ opacity: inactiveOpacity }}>
+                {renderLabel(false)}
+              </Animated.View>
+              <Animated.View
+                style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
+              >
+                {renderLabel(true)}
+              </Animated.View>
+            </View>
           </View>
+          {icon == null && badge != null ? (
+            <View style={styles.badgeAfterLabel}>{badge}</View>
+          ) : null}
         </View>
-        {customBadge != null ? (
-          <View style={styles.badge}>{customBadge({ route })}</View>
-        ) : null}
       </View>
     </PlatformPressable>
   );
@@ -350,10 +382,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  badge: {
+  badgeOnIcon: {
     position: 'absolute',
-    top: 0,
-    end: 0,
+    top: -3,
+    end: -3,
+  },
+  contentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  badgeAfterLabel: {
+    alignSelf: 'flex-start',
+    marginStart: 4,
   },
   pressable: {
     // The label is not pressable on Windows
