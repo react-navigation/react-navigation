@@ -1,4 +1,3 @@
-import { useLocale } from '@react-navigation/native';
 import {
   type ColorValue,
   Platform,
@@ -16,16 +15,12 @@ type Props = {
 };
 
 export function HeaderIcon({ icon, color, style }: Props) {
-  const { direction } = useLocale();
-
-  const iconStyle = [styles.icon, direction === 'rtl' && styles.flip, style];
-
   return (
     <PlatformIcon
       icon={icon}
       color={color}
       size={ICON_SIZE}
-      style={iconStyle}
+      style={[styles.icon, style]}
     />
   );
 }
@@ -38,8 +33,5 @@ const styles = StyleSheet.create({
     width: ICON_SIZE,
     height: ICON_SIZE,
     margin: ICON_MARGIN,
-  },
-  flip: {
-    transform: 'scaleX(-1)',
   },
 });

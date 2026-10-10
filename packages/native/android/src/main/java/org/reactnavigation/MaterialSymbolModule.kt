@@ -10,6 +10,7 @@ import com.facebook.fbreact.specs.NativeMaterialSymbolModuleSpec
 import com.facebook.react.bridge.ColorPropConverter
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.modules.i18nmanager.I18nUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -65,8 +66,12 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
       "react_navigation/material_symbols/$typefaceSuffix/$fontHash"
     )
 
+    val mirrored =
+      MaterialSymbolTypeface.isAutoMirrored(reactApplicationContext, name) &&
+        I18nUtil.instance.isRTL(reactApplicationContext)
+
     val cacheFile = File(
-      cacheDir, "${Uri.encode(name)}_${scaledSize}_$resolvedColor.png"
+      cacheDir, "${Uri.encode(name)}_${scaledSize}_$resolvedColor${if (mirrored) "_rtl" else ""}.png"
     )
 
     val cacheUri = cacheFile.toUri().toString()
@@ -107,6 +112,10 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     try {
       val canvas = Canvas(bitmap)
       val y = (scaledSize - (fontMetrics.descent - fontMetrics.ascent)) / 2f - fontMetrics.ascent
+
+      if (mirrored) {
+        canvas.scale(-1f, 1f, scaledSize / 2f, scaledSize / 2f)
+      }
 
       canvas.drawText(symbol, scaledSize / 2f, y, paint)
 
