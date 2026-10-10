@@ -23,13 +23,13 @@ import {
   StyleSheet,
 } from 'react-native';
 import {
-  type PlatformIconAndroid,
-  type PlatformIconIOS,
   type PlatformIconShared,
   Tabs,
   type TabsBottomAccessoryEnvironment,
   type TabSelectedEvent,
   type TabSelectionRejectedEvent,
+  type TabsScreenIconAndroid,
+  type TabsScreenIconIOS,
   type TabsScreenItemStateAppearanceAndroid,
   type TabsScreenItemStateAppearanceIOS,
 } from 'react-native-screens';
@@ -59,8 +59,8 @@ type TabSelectionPreventedEvent = {
 };
 
 type PlatformIcon = {
-  ios?: PlatformIconIOS | undefined;
-  android?: PlatformIconAndroid | undefined;
+  ios?: TabsScreenIconIOS | undefined;
+  android?: TabsScreenIconAndroid | undefined;
   shared?: PlatformIconShared | undefined;
 };
 
@@ -786,27 +786,24 @@ function getPlatformIcon(icon: Icon): PlatformIcon {
           : undefined;
 
       return {
-        ios:
-          icon.tinted === false
-            ? {
-                type: 'imageSource',
-                imageSource: icon.source,
-              }
-            : {
-                type: 'templateSource',
-                templateSource: icon.source,
-              },
+        ios: {
+          type: 'imageSource',
+          imageSource: icon.source,
+          renderingMode: icon.tinted === false ? 'original' : 'template',
+        },
         android:
           drawableName != null
             ? {
                 type: 'drawableResource',
                 name: drawableName,
+                tinting: icon.tinted === false ? 'original' : 'tinted',
               }
-            : undefined,
-        shared: {
-          type: 'imageSource',
-          imageSource: icon.source,
-        },
+            : {
+                type: 'imageSource',
+                imageSource: icon.source,
+                tinting: icon.tinted === false ? 'original' : 'tinted',
+              },
+        shared: undefined,
       };
     }
     default: {

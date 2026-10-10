@@ -121,7 +121,7 @@ type SFSymbolRenderingMode =
   | 'monochrome'
   | 'hierarchical'
   | 'palette'
-  | 'multicolor';
+  | 'original';
 
 export type SFSymbolEffectName =
   | 'bounce'
@@ -451,7 +451,7 @@ export type SFSymbolOptions = {
    * - `monochrome`: Single color tint (default).
    * - `hierarchical`: Derived hierarchy from a single color.
    * - `palette`: Explicit colors for each layer.
-   * - `multicolor`: Uses the symbol's built-in multicolor scheme.
+   * - `original`: Uses the symbol's own colors (Apple's multicolor rendering).
    *
    * @default 'monochrome'
    */
@@ -460,7 +460,7 @@ export type SFSymbolOptions = {
    * The colors for non-monochrome rendering modes.
    * - `hierarchical`: uses `primary` as the base color.
    * - `palette`: uses `primary`, `secondary`, and `tertiary` for each layer.
-   * - `multicolor`: ignored.
+   * - `original`: ignored.
    *
    * Falls back to `color` for `primary` if not specified.
    */

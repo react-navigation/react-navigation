@@ -482,8 +482,6 @@ export type BottomTabNavigationOptions = {
    * - on all platforms with `custom` implementation
    * - on iOS with `native` implementation
    *
-   * With `native` implementation, `tinted` for `image` can only be disabled on iOS.
-   *
    * A React element is only supported with `custom` implementation.
    */
   tabBarIcon?:
