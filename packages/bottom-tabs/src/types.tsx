@@ -194,7 +194,7 @@ type BottomTabCustomOptions = {
    *
    * Only supported with `custom` implementation.
    */
-  tabBarIconStyle?: StyleProp<TextStyle>;
+  tabBarIconStyle?: StyleProp<ViewStyle>;
 
   /**
    * Whether the tab bar gets hidden when the keyboard is shown.
@@ -430,6 +430,38 @@ export type BottomTabNavigationOptions = {
    * Only supported on Android with `native` implementation.
    */
   tabBarLabelVisibilityMode?: TabBarItemLabelVisibilityMode | undefined;
+
+  /**
+   * Size (in dp) of this tab's icon. Can be set globally via `screenOptions`
+   * and/or overridden per screen. Unset tabs use the default size.
+   *
+   * On the `custom` implementation it sizes the icon on all platforms. On the
+   * `native` implementation the largest value across tabs sets the bar's icon
+   * box and smaller icons are inset to their own size (Android only).
+   */
+  tabBarIconSize?: number | undefined;
+
+  /**
+   * Width (in dp) of this tab's active indicator. Can be set globally via
+   * `screenOptions` and/or overridden per screen. If unset, it is this tab's
+   * icon size plus the default Material padding.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform android
+   */
+  tabBarActiveIndicatorWidth?: number | undefined;
+
+  /**
+   * Height (in dp) of this tab's active indicator. Can be set globally via
+   * `screenOptions` and/or overridden per screen. If unset, it is this tab's
+   * icon size plus the default Material padding.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform android
+   */
+  tabBarActiveIndicatorHeight?: number | undefined;
 
   /**
    * Style object for the tab label.

@@ -500,6 +500,9 @@ export function BottomTabViewNative({
             tabBarRepeatedPressBehavior,
             tabBarBadgeStyle,
             tabBarIcon,
+            tabBarIconSize,
+            tabBarActiveIndicatorWidth,
+            tabBarActiveIndicatorHeight,
             tabBarBadge,
             tabBarSystemItem,
             tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
@@ -626,9 +629,12 @@ export function BottomTabViewNative({
                     currentOptions?.tabBarLabelVisibilityMode,
                   normal: normalTabItemAppearance,
                   selected: selectedTabItemAppearance,
+                  tabBarItemIconSize: tabBarIconSize,
                   tabBarItemActiveIndicatorColor: activeIndicatorColor,
                   tabBarItemActiveIndicatorEnabled:
                     currentOptions?.tabBarActiveIndicatorEnabled,
+                  tabBarItemActiveIndicatorWidth: tabBarActiveIndicatorWidth,
+                  tabBarItemActiveIndicatorHeight: tabBarActiveIndicatorHeight,
                   tabBarItemTitleFontFamily: fontFamily,
                   tabBarItemTitleFontWeight: fontWeight,
                   tabBarItemTitleSmallLabelFontSize: fontSize,
@@ -770,7 +776,15 @@ function getPlatformIcon(icon: Icon): PlatformIcon {
         },
         shared: undefined,
       };
-    case 'image':
+    case 'image': {
+      // A `{ uri: 'name' }` source maps to an Android drawable by name.
+      const drawableName =
+        typeof icon.source === 'object' &&
+        'uri' in icon.source &&
+        icon.source.uri?.includes(':') === false
+          ? icon.source.uri
+          : undefined;
+
       return {
         ios:
           icon.tinted === false
@@ -782,12 +796,19 @@ function getPlatformIcon(icon: Icon): PlatformIcon {
                 type: 'templateSource',
                 templateSource: icon.source,
               },
-        android: undefined,
+        android:
+          drawableName != null
+            ? {
+                type: 'drawableResource',
+                name: drawableName,
+              }
+            : undefined,
         shared: {
           type: 'imageSource',
           imageSource: icon.source,
         },
       };
+    }
     default: {
       const _exhaustiveCheck: never = icon;
 

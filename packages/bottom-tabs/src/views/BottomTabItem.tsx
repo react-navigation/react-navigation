@@ -136,6 +136,10 @@ type Props = {
    */
   labelStyle?: StyleProp<TextStyle> | undefined;
   /**
+   * Size (in dp) of the icon, overriding the default for the variant.
+   */
+  iconSize?: number | undefined;
+  /**
    * Style object for the icon element.
    */
   iconStyle?: StyleProp<ViewStyle> | undefined;
@@ -181,6 +185,7 @@ export function BottomTabItem({
   // https://developer.apple.com/documentation/uikit/uiview/3183939-largecontenttitle
   allowFontScaling = SUPPORTS_LARGE_CONTENT_VIEWER ? false : undefined,
   labelStyle,
+  iconSize,
   iconStyle,
   style,
 }: Props) {
@@ -290,6 +295,7 @@ export function BottomTabItem({
         route={route}
         variant={variant}
         size={compact ? 'compact' : 'regular'}
+        iconSize={iconSize}
         badge={badge}
         badgeStyle={badgeStyle}
         activeOpacity={activeOpacity}
