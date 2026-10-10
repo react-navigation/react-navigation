@@ -8,7 +8,13 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import { useMemo } from 'react';
-import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
+import {
+  type ColorValue,
+  Platform,
+  StyleSheet,
+  type TextStyle,
+  View,
+} from 'react-native';
 import {
   type HeaderBarButtonItemMenuAction,
   type HeaderBarButtonItemSubmenu,
@@ -43,7 +49,8 @@ const ICON_SIZE = 24;
 const processBarButtonItems = (
   items: NativeStackHeaderItem[] | undefined,
   colors: Theme['colors'],
-  fonts: Theme['fonts']
+  fonts: Theme['fonts'],
+  headerTintColor: ColorValue | undefined
 ) => {
   return items
     ?.map((item, index) => {
@@ -76,6 +83,7 @@ const processBarButtonItems = (
         const { badge, label, labelStyle, icon, ...rest } = item;
 
         const processedItemCommon = {
+          ...(headerTintColor != null ? { tintColor: headerTintColor } : null),
           ...rest,
           index,
           title: label,
@@ -564,8 +572,18 @@ export function useHeaderConfigProps({
       headerInsets?.bottom !== undefined ? !headerInsets.bottom : undefined,
     translucent: translucent === true,
     children,
-    headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
-    headerRightBarButtonItems: processBarButtonItems(rightItems, colors, fonts),
+    headerLeftBarButtonItems: processBarButtonItems(
+      leftItems,
+      colors,
+      fonts,
+      headerTintColor
+    ),
+    headerRightBarButtonItems: processBarButtonItems(
+      rightItems,
+      colors,
+      fonts,
+      headerTintColor
+    ),
     experimental_userInterfaceStyle: dark ? 'dark' : 'light',
   } as const;
 }

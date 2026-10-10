@@ -24,11 +24,16 @@ import {
   userEvent,
 } from '@testing-library/react-native';
 import { Button, Platform, Text, View } from 'react-native';
+import {
+  type HeaderBarButtonItemWithAction,
+  type ScreenStackHeaderConfigProps,
+} from 'react-native-screens';
 
 import {
   createNativeStackNavigator,
   type NativeStackScreenProps,
 } from '../index';
+import { useHeaderConfigProps } from '../views/useHeaderConfigProps';
 
 type StackParamList = {
   A: undefined;
@@ -847,5 +852,112 @@ describe('useHeaderHeight in native-stack', () => {
     await user.press(screen.getByRole('button', { name: /go to b/i }));
 
     expect(headerHeight).toBe(0);
+  });
+});
+
+describe('header bar button items tintColor', () => {
+  test('does not set tintColor on items by default when headerTintColor is not provided', async () => {
+    let headerConfig: ScreenStackHeaderConfigProps | undefined;
+
+    const Test = () => {
+      headerConfig = useHeaderConfigProps({
+        route: { key: 'A', name: 'A' },
+        headerHeight: 44,
+        headerBack: undefined,
+        unstable_headerRightItems: () => [
+          {
+            type: 'button',
+            label: 'Save',
+            onPress: () => {},
+          },
+        ],
+      });
+
+      return null;
+    };
+
+    await render(
+      <NavigationContainer>
+        <Test />
+      </NavigationContainer>
+    );
+
+    expect(
+      (
+        headerConfig
+          ?.headerRightBarButtonItems?.[0] as HeaderBarButtonItemWithAction
+      )?.tintColor
+    ).toBeUndefined();
+  });
+
+  test('applies explicit headerTintColor to items when provided', async () => {
+    let headerConfig: ScreenStackHeaderConfigProps | undefined;
+
+    const Test = () => {
+      headerConfig = useHeaderConfigProps({
+        route: { key: 'A', name: 'A' },
+        headerHeight: 44,
+        headerBack: undefined,
+        headerTintColor: 'tomato',
+        unstable_headerRightItems: () => [
+          {
+            type: 'button',
+            label: 'Save',
+            onPress: () => {},
+          },
+        ],
+      });
+
+      return null;
+    };
+
+    await render(
+      <NavigationContainer>
+        <Test />
+      </NavigationContainer>
+    );
+
+    expect(
+      (
+        headerConfig
+          ?.headerRightBarButtonItems?.[0] as HeaderBarButtonItemWithAction
+      )?.tintColor
+    ).toBe('tomato');
+  });
+
+  test('preserves item-level tintColor override over headerTintColor', async () => {
+    let headerConfig: ScreenStackHeaderConfigProps | undefined;
+
+    const Test = () => {
+      headerConfig = useHeaderConfigProps({
+        route: { key: 'A', name: 'A' },
+        headerHeight: 44,
+        headerBack: undefined,
+        headerTintColor: 'tomato',
+        unstable_headerRightItems: () => [
+          {
+            type: 'button',
+            label: 'Delete',
+            tintColor: 'red',
+            onPress: () => {},
+          },
+        ],
+      });
+
+      return null;
+    };
+
+    await render(
+      <NavigationContainer>
+        <Test />
+      </NavigationContainer>
+    );
+
+    expect(
+      (
+        headerConfig
+          ?.headerRightBarButtonItems?.[0] as HeaderBarButtonItemWithAction
+      )?.tintColor
+    ).toBe('red');
   });
 });
