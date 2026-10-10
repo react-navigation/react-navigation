@@ -442,6 +442,11 @@ export function BottomTabViewNative({
         ? 'never'
         : currentOptions.tabBarMinimizeBehavior;
 
+  const tabBarSidebarPreferredPlacement =
+    currentOptions.tabBarSidebarPreferredPlacement === 'auto'
+      ? 'automatic'
+      : currentOptions.tabBarSidebarPreferredPlacement;
+
   const bottomAccessory = currentOptions.bottomAccessory;
 
   return (
@@ -473,7 +478,10 @@ export function BottomTabViewNative({
             ? (environment: TabsBottomAccessoryEnvironment) =>
                 bottomAccessory({ placement: environment })
             : undefined,
+          tabBarHiddenAnimationEnabled:
+            currentOptions.tabBarVisibilityAnimationEnabled,
           tabBarControllerMode,
+          tabBarSidebarPreferredPlacement,
           tabBarMinimizeBehavior,
           tabBarTintColor: activeTintColor,
         }}
@@ -502,6 +510,8 @@ export function BottomTabViewNative({
             tabBarIcon,
             tabBarBadge,
             tabBarSystemItem,
+            tabBarRole,
+            tabBarSearchAutoFocus,
             tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
             tabBarStyle,
             tabBarAccessibilityLabel,
@@ -509,6 +519,12 @@ export function BottomTabViewNative({
             sceneStyle,
             overrideScrollViewContentInsetAdjustmentBehavior,
           } = options;
+
+          const systemItem =
+            tabBarSystemItem ??
+            // Setting the `role` to 'search' doesn't add title and icon automatically
+            // So we also set `tabBarSystemItem` to 'search' to match SwiftUI's behavior
+            (tabBarRole === 'search' ? 'search' : undefined);
 
           const {
             backgroundColor: tabBarBackgroundColor,
@@ -518,7 +534,7 @@ export function BottomTabViewNative({
           const tabTitle =
             // On iOS, `systemItem` already provides a localized label
             // So we should only use `tabBarLabel` if explicitly provided
-            Platform.OS === 'ios' && tabBarSystemItem != null
+            Platform.OS === 'ios' && systemItem != null
               ? tabBarLabel
               : getLabel({ label: tabBarLabel, title }, route.name);
 
@@ -641,7 +657,9 @@ export function BottomTabViewNative({
               ios={{
                 icon: icon?.ios ?? icon?.shared,
                 selectedIcon: selectedIcon?.ios ?? selectedIcon?.shared,
-                systemItem: tabBarSystemItem,
+                systemItem,
+                role: tabBarRole,
+                automaticallyActivatesSearch: tabBarSearchAutoFocus,
                 scrollEdgeAppearance: {
                   tabBarBackgroundColor,
                   tabBarShadowColor,

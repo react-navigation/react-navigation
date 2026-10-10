@@ -277,15 +277,93 @@ type BottomTabCustomOptions = {
 type BottomTabNativeOptions = {
   /**
    * Uses iOS built-in tab bar items with standard iOS styling and localized titles.
-   * If set to `search`, it's positioned next to the tab bar on iOS 26 and above.
    *
-   * The `tabBarIcon` and `tabBarLabel` options will override the icon and label from the system item.
+   * The `tabBarIcon` and `tabBarLabel` options override the icon and label from the system item.
    * If you want to keep the system behavior on iOS, but need to provide icon and label for other platforms,
    * Use `Platform.OS`  or `Platform.select`  to conditionally set `undefined` for `tabBarIcon` and `tabBarLabel` on iOS.
+   *
+   * If set to `search`, it's positioned next to the tab bar on iOS 26 only.
+   * To position it next to the tab bar on iOS 26 and above, use `tabBarRole: 'search'` with `tabBarSearchAutoFocus` enabled.
    *
    * @platform ios
    */
   tabBarSystemItem?: TabsScreenSystemItem | undefined;
+
+  /**
+   * The role of the tab within the system tab bar.
+   *
+   * Supported values:
+   * - `search` - the tab is used as the system search tab
+   *
+   * On iOS 26, a tab with `search` role is positioned next to the tab bar.
+   * On iOS 27 and above, it's positioned next to the tab bar only if `tabBarSearchAutoFocus` is enabled.
+   *
+   * If `tabBarSystemItem` isn't set, it defaults to `search` to use the system search icon and label.
+   * The `tabBarIcon` and `tabBarLabel` options override them.
+   *
+   * Changing the role after the tab is rendered is not supported.
+   *
+   * Only supported with `native` implementation.
+   *
+   * Supported on iOS 26.1 and above.
+   *
+   * @platform ios
+   */
+  tabBarRole?: 'search' | undefined;
+
+  /**
+   * Whether the search field is automatically focused when the tab is selected.
+   * Cancelling the search selects the previously selected tab.
+   *
+   * Only applies to tabs with `tabBarRole: 'search'`,
+   * and requires `headerSearchBarOptions` to be set in a native stack nested in the tab.
+   *
+   * Defaults to `false`.
+   *
+   * Only supported with `native` implementation.
+   *
+   * Supported on iOS 26.1 and above.
+   *
+   * @platform ios
+   */
+  tabBarSearchAutoFocus?: boolean | undefined;
+
+  /**
+   * Whether the sidebar or the tab bar is preferred when only one of them can be displayed.
+   *
+   * Supported values:
+   * - `auto` - uses the system default (tab bar)
+   * - `sidebar` - the sidebar is displayed when it's available
+   * - `tabBar` - the tab bar is displayed
+   *
+   * Requires `tabBarControllerMode` to be set to `tabSidebar`.
+   *
+   * The sidebar is only available when the horizontal size class is regular,
+   * e.g. on iPad, or on larger iPhones in landscape.
+   *
+   * Defaults to `auto`.
+   *
+   * Only supported with `native` implementation.
+   *
+   * Supported on iOS 27 and above.
+   * Not supported on tvOS.
+   *
+   * @platform ios
+   */
+  tabBarSidebarPreferredPlacement?: 'auto' | 'sidebar' | 'tabBar' | undefined;
+
+  /**
+   * Whether showing and hiding the tab bar is animated.
+   *
+   * Defaults to `true`.
+   *
+   * Only supported with `native` implementation.
+   *
+   * Supported on iOS 18 and above.
+   *
+   * @platform ios
+   */
+  tabBarVisibilityAnimationEnabled?: boolean | undefined;
 
   /**
    * Blur effect applied to the tab bar when tab screen is selected.

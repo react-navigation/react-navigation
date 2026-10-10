@@ -189,7 +189,8 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
       screen: FavoritesStack,
       options: {
         title: 'Favorites',
-        tabBarSystemItem: 'search',
+        tabBarRole: 'search',
+        tabBarSearchAutoFocus: true,
         tabBarLabel: 'Favorites',
         tabBarIcon: {
           type: 'image',
