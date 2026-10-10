@@ -59,6 +59,12 @@ import UIKit
     fatalError("init(coder:) has not been implemented")
   }
 
+  override public var semanticContentAttribute: UISemanticContentAttribute {
+    didSet {
+      imageView.semanticContentAttribute = semanticContentAttribute
+    }
+  }
+
   @objc public func updateProps(_ props: ReactNavigationSFSymbolViewImplProps, oldProps: ReactNavigationSFSymbolViewImplProps) {
     let needsImageUpdate =
       props.name != oldProps.name ||

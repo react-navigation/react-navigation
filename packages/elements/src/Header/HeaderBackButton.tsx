@@ -61,7 +61,7 @@ export function HeaderBackButton({
       Platform.select<Icon>({
         ios: {
           type: 'sfSymbol',
-          name: 'chevron.left',
+          name: 'chevron.backward',
         },
         android: MaterialSymbol.isAvailable()
           ? {
@@ -85,9 +85,9 @@ export function HeaderBackButton({
         style={[
           styles.icon,
           direction === 'rtl' &&
-            // Material Symbols are mirrored natively in RTL layouts
-            // So we don't need to flip them
-            backIcon.type !== 'materialSymbol' &&
+            // Material Symbols and SF Symbols are mirrored natively in RTL
+            // So we only need to flip images
+            backIcon.type === 'image' &&
             styles.flip,
         ]}
       />

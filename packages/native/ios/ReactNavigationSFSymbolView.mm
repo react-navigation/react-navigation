@@ -37,6 +37,13 @@ using namespace facebook::react;
   return self;
 }
 
+- (void)setSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute
+{
+    [super setSemanticContentAttribute:semanticContentAttribute];
+
+    _view.semanticContentAttribute = semanticContentAttribute;
+}
+
 static ReactNavigationSFSymbolViewImplProps *convertProps(const Props::Shared &props) {
     const auto &viewProps = *std::static_pointer_cast<ReactNavigationSFSymbolViewProps const>(props);
 
