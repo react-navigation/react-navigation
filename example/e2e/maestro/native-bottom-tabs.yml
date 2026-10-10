@@ -13,7 +13,7 @@ name: Native Bottom Tabs - Basic
 - tapOn:
     text: 'Navigate to feed'
 - assertVisible:
-    text: 'Feed'
+    text: 'Replace with contacts'
 - tapOn:
     text: 'Albums'
 - assertVisible:
@@ -42,7 +42,22 @@ name: Native Bottom Tabs - Basic
 - tapOn:
     text: 'Navigate to feed'
 - assertVisible:
+    text: 'Replace with contacts'
+- tapOn:
+    text: 'Article'
+- assertVisible:
+    text: 'Article by Babel fish'
+- tapOn:
     text: 'Feed'
+- assertVisible:
+    text: 'Joke bot'
+- scrollUntilVisible:
+    element:
+      text: 'Someone broke into my house and stole 20% of my couch. Ouch!'
+- assertVisible:
+    text: 'Someone broke into my house and stole 20% of my couch. Ouch!'
+- assertNotVisible:
+    text: 'Article by Babel fish'
 - tapOn:
     text: 'Article'
 - assertVisible:
