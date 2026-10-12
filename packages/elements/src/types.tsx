@@ -99,6 +99,21 @@ export type HeaderSearchBarOptions = {
    */
   cancelButtonText?: string | undefined;
   /**
+   * Accessibility label for the button that closes the search bar.
+   * Defaults to `Close` on iOS 26+, `cancelButtonText` on older iOS and `Back` on other platforms.
+   */
+  cancelButtonAccessibilityLabel?: string | undefined;
+  /**
+   * Accessibility label for the button that clears the search input.
+   * Defaults to `Clear text`.
+   */
+  clearButtonAccessibilityLabel?: string | undefined;
+  /**
+   * Accessibility label for the header button that opens the search bar.
+   * Defaults to `Search`.
+   */
+  openButtonAccessibilityLabel?: string | undefined;
+  /**
    * Sets type of the input. Defaults to `text`.
    */
   inputType?: 'text' | 'phone' | 'number' | 'email' | undefined;

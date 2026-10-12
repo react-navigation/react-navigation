@@ -59,6 +59,13 @@ export function HeaderSearchBar({
   placeholder = 'Search',
   enterKeyHint = 'search',
   cancelButtonText = 'Cancel',
+  cancelButtonAccessibilityLabel = Platform.OS === 'ios'
+    ? isLiquidGlassSupported
+      ? 'Close'
+      : cancelButtonText
+    : 'Back',
+  clearButtonAccessibilityLabel = 'Clear text',
+  openButtonAccessibilityLabel: _openButtonAccessibilityLabel,
   onChange,
   onClose,
   tintColor,
@@ -187,7 +194,6 @@ export function HeaderSearchBar({
   return (
     <AnimatedLiquidGlassContainerView
       spacing={BUTTON_SPACING}
-      aria-live="polite"
       aria-hidden={!visible}
       style={[
         styles.container,
@@ -203,7 +209,7 @@ export function HeaderSearchBar({
     >
       {Platform.OS !== 'ios' ? (
         <HeaderBackButton
-          accessibilityLabel={cancelButtonText}
+          accessibilityLabel={cancelButtonAccessibilityLabel}
           tintColor={tintColor ?? colors.text}
           pressColor={pressColor}
           pressOpacity={pressOpacity}
@@ -226,6 +232,7 @@ export function HeaderSearchBar({
         <TextInput
           {...rest}
           ref={inputRef}
+          accessibilityRole="search"
           onChange={onChange}
           onChangeText={setValue}
           autoFocus={autoFocus}
@@ -256,7 +263,8 @@ export function HeaderSearchBar({
         />
         {Platform.OS === 'ios' ? (
           <PlatformPressable
-            accessibilityLabel="Clear"
+            accessible={hasText}
+            accessibilityLabel={clearButtonAccessibilityLabel}
             onPress={onClear}
             style={[
               {
@@ -278,7 +286,7 @@ export function HeaderSearchBar({
       </HeaderButtonBackground>
       {Platform.OS !== 'ios' ? (
         <HeaderButton
-          accessibilityLabel="Clear"
+          accessibilityLabel={clearButtonAccessibilityLabel}
           onPress={onClear}
           style={[styles.closeButton, { opacity: clearVisibleAnim }]}
         >
@@ -306,7 +314,7 @@ export function HeaderSearchBar({
         isLiquidGlassSupported ? (
           <HeaderButtonBackground style={styles.closeButtonContainerIos}>
             <HeaderButton
-              accessibilityLabel={cancelButtonText}
+              accessibilityLabel={cancelButtonAccessibilityLabel}
               onPress={cancelSearch}
             >
               <SFSymbol name="xmark" color={textColor} />
@@ -314,7 +322,7 @@ export function HeaderSearchBar({
           </HeaderButtonBackground>
         ) : (
           <PlatformPressable
-            accessibilityLabel={cancelButtonText}
+            accessibilityLabel={cancelButtonAccessibilityLabel}
             onPress={cancelSearch}
             style={styles.cancelButton}
           >
