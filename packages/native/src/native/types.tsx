@@ -1,5 +1,6 @@
 import type { ColorValue } from 'react-native';
 
+import type { LocaleDirection } from '../types';
 import type { FONT_WEIGHTS } from './constants';
 import type { MaterialSymbolName } from './MaterialSymbolData';
 
@@ -113,6 +114,17 @@ export type MaterialSymbolOptions = {
    * @default 'black'
    */
   color?: ColorValue | undefined;
+};
+
+export type MaterialSymbolImageSourceOptions = MaterialSymbolOptions & {
+  /**
+   * The layout direction to render the symbol for.
+   *
+   * Symbols that support auto-mirroring are flipped horizontally in RTL.
+   *
+   * @default I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'
+   */
+  direction?: LocaleDirection | undefined;
 };
 
 type SFSymbolScale = 'small' | 'medium' | 'large';

@@ -6,11 +6,13 @@ import {
 } from '@react-navigation/elements/internal';
 import {
   CommonActions,
+  type LocaleDirection,
   MaterialSymbol,
   type ParamListBase,
   type Route,
   StackActions,
   type TabNavigationState,
+  useLocale,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -121,6 +123,7 @@ export function BottomTabViewNative({
   tabBar,
 }: Props) {
   const { dark, colors, fonts } = useTheme();
+  const { direction } = useLocale();
 
   const focusedRoute = state.routes[state.index];
 
@@ -566,14 +569,14 @@ export function BottomTabViewNative({
                 typeof result === 'object' &&
                 'type' in result
               ) {
-                return getPlatformIcon(result);
+                return getPlatformIcon(result, direction);
               } else {
                 throw new Error(
                   `The 'tabBarIcon' function must return an icon object (got ${typeof result}).`
                 );
               }
             } else if (tabBarIcon != null) {
-              return getPlatformIcon(tabBarIcon);
+              return getPlatformIcon(tabBarIcon, direction);
             }
 
             return undefined;
@@ -747,7 +750,7 @@ function AnimatedScreenContent({
   );
 }
 
-function getPlatformIcon(icon: Icon): PlatformIcon {
+function getPlatformIcon(icon: Icon, direction: LocaleDirection): PlatformIcon {
   switch (icon.type) {
     case 'sfSymbol':
       return {
@@ -766,6 +769,7 @@ function getPlatformIcon(icon: Icon): PlatformIcon {
             weight: icon.weight,
             fill: icon.fill,
             size: ICON_SIZE,
+            direction,
           }),
         },
         shared: undefined,

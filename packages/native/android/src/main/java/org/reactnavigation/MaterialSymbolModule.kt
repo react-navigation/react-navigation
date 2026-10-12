@@ -10,7 +10,6 @@ import com.facebook.fbreact.specs.NativeMaterialSymbolModuleSpec
 import com.facebook.react.bridge.ColorPropConverter
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.modules.i18nmanager.I18nUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,7 +39,7 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
   }
 
   override fun getImageSource(
-    name: String, variant: String?, weight: Double?, fill: Boolean?, size: Double, color: ReadableMap
+    name: String, variant: String?, weight: Double?, fill: Boolean?, size: Double, color: ReadableMap, direction: String
   ): String {
     val colorValue = color.getDynamic("value").let {
       when (it.type) {
@@ -67,8 +66,7 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     )
 
     val mirrored =
-      MaterialSymbolTypeface.isAutoMirrored(reactApplicationContext, name) &&
-        I18nUtil.instance.isRTL(reactApplicationContext)
+      direction == "rtl" && MaterialSymbolTypeface.isAutoMirrored(reactApplicationContext, name)
 
     val cacheFile = File(
       cacheDir, "${Uri.encode(name)}_${scaledSize}_$resolvedColor${if (mirrored) "_rtl" else ""}.png"

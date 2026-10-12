@@ -5,10 +5,14 @@ import {
   type ViewStyle,
 } from 'react-native';
 
+import { DEFAULT_DIRECTION } from '../constants';
 import { FONT_WEIGHTS } from './constants';
 import MaterialSymbolViewNativeComponent from './MaterialSymbolViewNativeComponent';
 import NativeMaterialSymbolModule from './NativeMaterialSymbolModule';
-import type { MaterialSymbolOptions } from './types';
+import type {
+  MaterialSymbolImageSourceOptions,
+  MaterialSymbolOptions,
+} from './types';
 
 export type MaterialSymbolProps = MaterialSymbolOptions & {
   /**
@@ -56,7 +60,8 @@ MaterialSymbol.getImageSource = ({
   fill,
   size = 24,
   color = 'black',
-}: MaterialSymbolOptions): ImageSourcePropType => {
+  direction = DEFAULT_DIRECTION,
+}: MaterialSymbolImageSourceOptions): ImageSourcePropType => {
   const processedColor = processColor(color);
 
   if (processedColor == null) {
@@ -71,7 +76,8 @@ MaterialSymbol.getImageSource = ({
     typeof weight === 'string' ? FONT_WEIGHTS[weight] : weight,
     fill,
     size,
-    { value: processedColor }
+    { value: processedColor },
+    direction
   );
 
   const source: ImageSourcePropType = {

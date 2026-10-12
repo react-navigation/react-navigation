@@ -391,6 +391,7 @@ export function useHeaderConfigProps({
         name: 'arrow_back',
         color: tintColor,
         size: ICON_SIZE,
+        direction,
       });
     } else if (headerBackIcon?.type === 'image') {
       return headerBackIcon.source;
@@ -402,11 +403,12 @@ export function useHeaderConfigProps({
         fill: headerBackIcon.fill,
         color: tintColor,
         size: ICON_SIZE,
+        direction,
       });
     }
 
     return undefined;
-  }, [headerBackIcon, headerBackVisible, headerShown, tintColor]);
+  }, [direction, headerBackIcon, headerBackVisible, headerShown, tintColor]);
 
   const children = (
     <>

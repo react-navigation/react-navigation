@@ -1,6 +1,9 @@
 import type { ImageSourcePropType, ViewStyle } from 'react-native';
 
-import type { MaterialSymbolOptions } from './types';
+import type {
+  MaterialSymbolImageSourceOptions,
+  MaterialSymbolOptions,
+} from './types';
 
 export type MaterialSymbolProps = MaterialSymbolOptions & {
   /**
@@ -18,7 +21,7 @@ MaterialSymbol.isAvailable = (): boolean => {
 };
 
 MaterialSymbol.getImageSource = (
-  _: MaterialSymbolOptions
+  _: MaterialSymbolImageSourceOptions
 ): ImageSourcePropType => {
   throw new Error(
     'MaterialSymbol.getImageSource is only supported on Android.'

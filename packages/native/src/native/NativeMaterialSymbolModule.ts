@@ -12,7 +12,8 @@ export interface Spec extends TurboModule {
     size: number,
     // Codegen requires using `Object` instead of `object
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
-    color: Object
+    color: Object,
+    direction: 'ltr' | 'rtl'
   ): string;
 }
 
