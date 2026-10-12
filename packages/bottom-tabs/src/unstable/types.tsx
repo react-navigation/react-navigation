@@ -122,6 +122,11 @@ type IconIOSSfSymbol = {
 
 export type NativeBottomTabIcon = IconIOSSfSymbol | IconImage;
 
+type TabBarLabelOffset = {
+  horizontal?: number;
+  vertical?: number;
+};
+
 export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
   /**
    * Title text for the screen.
@@ -346,6 +351,24 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    * @platform ios
    */
   tabBarMinimizeBehavior?: 'auto' | 'none' | 'onScrollDown' | 'onScrollUp';
+
+  /**
+   * Offset applied to the tab label relative to its default position.
+   * Positive `vertical` moves the label down, positive `horizontal` moves it right.
+   *
+   * The offset is specified separately for each tab bar item layout:
+   *
+   * - `stacked` - icon above the label, e.g. on iPhone in portrait
+   * - `inline` - icon beside the label in regular width, e.g. on iPad
+   * - `compactInline` - icon beside the label in compact width, e.g. on iPhone in landscape
+   *
+   * @platform ios
+   */
+  tabBarLabelPositionAdjustment?: {
+    stacked?: TabBarLabelOffset;
+    inline?: TabBarLabelOffset;
+    compactInline?: TabBarLabelOffset;
+  };
 
   /**
    * Function which returns a React element to display as an accessory view.
