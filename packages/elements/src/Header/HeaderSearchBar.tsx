@@ -45,6 +45,11 @@ function HeaderSearchBarInternal(
     autoCapitalize,
     placeholder = 'Search',
     cancelButtonText = 'Cancel',
+    cancelButtonAccessibilityLabel = Platform.OS === 'ios'
+      ? cancelButtonText
+      : 'Close',
+    clearButtonAccessibilityLabel = 'Clear text',
+    openButtonAccessibilityLabel: _openButtonAccessibilityLabel,
     enterKeyHint = 'search',
     onChangeText,
     onClose,
@@ -158,7 +163,6 @@ function HeaderSearchBarInternal(
   return (
     <Animated.View
       pointerEvents={visible ? 'auto' : 'none'}
-      aria-live="polite"
       aria-hidden={!visible}
       style={[styles.container, { opacity: visibleAnim }, style]}
     >
@@ -171,6 +175,7 @@ function HeaderSearchBarInternal(
         <TextInput
           {...rest}
           ref={inputRef}
+          accessibilityRole="search"
           onChange={onChangeText}
           onChangeText={setValue}
           autoFocus={autoFocus}
@@ -199,6 +204,8 @@ function HeaderSearchBarInternal(
         />
         {Platform.OS === 'ios' ? (
           <PlatformPressable
+            accessible={hasText}
+            accessibilityLabel={clearButtonAccessibilityLabel}
             onPress={onClear}
             style={[
               {
@@ -219,6 +226,11 @@ function HeaderSearchBarInternal(
       </View>
       {Platform.OS !== 'ios' ? (
         <HeaderButton
+          accessibilityLabel={
+            hasText
+              ? clearButtonAccessibilityLabel
+              : cancelButtonAccessibilityLabel
+          }
           onPress={() => {
             if (value) {
               onClear();
@@ -232,7 +244,11 @@ function HeaderSearchBarInternal(
         </HeaderButton>
       ) : null}
       {Platform.OS === 'ios' ? (
-        <PlatformPressable onPress={cancelSearch} style={styles.cancelButton}>
+        <PlatformPressable
+          accessibilityLabel={cancelButtonAccessibilityLabel}
+          onPress={cancelSearch}
+          style={styles.cancelButton}
+        >
           <Text
             style={[
               fonts.regular,
