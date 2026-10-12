@@ -37,7 +37,6 @@ class MaterialSymbolView @JvmOverloads constructor(
   }
 
   fun setName(name: String?) {
-    text = name
     symbol = name?.let { MaterialSymbolTypeface.getSymbol(context, it) }
     autoMirrored = name?.let { MaterialSymbolTypeface.isAutoMirrored(context, it) } ?: false
 
