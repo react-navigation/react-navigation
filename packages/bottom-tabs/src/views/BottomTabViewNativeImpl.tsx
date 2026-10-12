@@ -607,7 +607,7 @@ export function BottomTabViewNative({
               preventNativeSelection={tabBarSelectionEnabled === false}
               badgeValue={tabBarBadge?.toString()}
               title={tabTitle}
-              nativeContainerStyle={{ backgroundColor: colors.background }}
+              style={{ backgroundColor: colors.background }}
               specialEffects={{
                 repeatedTabSelection: {
                   popToRoot: tabBarRepeatedPressBehavior?.popToTop !== false,
