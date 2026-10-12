@@ -60,9 +60,17 @@ test('preserves reference for navigation objects', () => {
     return null;
   };
 
-  const root = render(<Test />);
+  const root = render(
+    <BaseNavigationContainer>
+      <Test />
+    </BaseNavigationContainer>
+  );
 
-  root.update(<Test />);
+  root.update(
+    <BaseNavigationContainer>
+      <Test />
+    </BaseNavigationContainer>
+  );
 });
 
 test('returns correct value for isFocused', () => {

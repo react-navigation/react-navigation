@@ -108,6 +108,6 @@ export function NavigationStateListenerProvider({
   );
 }
 
-const NavigationStateListenerContext = React.createContext<
+export const NavigationStateListenerContext = React.createContext<
   NavigationStateListener | undefined
 >(undefined);

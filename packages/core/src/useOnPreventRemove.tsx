@@ -9,7 +9,7 @@ import * as React from 'react';
 
 import {
   type ChildBeforeRemoveListener,
-  NavigationBuilderContext,
+  useNavigationBuilderContext,
 } from './NavigationBuilderContext';
 import { NavigationRouteContext } from './NavigationProvider';
 import type { EventMapCore } from './types';
@@ -107,7 +107,7 @@ export function useOnPreventRemove({
   emitter,
   beforeRemoveListeners,
 }: Options) {
-  const { addKeyedListener } = React.useContext(NavigationBuilderContext);
+  const { addKeyedListener } = useNavigationBuilderContext();
   const route = React.useContext(NavigationRouteContext);
   const routeKey = route?.key;
 

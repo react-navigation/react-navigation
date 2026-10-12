@@ -19,7 +19,7 @@ import { ConsumedParamsContext } from './ConsumedParamsContext';
 import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { useNavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 // eslint-disable-next-line import-x/no-deprecated
 import { NavigationMetaContext } from './NavigationMetaContext';
@@ -463,9 +463,7 @@ export function useNavigationBuilder<
     getIsInitial,
   } = React.useContext(NavigationStateContext);
 
-  const { onEmitEvent, getIsStateEmitted } = React.useContext(
-    NavigationBuilderContext
-  );
+  const { onEmitEvent, getIsStateEmitted } = useNavigationBuilderContext();
 
   const stateCleanupRef = React.useRef<boolean>(false);
   const lastStateRef = React.useRef<State | PartialState<State> | undefined>(

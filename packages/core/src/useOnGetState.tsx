@@ -4,7 +4,7 @@ import * as React from 'react';
 import { isArrayEqual } from './isArrayEqual';
 import {
   type GetStateListener,
-  NavigationBuilderContext,
+  useNavigationBuilderContext,
 } from './NavigationBuilderContext';
 import { NavigationRouteContext } from './NavigationProvider';
 
@@ -14,7 +14,7 @@ type Options = {
 };
 
 export function useOnGetState({ getState, getStateListeners }: Options) {
-  const { addKeyedListener } = React.useContext(NavigationBuilderContext);
+  const { addKeyedListener } = useNavigationBuilderContext();
   const route = React.useContext(NavigationRouteContext);
   const key = route ? route.key : 'root';
 
