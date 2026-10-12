@@ -7,6 +7,7 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
+import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContext } from './NavigationContext';
 import { type NavigationHelpers, PrivateValueStore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
@@ -44,6 +45,7 @@ export function useNavigationHelpers<
   router,
 }: Options<State, Action>) {
   const parentNavigationHelpers = React.useContext(NavigationContext);
+  const { withStackTrace } = React.useContext(NavigationBuilderContext);
 
   // In some cases (e.g. route names change), internal state might have changed
   // But it hasn't been committed yet, so hasn't propagated to any listeners
@@ -64,13 +66,15 @@ export function useNavigationHelpers<
 
   return React.useMemo(() => {
     const dispatch = (op: Action | ((state: State) => Action)) => {
-      const action = typeof op === 'function' ? op(getState()) : op;
+      withStackTrace(dispatch, () => {
+        const action = typeof op === 'function' ? op(getState()) : op;
 
-      const handled = onAction(action);
+        const handled = onAction(action);
 
-      if (!handled) {
-        onUnhandledAction?.(action);
-      }
+        if (!handled) {
+          onUnhandledAction?.(action);
+        }
+      });
     };
 
     const actions = {
@@ -79,8 +83,15 @@ export function useNavigationHelpers<
     };
 
     const helpers = Object.keys(actions).reduce((acc, name) => {
+      const helper = (...args: any) =>
+        withStackTrace(helper, () =>
+          // @ts-expect-error: name is a valid key, but TypeScript is dumb
+          dispatch(actions[name](...args))
+        );
+
       // @ts-expect-error: name is a valid key, but TypeScript is dumb
-      acc[name] = (...args: any) => dispatch(actions[name](...args));
+      acc[name] = helper;
+
       return acc;
     }, {} as ActionHelpers);
 
@@ -143,5 +154,6 @@ export function useNavigationHelpers<
     onUnhandledAction,
     navigatorId,
     stateRef,
+    withStackTrace,
   ]);
 }

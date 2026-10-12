@@ -66,7 +66,7 @@ export function useNavigationCache<
   router,
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
-  const { stackRef } = React.useContext(NavigationBuilderContext);
+  const { withStackTrace } = React.useContext(NavigationBuilderContext);
 
   const base = React.useMemo((): NavigationItem<
     State,
@@ -148,33 +148,14 @@ export function useNavigationCache<
       acc[route.key] = previous;
     } else {
       const dispatch = (thunk: Thunk) => {
-        const action = typeof thunk === 'function' ? thunk(getState()) : thunk;
+        withStackTrace(dispatch, () => {
+          const action =
+            typeof thunk === 'function' ? thunk(getState()) : thunk;
 
-        if (action != null) {
-          navigation.dispatch({ source: route.key, ...action });
-        }
-      };
-
-      const withStack = (callback: () => void) => {
-        let isStackSet = false;
-
-        try {
-          if (
-            process.env.NODE_ENV !== 'production' &&
-            stackRef &&
-            !stackRef.current
-          ) {
-            // Capture the stack trace for devtools
-            stackRef.current = new Error().stack;
-            isStackSet = true;
+          if (action != null) {
+            navigation.dispatch({ source: route.key, ...action });
           }
-
-          callback();
-        } finally {
-          if (isStackSet && stackRef) {
-            stackRef.current = undefined;
-          }
-        }
+        });
       };
 
       const actions = {
@@ -184,11 +165,13 @@ export function useNavigationCache<
 
       const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
         (acc, name) => {
-          acc[name] = (...args: any) =>
-            withStack(() =>
+          const helper = (...args: any) =>
+            withStackTrace(helper, () =>
               // @ts-expect-error: name is a valid key, but TypeScript is dumb
               dispatch(actions[name](...args))
             );
+
+          acc[name] = helper;
 
           return acc;
         },
@@ -200,7 +183,7 @@ export function useNavigationCache<
         ...helpers,
         // FIXME: too much work to fix the types for now
         ...(emitter.create(route.key) as any),
-        dispatch: (thunk: Thunk) => withStack(() => dispatch(thunk)),
+        dispatch,
         getParent: (id?: string) => {
           if (id !== undefined && id === base.getId()) {
             // If the passed id is the same as the current navigation id,
