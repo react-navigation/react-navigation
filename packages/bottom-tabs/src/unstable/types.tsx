@@ -192,6 +192,16 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
     | ((props: { focused: boolean }) => NativeBottomTabIcon);
 
   /**
+   * Size of the tab's icon.
+   *
+   * The largest size is used for the icon area in all tabs.
+   * Icons smaller than the largest size are centered in this area.
+   *
+   * @platform android
+   */
+  tabBarIconSize?: number;
+
+  /**
    * Text to show in a badge on the tab icon.
    */
   tabBarBadge?: number | string;
@@ -232,6 +242,20 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    * @platform android
    */
   tabBarActiveIndicatorEnabled?: boolean;
+
+  /**
+   * Width of the tab's active indicator.
+   *
+   * @platform android
+   */
+  tabBarActiveIndicatorWidth?: number;
+
+  /**
+   * Height of the tab's active indicator.
+   *
+   * @platform android
+   */
+  tabBarActiveIndicatorHeight?: number;
 
   /**
    * Color of tab bar item's ripple effect.

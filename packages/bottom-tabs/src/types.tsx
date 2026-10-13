@@ -209,6 +209,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   }) => React.ReactNode;
 
   /**
+   * Size of the tab's icon.
+   */
+  tabBarIconSize?: number;
+
+  /**
    * Style object for the tab icon.
    */
   tabBarIconStyle?: StyleProp<TextStyle>;
