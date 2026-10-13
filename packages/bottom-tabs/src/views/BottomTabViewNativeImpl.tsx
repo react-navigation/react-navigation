@@ -93,6 +93,9 @@ const ICON_SIZE = Platform.select({
   default: 24,
 });
 
+const SUPPORTS_PROMINENT_TAB =
+  Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 27;
+
 function reducer(state: NativeState, action: NativeAction): NativeState {
   switch (action.type) {
     case 'TRACK_TRANSITION':
@@ -449,6 +452,17 @@ export function BottomTabViewNative({
         ? 'never'
         : currentOptions.tabBarMinimizeBehavior;
 
+  const tabBarSidebarPreferredPlacement =
+    currentOptions.tabBarSidebarPreferredPlacement === 'auto'
+      ? 'automatic'
+      : currentOptions.tabBarSidebarPreferredPlacement;
+
+  const prominentScreenKey = SUPPORTS_PROMINENT_TAB
+    ? state.routes.find(
+        (route) => descriptors[route.key]?.options.tabBarRole === 'prominent'
+      )?.key
+    : undefined;
+
   const bottomAccessory = currentOptions.bottomAccessory;
 
   return (
@@ -476,11 +490,15 @@ export function BottomTabViewNative({
         colorScheme={dark ? 'dark' : 'light'}
         nativeContainerStyle={{ backgroundColor: colors.background }}
         ios={{
+          prominentScreenKey,
           bottomAccessory: bottomAccessory
             ? (environment: TabsBottomAccessoryEnvironment) =>
                 bottomAccessory({ placement: environment })
             : undefined,
+          tabBarHiddenAnimationEnabled:
+            currentOptions.tabBarVisibilityAnimationEnabled,
           tabBarControllerMode,
+          tabBarSidebarPreferredPlacement,
           tabBarMinimizeBehavior,
           tabBarTintColor: activeTintColor,
         }}
@@ -622,6 +640,8 @@ const TabScene = React.memo(function TabScene({
     tabBarActiveIndicatorHeight,
     tabBarBadge,
     tabBarSystemItem,
+    tabBarRole,
+    tabBarSearchAutoFocus,
     tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
     tabBarStyle,
     tabBarAccessibilityLabel,
@@ -629,6 +649,12 @@ const TabScene = React.memo(function TabScene({
     sceneStyle,
     overrideScrollViewContentInsetAdjustmentBehavior,
   } = options;
+
+  const systemItem =
+    tabBarSystemItem ??
+    // Setting the `role` to 'search' doesn't add title and icon automatically
+    // So we also set `tabBarSystemItem` to 'search' to match SwiftUI's behavior
+    (tabBarRole === 'search' ? 'search' : undefined);
 
   const {
     backgroundColor: tabBarBackgroundColor,
@@ -638,7 +664,7 @@ const TabScene = React.memo(function TabScene({
   const tabTitle =
     // On iOS, `systemItem` already provides a localized label
     // So we should only use `tabBarLabel` if explicitly provided
-    Platform.OS === 'ios' && tabBarSystemItem != null
+    Platform.OS === 'ios' && systemItem != null
       ? tabBarLabel
       : getLabel({ label: tabBarLabel, title }, route.name);
 
@@ -769,7 +795,9 @@ const TabScene = React.memo(function TabScene({
       ios={{
         icon: icon?.ios ?? icon?.shared,
         selectedIcon: selectedIcon?.ios ?? selectedIcon?.shared,
-        systemItem: tabBarSystemItem,
+        systemItem,
+        role: tabBarRole === 'search' ? tabBarRole : undefined,
+        automaticallyActivatesSearch: tabBarSearchAutoFocus,
         scrollEdgeAppearance: {
           tabBarBackgroundColor,
           tabBarShadowColor,
