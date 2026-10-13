@@ -290,10 +290,10 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
         });
 
       const activeIndicatorColor =
-        (currentOptions?.tabBarActiveIndicatorColor ??
-        typeof activeTintColor === 'string')
+        currentOptions?.tabBarActiveIndicatorColor ??
+        (typeof activeTintColor === 'string'
           ? Color(activeTintColor)?.alpha(0.1).string()
-          : undefined;
+          : undefined);
 
       return { activeIndicatorColor, activeTintColor, inactiveTintColor };
     }, [
