@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.55](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.54...@react-navigation/elements@3.0.0-alpha.55) (2026-10-13)
+
+### Bug Fixes
+
+* fallback to images when material symbols are not available ([8a45f3d](https://github.com/react-navigation/react-navigation/commit/8a45f3d06ecd2b2ced29e27a4d6d680b51e2c4d6)) - by @satya164
+* improve accessibility for custom header searchbar ([2839ae5](https://github.com/react-navigation/react-navigation/commit/2839ae55cc55b52bfabb1fe5da62a891d9773b1e)) - by @satya164
+* propagate layout direction to sf symbols ([3cdc6f1](https://github.com/react-navigation/react-navigation/commit/3cdc6f1dd6dcbf381ade32b1b84c44ba9d0a0620)) - by @satya164
+
+### Features
+
+* add support for extending SFSymbol name types ([#13166](https://github.com/react-navigation/react-navigation/issues/13166)) ([4ba764e](https://github.com/react-navigation/react-navigation/commit/4ba764e041a96691fa2e0e4052452ebe90f5af7c)) - by @satya164
+* add support for filled material symbols and reduce size ([#13274](https://github.com/react-navigation/react-navigation/issues/13274)) ([d6c10f5](https://github.com/react-navigation/react-navigation/commit/d6c10f5390ce4c54d9b205e0c080ff3d7fff9441)) - by @satya164
+* automatically mirror material symbols on android in RTL ([#13281](https://github.com/react-navigation/react-navigation/issues/13281)) ([b9c9fe6](https://github.com/react-navigation/react-navigation/commit/b9c9fe6ea9b8fcf32f49cb04045d944c1ee86a87)) - by @satya164
+* support tinted image icons on Android and rendering mode for SF Symbol icons ([#13278](https://github.com/react-navigation/react-navigation/issues/13278)) ([e50049a](https://github.com/react-navigation/react-navigation/commit/e50049a71517809fec9371c5345e225edfb70477)), closes [#13282](https://github.com/react-navigation/react-navigation/issues/13282) - by @stachbial
+
 # [3.0.0-alpha.54](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.53...@react-navigation/elements@3.0.0-alpha.54) (2026-10-02)
 
 **Note:** Version bump only for package @react-navigation/elements
