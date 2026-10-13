@@ -195,7 +195,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
   swipeMinDistance?: number | undefined;
 
   /**
-   * Whether the keyboard should be dismissed when the swipe gesture begins.
+   * Whether the keyboard should be dismissed when the drawer starts opening or closing.
    * Defaults to `'on-drag'`. Set to `'none'` to disable keyboard handling.
    */
   keyboardDismissMode?: 'on-drag' | 'none' | undefined;
