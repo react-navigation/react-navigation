@@ -1,8 +1,11 @@
 import * as React from 'react';
 
 import { NavigationBuilderContext } from './NavigationBuilderContext';
-import { NavigationStateContext } from './NavigationStateContext';
 import { IsFocusedContext } from './useIsFocused';
+
+export const OptionsGetterContext = React.createContext<
+  ((key: string, getter: () => object | undefined | null) => void) | undefined
+>(undefined);
 
 type Options = {
   key?: string;
@@ -24,9 +27,7 @@ export function useOptionsGetters({
 
   const onOptionsChange = React.use(NavigationBuilderContext)?.onOptionsChange;
 
-  const { addOptionsGetter: parentAddOptionsGetter } = React.use(
-    NavigationStateContext
-  );
+  const parentAddOptionsGetter = React.use(OptionsGetterContext);
 
   React.useInsertionEffect(() => {
     optionsRef.current = options;
