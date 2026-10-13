@@ -194,7 +194,7 @@ type BottomTabCustomOptions = {
    *
    * Only supported with `custom` implementation.
    */
-  tabBarIconStyle?: StyleProp<TextStyle>;
+  tabBarIconStyle?: StyleProp<ViewStyle>;
 
   /**
    * Whether the tab bar gets hidden when the keyboard is shown.
@@ -383,6 +383,24 @@ type BottomTabNativeOptions = {
   tabBarActiveIndicatorEnabled?: boolean | undefined;
 
   /**
+   * Width of the tab's active indicator.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform android
+   */
+  tabBarActiveIndicatorWidth?: number | undefined;
+
+  /**
+   * Height of the tab's active indicator.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform android
+   */
+  tabBarActiveIndicatorHeight?: number | undefined;
+
+  /**
    * Function which returns a React element to display as an accessory view.
    *
    * Accepts a `placement` parameter which can be one of the following values:
@@ -457,6 +475,17 @@ export type BottomTabNavigationOptions = {
    * Only supported on Android with `native` implementation.
    */
   tabBarLabelVisibilityMode?: TabBarItemLabelVisibilityMode | undefined;
+
+  /**
+   * Size of the tab's icon.
+   *
+   * With `native` implementation, the largest size is used for the icon area in all tabs.
+   * Icons smaller than the largest size are centered in this area.
+   *
+   * Supported on all platforms with `custom` implementation.
+   * Only supported on Android with `native` implementation.
+   */
+  tabBarIconSize?: number | undefined;
 
   /**
    * Style object for the tab label.

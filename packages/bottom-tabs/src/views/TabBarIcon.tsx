@@ -15,6 +15,7 @@ export type TabBarIconProps = {
   route: Route<string>;
   variant: 'uikit' | 'material';
   size: 'compact' | 'regular';
+  iconSize?: number | undefined;
   badge?: string | number | undefined;
   badgeStyle?: StyleProp<TextStyle> | undefined;
   activeOpacity: number;
@@ -48,6 +49,7 @@ export function TabBarIcon({
   route: _,
   variant,
   size,
+  iconSize: iconSizeOverride,
   badge,
   badgeStyle,
   activeOpacity,
@@ -59,11 +61,12 @@ export function TabBarIcon({
   style,
 }: TabBarIconProps) {
   const iconSize =
-    variant === 'material'
+    iconSizeOverride ??
+    (variant === 'material'
       ? ICON_SIZE_MATERIAL
       : size === 'compact'
         ? ICON_SIZE_SQUARE_COMPACT
-        : ICON_SIZE_SQUARE;
+        : ICON_SIZE_SQUARE);
 
   // We render the icon twice at the same position on top of each other:
   // active and inactive one, so we can fade between them.
@@ -75,6 +78,10 @@ export function TabBarIcon({
           : size === 'compact'
             ? styles.wrapperUikitCompact
             : styles.wrapperUikit,
+        iconSizeOverride != null && {
+          width: iconSizeOverride,
+          height: iconSizeOverride,
+        },
         style,
       ]}
     >

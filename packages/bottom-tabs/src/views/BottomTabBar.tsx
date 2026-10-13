@@ -601,6 +601,7 @@ const BottomTabBarItem = React.memo(function BottomTabBarItem({
         label={label}
         labelVisibilityMode={tabBarLabelVisibilityMode}
         labelStyle={options.tabBarLabelStyle}
+        iconSize={options.tabBarIconSize}
         iconStyle={options.tabBarIconStyle}
         style={[
           sidebar

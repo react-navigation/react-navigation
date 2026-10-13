@@ -27,13 +27,13 @@ import {
   type TextStyle,
 } from 'react-native';
 import {
-  type PlatformIconAndroid,
   type PlatformIconIOS,
   type PlatformIconShared,
   Tabs,
   type TabsBottomAccessoryEnvironment,
   type TabSelectedEvent,
   type TabSelectionRejectedEvent,
+  type TabsScreenIconAndroid,
   type TabsScreenItemStateAppearanceAndroid,
   type TabsScreenItemStateAppearanceIOS,
 } from 'react-native-screens';
@@ -65,7 +65,7 @@ type TabSelectionPreventedEvent = {
 
 type PlatformIcon = {
   ios?: PlatformIconIOS | undefined;
-  android?: PlatformIconAndroid | undefined;
+  android?: TabsScreenIconAndroid | undefined;
   shared?: PlatformIconShared | undefined;
 };
 
@@ -617,6 +617,9 @@ const TabScene = React.memo(function TabScene({
     tabBarRepeatedPressBehavior,
     tabBarBadgeStyle,
     tabBarIcon,
+    tabBarIconSize,
+    tabBarActiveIndicatorWidth,
+    tabBarActiveIndicatorHeight,
     tabBarBadge,
     tabBarSystemItem,
     tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
@@ -688,11 +691,14 @@ const TabScene = React.memo(function TabScene({
     tabBarItemIconColor: activeTintColor,
   };
 
+  const iconSize =
+    Platform.OS === 'android' ? (tabBarIconSize ?? ICON_SIZE!) : ICON_SIZE!;
+
   const getIcon = (selected: boolean) => {
     if (typeof tabBarIcon === 'function') {
       const result = tabBarIcon({
         focused: selected,
-        size: ICON_SIZE!,
+        size: iconSize,
         color: selected ? activeTintColor : inactiveTintColor,
       });
 
@@ -701,14 +707,14 @@ const TabScene = React.memo(function TabScene({
           `Returning a React element from 'tabBarIcon' is not supported with native tab bar.`
         );
       } else if (result && typeof result === 'object' && 'type' in result) {
-        return getPlatformIcon(result, direction);
+        return getPlatformIcon(result, direction, iconSize);
       } else {
         throw new Error(
           `The 'tabBarIcon' function must return an icon object (got ${typeof result}).`
         );
       }
     } else if (tabBarIcon != null) {
-      return getPlatformIcon(tabBarIcon, direction);
+      return getPlatformIcon(tabBarIcon, direction, iconSize);
     }
 
     return undefined;
@@ -746,8 +752,11 @@ const TabScene = React.memo(function TabScene({
           tabBarItemLabelVisibilityMode: labelVisibilityMode,
           normal: normalTabItemAppearance,
           selected: selectedTabItemAppearance,
+          tabBarItemIconSize: tabBarIconSize,
           tabBarItemActiveIndicatorColor: activeIndicatorColor,
           tabBarItemActiveIndicatorEnabled: activeIndicatorEnabled,
+          tabBarItemActiveIndicatorWidth: tabBarActiveIndicatorWidth,
+          tabBarItemActiveIndicatorHeight: tabBarActiveIndicatorHeight,
           tabBarItemTitleFontFamily: fontFamily,
           tabBarItemTitleFontWeight: fontWeight,
           tabBarItemTitleSmallLabelFontSize: fontSize,
@@ -840,7 +849,11 @@ function AnimatedScreenContent({
   );
 }
 
-function getPlatformIcon(icon: Icon, direction: LocaleDirection): PlatformIcon {
+function getPlatformIcon(
+  icon: Icon,
+  direction: LocaleDirection,
+  size: number
+): PlatformIcon {
   switch (icon.type) {
     case 'sfSymbol':
       return {
@@ -858,13 +871,21 @@ function getPlatformIcon(icon: Icon, direction: LocaleDirection): PlatformIcon {
             variant: icon.variant,
             weight: icon.weight,
             fill: icon.fill,
-            size: ICON_SIZE,
+            size,
             direction,
           }),
         },
         shared: undefined,
       };
-    case 'image':
+    case 'image': {
+      // A `{ uri: 'name' }` source maps to an Android drawable by name.
+      const drawableName =
+        typeof icon.source === 'object' &&
+        'uri' in icon.source &&
+        icon.source.uri?.includes(':') === false
+          ? icon.source.uri
+          : undefined;
+
       return {
         ios:
           icon.tinted === false
@@ -876,12 +897,19 @@ function getPlatformIcon(icon: Icon, direction: LocaleDirection): PlatformIcon {
                 type: 'templateSource',
                 templateSource: icon.source,
               },
-        android: undefined,
+        android:
+          drawableName != null
+            ? {
+                type: 'drawableResource',
+                name: drawableName,
+              }
+            : undefined,
         shared: {
           type: 'imageSource',
           imageSource: icon.source,
         },
       };
+    }
     default: {
       const _exhaustiveCheck: never = icon;
 
