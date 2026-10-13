@@ -101,8 +101,6 @@ type IconImage = {
    * Disabling will keep the image's original colors.
    *
    * Defaults to `true`.
-   *
-   * @platform ios
    */
   tinted?: boolean;
 };
@@ -118,6 +116,16 @@ type IconIOSSfSymbol = {
    * @platform ios
    */
   name: SFSymbol;
+  /**
+   * How to color the symbol.
+   * - `monochrome`: Single color, using the tint color.
+   * - `multicolor`: Uses the symbol's built-in multicolor scheme.
+   *
+   * Defaults to a single color for system symbols.
+   *
+   * @platform ios
+   */
+  renderingMode?: 'monochrome' | 'multicolor';
 };
 
 export type NativeBottomTabIcon = IconIOSSfSymbol | IconImage;
