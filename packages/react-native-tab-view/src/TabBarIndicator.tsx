@@ -27,6 +27,99 @@ const samplePoints = (easing: (t: number) => number) =>
 const TRAILING_EDGE_SAMPLES = samplePoints(Easing.bezier(0.3, 0, 0.8, 0.15));
 const LEADING_EDGE_SAMPLES = samplePoints(Easing.bezier(0.05, 0.7, 0.1, 1));
 
+const easedInterpolate = (
+  position: Animated.AnimatedInterpolation<number>,
+  values: number[],
+  samples: number[] | null,
+  jumpRange: { from: number; to: number } | null
+) => {
+  if (values.length <= 1) {
+    return values[0] ?? 0;
+  }
+
+  // On multi-tab jumps, slide directly from source to destination and
+  // Settle one tab before the pager finishes scrolling
+  // This makes the animation feel snappier
+  // Especially on Android where the pager animation is slow
+  if (jumpRange) {
+    const fromValue = values[jumpRange.from];
+    const toValue = values[jumpRange.to];
+
+    if (fromValue == null) {
+      throw new Error(`Couldn't find a value at index ${jumpRange.from}.`);
+    }
+
+    if (toValue == null) {
+      throw new Error(`Couldn't find a value at index ${jumpRange.to}.`);
+    }
+
+    const inputRange =
+      jumpRange.from > jumpRange.to
+        ? [jumpRange.to, jumpRange.to + 1, jumpRange.from]
+        : [jumpRange.from, jumpRange.to - 1, jumpRange.to];
+
+    const outputRange = inputRange.map((i) =>
+      i === jumpRange.from ? fromValue : toValue
+    );
+
+    return position.interpolate({
+      inputRange,
+      outputRange,
+      extrapolate: 'clamp',
+    });
+  }
+
+  if (samples == null) {
+    return position.interpolate({
+      inputRange: values.map((_, i) => i),
+      outputRange: values,
+      extrapolate: 'clamp',
+    });
+  }
+
+  const inputRange: number[] = [];
+  const outputRange: number[] = [];
+
+  for (let i = 0; i < values.length - 1; i++) {
+    const start = values[i];
+    const end = values[i + 1];
+
+    if (start == null) {
+      throw new Error(`Couldn't find a value at index ${i}.`);
+    }
+
+    if (end == null) {
+      throw new Error(`Couldn't find a value at index ${i + 1}.`);
+    }
+
+    for (let j = 0; j < samples.length - 1; j++) {
+      const sample = samples[j];
+
+      if (sample == null) {
+        throw new Error(`Couldn't find an easing sample at index ${j}.`);
+      }
+
+      inputRange.push(i + j / EASING_SAMPLE_COUNT);
+      outputRange.push(start + (end - start) * sample);
+    }
+  }
+
+  const last = values[values.length - 1];
+
+  if (last == null) {
+    throw new Error(`Couldn't find a value at index ${values.length - 1}.`);
+  }
+
+  inputRange.push(values.length - 1);
+  outputRange.push(last);
+
+  return position.interpolate({
+    inputRange,
+    outputRange,
+    extrapolate: 'clamp',
+  });
+};
+
 export type Props<T extends Route> = SceneRendererProps & {
   variant?: 'primary' | 'secondary' | undefined;
   navigationState: NavigationState<T>;
@@ -118,111 +211,25 @@ export function TabBarIndicator<T extends Route>({
   const leftPieceWidth = leftRadiusWidth + CAP_FILL_OVERLAP;
   const rightPieceWidth = rightRadiusWidth + CAP_FILL_OVERLAP;
 
-  const { routes } = navigationState;
-
-  const easedInterpolate = (values: number[], samples: number[] | null) => {
-    if (routes.length <= 1) {
-      return values[0] ?? 0;
-    }
-
-    // On multi-tab jumps, slide directly from source to destination and
-    // Settle one tab before the pager finishes scrolling
-    // This makes the animation feel snappier
-    // Especially on Android where the pager animation is slow
-    if (jumpRange) {
-      const fromValue = values[jumpRange.from];
-      const toValue = values[jumpRange.to];
-
-      if (fromValue == null) {
-        throw new Error(`Couldn't find a value at index ${jumpRange.from}.`);
-      }
-
-      if (toValue == null) {
-        throw new Error(`Couldn't find a value at index ${jumpRange.to}.`);
-      }
-
-      const inputRange =
-        jumpRange.from > jumpRange.to
-          ? [jumpRange.to, jumpRange.to + 1, jumpRange.from]
-          : [jumpRange.from, jumpRange.to - 1, jumpRange.to];
-
-      const outputRange = inputRange.map((i) =>
-        i === jumpRange.from ? fromValue : toValue
-      );
-
-      return position.interpolate({
-        inputRange,
-        outputRange,
-        extrapolate: 'clamp',
-      });
-    }
-
-    if (samples == null) {
-      return position.interpolate({
-        inputRange: values.map((_, i) => i),
-        outputRange: values,
-        extrapolate: 'clamp',
-      });
-    }
-
-    const inputRange: number[] = [];
-    const outputRange: number[] = [];
-
-    for (let i = 0; i < values.length - 1; i++) {
-      const start = values[i];
-      const end = values[i + 1];
-
-      if (start == null) {
-        throw new Error(`Couldn't find a value at index ${i}.`);
-      }
-
-      if (end == null) {
-        throw new Error(`Couldn't find a value at index ${i + 1}.`);
-      }
-
-      for (let j = 0; j < samples.length - 1; j++) {
-        const sample = samples[j];
-
-        if (sample == null) {
-          throw new Error(`Couldn't find an easing sample at index ${j}.`);
-        }
-
-        inputRange.push(i + j / EASING_SAMPLE_COUNT);
-        outputRange.push(start + (end - start) * sample);
-      }
-    }
-
-    const last = values[values.length - 1];
-
-    if (last == null) {
-      throw new Error(`Couldn't find a value at index ${values.length - 1}.`);
-    }
-
-    inputRange.push(values.length - 1);
-    outputRange.push(last);
-
-    return position.interpolate({
-      inputRange,
-      outputRange,
-      extrapolate: 'clamp',
-    });
-  };
-
   let containerLayout: ViewStyle;
   let leftFillStyle: ViewStyle;
   let centerFillStyle: ViewStyle;
   let rightCapStyle: ViewStyle;
   let rightFillStyle: ViewStyle;
 
-  const rightEdges = widths.map((w, i) => {
-    const offset = offsets[i];
+  const rightEdges = React.useMemo(
+    () =>
+      widths.map((w, i) => {
+        const offset = offsets[i];
 
-    if (offset == null) {
-      throw new Error(`Couldn't find an offset at index ${i}.`);
-    }
+        if (offset == null) {
+          throw new Error(`Couldn't find an offset at index ${i}.`);
+        }
 
-    return offset + w;
-  });
+        return offset + w;
+      }),
+    [offsets, widths]
+  );
 
   const [lastIndex, setLastIndex] = React.useState(navigationState.index);
   const [jumpRange, setJumpRange] = React.useState<{
@@ -257,15 +264,40 @@ export function TabBarIndicator<T extends Route>({
   const trailingSamples = shouldStretch ? TRAILING_EDGE_SAMPLES : null;
   const leadingSamples = shouldStretch ? LEADING_EDGE_SAMPLES : null;
 
-  const offset = easedInterpolate(offsets, trailingSamples);
-  const rightEdge = easedInterpolate(rightEdges, leadingSamples);
+  const { offset, containerWidth, sideFillWidth, sideFillScale } =
+    React.useMemo(() => {
+      const offset = easedInterpolate(
+        position,
+        offsets,
+        trailingSamples,
+        jumpRange
+      );
 
-  const containerWidth = Animated.subtract(rightEdge, offset);
-  const sideFillWidth = Animated.divide(
-    Animated.subtract(containerWidth, leftPieceWidth + rightPieceWidth),
-    2
-  );
-  const sideFillScale = Animated.add(sideFillWidth, CAP_FILL_OVERLAP);
+      const rightEdge = easedInterpolate(
+        position,
+        rightEdges,
+        leadingSamples,
+        jumpRange
+      );
+
+      const containerWidth = Animated.subtract(rightEdge, offset);
+      const sideFillWidth = Animated.divide(
+        Animated.subtract(containerWidth, leftPieceWidth + rightPieceWidth),
+        2
+      );
+      const sideFillScale = Animated.add(sideFillWidth, CAP_FILL_OVERLAP);
+
+      return { offset, containerWidth, sideFillWidth, sideFillScale };
+    }, [
+      position,
+      offsets,
+      rightEdges,
+      trailingSamples,
+      leadingSamples,
+      jumpRange,
+      leftPieceWidth,
+      rightPieceWidth,
+    ]);
 
   if (Platform.OS === 'web') {
     const centerFillStart = Animated.add(sideFillWidth, leftPieceWidth);
