@@ -8,6 +8,7 @@ import {
   useHeaderHeight,
 } from '@react-navigation/elements';
 import {
+  type NavigationRoute,
   type ParamListBase,
   type RouteProp,
   type StackNavigationState,
@@ -59,36 +60,8 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
           ? descriptors[previousKey]
           : undefined;
         const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
-        const { options, navigation, render } =
+        const descriptor =
           descriptors[route.key] ?? preloadedDescriptors[route.key];
-
-        const headerBack = previousDescriptor
-          ? {
-              title: getHeaderTitle(
-                previousDescriptor.options,
-                previousDescriptor.route.name
-              ),
-              href: buildHref(
-                previousDescriptor.route.name,
-                previousDescriptor.route.params
-              ),
-            }
-          : parentHeaderBack;
-
-        const canGoBack = headerBack != null;
-
-        const {
-          header,
-          headerShown,
-          headerBackIcon,
-          headerBackImageSource,
-          headerLeft,
-          headerTransparent,
-          headerBackTitle,
-          presentation,
-          contentStyle,
-          ...rest
-        } = options;
 
         const nextPresentation = nextDescriptor?.options.presentation;
 
@@ -97,94 +70,155 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
           descriptors[route.key] === undefined;
 
         return (
-          <Screen
+          <SceneView
             key={route.key}
-            focused={isFocused}
             route={route}
-            navigation={navigation}
-            headerShown={headerShown}
-            headerTransparent={headerTransparent}
-            header={
-              header !== undefined ? (
-                header({
-                  back: headerBack,
-                  options,
-                  route,
-                  navigation,
-                })
-              ) : (
-                <Header
-                  {...rest}
-                  back={headerBack}
-                  title={getHeaderTitle(options, route.name)}
-                  headerLeft={
-                    typeof headerLeft === 'function'
-                      ? ({ label, ...rest }) =>
-                          headerLeft({
-                            ...rest,
-                            label: headerBackTitle ?? label,
-                          })
-                      : headerLeft === undefined && canGoBack
-                        ? ({ tintColor, label, ...rest }) => (
-                            <HeaderBackButton
-                              {...rest}
-                              label={headerBackTitle ?? label}
-                              tintColor={tintColor}
-                              backImage={
-                                headerBackIcon !== undefined ||
-                                headerBackImageSource !== undefined
-                                  ? () => (
-                                      <Image
-                                        source={
-                                          headerBackIcon?.source ??
-                                          headerBackImageSource
-                                        }
-                                        resizeMode="contain"
-                                        tintColor={tintColor}
-                                        style={styles.backImage}
-                                      />
-                                    )
-                                  : undefined
-                              }
-                              onPress={navigation.goBack}
-                            />
-                          )
-                        : headerLeft
-                  }
-                  headerTransparent={headerTransparent}
-                />
-              )
+            descriptor={descriptor}
+            previousDescriptor={previousDescriptor}
+            parentHeaderBack={parentHeaderBack}
+            buildHref={buildHref}
+            focused={isFocused}
+            visible={
+              (isFocused ||
+                (nextPresentation != null &&
+                  TRANSPARENT_PRESENTATIONS.includes(nextPresentation))) &&
+              !isPreloaded
             }
-            style={[
-              StyleSheet.absoluteFill,
-              {
-                display:
-                  (isFocused ||
-                    (nextPresentation != null &&
-                      TRANSPARENT_PRESENTATIONS.includes(nextPresentation))) &&
-                  !isPreloaded
-                    ? 'flex'
-                    : 'none',
-              },
-              presentation != null &&
-              TRANSPARENT_PRESENTATIONS.includes(presentation)
-                ? { backgroundColor: 'transparent' }
-                : null,
-            ]}
-          >
-            <HeaderBackContext.Provider value={headerBack}>
-              <AnimatedHeaderHeightProvider>
-                <View style={[styles.contentContainer, contentStyle]}>
-                  {render()}
-                </View>
-              </AnimatedHeaderHeightProvider>
-            </HeaderBackContext.Provider>
-          </Screen>
+          />
         );
       })}
     </SafeAreaProviderCompat>
   );
 }
+
+type SceneViewProps = {
+  route: NavigationRoute<ParamListBase, string>;
+  descriptor: NativeStackDescriptor;
+  previousDescriptor: NativeStackDescriptor | undefined;
+  parentHeaderBack: React.ContextType<typeof HeaderBackContext>;
+  buildHref: ReturnType<typeof useLinkBuilder>['buildHref'];
+  focused: boolean;
+  visible: boolean;
+};
+
+const SceneView = React.memo(function SceneView({
+  route,
+  descriptor,
+  previousDescriptor,
+  parentHeaderBack,
+  buildHref,
+  focused,
+  visible,
+}: SceneViewProps) {
+  const { options, navigation, render } = descriptor;
+
+  const headerBack = previousDescriptor
+    ? {
+        title: getHeaderTitle(
+          previousDescriptor.options,
+          previousDescriptor.route.name
+        ),
+        href: buildHref(
+          previousDescriptor.route.name,
+          previousDescriptor.route.params
+        ),
+      }
+    : parentHeaderBack;
+
+  const canGoBack = headerBack != null;
+
+  const {
+    header,
+    headerShown,
+    headerBackIcon,
+    headerBackImageSource,
+    headerLeft,
+    headerTransparent,
+    headerBackTitle,
+    presentation,
+    contentStyle,
+    ...rest
+  } = options;
+
+  return (
+    <Screen
+      key={route.key}
+      focused={focused}
+      route={route}
+      navigation={navigation}
+      headerShown={headerShown}
+      headerTransparent={headerTransparent}
+      header={
+        header !== undefined ? (
+          header({
+            back: headerBack,
+            options,
+            route,
+            navigation,
+          })
+        ) : (
+          <Header
+            {...rest}
+            back={headerBack}
+            title={getHeaderTitle(options, route.name)}
+            headerLeft={
+              typeof headerLeft === 'function'
+                ? ({ label, ...rest }) =>
+                    headerLeft({
+                      ...rest,
+                      label: headerBackTitle ?? label,
+                    })
+                : headerLeft === undefined && canGoBack
+                  ? ({ tintColor, label, ...rest }) => (
+                      <HeaderBackButton
+                        {...rest}
+                        label={headerBackTitle ?? label}
+                        tintColor={tintColor}
+                        backImage={
+                          headerBackIcon !== undefined ||
+                          headerBackImageSource !== undefined
+                            ? () => (
+                                <Image
+                                  source={
+                                    headerBackIcon?.source ??
+                                    headerBackImageSource
+                                  }
+                                  resizeMode="contain"
+                                  tintColor={tintColor}
+                                  style={styles.backImage}
+                                />
+                              )
+                            : undefined
+                        }
+                        onPress={navigation.goBack}
+                      />
+                    )
+                  : headerLeft
+            }
+            headerTransparent={headerTransparent}
+          />
+        )
+      }
+      style={[
+        StyleSheet.absoluteFill,
+        {
+          display: visible ? 'flex' : 'none',
+        },
+        presentation != null && TRANSPARENT_PRESENTATIONS.includes(presentation)
+          ? { backgroundColor: 'transparent' }
+          : null,
+      ]}
+    >
+      <HeaderBackContext.Provider value={headerBack}>
+        <AnimatedHeaderHeightProvider>
+          <View style={[styles.contentContainer, contentStyle]}>
+            {render()}
+          </View>
+        </AnimatedHeaderHeightProvider>
+      </HeaderBackContext.Provider>
+    </Screen>
+  );
+});
 
 const AnimatedHeaderHeightProvider = ({
   children,
