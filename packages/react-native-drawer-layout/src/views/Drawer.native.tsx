@@ -220,6 +220,12 @@ export function Drawer({
   const onCloseLatest = useLatestCallback(onClose);
 
   const onAnimationStart = useLatestCallback((open: boolean) => {
+    // This is only called when the drawer is toggled programmatically
+    // Swipe gestures already dismiss the keyboard in `onGestureBegin`
+    if (open && drawerType !== 'permanent') {
+      hideKeyboard();
+    }
+
     onTransitionStart?.(!open);
   });
 

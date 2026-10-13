@@ -3,11 +3,12 @@ import 'react-native-gesture-handler/jestSetup';
 import { afterEach, expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
+  DrawerActions,
   NavigationContainer,
 } from '@react-navigation/native';
 import { act, render, screen, userEvent } from '@testing-library/react-native';
 import { useEffect } from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, Keyboard, Text, View } from 'react-native';
 import { setUpTests } from 'react-native-reanimated';
 
 import { createDrawerNavigator, type DrawerScreenProps } from '../index';
@@ -234,4 +235,51 @@ test('lazy=false pre-renders screen with effects active, pauses after first visi
 
   // After first focus and navigating away, effects are paused
   expect(effectActive).toBe(false);
+});
+
+test('dismisses the keyboard when the drawer is opened', async () => {
+  const dismiss = jest.spyOn(Keyboard, 'dismiss');
+
+  const Drawer = createDrawerNavigator<DrawerParamList>();
+  const navigation = createNavigationContainerRef<DrawerParamList>();
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Drawer.Navigator>
+        <Drawer.Screen name="A">{() => null}</Drawer.Screen>
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(dismiss).not.toHaveBeenCalled();
+
+  await act(() => navigation.dispatch(DrawerActions.openDrawer()));
+  await act(() => jest.runAllTicks());
+
+  expect(dismiss).toHaveBeenCalledTimes(1);
+
+  await act(() => navigation.dispatch(DrawerActions.closeDrawer()));
+  await act(() => jest.runAllTicks());
+
+  expect(dismiss).toHaveBeenCalledTimes(1);
+});
+
+test("doesn't dismiss the keyboard with keyboardDismissMode='none'", async () => {
+  const dismiss = jest.spyOn(Keyboard, 'dismiss');
+
+  const Drawer = createDrawerNavigator<DrawerParamList>();
+  const navigation = createNavigationContainerRef<DrawerParamList>();
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Drawer.Navigator screenOptions={{ keyboardDismissMode: 'none' }}>
+        <Drawer.Screen name="A">{() => null}</Drawer.Screen>
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.dispatch(DrawerActions.openDrawer()));
+  await act(() => jest.runAllTicks());
+
+  expect(dismiss).not.toHaveBeenCalled();
 });
