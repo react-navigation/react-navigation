@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.12.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.12.0...@react-navigation/stack@7.12.1) (2026-10-13)
+
+### Bug Fixes
+
+* restart card animation when StrictMode re-runs effects ([deb3b66](https://github.com/react-navigation/react-navigation/commit/deb3b66a81fdbd6361b6ae3fe952ab3dba658eb6)) - by @satya164
+
 # [7.12.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.11.2...@react-navigation/stack@7.12.0) (2026-09-29)
 
 ### Features

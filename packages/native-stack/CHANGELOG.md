@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.21.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.20.0...@react-navigation/native-stack@7.21.0) (2026-10-13)
+
+### Features
+
+* add options to hide left and right item backgrounds ([54e18fd](https://github.com/react-navigation/react-navigation/commit/54e18fd30479372544aff9db5446a733604f34b9)) - by @danchily2
+* add visibilityPriority and submenu description to header items ([#13284](https://github.com/react-navigation/react-navigation/issues/13284)) ([6ebba1e](https://github.com/react-navigation/react-navigation/commit/6ebba1efc7bccd49ed2c2817b073da36b39595f9)) - by @satya164
+
 # [7.20.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.19.2...@react-navigation/native-stack@7.20.0) (2026-09-29)
 
 ### Features

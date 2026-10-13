@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.24.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.23.0...@react-navigation/core@7.24.0) (2026-10-13)
+
+### Bug Fixes
+
+* capture stack traces for devtools at the call site ([da11ee5](https://github.com/react-navigation/react-navigation/commit/da11ee53985d0e83abc1dfb9108d4b2e5f8b76a5)) - by @satya164
+* cleanup more contexts in NavigationIndependentTree ([a6e4071](https://github.com/react-navigation/react-navigation/commit/a6e4071c05b8495aeef8e661867f017330324d0b)) - by @satya164
+
+### Features
+
+* add getter support to screens for lazy requires ([#13141](https://github.com/react-navigation/react-navigation/issues/13141)) ([6f8ad38](https://github.com/react-navigation/react-navigation/commit/6f8ad386ee9f0dd53a9571bf862acec6156a2849)) - by @satya164
+
 # [7.23.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.22.1...@react-navigation/core@7.23.0) (2026-09-29)
 
 ### Bug Fixes

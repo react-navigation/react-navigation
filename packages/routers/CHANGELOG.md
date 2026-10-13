@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.6.4...@react-navigation/routers@7.6.5) (2026-10-13)
+
+### Bug Fixes
+
+* update history params when switching tabs ([90540ca](https://github.com/react-navigation/react-navigation/commit/90540caa20d8646b15475a58c0b03dead1bc0733)) - by @satya164
+
 ## [7.6.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.6.3...@react-navigation/routers@7.6.4) (2026-07-20)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.45](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.44...@react-navigation/elements@2.9.45) (2026-10-13)
+
+### Bug Fixes
+
+* improve accessibility for custom header searchbar ([aa86a5a](https://github.com/react-navigation/react-navigation/commit/aa86a5a28025913fe29624b0748c846bf1c7ec0b)) - by @satya164
+
 ## [2.9.44](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.43...@react-navigation/elements@2.9.44) (2026-09-29)
 
 **Note:** Version bump only for package @react-navigation/elements
