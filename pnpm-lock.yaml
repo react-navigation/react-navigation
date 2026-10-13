@@ -505,9 +505,6 @@ importers:
 
   packages/elements:
     dependencies:
-      sf-symbols-typescript:
-        specifier: ^2.2.0
-        version: 2.2.0
       use-latest-callback:
         specifier: ^0.3.5
         version: 0.3.5(react@19.2.3)
