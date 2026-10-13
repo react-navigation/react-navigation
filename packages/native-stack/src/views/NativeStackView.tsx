@@ -43,6 +43,24 @@ export function NativeStackView({ state, descriptors }: Props) {
   const activeRoutes = state.routes.slice(0, state.index + 1);
   const modalRouteKeys = getModalRouteKeys(activeRoutes, descriptors);
 
+  const [savedNestedStateRouteKeys, setSavedNestedStateRouteKeys] =
+    React.useState<string[]>([]);
+
+  // Nested navigators clean up `route.state` when the screen is paused with `Activity`
+  // So we remember routes which had state until they are removed
+  const nestedStateRouteKeys = state.routes
+    .filter(
+      (route) =>
+        route.state != null || savedNestedStateRouteKeys.includes(route.key)
+    )
+    .map((route) => route.key);
+
+  if (
+    nestedStateRouteKeys.some((key) => !savedNestedStateRouteKeys.includes(key))
+  ) {
+    setSavedNestedStateRouteKeys(nestedStateRouteKeys);
+  }
+
   return (
     <SafeAreaProviderCompat>
       {state.routes.map((route, i) => {
@@ -118,7 +136,7 @@ export function NativeStackView({ state, descriptors }: Props) {
               : inactiveBehavior === 'unmount' &&
                   !isNextScreenModal &&
                   !isBeforeLast &&
-                  !route.state
+                  !nestedStateRouteKeys.includes(route.key)
                 ? 'unmounted'
                 : 'paused';
 
