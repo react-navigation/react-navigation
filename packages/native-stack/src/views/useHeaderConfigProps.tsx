@@ -10,6 +10,7 @@ import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   type HeaderBarButtonItemMenuAction,
   type HeaderBarButtonItemSubmenu,
+  type HeaderBarButtonItemVisibilityPriority,
   type HeaderBarButtonItemWithAction,
   type HeaderBarButtonItemWithMenu,
   isSearchBarAvailableForCurrentPlatform,
@@ -71,7 +72,13 @@ const processBarButtonItems = (
           );
         }
 
-        const { badge, label, labelStyle, icon, ...rest } = item;
+        const { badge, label, labelStyle, icon, visibilityPriority, ...rest } =
+          item;
+
+        const processedVisibilityPriority:
+          | HeaderBarButtonItemVisibilityPriority
+          | undefined =
+          visibilityPriority === 'default' ? 'standard' : visibilityPriority;
 
         const processedItemCommon = {
           ...rest,
@@ -82,6 +89,7 @@ const processBarButtonItems = (
             ...labelStyle,
           },
           icon: transformIcon(icon),
+          visibilityPriority: processedVisibilityPriority,
         };
 
         let processedItem:
@@ -164,13 +172,22 @@ const getMenuItem = (
   item: NativeStackHeaderItemMenuAction | NativeStackHeaderItemMenuSubmenu
 ): HeaderBarButtonItemMenuAction | HeaderBarButtonItemSubmenu => {
   if (item.type === 'submenu') {
-    const { label, icon, inline, layout, items, multiselectable, ...rest } =
-      item;
+    const {
+      label,
+      description,
+      icon,
+      inline,
+      layout,
+      items,
+      multiselectable,
+      ...rest
+    } = item;
 
     return {
       ...rest,
       icon: transformIcon(icon),
       title: label,
+      subtitle: description,
       displayAsPalette: layout === 'palette',
       displayInline: inline,
       singleSelection:
