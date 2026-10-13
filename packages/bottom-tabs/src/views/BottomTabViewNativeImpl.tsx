@@ -27,13 +27,13 @@ import {
   type TextStyle,
 } from 'react-native';
 import {
-  type PlatformIconAndroid,
   type PlatformIconIOS,
   type PlatformIconShared,
   Tabs,
   type TabsBottomAccessoryEnvironment,
   type TabSelectedEvent,
   type TabSelectionRejectedEvent,
+  type TabsScreenIconAndroid,
   type TabsScreenItemStateAppearanceAndroid,
   type TabsScreenItemStateAppearanceIOS,
 } from 'react-native-screens';
@@ -65,7 +65,7 @@ type TabSelectionPreventedEvent = {
 
 type PlatformIcon = {
   ios?: PlatformIconIOS | undefined;
-  android?: PlatformIconAndroid | undefined;
+  android?: TabsScreenIconAndroid | undefined;
   shared?: PlatformIconShared | undefined;
 };
 
@@ -691,7 +691,8 @@ const TabScene = React.memo(function TabScene({
     tabBarItemIconColor: activeTintColor,
   };
 
-  const iconSize = tabBarIconSize ?? ICON_SIZE!;
+  const iconSize =
+    Platform.OS === 'android' ? (tabBarIconSize ?? ICON_SIZE!) : ICON_SIZE!;
 
   const getIcon = (selected: boolean) => {
     if (typeof tabBarIcon === 'function') {
