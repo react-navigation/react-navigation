@@ -14,10 +14,6 @@ export const NavigationStateContext = React.createContext<{
     state: NavigationState | PartialState<NavigationState> | undefined
   ) => void;
   getIsInitial: () => boolean;
-  addOptionsGetter?: (
-    key: string,
-    getter: () => object | undefined | null
-  ) => void;
 }>({
   isDefault: true,
 
