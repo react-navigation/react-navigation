@@ -432,9 +432,12 @@ export function SwitchRouter<Type extends SwitchRouterType>({
                 ? { ...route, path, params }
                 : route;
 
-          const routes = state.routes.map((item, routeIndex) =>
-            routeIndex === index ? nextRoute : item
-          );
+          const routes =
+            nextRoute === route
+              ? state.routes
+              : state.routes.map((item, routeIndex) =>
+                  routeIndex === index ? nextRoute : item
+                );
 
           const updatedState: State = {
             ...state,
@@ -622,9 +625,12 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             preloadedRouteKeys: state.preloadedRouteKeys
               .filter((key) => key !== route.key)
               .concat(newRoute.key),
-            routes: state.routes.map((route, index) =>
-              index === routeIndex ? newRoute : route
-            ),
+            routes:
+              newRoute === route
+                ? state.routes
+                : state.routes.map((route, index) =>
+                    index === routeIndex ? newRoute : route
+                  ),
             history,
           };
         }
