@@ -6,6 +6,7 @@ import {
 import {
   CommonActions,
   NavigationMetaContext,
+  type NavigationRoute,
   type ParamListBase,
   type Route,
   StackActions,
@@ -19,6 +20,7 @@ import {
   type NativeSyntheticEvent,
   Platform,
   PlatformColor,
+  type TextStyle,
 } from 'react-native';
 import {
   type PlatformIconAndroid,
@@ -35,6 +37,7 @@ import {
 import { Deferred } from './Deferred';
 import { NativeScreen } from './NativeScreen/NativeScreen';
 import type {
+  NativeBottomTabDescriptor,
   NativeBottomTabDescriptorMap,
   NativeBottomTabIcon,
   NativeBottomTabNavigationConfig,
@@ -274,49 +277,32 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
     color: fontColor,
   } = currentOptions.tabBarLabelStyle || {};
 
-  const activeTintColor =
-    currentOptions.tabBarActiveTintColor ?? colors.primary;
+  const { activeIndicatorColor, activeTintColor, inactiveTintColor } =
+    React.useMemo(() => {
+      const activeTintColor =
+        currentOptions.tabBarActiveTintColor ?? colors.primary;
 
-  const inactiveTintColor =
-    currentOptions.tabBarInactiveTintColor ??
-    Platform.select<ColorValue | string>({
-      ios: PlatformColor('label'),
-      default: colors.text,
-    });
+      const inactiveTintColor =
+        currentOptions.tabBarInactiveTintColor ??
+        Platform.select<ColorValue | string>({
+          ios: PlatformColor('label'),
+          default: colors.text,
+        });
 
-  const activeIndicatorColor =
-    (currentOptions?.tabBarActiveIndicatorColor ??
-    typeof activeTintColor === 'string')
-      ? Color(activeTintColor)?.alpha(0.1).string()
-      : undefined;
+      const activeIndicatorColor =
+        (currentOptions?.tabBarActiveIndicatorColor ??
+        typeof activeTintColor === 'string')
+          ? Color(activeTintColor)?.alpha(0.1).string()
+          : undefined;
 
-  const onTransitionStart = ({
-    closing,
-    route,
-  }: {
-    closing: boolean;
-    route: Route<string>;
-  }) => {
-    navigation.emit({
-      type: 'transitionStart',
-      data: { closing },
-      target: route.key,
-    });
-  };
-
-  const onTransitionEnd = ({
-    closing,
-    route,
-  }: {
-    closing: boolean;
-    route: Route<string>;
-  }) => {
-    navigation.emit({
-      type: 'transitionEnd',
-      data: { closing },
-      target: route.key,
-    });
-  };
+      return { activeIndicatorColor, activeTintColor, inactiveTintColor };
+    }, [
+      currentOptions?.tabBarActiveIndicatorColor,
+      currentOptions.tabBarActiveTintColor,
+      currentOptions.tabBarInactiveTintColor,
+      colors.primary,
+      colors.text,
+    ]);
 
   const tabBarControllerMode =
     currentOptions.tabBarControllerMode === 'auto'
@@ -359,187 +345,277 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
         }}
       >
         {state.routes.map((route, index) => {
-          const { options, render, navigation } = descriptors[route.key];
+          const descriptor = descriptors[route.key];
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
-          const {
-            title,
-            lazy = false,
-            tabBarLabel,
-            tabBarLabelPositionAdjustment,
-            tabBarSelectionEnabled,
-            tabBarRepeatedPressBehavior,
-            tabBarBadgeStyle,
-            tabBarIcon,
-            tabBarBadge,
-            tabBarSystemItem,
-            tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
-            tabBarStyle,
-            overrideScrollViewContentInsetAdjustmentBehavior,
-          } = options;
-
-          const {
-            backgroundColor: tabBarBackgroundColor,
-            shadowColor: tabBarShadowColor,
-          } = tabBarStyle || {};
-
-          const tabTitle =
-            // On iOS, `systemItem` already provides a localized label
-            // So we should only use `tabBarLabel` if explicitly provided
-            Platform.OS === 'ios' && tabBarSystemItem != null
-              ? tabBarLabel
-              : getLabel({ label: tabBarLabel, title }, route.name);
-
-          const badgeBackgroundColor =
-            tabBarBadgeStyle?.backgroundColor ?? colors.notification;
-          const badgeTextColor =
-            tabBarBadgeStyle?.color ??
-            (typeof badgeBackgroundColor === 'string'
-              ? Color(badgeBackgroundColor).isLight()
-                ? 'black'
-                : 'white'
-              : undefined);
-
-          const tabItemAppearance: TabsScreenItemStateAppearanceIOS = {
-            tabBarItemTitleFontFamily: fontFamily,
-            tabBarItemTitleFontSize: fontSize,
-            tabBarItemTitleFontWeight: fontWeight,
-            tabBarItemTitleFontStyle: fontStyle,
-            tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
-            tabBarItemIconColor: inactiveTintColor,
-            tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
-          };
-
-          const tabItemLayoutAppearance = {
-            stacked: {
-              normal: {
-                ...tabItemAppearance,
-                tabBarItemTitlePositionAdjustment:
-                  tabBarLabelPositionAdjustment?.stacked,
-              },
-            },
-            inline: {
-              normal: {
-                ...tabItemAppearance,
-                tabBarItemTitlePositionAdjustment:
-                  tabBarLabelPositionAdjustment?.inline,
-              },
-            },
-            compactInline: {
-              normal: {
-                ...tabItemAppearance,
-                tabBarItemTitlePositionAdjustment:
-                  tabBarLabelPositionAdjustment?.compactInline,
-              },
-            },
-          };
-
-          const normalTabItemAppearance: TabsScreenItemStateAppearanceAndroid =
-            {
-              tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
-              tabBarItemIconColor: inactiveTintColor,
-            };
-
-          const selectedTabItemAppearance: TabsScreenItemStateAppearanceAndroid =
-            {
-              tabBarItemTitleFontColor: activeTintColor,
-              tabBarItemIconColor: activeTintColor,
-            };
-
-          const icon =
-            typeof tabBarIcon === 'function'
-              ? getPlatformIcon(tabBarIcon({ focused: false }))
-              : tabBarIcon != null
-                ? getPlatformIcon(tabBarIcon)
-                : undefined;
-
-          const selectedIcon =
-            typeof tabBarIcon === 'function'
-              ? getPlatformIcon(tabBarIcon({ focused: true }))
-              : undefined;
+          const { lazy = false } = descriptor.options;
 
           return (
-            <Tabs.Screen
-              onWillDisappear={() =>
-                onTransitionStart({ closing: true, route })
-              }
-              onWillAppear={() => onTransitionStart({ closing: false, route })}
-              onDidAppear={() => onTransitionEnd({ closing: false, route })}
-              onDidDisappear={() => onTransitionEnd({ closing: true, route })}
+            <TabScene
               key={route.key}
-              screenKey={route.key}
-              preventNativeSelection={tabBarSelectionEnabled === false}
-              badgeValue={tabBarBadge?.toString()}
-              title={tabTitle}
-              style={{ backgroundColor: colors.background }}
-              specialEffects={{
-                repeatedTabSelection: {
-                  popToRoot: tabBarRepeatedPressBehavior?.popToTop !== false,
-                  scrollToTop:
-                    tabBarRepeatedPressBehavior?.scrollToTop !== false,
-                },
-              }}
-              android={{
-                icon: icon?.android ?? icon?.shared,
-                selectedIcon: selectedIcon?.android ?? selectedIcon?.shared,
-                standardAppearance: {
-                  tabBarBackgroundColor: tabBarBackgroundColor ?? colors.card,
-                  tabBarItemRippleColor: currentOptions?.tabBarRippleColor,
-                  tabBarItemLabelVisibilityMode:
-                    currentOptions?.tabBarLabelVisibilityMode,
-                  normal: normalTabItemAppearance,
-                  selected: selectedTabItemAppearance,
-                  tabBarItemActiveIndicatorColor: activeIndicatorColor,
-                  tabBarItemActiveIndicatorEnabled:
-                    currentOptions?.tabBarActiveIndicatorEnabled,
-                  tabBarItemTitleFontFamily: fontFamily,
-                  tabBarItemTitleFontWeight: fontWeight,
-                  tabBarItemTitleSmallLabelFontSize: fontSize,
-                  tabBarItemTitleLargeLabelFontSize: fontSize,
-                  tabBarItemTitleFontStyle: fontStyle,
-                  tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
-                  tabBarItemBadgeTextColor: badgeTextColor,
-                },
-              }}
-              ios={{
-                icon: icon?.ios ?? icon?.shared,
-                selectedIcon: selectedIcon?.ios ?? selectedIcon?.shared,
-                systemItem: tabBarSystemItem,
-                scrollEdgeAppearance: {
-                  tabBarBackgroundColor,
-                  tabBarShadowColor,
-                  tabBarBlurEffect,
-                  ...tabItemLayoutAppearance,
-                },
-                standardAppearance: {
-                  tabBarBackgroundColor,
-                  tabBarShadowColor,
-                  tabBarBlurEffect,
-                  ...tabItemLayoutAppearance,
-                },
-                overrideScrollViewContentInsetAdjustmentBehavior,
-              }}
-            >
-              <Deferred lazy={lazy} visible={isFocused || isPreloaded}>
-                <ScreenWithHeader
-                  isFocused={isFocused}
-                  route={route}
-                  navigation={navigation}
-                  options={options}
-                >
-                  <NavigationMetaContext.Provider value={meta}>
-                    {render()}
-                  </NavigationMetaContext.Provider>
-                </ScreenWithHeader>
-              </Deferred>
-            </Tabs.Screen>
+              route={route}
+              descriptor={descriptor}
+              navigation={navigation}
+              isFocused={isFocused}
+              lazy={lazy}
+              visible={isFocused || isPreloaded}
+              fontFamily={fontFamily}
+              fontWeight={fontWeight}
+              fontSize={fontSize}
+              fontStyle={fontStyle}
+              fontColor={fontColor}
+              activeTintColor={activeTintColor}
+              inactiveTintColor={inactiveTintColor}
+              activeIndicatorColor={activeIndicatorColor}
+              rippleColor={currentOptions.tabBarRippleColor}
+              labelVisibilityMode={currentOptions.tabBarLabelVisibilityMode}
+              activeIndicatorEnabled={
+                currentOptions.tabBarActiveIndicatorEnabled
+              }
+            />
           );
         })}
       </Tabs.Host>
     </SafeAreaProviderCompat>
   );
 }
+
+type TabSceneProps = {
+  route: NavigationRoute<ParamListBase, string>;
+  descriptor: NativeBottomTabDescriptor;
+  navigation: NativeBottomTabNavigationHelpers;
+  isFocused: boolean;
+  lazy: boolean;
+  visible: boolean;
+  fontFamily: TextStyle['fontFamily'];
+  fontWeight: TextStyle['fontWeight'];
+  fontSize: TextStyle['fontSize'];
+  fontStyle: TextStyle['fontStyle'];
+  fontColor: TextStyle['color'];
+  activeTintColor: ColorValue;
+  inactiveTintColor: ColorValue;
+  activeIndicatorColor: ColorValue | undefined;
+  rippleColor: ColorValue | undefined;
+  labelVisibilityMode: NativeBottomTabNavigationOptions['tabBarLabelVisibilityMode'];
+  activeIndicatorEnabled: boolean | undefined;
+};
+
+const TabScene = React.memo(function TabScene({
+  route,
+  descriptor,
+  navigation,
+  isFocused,
+  lazy,
+  visible,
+  fontFamily,
+  fontWeight,
+  fontSize,
+  fontStyle,
+  fontColor,
+  activeTintColor,
+  inactiveTintColor,
+  activeIndicatorColor,
+  rippleColor,
+  labelVisibilityMode,
+  activeIndicatorEnabled,
+}: TabSceneProps) {
+  const { dark, colors } = useTheme();
+
+  const onTransitionStart = ({
+    closing,
+    route,
+  }: {
+    closing: boolean;
+    route: Route<string>;
+  }) => {
+    navigation.emit({
+      type: 'transitionStart',
+      data: { closing },
+      target: route.key,
+    });
+  };
+
+  const onTransitionEnd = ({
+    closing,
+    route,
+  }: {
+    closing: boolean;
+    route: Route<string>;
+  }) => {
+    navigation.emit({
+      type: 'transitionEnd',
+      data: { closing },
+      target: route.key,
+    });
+  };
+
+  const { options, render } = descriptor;
+
+  const {
+    title,
+    tabBarLabel,
+    tabBarLabelPositionAdjustment,
+    tabBarSelectionEnabled,
+    tabBarRepeatedPressBehavior,
+    tabBarBadgeStyle,
+    tabBarIcon,
+    tabBarBadge,
+    tabBarSystemItem,
+    tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
+    tabBarStyle,
+    overrideScrollViewContentInsetAdjustmentBehavior,
+  } = options;
+
+  const {
+    backgroundColor: tabBarBackgroundColor,
+    shadowColor: tabBarShadowColor,
+  } = tabBarStyle || {};
+
+  const tabTitle =
+    // On iOS, `systemItem` already provides a localized label
+    // So we should only use `tabBarLabel` if explicitly provided
+    Platform.OS === 'ios' && tabBarSystemItem != null
+      ? tabBarLabel
+      : getLabel({ label: tabBarLabel, title }, route.name);
+
+  const badgeBackgroundColor =
+    tabBarBadgeStyle?.backgroundColor ?? colors.notification;
+  const badgeTextColor =
+    tabBarBadgeStyle?.color ??
+    (typeof badgeBackgroundColor === 'string'
+      ? Color(badgeBackgroundColor).isLight()
+        ? 'black'
+        : 'white'
+      : undefined);
+
+  const tabItemAppearance: TabsScreenItemStateAppearanceIOS = {
+    tabBarItemTitleFontFamily: fontFamily,
+    tabBarItemTitleFontSize: fontSize,
+    tabBarItemTitleFontWeight: fontWeight,
+    tabBarItemTitleFontStyle: fontStyle,
+    tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
+    tabBarItemIconColor: inactiveTintColor,
+    tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
+  };
+
+  const tabItemLayoutAppearance = {
+    stacked: {
+      normal: {
+        ...tabItemAppearance,
+        tabBarItemTitlePositionAdjustment:
+          tabBarLabelPositionAdjustment?.stacked,
+      },
+    },
+    inline: {
+      normal: {
+        ...tabItemAppearance,
+        tabBarItemTitlePositionAdjustment:
+          tabBarLabelPositionAdjustment?.inline,
+      },
+    },
+    compactInline: {
+      normal: {
+        ...tabItemAppearance,
+        tabBarItemTitlePositionAdjustment:
+          tabBarLabelPositionAdjustment?.compactInline,
+      },
+    },
+  };
+
+  const normalTabItemAppearance: TabsScreenItemStateAppearanceAndroid = {
+    tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
+    tabBarItemIconColor: inactiveTintColor,
+  };
+
+  const selectedTabItemAppearance: TabsScreenItemStateAppearanceAndroid = {
+    tabBarItemTitleFontColor: activeTintColor,
+    tabBarItemIconColor: activeTintColor,
+  };
+
+  const icon =
+    typeof tabBarIcon === 'function'
+      ? getPlatformIcon(tabBarIcon({ focused: false }))
+      : tabBarIcon != null
+        ? getPlatformIcon(tabBarIcon)
+        : undefined;
+
+  const selectedIcon =
+    typeof tabBarIcon === 'function'
+      ? getPlatformIcon(tabBarIcon({ focused: true }))
+      : undefined;
+
+  return (
+    <Tabs.Screen
+      onWillDisappear={() => onTransitionStart({ closing: true, route })}
+      onWillAppear={() => onTransitionStart({ closing: false, route })}
+      onDidAppear={() => onTransitionEnd({ closing: false, route })}
+      onDidDisappear={() => onTransitionEnd({ closing: true, route })}
+      screenKey={route.key}
+      preventNativeSelection={tabBarSelectionEnabled === false}
+      badgeValue={tabBarBadge?.toString()}
+      title={tabTitle}
+      style={{ backgroundColor: colors.background }}
+      specialEffects={{
+        repeatedTabSelection: {
+          popToRoot: tabBarRepeatedPressBehavior?.popToTop !== false,
+          scrollToTop: tabBarRepeatedPressBehavior?.scrollToTop !== false,
+        },
+      }}
+      android={{
+        icon: icon?.android ?? icon?.shared,
+        selectedIcon: selectedIcon?.android ?? selectedIcon?.shared,
+        standardAppearance: {
+          tabBarBackgroundColor: tabBarBackgroundColor ?? colors.card,
+          tabBarItemRippleColor: rippleColor,
+          tabBarItemLabelVisibilityMode: labelVisibilityMode,
+          normal: normalTabItemAppearance,
+          selected: selectedTabItemAppearance,
+          tabBarItemActiveIndicatorColor: activeIndicatorColor,
+          tabBarItemActiveIndicatorEnabled: activeIndicatorEnabled,
+          tabBarItemTitleFontFamily: fontFamily,
+          tabBarItemTitleFontWeight: fontWeight,
+          tabBarItemTitleSmallLabelFontSize: fontSize,
+          tabBarItemTitleLargeLabelFontSize: fontSize,
+          tabBarItemTitleFontStyle: fontStyle,
+          tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
+          tabBarItemBadgeTextColor: badgeTextColor,
+        },
+      }}
+      ios={{
+        icon: icon?.ios ?? icon?.shared,
+        selectedIcon: selectedIcon?.ios ?? selectedIcon?.shared,
+        systemItem: tabBarSystemItem,
+        scrollEdgeAppearance: {
+          tabBarBackgroundColor,
+          tabBarShadowColor,
+          tabBarBlurEffect,
+          ...tabItemLayoutAppearance,
+        },
+        standardAppearance: {
+          tabBarBackgroundColor,
+          tabBarShadowColor,
+          tabBarBlurEffect,
+          ...tabItemLayoutAppearance,
+        },
+        overrideScrollViewContentInsetAdjustmentBehavior,
+      }}
+    >
+      <Deferred lazy={lazy} visible={visible}>
+        <ScreenWithHeader
+          isFocused={isFocused}
+          route={route}
+          navigation={descriptor.navigation}
+          options={options}
+        >
+          <NavigationMetaContext.Provider value={meta}>
+            {render()}
+          </NavigationMetaContext.Provider>
+        </ScreenWithHeader>
+      </Deferred>
+    </Tabs.Screen>
+  );
+});
 
 function ScreenWithHeader({
   isFocused,
