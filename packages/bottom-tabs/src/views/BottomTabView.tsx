@@ -5,6 +5,7 @@ import {
   Screen,
 } from '@react-navigation/elements';
 import {
+  type NavigationRoute,
   type ParamListBase,
   StackActions,
   type TabNavigationState,
@@ -19,6 +20,7 @@ import {
 } from '../TransitionConfigs/TransitionPresets';
 import type {
   BottomTabBarProps,
+  BottomTabDescriptor,
   BottomTabDescriptorMap,
   BottomTabHeaderProps,
   BottomTabNavigationConfig,
@@ -283,12 +285,7 @@ export function BottomTabView(props: Props) {
       >
         {routes.map((route, index) => {
           const descriptor = descriptors[route.key];
-          const {
-            lazy = true,
-            animation = 'none',
-            sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
-              .sceneStyleInterpolator,
-          } = descriptor.options;
+          const { lazy = true } = descriptor.options;
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
@@ -302,73 +299,23 @@ export function BottomTabView(props: Props) {
             return null;
           }
 
-          const {
-            freezeOnBlur,
-            header = ({ layout, options }: BottomTabHeaderProps) => (
-              <Header
-                {...options}
-                layout={layout}
-                title={getHeaderTitle(options, route.name)}
-              />
-            ),
-            headerShown,
-            headerStatusBarHeight,
-            headerTransparent,
-            sceneStyle: customSceneStyle,
-          } = descriptor.options;
-
-          const { sceneStyle } =
-            sceneStyleInterpolator?.({
-              current: {
-                progress: tabAnims[route.key],
-              },
-            }) ?? {};
-
-          const animationEnabled = hasAnimation(descriptor.options);
           const isAnimatingRoute =
             lastUpdate.animating &&
             (lastUpdate.previous === route.key ||
               lastUpdate.current === route.key);
 
-          const activityState = isFocused
-            ? STATE_ON_TOP // the screen is on top after the transition
-            : animationEnabled && isAnimatingRoute
-              ? STATE_TRANSITIONING_OR_BELOW_TOP // screen visible during transition
-              : STATE_INACTIVE;
-
           return (
-            <MaybeScreen
+            <TabScene
               key={route.key}
-              style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
-              active={activityState}
-              enabled={detachInactiveScreens}
-              freezeOnBlur={freezeOnBlur}
-              shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
-              pointerEvents={isFocused ? 'box-none' : 'none'}
-            >
-              <BottomTabBarHeightContext.Provider
-                value={tabBarPosition === 'bottom' ? tabBarHeight : 0}
-              >
-                <Screen
-                  focused={isFocused}
-                  route={descriptor.route}
-                  navigation={descriptor.navigation}
-                  headerShown={headerShown}
-                  headerStatusBarHeight={headerStatusBarHeight}
-                  headerTransparent={headerTransparent}
-                  header={header({
-                    layout: dimensions,
-                    route: descriptor.route,
-                    navigation:
-                      descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
-                    options: descriptor.options,
-                  })}
-                  style={[customSceneStyle, animationEnabled && sceneStyle]}
-                >
-                  {descriptor.render()}
-                </Screen>
-              </BottomTabBarHeightContext.Provider>
-            </MaybeScreen>
+              route={route}
+              descriptor={descriptor}
+              isFocused={isFocused}
+              isPreloaded={isPreloaded}
+              isAnimatingRoute={isAnimatingRoute}
+              tabAnimation={tabAnims[route.key]}
+              tabBarHeight={tabBarPosition === 'bottom' ? tabBarHeight : 0}
+              detachInactiveScreens={detachInactiveScreens}
+            />
           );
         })}
       </MaybeScreenContainer>
@@ -378,6 +325,93 @@ export function BottomTabView(props: Props) {
     </SafeAreaProviderCompat>
   );
 }
+
+type TabSceneProps = {
+  route: NavigationRoute<ParamListBase, string>;
+  descriptor: BottomTabDescriptor;
+  isFocused: boolean;
+  isPreloaded: boolean;
+  isAnimatingRoute: boolean;
+  tabAnimation: Animated.Value;
+  tabBarHeight: number;
+  detachInactiveScreens: boolean;
+};
+
+const TabScene = React.memo(function TabScene({
+  route,
+  descriptor,
+  isFocused,
+  isPreloaded,
+  isAnimatingRoute,
+  tabAnimation,
+  tabBarHeight,
+  detachInactiveScreens,
+}: TabSceneProps) {
+  const {
+    animation = 'none',
+    sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
+      .sceneStyleInterpolator,
+    freezeOnBlur,
+    header = ({ layout, options }: BottomTabHeaderProps) => (
+      <Header
+        {...options}
+        layout={layout}
+        title={getHeaderTitle(options, route.name)}
+      />
+    ),
+    headerShown,
+    headerStatusBarHeight,
+    headerTransparent,
+    sceneStyle: customSceneStyle,
+  } = descriptor.options;
+
+  const { sceneStyle } =
+    sceneStyleInterpolator?.({
+      current: {
+        progress: tabAnimation,
+      },
+    }) ?? {};
+
+  const animationEnabled = hasAnimation(descriptor.options);
+
+  const activityState = isFocused
+    ? STATE_ON_TOP // the screen is on top after the transition
+    : animationEnabled && isAnimatingRoute
+      ? STATE_TRANSITIONING_OR_BELOW_TOP // screen visible during transition
+      : STATE_INACTIVE;
+
+  return (
+    <MaybeScreen
+      style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
+      active={activityState}
+      enabled={detachInactiveScreens}
+      freezeOnBlur={freezeOnBlur}
+      shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
+      pointerEvents={isFocused ? 'box-none' : 'none'}
+    >
+      <BottomTabBarHeightContext.Provider value={tabBarHeight}>
+        <Screen
+          focused={isFocused}
+          route={descriptor.route}
+          navigation={descriptor.navigation}
+          headerShown={headerShown}
+          headerStatusBarHeight={headerStatusBarHeight}
+          headerTransparent={headerTransparent}
+          header={header({
+            layout: SafeAreaProviderCompat.initialMetrics.frame,
+            route: descriptor.route,
+            navigation:
+              descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
+            options: descriptor.options,
+          })}
+          style={[customSceneStyle, animationEnabled && sceneStyle]}
+        >
+          {descriptor.render()}
+        </Screen>
+      </BottomTabBarHeightContext.Provider>
+    </MaybeScreen>
+  );
+});
 
 const styles = StyleSheet.create({
   screens: {
