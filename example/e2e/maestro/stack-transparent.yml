@@ -1,8 +1,28 @@
 appId: ${APP_ID}
 name: Stack Transparent
 ---
-- stopApp
-- openLink:
-    link: exp://127.0.0.1:8081/--/stack-transparent
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-transparent
+      TEXT: 'Article'
+- tapOn:
+    text: 'Show Dialog'
 - assertVisible:
-    text: 'Article'
+    text: 'Okay'
+- tapOn:
+    text: 'Okay'
+- assertNotVisible:
+    text: 'Okay'
+- tapOn:
+    text: 'Push NewsFeed'
+- assertVisible:
+    text: 'NewsFeed'
+- tapOn:
+    text: 'Show Dialog'
+- assertVisible:
+    text: 'Okay'
+- tapOn:
+    text: 'Okay'
+- assertNotVisible:
+    text: 'Okay'

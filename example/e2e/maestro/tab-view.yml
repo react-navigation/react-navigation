@@ -1,8 +1,222 @@
 appId: ${APP_ID}
 name: Tab View
 ---
-- stopApp
-- openLink:
-    link: exp://127.0.0.1:8081/--/tab-view
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: tab-view
+      TEXT: 'TabView Examples'
+# Scrollable tab bar
+- tapOn:
+    id: 'ScrollableTabBar'
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 5000
+- tapOn:
+    text: 'Article'
+- extendedWaitUntil:
+    visible:
+      text: 'What is Lorem Ipsum?'
+    timeout: 5000
+- tapOn:
+    text: 'Albums'
+- extendedWaitUntil:
+    visible:
+      text: 'Albums'
+      selected: true
+    timeout: 5000
+- extendedWaitUntil:
+    notVisible:
+      text: 'What is Lorem Ipsum?'
+    timeout: 5000
+- tapOn:
+    text: 'Chat'
+- extendedWaitUntil:
+    visible:
+      text: 'make me a sandwich'
+    timeout: 5000
+- tapOn:
+    text: 'Contacts'
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 5000
+- swipe:
+    direction: LEFT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'Albums'
+      selected: true
+    timeout: 5000
+- extendedWaitUntil:
+    notVisible:
+      text: 'Marissa Castillo'
+    timeout: 5000
+- swipe:
+    direction: LEFT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'make me a sandwich'
+    timeout: 5000
+- swipe:
+    direction: RIGHT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'Albums'
+      selected: true
+    timeout: 5000
+- extendedWaitUntil:
+    notVisible:
+      text: 'make me a sandwich'
+    timeout: 5000
+# Scrollable tab bar (auto width)
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: tab-view/auto-width-tab-bar
+      TEXT: 'Marissa Castillo'
+- tapOn:
+    text: 'Article'
+- extendedWaitUntil:
+    visible:
+      text: 'What is Lorem Ipsum?'
+    timeout: 5000
+- tapOn:
+    text: 'Albums'
+- extendedWaitUntil:
+    visible:
+      text: 'Albums'
+      selected: true
+    timeout: 5000
+- extendedWaitUntil:
+    notVisible:
+      text: 'What is Lorem Ipsum?'
+    timeout: 5000
+- tapOn:
+    text: 'Chat'
+- extendedWaitUntil:
+    visible:
+      text: 'make me a sandwich'
+    timeout: 5000
+- tapOn:
+    text: 'Contacts'
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 5000
+# Custom tab bar
+# The tab items have no accessibility label, so on iOS the label
+# combines the texts of the icon and the two label layers in the item
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: tab-view/custom-tab-bar
+      TEXT: 'Custom tab bar'
 - assertVisible:
-    text: 'TabView Examples'
+    text: 'Marissa Castillo'
+- tapOn:
+    text: '.*Albums.*'
+- extendedWaitUntil:
+    notVisible:
+      text: 'Marissa Castillo'
+    timeout: 5000
+- tapOn:
+    text: '.*Article.*'
+- extendedWaitUntil:
+    visible:
+      text: 'What is Lorem Ipsum?'
+    timeout: 5000
+- tapOn:
+    text: '.*Chat.*'
+    delay: 500
+- extendedWaitUntil:
+    visible:
+      text: 'make me a sandwich'
+    timeout: 5000
+- tapOn:
+    text: '.*Contacts.*'
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 5000
+- swipe:
+    direction: LEFT
+    duration: 300
+- extendedWaitUntil:
+    notVisible:
+      text: 'Marissa Castillo'
+    timeout: 5000
+- swipe:
+    direction: LEFT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'What is Lorem Ipsum?'
+    timeout: 5000
+- swipe:
+    direction: RIGHT
+    duration: 300
+- extendedWaitUntil:
+    notVisible:
+      text: 'What is Lorem Ipsum?'
+    timeout: 5000
+# Coverflow
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: tab-view/coverflow
+      TEXT: 'Homogenic'
+- assertVisible:
+    text: 'Homogenic'
+- swipe:
+    duration: 300
+    start: 90%, 50%
+    end: 10%, 50%
+- extendedWaitUntil:
+    visible:
+      text: 'Number of the Beast'
+    timeout: 5000
+- swipe:
+    duration: 300
+    start: 90%, 50%
+    end: 10%, 50%
+- extendedWaitUntil:
+    visible:
+      text: "It's Blitz"
+    timeout: 5000
+- swipe:
+    duration: 300
+    start: 10%, 50%
+    end: 90%, 50%
+- extendedWaitUntil:
+    visible:
+      text: 'Number of the Beast'
+    timeout: 5000
+- swipe:
+    duration: 300
+    start: 10%, 50%
+    end: 90%, 50%
+- extendedWaitUntil:
+    visible:
+      text: 'Homogenic'
+    timeout: 5000
+- swipe:
+    duration: 300
+    start: 10%, 50%
+    end: 90%, 50%
+- extendedWaitUntil:
+    visible:
+      text: 'Bat Out of Hell'
+    timeout: 5000
+- swipe:
+    duration: 300
+    start: 90%, 50%
+    end: 10%, 50%
+- extendedWaitUntil:
+    visible:
+      text: 'Homogenic'
+    timeout: 5000
