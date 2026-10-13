@@ -24,15 +24,17 @@ const DetailsScreen = ({
 }: StackScreenProps<PreloadStackParams, 'Details'>) => {
   const [loadingCountdown, setLoadingCountdown] = useState(3);
   useEffect(() => {
-    const interval = setInterval(() => {
-      setLoadingCountdown((loadingCountdown) => {
-        if (loadingCountdown === 1) {
-          clearInterval(interval);
-        }
-        return loadingCountdown - 1;
-      });
-    }, 1000);
-  }, []);
+    if (loadingCountdown === 0) {
+      return;
+    }
+
+    const timer = setTimeout(
+      () => setLoadingCountdown(loadingCountdown - 1),
+      1000
+    );
+
+    return () => clearTimeout(timer);
+  }, [loadingCountdown]);
 
   return (
     <View style={styles.content}>

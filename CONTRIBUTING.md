@@ -69,13 +69,12 @@ Then run the tests with the `CI` environment variable:
 CI=1 yarn example e2e:web
 ```
 
-Before running Maestro tests:
+Before running native e2e tests:
 
-- Install it following the instructions [here](https://maestro.mobile.dev/getting-started/installing-maestro).
-- Start the Emulator or Simulator and install the Expo Go app.
+- Start the Emulator or Simulator and install the example app with `yarn example android` or `yarn example ios`.
 - Start the Metro server with `yarn example start`.
 
-Then run the Maestro tests by:
+Then run the agent-device tests by:
 
 ```sh
 yarn example e2e:native

@@ -1,12 +1,11 @@
 appId: ${APP_ID}
 name: Auth Flow
 ---
-- stopApp
-- openLink:
-    link: exp://127.0.0.1:8081/--/auth-flow
-- extendedWaitUntil:
-    visible: 'Welcome'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: auth-flow
+      TEXT: 'Welcome'
 - tapOn:
     text: 'Sign in'
 - assertVisible:
@@ -20,7 +19,7 @@ name: Auth Flow
 - assertVisible:
     text: 'Sign in'
 - openLink:
-    link: exp://127.0.0.1:8081/--/auth-flow/profile
+    link: ${APP_SCHEME}auth-flow/profile
 - assertVisible:
     text: 'Welcome'
 - tapOn:
@@ -36,7 +35,7 @@ name: Auth Flow
 - assertVisible:
     text: 'Sign in'
 - openLink:
-    link: exp://127.0.0.1:8081/--/auth-flow
+    link: ${APP_SCHEME}auth-flow
 - tapOn:
     text: 'Sign in'
 - assertVisible:

@@ -1,8 +1,59 @@
 appId: ${APP_ID}
 name: Material Top Tabs
 ---
-- stopApp
-- openLink:
-    link: exp://127.0.0.1:8081/--/material-top-tabs-screen
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: material-top-tabs-screen
+      TEXT: 'Material Top Tabs'
 - assertVisible:
-    text: 'Material Top Tabs'
+    text: 'make me a sandwich'
+- tapOn:
+    text: 'Contacts'
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 5000
+- tapOn:
+    text: 'Albums'
+- extendedWaitUntil:
+    visible:
+      text: 'Albums'
+      selected: true
+    timeout: 5000
+- extendedWaitUntil:
+    notVisible:
+      text: 'Marissa Castillo'
+    timeout: 5000
+- tapOn:
+    text: 'Chat'
+- extendedWaitUntil:
+    visible:
+      text: 'make me a sandwich'
+    timeout: 5000
+- swipe:
+    direction: LEFT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 5000
+- swipe:
+    direction: LEFT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'Albums'
+      selected: true
+    timeout: 5000
+- extendedWaitUntil:
+    notVisible:
+      text: 'Marissa Castillo'
+    timeout: 5000
+- swipe:
+    direction: RIGHT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 5000

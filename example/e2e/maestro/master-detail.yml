@@ -1,8 +1,26 @@
 appId: ${APP_ID}
 name: Master Detail
 ---
-- stopApp
-- openLink:
-    link: exp://127.0.0.1:8081/--/master-detail
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: master-detail
+      TEXT: 'Pages'
+- tapOn:
+    text: 'Feed'
 - assertVisible:
-    text: 'Pages'
+    text: 'Joke bot'
+- tapOn:
+    text: 'Go back'
+- tapOn:
+    text: 'Albums'
+- assertVisible:
+    text: 'Albums'
+- assertNotVisible:
+    text: 'Joke bot'
+- tapOn:
+    text: 'Go back'
+- tapOn:
+    text: 'Article'
+- assertVisible:
+    text: 'What is Lorem Ipsum?'

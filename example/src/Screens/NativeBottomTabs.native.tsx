@@ -15,9 +15,11 @@ import {
 import {
   type NavigatorScreenParams,
   type PathConfigMap,
+  useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
+import { StatusBar } from 'expo-status-bar';
 import {
   Alert,
   Image,
@@ -30,19 +32,20 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import album10 from '../../assets/album-art-10.jpg';
 import iconBookUser from '../../assets/icons/book-user.png';
-import iconHeart from '../../assets/icons/heart.png';
+import iconLayoutDashboard from '../../assets/icons/layout-dashboard.png';
 import iconListMusic from '../../assets/icons/list-music.png';
 import iconMusic from '../../assets/icons/music.png';
 import iconNewspaper from '../../assets/icons/newspaper.png';
 import { Albums } from '../Shared/Albums';
 import { Contacts } from '../Shared/Contacts';
+import { NewsFeed } from '../Shared/NewsFeed';
 import { NativeStack, type NativeStackParams } from './NativeStack';
 
 export type NativeBottomTabParams = {
   TabStack: NavigatorScreenParams<NativeStackParams>;
   TabAlbums: undefined;
   TabContacts: { count: number };
-  TabFavorites: undefined;
+  TabFeed: undefined;
 };
 
 const linking: PathConfigMap<NativeBottomTabParams> = {
@@ -52,7 +55,21 @@ const linking: PathConfigMap<NativeBottomTabParams> = {
   },
   TabAlbums: 'albums',
   TabContacts: 'contacts',
+  TabFeed: 'feed',
 };
+
+function ContactsScreen() {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <Contacts
+      automaticallyAdjustContentInsets
+      contentContainerStyle={{
+        paddingTop: Platform.OS === 'ios' ? 0 : insets.top,
+      }}
+    />
+  );
+}
 
 function AlbumsScreen() {
   const navigation =
@@ -61,15 +78,17 @@ function AlbumsScreen() {
     >();
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
+  const isFocused = useIsFocused();
 
   return (
     <>
+      {isFocused && <StatusBar style="light" />}
       <ScrollView
         automaticallyAdjustContentInsets
         contentContainerStyle={{
           paddingTop:
             Platform.OS === 'ios'
-              ? // FIXME: seems iOS has an extra inset on top of header height
+              ? // iOS also has automatic safe area insets at top
                 headerHeight - insets.top
               : headerHeight,
         }}
@@ -90,6 +109,19 @@ function AlbumsScreen() {
         <Albums scrollEnabled={false} />
       </ScrollView>
     </>
+  );
+}
+
+function NewsFeedScreen() {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <NewsFeed
+      automaticallyAdjustContentInsets
+      contentContainerStyle={{
+        paddingTop: Platform.OS === 'ios' ? 0 : insets.top,
+      }}
+    />
   );
 }
 
@@ -149,11 +181,12 @@ export function NativeBottomTabs() {
             source: iconNewspaper,
           },
           tabBarMinimizeBehavior: 'onScrollDown',
+          tabBarControllerMode: 'tabSidebar',
         }}
       />
       <Tab.Screen
         name="TabContacts"
-        component={Contacts}
+        component={ContactsScreen}
         initialParams={{ count: i }}
         options={({ route }) => ({
           title: 'Contacts',
@@ -195,6 +228,8 @@ export function NativeBottomTabs() {
               type: 'image',
               source: focused ? iconListMusic : iconMusic,
             }),
+            tabBarActiveTintColor:
+              Platform.OS !== 'ios' ? 'rgba(255, 255, 255, 0.9)' : undefined,
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.7)',
             tabBarStyle: {
               backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -208,23 +243,17 @@ export function NativeBottomTabs() {
       />
 
       <Tab.Screen
-        name="TabFavorites"
+        name="TabFeed"
+        component={NewsFeedScreen}
         options={{
-          title: 'Favorites',
-          tabBarSystemItem: 'search',
-          tabBarLabel: 'Favorites',
+          title: 'Feed',
+          tabBarRole: 'prominent',
           tabBarIcon: {
             type: 'image',
-            source: iconHeart,
-          },
-          headerShown: true,
-          headerSearchBarOptions: {
-            placeholder: 'Search Favorites',
+            source: iconLayoutDashboard,
           },
         }}
-      >
-        {() => null}
-      </Tab.Screen>
+      />
     </Tab.Navigator>
   );
 }

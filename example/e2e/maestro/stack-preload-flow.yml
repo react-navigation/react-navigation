@@ -1,8 +1,26 @@
 appId: ${APP_ID}
 name: Stack Preload Flow
 ---
-- stopApp
-- openLink:
-    link: exp://127.0.0.1:8081/--/stack-preload-flow
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-preload-flow
+      TEXT: 'Home'
+- tapOn:
+    text: 'Preload Details'
+- tapOn:
+    text: 'Navigate Details'
+- extendedWaitUntil:
+    timeout: 7000
+    visible: 'Loaded!'
+- tapOn:
+    text: 'Back to home'
 - assertVisible:
-    text: 'Home'
+    text: 'Navigate Details'
+- tapOn:
+    text: 'Navigate Details'
+- assertVisible:
+    text: 'Loading...'
+- extendedWaitUntil:
+    timeout: 7000
+    visible: 'Loaded!'

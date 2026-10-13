@@ -41,6 +41,7 @@
     "@react-native/jest-preset": "0.85.3",
     "@types/babel__core": "^7",
     "@types/node": "^24.13.2",
+    "agent-device": "^0.21.16",
     "check-dependency-version-consistency": "^5.0.0",
     "commitlint": "^19.8.1",
     "eslint": "^9.39.5",
