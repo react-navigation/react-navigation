@@ -11,6 +11,7 @@ import {
   Screen,
 } from '@react-navigation/elements/internal';
 import {
+  type NavigationRoute,
   type ParamListBase,
   type StackNavigationState,
   useLinkBuilder,
@@ -19,6 +20,7 @@ import * as React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 
 import type {
+  NativeStackDescriptor,
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
 } from '../types';
@@ -79,35 +81,7 @@ export function NativeStackView({ state, descriptors }: Props) {
           );
         }
 
-        const { options, navigation, render } = descriptor;
-
-        const headerBack = previousDescriptor
-          ? {
-              title: getHeaderTitle(
-                previousDescriptor.options,
-                previousDescriptor.route.name
-              ),
-              href: buildHref(
-                previousDescriptor.route.name,
-                previousDescriptor.route.params
-              ),
-            }
-          : parentHeaderBack;
-
-        const canGoBack = headerBack != null;
-
-        const {
-          inactiveBehavior = 'pause',
-          header,
-          headerShown,
-          headerBackIcon,
-          headerLeft,
-          headerTransparent,
-          headerBackTitle,
-          presentation,
-          contentStyle,
-          ...rest
-        } = options;
+        const { inactiveBehavior = 'pause' } = descriptor.options;
 
         const nextPresentation = nextDescriptor?.options.presentation;
 
@@ -144,83 +118,143 @@ export function NativeStackView({ state, descriptors }: Props) {
           return null;
         }
 
-        const content = (
-          <Screen
-            key={route.key}
-            focused={isFocused}
-            route={route}
-            navigation={navigation}
-            headerShown={headerShown}
-            headerTransparent={headerTransparent}
-            pageOverflowEnabled={
-              presentation == null || presentation === 'card'
-            }
-            contentStyle={contentStyle}
-            header={
-              header !== undefined ? (
-                header({
-                  back: headerBack,
-                  options,
-                  route,
-                  navigation,
-                })
-              ) : (
-                <Header
-                  {...rest}
-                  back={headerBack}
-                  title={getHeaderTitle(options, route.name)}
-                  headerLeft={
-                    typeof headerLeft === 'function'
-                      ? ({ label, ...rest }) =>
-                          headerLeft({
-                            ...rest,
-                            label: headerBackTitle ?? label,
-                          })
-                      : headerLeft === undefined && canGoBack
-                        ? ({ tintColor, label, ...rest }) => (
-                            <HeaderBackButton
-                              {...rest}
-                              label={headerBackTitle ?? label}
-                              tintColor={tintColor}
-                              icon={headerBackIcon}
-                              onPress={navigation.goBack}
-                            />
-                          )
-                        : headerLeft
-                  }
-                  headerTransparent={headerTransparent}
-                />
-              )
-            }
-            style={{
-              ...(presentation != null &&
-              TRANSPARENT_PRESENTATIONS.includes(presentation)
-                ? { backgroundColor: 'transparent' }
-                : null),
-            }}
-          >
-            <HeaderBackContext.Provider value={headerBack}>
-              <AnimatedHeaderHeightProvider>
-                {render()}
-              </AnimatedHeaderHeightProvider>
-            </HeaderBackContext.Provider>
-          </Screen>
-        );
-
         return (
-          <ActivityView
+          <SceneView
             key={route.key}
-            mode={activityMode}
+            route={route}
+            descriptor={descriptor}
+            previousDescriptor={previousDescriptor}
+            parentHeaderBack={parentHeaderBack}
+            buildHref={buildHref}
+            focused={isFocused}
+            activityMode={activityMode}
             visible={isFocused || isNextScreenTransparent}
-            style={StyleSheet.absoluteFill}
-          >
-            {content}
-          </ActivityView>
+          />
         );
       })}
     </SafeAreaProviderCompat>
   );
 }
+
+type SceneViewProps = {
+  route: NavigationRoute<ParamListBase, string>;
+  descriptor: NativeStackDescriptor;
+  previousDescriptor: NativeStackDescriptor | undefined;
+  parentHeaderBack: React.ContextType<typeof HeaderBackContext>;
+  buildHref: ReturnType<typeof useLinkBuilder>['buildHref'];
+  focused: boolean;
+  activityMode: 'normal' | 'inert' | 'paused';
+  visible: boolean;
+};
+
+const SceneView = React.memo(function SceneView({
+  route,
+  descriptor,
+  previousDescriptor,
+  parentHeaderBack,
+  buildHref,
+  focused,
+  activityMode,
+  visible,
+}: SceneViewProps) {
+  const { options, navigation, render } = descriptor;
+
+  const headerBack = previousDescriptor
+    ? {
+        title: getHeaderTitle(
+          previousDescriptor.options,
+          previousDescriptor.route.name
+        ),
+        href: buildHref(
+          previousDescriptor.route.name,
+          previousDescriptor.route.params
+        ),
+      }
+    : parentHeaderBack;
+
+  const canGoBack = headerBack != null;
+
+  const {
+    header,
+    headerShown,
+    headerBackIcon,
+    headerLeft,
+    headerTransparent,
+    headerBackTitle,
+    presentation,
+    contentStyle,
+    ...rest
+  } = options;
+
+  const content = (
+    <Screen
+      key={route.key}
+      focused={focused}
+      route={route}
+      navigation={navigation}
+      headerShown={headerShown}
+      headerTransparent={headerTransparent}
+      pageOverflowEnabled={presentation == null || presentation === 'card'}
+      contentStyle={contentStyle}
+      header={
+        header !== undefined ? (
+          header({
+            back: headerBack,
+            options,
+            route,
+            navigation,
+          })
+        ) : (
+          <Header
+            {...rest}
+            back={headerBack}
+            title={getHeaderTitle(options, route.name)}
+            headerLeft={
+              typeof headerLeft === 'function'
+                ? ({ label, ...rest }) =>
+                    headerLeft({
+                      ...rest,
+                      label: headerBackTitle ?? label,
+                    })
+                : headerLeft === undefined && canGoBack
+                  ? ({ tintColor, label, ...rest }) => (
+                      <HeaderBackButton
+                        {...rest}
+                        label={headerBackTitle ?? label}
+                        tintColor={tintColor}
+                        icon={headerBackIcon}
+                        onPress={navigation.goBack}
+                      />
+                    )
+                  : headerLeft
+            }
+            headerTransparent={headerTransparent}
+          />
+        )
+      }
+      style={{
+        ...(presentation != null &&
+        TRANSPARENT_PRESENTATIONS.includes(presentation)
+          ? { backgroundColor: 'transparent' }
+          : null),
+      }}
+    >
+      <HeaderBackContext.Provider value={headerBack}>
+        <AnimatedHeaderHeightProvider>{render()}</AnimatedHeaderHeightProvider>
+      </HeaderBackContext.Provider>
+    </Screen>
+  );
+
+  return (
+    <ActivityView
+      mode={activityMode}
+      visible={visible}
+      style={StyleSheet.absoluteFill}
+    >
+      {content}
+    </ActivityView>
+  );
+});
 
 const AnimatedHeaderHeightProvider = ({
   children,
