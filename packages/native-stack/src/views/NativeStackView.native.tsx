@@ -37,6 +37,7 @@ import type {
   NativeStackDescriptor,
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
+  NativeStackNavigationOptions,
 } from '../types';
 import { debounce } from '../utils/debounce';
 import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
@@ -57,42 +58,118 @@ type SceneViewProps = {
   shouldFreeze: boolean;
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
-  nextDescriptor?: NativeStackDescriptor;
+  nextGestureDirection?: NativeStackNavigationOptions['gestureDirection'];
   isPresentationModal?: boolean;
   isPreloaded?: boolean;
-  onWillDisappear: () => void;
-  onWillAppear: () => void;
-  onAppear: () => void;
-  onDisappear: () => void;
-  onDismissed: ScreenProps['onDismissed'];
-  onHeaderBackButtonClicked: ScreenProps['onHeaderBackButtonClicked'];
-  onNativeDismissCancelled: ScreenProps['onDismissed'];
-  onGestureCancel: ScreenProps['onGestureCancel'];
-  onSheetDetentChanged: ScreenProps['onSheetDetentChanged'];
+  stateKey: string;
+  emit: NativeStackNavigationHelpers['emit'];
+  dispatch: NativeStackNavigationHelpers['dispatch'];
+  getState: NativeStackNavigationHelpers['getState'];
+  setNextDismissedKey: (key: string) => void;
 };
 
 const useNativeDriver = Platform.OS !== 'web';
 
-const SceneView = ({
+const SceneView = React.memo(function SceneView({
   index,
   focused,
   shouldFreeze,
   descriptor,
   previousDescriptor,
-  nextDescriptor,
+  nextGestureDirection,
   isPresentationModal,
   isPreloaded,
-  onWillDisappear,
-  onWillAppear,
-  onAppear,
-  onDisappear,
-  onDismissed,
-  onHeaderBackButtonClicked,
-  onNativeDismissCancelled,
-  onGestureCancel,
-  onSheetDetentChanged,
-}: SceneViewProps) => {
+  stateKey,
+  emit,
+  dispatch,
+  getState,
+  setNextDismissedKey,
+}: SceneViewProps) {
   const { route, navigation, options, render } = descriptor;
+
+  const onWillDisappear = () => {
+    emit({
+      type: 'transitionStart',
+      data: { closing: true },
+      target: route.key,
+    });
+  };
+
+  const onWillAppear = () => {
+    emit({
+      type: 'transitionStart',
+      data: { closing: false },
+      target: route.key,
+    });
+  };
+
+  const onAppear = () => {
+    emit({
+      type: 'transitionEnd',
+      data: { closing: false },
+      target: route.key,
+    });
+  };
+
+  const onDisappear = () => {
+    emit({
+      type: 'transitionEnd',
+      data: { closing: true },
+      target: route.key,
+    });
+  };
+
+  const onDismissed: ScreenProps['onDismissed'] = (event) => {
+    const currentState = getState();
+    const currentActiveRoutes = currentState.routes.slice(
+      0,
+      currentState.index + 1
+    );
+
+    if (currentActiveRoutes.some((r) => r.key === route.key)) {
+      dispatch({
+        ...StackActions.pop(event.nativeEvent.dismissCount),
+        source: route.key,
+        target: currentState.key,
+      });
+    }
+
+    setNextDismissedKey(route.key);
+  };
+
+  const onHeaderBackButtonClicked = () => {
+    dispatch({
+      ...StackActions.pop(),
+      source: route.key,
+      target: stateKey,
+    });
+  };
+
+  const onNativeDismissCancelled: ScreenProps['onDismissed'] = (event) => {
+    dispatch({
+      ...StackActions.pop(event.nativeEvent.dismissCount),
+      source: route.key,
+      target: stateKey,
+    });
+  };
+
+  const onGestureCancel = () => {
+    emit({
+      type: 'gestureCancel',
+      target: route.key,
+    });
+  };
+
+  const onSheetDetentChanged: ScreenProps['onSheetDetentChanged'] = (event) => {
+    emit({
+      type: 'sheetDetentChange',
+      target: route.key,
+      data: {
+        index: event.nativeEvent.index,
+        stable: event.nativeEvent.isStable,
+      },
+    });
+  };
 
   let {
     animation,
@@ -161,7 +238,6 @@ const SceneView = ({
 
   // workaround for rn-screens where gestureDirection has to be set on both
   // current and previous screen - software-mansion/react-native-screens/pull/1509
-  const nextGestureDirection = nextDescriptor?.options.gestureDirection;
   const gestureDirectionOverride =
     nextGestureDirection != null ? nextGestureDirection : gestureDirection;
 
@@ -497,7 +573,7 @@ const SceneView = ({
       </ScreenStackItem>
     </NavigationProvider>
   );
-};
+});
 
 type Props = {
   state: StackNavigationState<ParamListBase>;
@@ -563,84 +639,14 @@ export function NativeStackView({
               shouldFreeze={shouldFreeze}
               descriptor={descriptor}
               previousDescriptor={previousDescriptor}
-              nextDescriptor={nextDescriptor}
+              nextGestureDirection={nextDescriptor?.options.gestureDirection}
               isPresentationModal={isModal}
               isPreloaded={isPreloaded}
-              onWillDisappear={() => {
-                navigation.emit({
-                  type: 'transitionStart',
-                  data: { closing: true },
-                  target: route.key,
-                });
-              }}
-              onWillAppear={() => {
-                navigation.emit({
-                  type: 'transitionStart',
-                  data: { closing: false },
-                  target: route.key,
-                });
-              }}
-              onAppear={() => {
-                navigation.emit({
-                  type: 'transitionEnd',
-                  data: { closing: false },
-                  target: route.key,
-                });
-              }}
-              onDisappear={() => {
-                navigation.emit({
-                  type: 'transitionEnd',
-                  data: { closing: true },
-                  target: route.key,
-                });
-              }}
-              onDismissed={(event) => {
-                const currentState = navigation.getState();
-                const currentActiveRoutes = currentState.routes.slice(
-                  0,
-                  currentState.index + 1
-                );
-
-                if (currentActiveRoutes.some((r) => r.key === route.key)) {
-                  navigation.dispatch({
-                    ...StackActions.pop(event.nativeEvent.dismissCount),
-                    source: route.key,
-                    target: currentState.key,
-                  });
-                }
-
-                setNextDismissedKey(route.key);
-              }}
-              onHeaderBackButtonClicked={() => {
-                navigation.dispatch({
-                  ...StackActions.pop(),
-                  source: route.key,
-                  target: state.key,
-                });
-              }}
-              onNativeDismissCancelled={(event) => {
-                navigation.dispatch({
-                  ...StackActions.pop(event.nativeEvent.dismissCount),
-                  source: route.key,
-                  target: state.key,
-                });
-              }}
-              onGestureCancel={() => {
-                navigation.emit({
-                  type: 'gestureCancel',
-                  target: route.key,
-                });
-              }}
-              onSheetDetentChanged={(event) => {
-                navigation.emit({
-                  type: 'sheetDetentChange',
-                  target: route.key,
-                  data: {
-                    index: event.nativeEvent.index,
-                    stable: event.nativeEvent.isStable,
-                  },
-                });
-              }}
+              stateKey={state.key}
+              emit={navigation.emit}
+              dispatch={navigation.dispatch}
+              getState={navigation.getState}
+              setNextDismissedKey={setNextDismissedKey}
             />
           );
         })}
