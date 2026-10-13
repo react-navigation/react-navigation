@@ -691,7 +691,8 @@ const TabScene = React.memo(function TabScene({
     tabBarItemIconColor: activeTintColor,
   };
 
-  const iconSize = tabBarIconSize ?? ICON_SIZE!;
+  const iconSize =
+    Platform.OS === 'android' ? (tabBarIconSize ?? ICON_SIZE!) : ICON_SIZE!;
 
   const getIcon = (selected: boolean) => {
     if (typeof tabBarIcon === 'function') {
