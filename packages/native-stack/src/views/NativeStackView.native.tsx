@@ -59,6 +59,7 @@ type SceneViewProps = {
   isNextScreenModal: boolean;
   isInactive: boolean;
   isBeforeLast: boolean;
+  hasNestedState: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
   onAppear: () => void;
@@ -90,6 +91,7 @@ const SceneView = ({
   isNextScreenModal,
   isInactive,
   isBeforeLast,
+  hasNestedState,
   onWillDisappear,
   onWillAppear,
   onAppear,
@@ -307,6 +309,14 @@ const SceneView = ({
         }
       );
 
+  // Nested navigators clean up `route.state` when the screen is paused with `Activity`
+  // So we remember if the route had state until the screen is removed
+  const [hadNestedState, setHadNestedState] = React.useState(hasNestedState);
+
+  if (hasNestedState && !hadNestedState) {
+    setHadNestedState(true);
+  }
+
   const activityMode =
     // Render focused screens normally
     // Unpause preloaded and retained screens so updates are visible
@@ -325,7 +335,7 @@ const SceneView = ({
     (isNextScreenModal && !isModal) ||
     isBeforeLast
       ? 'normal'
-      : inactiveBehavior === 'unmount' && !('state' in route && route.state)
+      : inactiveBehavior === 'unmount' && !hadNestedState
         ? 'unmounted'
         : 'paused';
 
@@ -541,6 +551,7 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
               isNextScreenModal={isNextScreenModal}
               isInactive={index > state.index}
               isBeforeLast={index === activeRoutes.length - 2}
+              hasNestedState={route.state != null}
               onWillDisappear={() => {
                 navigation.emit({
                   type: 'transitionStart',

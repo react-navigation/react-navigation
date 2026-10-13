@@ -12,6 +12,7 @@ import {
   createNavigationContainerRef,
   type NavigationAction,
   NavigationContainer,
+  type NavigatorScreenParams,
   StackActions,
   usePreventRemove,
 } from '@react-navigation/native';
@@ -23,6 +24,7 @@ import {
   screen,
   userEvent,
 } from '@testing-library/react-native';
+import * as React from 'react';
 import { Button, Platform, Text, View } from 'react-native';
 
 import {
@@ -37,6 +39,18 @@ type StackParamList = {
 
 type NestedStackParamList = {
   C: undefined;
+};
+
+type ParentStackParamList = {
+  A: NavigatorScreenParams<ChildStackParamList>;
+  B: undefined;
+  C: undefined;
+  D: undefined;
+};
+
+type ChildStackParamList = {
+  X: undefined;
+  Y: undefined;
 };
 
 beforeEach(() => {
@@ -340,6 +354,68 @@ test('renders a native-stack navigator with screens', async () => {
     )
   ).toBe(true);
   expect(isHiddenFromAccessibility(screen.getByText('Screen B'))).toBe(false);
+});
+
+test('inactiveBehavior="unmount" keeps screens with nested navigators mounted', async () => {
+  const Stack = createNativeStackNavigator<ParentStackParamList>();
+  const NestedStack = createNativeStackNavigator<ChildStackParamList>();
+
+  const navigation = createNavigationContainerRef<ParentStackParamList>();
+  const user = userEvent.setup();
+
+  const Counter = ({ name }: { name: string }) => {
+    const [count, setCount] = React.useState(0);
+
+    return (
+      <View>
+        <Text>
+          {name}: {count}
+        </Text>
+        <Button onPress={() => setCount((c) => c + 1)} title="Increment" />
+      </View>
+    );
+  };
+
+  const Nested = () => (
+    <NestedStack.Navigator>
+      <NestedStack.Screen name="X">{() => null}</NestedStack.Screen>
+      <NestedStack.Screen name="Y">
+        {() => <Counter name="Nested" />}
+      </NestedStack.Screen>
+    </NestedStack.Navigator>
+  );
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator screenOptions={{ inactiveBehavior: 'unmount' }}>
+        <Stack.Screen name="A" component={Nested} />
+        <Stack.Screen name="B">{() => <Counter name="Plain" />}</Stack.Screen>
+        <Stack.Screen name="C">{() => null}</Stack.Screen>
+        <Stack.Screen name="D">{() => null}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('A', { screen: 'Y' }));
+  await user.press(screen.getByRole('button', { name: 'Increment' }));
+
+  expect(screen.getByText('Nested: 1')).toBeOnTheScreen();
+
+  await act(() => navigation.navigate('B'));
+  await user.press(screen.getByRole('button', { name: 'Increment' }));
+
+  expect(screen.getByText('Plain: 1')).toBeOnTheScreen();
+
+  await act(() => navigation.navigate('C'));
+  await act(() => navigation.navigate('D'));
+
+  await act(() => navigation.dispatch(StackActions.popTo('B')));
+
+  expect(screen.getByText('Plain: 0')).toBeOnTheScreen();
+
+  await act(() => navigation.dispatch(StackActions.popTo('A')));
+
+  expect(screen.getByText('Nested: 1')).toBeOnTheScreen();
 });
 
 describe('useHeaderHeight in native-stack', () => {
