@@ -5070,7 +5070,7 @@ __metadata:
     react-native: "npm:0.85.3"
     react-native-builder-bob: "npm:^0.42.1"
     react-native-safe-area-context: "npm:~5.10.0"
-    react-native-screens: "npm:^4.26.2"
+    react-native-screens: "npm:^4.30.0"
     react-test-renderer: "npm:19.2.3"
     sf-symbols-typescript: "npm:^2.1.0"
     typescript: "npm:~6.0.3"
@@ -5146,7 +5146,7 @@ __metadata:
     react-native-gesture-handler: "npm:~2.31.1"
     react-native-reanimated: "npm:4.3.1"
     react-native-safe-area-context: "npm:~5.10.0"
-    react-native-screens: "npm:^4.26.2"
+    react-native-screens: "npm:^4.30.0"
     react-native-worklets: "npm:0.8.3"
     react-test-renderer: "npm:19.2.3"
     typescript: "npm:~6.0.3"
@@ -5240,7 +5240,7 @@ __metadata:
     react-native-pager-view: "npm:8.0.1"
     react-native-reanimated: "npm:4.3.1"
     react-native-safe-area-context: "npm:~5.10.0"
-    react-native-screens: "npm:^4.26.2"
+    react-native-screens: "npm:^4.30.0"
     react-native-web: "npm:^0.21.2"
     react-native-worklets: "npm:0.8.3"
     react-test-renderer: "npm:19.2.3"
@@ -5294,7 +5294,7 @@ __metadata:
     react: "npm:19.2.3"
     react-native: "npm:0.85.3"
     react-native-builder-bob: "npm:^0.42.1"
-    react-native-screens: "npm:^4.26.2"
+    react-native-screens: "npm:^4.30.0"
     react-test-renderer: "npm:19.2.3"
     sf-symbols-typescript: "npm:^2.1.0"
     typescript: "npm:~6.0.3"
@@ -5364,7 +5364,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.42.1"
     react-native-gesture-handler: "npm:~2.31.1"
     react-native-safe-area-context: "npm:~5.10.0"
-    react-native-screens: "npm:^4.26.2"
+    react-native-screens: "npm:^4.30.0"
     react-test-renderer: "npm:19.2.3"
     typescript: "npm:~6.0.3"
     use-latest-callback: "npm:^0.2.4"
@@ -15430,16 +15430,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^4.26.2":
-  version: 4.26.2
-  resolution: "react-native-screens@npm:4.26.2"
+"react-native-screens@npm:^4.30.0":
+  version: 4.30.0
+  resolution: "react-native-screens@npm:4.30.0"
   dependencies:
     react-freeze: "npm:^1.0.0"
     warn-once: "npm:^0.1.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/3cdc702d8e21c63331e306a2b971307d5d9e13df52d94f435c5bb8d5dcf09fed00f4ef788e85ba87fae1ba5b155f4cdc2ee177a70f1f512adff73f94eef844d1
+  checksum: 10c0/9f5d4f0710a67362d4c3df8b998e8cf22d8d8eaa1a1a0185b5a34588b0aa922d346baf22a9e89c43a46f2d0b04c64e9f9e658411114a9e97fd228e29553f6cb8
   languageName: node
   linkType: hard
 
