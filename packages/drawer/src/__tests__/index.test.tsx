@@ -237,7 +237,7 @@ test('lazy=false pre-renders screen with effects active, pauses after first visi
   expect(effectActive).toBe(false);
 });
 
-test('dismisses the keyboard when the drawer is opened', async () => {
+test('dismisses the keyboard when the drawer is opened or closed', async () => {
   const dismiss = jest.spyOn(Keyboard, 'dismiss');
 
   const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -254,14 +254,14 @@ test('dismisses the keyboard when the drawer is opened', async () => {
   expect(dismiss).not.toHaveBeenCalled();
 
   await act(() => navigation.dispatch(DrawerActions.openDrawer()));
-  await act(() => jest.runAllTicks());
+  await act(() => jest.runAllTimers());
 
   expect(dismiss).toHaveBeenCalledTimes(1);
 
   await act(() => navigation.dispatch(DrawerActions.closeDrawer()));
-  await act(() => jest.runAllTicks());
+  await act(() => jest.runAllTimers());
 
-  expect(dismiss).toHaveBeenCalledTimes(1);
+  expect(dismiss).toHaveBeenCalledTimes(2);
 });
 
 test("doesn't dismiss the keyboard with keyboardDismissMode='none'", async () => {
@@ -279,7 +279,10 @@ test("doesn't dismiss the keyboard with keyboardDismissMode='none'", async () =>
   );
 
   await act(() => navigation.dispatch(DrawerActions.openDrawer()));
-  await act(() => jest.runAllTicks());
+  await act(() => jest.runAllTimers());
+
+  await act(() => navigation.dispatch(DrawerActions.closeDrawer()));
+  await act(() => jest.runAllTimers());
 
   expect(dismiss).not.toHaveBeenCalled();
 });
