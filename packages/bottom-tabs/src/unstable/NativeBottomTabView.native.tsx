@@ -23,13 +23,13 @@ import {
   type TextStyle,
 } from 'react-native';
 import {
-  type PlatformIconAndroid,
   type PlatformIconIOS,
   type PlatformIconShared,
   Tabs,
   type TabsBottomAccessoryEnvironment,
   type TabSelectedEvent,
   type TabSelectionRejectedEvent,
+  type TabsScreenIconAndroid,
   type TabsScreenItemStateAppearanceAndroid,
   type TabsScreenItemStateAppearanceIOS,
 } from 'react-native-screens';
@@ -54,7 +54,7 @@ type Props = NativeBottomTabNavigationConfig & {
 
 type PlatformIcon = {
   ios?: PlatformIconIOS;
-  android?: PlatformIconAndroid;
+  android?: TabsScreenIconAndroid;
   shared?: PlatformIconShared;
 };
 
@@ -460,6 +460,9 @@ const TabScene = React.memo(function TabScene({
     tabBarRepeatedPressBehavior,
     tabBarBadgeStyle,
     tabBarIcon,
+    tabBarIconSize,
+    tabBarActiveIndicatorWidth,
+    tabBarActiveIndicatorHeight,
     tabBarBadge,
     tabBarSystemItem,
     tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
@@ -571,8 +574,11 @@ const TabScene = React.memo(function TabScene({
           tabBarItemLabelVisibilityMode: labelVisibilityMode,
           normal: normalTabItemAppearance,
           selected: selectedTabItemAppearance,
+          tabBarItemIconSize: tabBarIconSize,
           tabBarItemActiveIndicatorColor: activeIndicatorColor,
           tabBarItemActiveIndicatorEnabled: activeIndicatorEnabled,
+          tabBarItemActiveIndicatorWidth: tabBarActiveIndicatorWidth,
+          tabBarItemActiveIndicatorHeight: tabBarActiveIndicatorHeight,
           tabBarItemTitleFontFamily: fontFamily,
           tabBarItemTitleFontWeight: fontWeight,
           tabBarItemTitleSmallLabelFontSize: fontSize,
@@ -682,7 +688,15 @@ function getPlatformIcon(icon: NativeBottomTabIcon): PlatformIcon {
         android: undefined,
         shared: undefined,
       };
-    case 'image':
+    case 'image': {
+      // A `{ uri: 'name' }` source maps to an Android drawable by name.
+      const drawableName =
+        typeof icon.source === 'object' &&
+        'uri' in icon.source &&
+        icon.source.uri?.includes(':') === false
+          ? icon.source.uri
+          : undefined;
+
       return {
         ios:
           icon.tinted === false
@@ -694,12 +708,19 @@ function getPlatformIcon(icon: NativeBottomTabIcon): PlatformIcon {
                 type: 'templateSource',
                 templateSource: icon.source,
               },
-        android: undefined,
+        android:
+          drawableName != null
+            ? {
+                type: 'drawableResource',
+                name: drawableName,
+              }
+            : undefined,
         shared: {
           type: 'imageSource',
           imageSource: icon.source,
         },
       };
+    }
     default: {
       const _exhaustiveCheck: never = icon;
 
