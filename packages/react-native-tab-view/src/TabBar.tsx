@@ -129,6 +129,9 @@ const convertPaddingPercentToSize = (
   return 0;
 };
 
+const isArrayEqual = (a: unknown[], b: unknown[]) =>
+  a.length === b.length && a.every((it, index) => Object.is(it, b[index]));
+
 const getComputedTabWidth = ({
   index,
   layoutWidth,
@@ -651,7 +654,7 @@ export function TabBar<T extends Route>({
     };
   });
 
-  const indicatorWidths = indicatorBaseWidths.map((width, i) => {
+  const computedIndicatorWidths = indicatorBaseWidths.map((width, i) => {
     if (!width) {
       return 0;
     }
@@ -665,7 +668,7 @@ export function TabBar<T extends Route>({
     return Math.max(0, width - margin.left - margin.right);
   });
 
-  const indicatorOffsets = tabWidthByIndex.map((tabWidth, i) => {
+  const computedIndicatorOffsets = tabWidthByIndex.map((tabWidth, i) => {
     const precedingTabsWidth = tabWidthByIndex
       .slice(0, i)
       .reduce((sum, width) => sum + width, 0);
@@ -700,6 +703,21 @@ export function TabBar<T extends Route>({
 
     return tabStart + baseOffset + margin.left;
   });
+
+  const [indicatorWidths, setIndicatorWidths] = React.useState(
+    computedIndicatorWidths
+  );
+  const [indicatorOffsets, setIndicatorOffsets] = React.useState(
+    computedIndicatorOffsets
+  );
+
+  if (!isArrayEqual(indicatorWidths, computedIndicatorWidths)) {
+    setIndicatorWidths(computedIndicatorWidths);
+  }
+
+  if (!isArrayEqual(indicatorOffsets, computedIndicatorOffsets)) {
+    setIndicatorOffsets(computedIndicatorOffsets);
+  }
 
   return (
     <Animated.View
