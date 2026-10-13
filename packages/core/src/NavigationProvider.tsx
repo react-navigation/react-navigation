@@ -37,13 +37,16 @@ export function NavigationProvider({ route, navigation, children }: Props) {
       ? focusedRouteKey === route.key
       : false;
 
-  return (
-    <NavigationRouteContext.Provider value={route}>
-      <NavigationContext.Provider value={navigation}>
-        <IsFocusedContext.Provider value={isFocused}>
-          {children}
-        </IsFocusedContext.Provider>
-      </NavigationContext.Provider>
-    </NavigationRouteContext.Provider>
+  return React.useMemo(
+    () => (
+      <NavigationRouteContext.Provider value={route}>
+        <NavigationContext.Provider value={navigation}>
+          <IsFocusedContext.Provider value={isFocused}>
+            {children}
+          </IsFocusedContext.Provider>
+        </NavigationContext.Provider>
+      </NavigationRouteContext.Provider>
+    ),
+    [children, isFocused, navigation, route]
   );
 }

@@ -2,8 +2,11 @@ import type { ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
 import { NavigationBuilderContext } from './NavigationBuilderContext';
-import { NavigationStateContext } from './NavigationStateContext';
 import type { NavigationProp } from './types';
+
+export const OptionsGetterContext = React.createContext<
+  ((key: string, getter: () => object | undefined | null) => void) | undefined
+>(undefined);
 
 type Options = {
   key?: string;
@@ -20,9 +23,7 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
   const onOptionsChange = React.useContext(
     NavigationBuilderContext
   )?.onOptionsChange;
-  const { addOptionsGetter: parentAddOptionsGetter } = React.useContext(
-    NavigationStateContext
-  );
+  const parentAddOptionsGetter = React.useContext(OptionsGetterContext);
 
   const optionsChangeListener = React.useCallback(() => {
     const isFocused = navigation?.isFocused() ?? true;

@@ -36,7 +36,7 @@ import { useEventEmitter } from './useEventEmitter';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
 import { useLazyValue } from './useLazyValue';
 import { useNavigationIndependentTree } from './useNavigationIndependentTree';
-import { useOptionsGetters } from './useOptionsGetters';
+import { OptionsGetterContext, useOptionsGetters } from './useOptionsGetters';
 import { useSyncState } from './useSyncState';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
@@ -356,17 +356,8 @@ export const BaseNavigationContainer = React.forwardRef(
         getKey,
         setKey,
         getIsInitial,
-        addOptionsGetter,
       }),
-      [
-        state,
-        getState,
-        setState,
-        getKey,
-        setKey,
-        getIsInitial,
-        addOptionsGetter,
-      ]
+      [state, getState, setState, getKey, setKey, getIsInitial]
     );
 
     const onReadyRef = React.useRef(onReady);
@@ -520,19 +511,21 @@ export const BaseNavigationContainer = React.forwardRef(
         <NavigationContainerRefContext.Provider value={navigation}>
           <NavigationBuilderContext.Provider value={builderContext}>
             <NavigationStateContext.Provider value={context}>
-              <ConsumedParamsContext.Provider value={consumedParams}>
-                <UnhandledActionContext.Provider
-                  value={onUnhandledAction ?? defaultOnUnhandledAction}
-                >
-                  <DeprecatedNavigationInChildContext.Provider
-                    value={navigationInChildEnabled}
+              <OptionsGetterContext.Provider value={addOptionsGetter}>
+                <ConsumedParamsContext.Provider value={consumedParams}>
+                  <UnhandledActionContext.Provider
+                    value={onUnhandledAction ?? defaultOnUnhandledAction}
                   >
-                    <EnsureSingleNavigator>
-                      <ThemeProvider value={theme}>{children}</ThemeProvider>
-                    </EnsureSingleNavigator>
-                  </DeprecatedNavigationInChildContext.Provider>
-                </UnhandledActionContext.Provider>
-              </ConsumedParamsContext.Provider>
+                    <DeprecatedNavigationInChildContext.Provider
+                      value={navigationInChildEnabled}
+                    >
+                      <EnsureSingleNavigator>
+                        <ThemeProvider value={theme}>{children}</ThemeProvider>
+                      </EnsureSingleNavigator>
+                    </DeprecatedNavigationInChildContext.Provider>
+                  </UnhandledActionContext.Provider>
+                </ConsumedParamsContext.Provider>
+              </OptionsGetterContext.Provider>
             </NavigationStateContext.Provider>
           </NavigationBuilderContext.Provider>
         </NavigationContainerRefContext.Provider>
