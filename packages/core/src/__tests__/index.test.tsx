@@ -684,6 +684,71 @@ test('preserves initial state when navigator mount is delayed in StrictMode', as
   expect(navigation.getCurrentRoute()?.name).toBe('bar');
 });
 
+test.each([false, true])(
+  'preserves mount-time navigation when a navigator mounts later (StrictMode: %s)',
+  async (strictMode) => {
+    const TestNavigator = (props: any): any => {
+      const { state, descriptors, render } = useNavigationBuilder(
+        StackRouter,
+        props
+      );
+
+      const route = state.routes[state.index];
+
+      if (route == null) {
+        return null;
+      }
+
+      return render(descriptors[route.key]?.render());
+    };
+
+    const FooScreen = ({ navigation }: any): any => {
+      const hasReplaced = React.useRef(false);
+
+      React.useEffect(() => {
+        if (!hasReplaced.current) {
+          hasReplaced.current = true;
+          navigation.replace('bar');
+        }
+      }, [navigation]);
+
+      return <Text>[foo]</Text>;
+    };
+
+    const BarScreen = (): any => <Text>[bar]</Text>;
+
+    const navigation = createNavigationContainerRef<ParamListBase>();
+
+    const Test = ({ ready }: { ready: boolean }) => (
+      <BaseNavigationContainer ref={navigation}>
+        {ready ? (
+          <TestNavigator>
+            <Screen name="foo" component={FooScreen} />
+            <Screen name="bar" component={BarScreen} />
+          </TestNavigator>
+        ) : null}
+      </BaseNavigationContainer>
+    );
+
+    const element = (ready: boolean) =>
+      strictMode ? (
+        <React.StrictMode>
+          <Test ready={ready} />
+        </React.StrictMode>
+      ) : (
+        <Test ready={ready} />
+      );
+
+    const root = await render(element(false));
+
+    await root.rerender(element(true));
+
+    expect(navigation.getCurrentRoute()?.name).toBe('bar');
+    expect(root.getByText('[bar]')).toBeDefined();
+    expect(root.queryByText('[foo]')).toBeNull();
+  }
+);
+
 test('preserves state after rendered in `<Activity mode="hidden">`', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, render } = useNavigationBuilder(
