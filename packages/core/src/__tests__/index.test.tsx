@@ -684,6 +684,73 @@ test('preserves initial state when navigator mount is delayed in StrictMode', as
   expect(navigation.getCurrentRoute()?.name).toBe('bar');
 });
 
+test.each([{ strict: false }, { strict: true }])(
+  'preserves navigation from a screen effect when navigator mount is delayed (strict mode: $strict)',
+  async ({ strict }) => {
+    const TestNavigator = (props: any): any => {
+      const { state, descriptors, render } = useNavigationBuilder(
+        MockRouter,
+        props
+      );
+
+      const route = state.routes[state.index];
+
+      if (route == null) {
+        return null;
+      }
+
+      return render(descriptors[route.key]?.render());
+    };
+
+    const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
+
+    const FooScreen = (props: any) => {
+      const isNavigatedRef = React.useRef(false);
+
+      React.useEffect(() => {
+        // Only navigate in the first run in strict mode
+        if (!isNavigatedRef.current) {
+          isNavigatedRef.current = true;
+          props.navigation.navigate('bar');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
+
+      return <TestScreen {...props} />;
+    };
+
+    const navigation = createNavigationContainerRef<ParamListBase>();
+
+    const Wrapper = strict ? React.StrictMode : React.Fragment;
+
+    const Test = ({ condition }: { condition: boolean }) => (
+      <Wrapper>
+        <BaseNavigationContainer ref={navigation}>
+          {condition ? (
+            <TestNavigator>
+              <Screen name="foo" component={FooScreen} />
+              <Screen name="bar" component={TestScreen} />
+            </TestNavigator>
+          ) : null}
+        </BaseNavigationContainer>
+      </Wrapper>
+    );
+
+    const root = await render(<Test condition={false} />);
+
+    await root.rerender(<Test condition />);
+
+    expect(root).toMatchInlineSnapshot(`
+      <Text>
+        [
+        bar
+        ]
+      </Text>
+    `);
+    expect(navigation.getCurrentRoute()?.name).toBe('bar');
+  }
+);
+
 test('preserves state after rendered in `<Activity mode="hidden">`', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, render } = useNavigationBuilder(
