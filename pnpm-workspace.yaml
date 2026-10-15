@@ -6,3 +6,10 @@ allowBuilds:
   core-js: false
   esbuild: false
   unrs-resolver: false
+minimumReleaseAgeExclude:
+  - '@ai-sdk/gateway@4.0.114'
+  - '@ai-sdk/provider-utils@5.0.60'
+  - '@e2e-dev/mobile@0.12.1'
+  - '@e2e-dev/web@0.15.0'
+  - ai@7.0.141
+  - e2e@0.21.0

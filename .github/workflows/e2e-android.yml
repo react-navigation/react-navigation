@@ -173,9 +173,6 @@ jobs:
         run: |
           avdmanager create avd -n "${{ env.AVD_NAME }}" -d "${{ env.EMULATOR_PROFILE }}" -k "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
 
-      - name: Start Metro bundler
-        run: pnpm --dir example start &
-
       - name: Start emulator
         timeout-minutes: 10
         run: |
@@ -183,28 +180,21 @@ jobs:
           adb wait-for-device
           adb shell "while [[ -z \$(getprop sys.boot_completed) ]]; do sleep 1; done"
 
-      - name: Wait for Metro bundler
-        timeout-minutes: 5
-        run: |
-          until curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=android&dev=true&minify=false" > /dev/null 2>&1; do
-            sleep 2
-          done
-
       - name: Run E2E tests
         run: |
           adb install android-debug-build/android-debug.apk
           adb reverse tcp:8081 tcp:8081
           cd example
-          pnpm e2e:native --platform android
+          pnpm e2e:android --retries 3 --reporter list,junit
 
       - name: Store E2E output
-        if: always()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: e2e-output-android
-          path: example/agent-device-artifacts/**/*
+          path: example/.e2e/
           include-hidden-files: true
-          overwrite: true
+          if-no-files-found: warn
 
       - name: Kill emulator
         if: always()
@@ -215,8 +205,6 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: e2e-artifacts-android
-          path: |
-            example/agent-device-state/**/*.log
-            ~/.agent-device/**/*.log
+          path: ~/.agent-device/**/*.log
           include-hidden-files: true
           overwrite: true
