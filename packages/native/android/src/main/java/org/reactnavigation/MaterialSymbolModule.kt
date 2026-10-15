@@ -65,11 +65,10 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
       "react_navigation/material_symbols/$typefaceSuffix/$fontHash"
     )
 
-    val mirrored =
-      direction == "rtl" && MaterialSymbolTypeface.isAutoMirrored(reactApplicationContext, name)
+    val rtl = direction == "rtl"
 
     val cacheFile = File(
-      cacheDir, "${Uri.encode(name)}_${scaledSize}_$resolvedColor${if (mirrored) "_rtl" else ""}.png"
+      cacheDir, "${Uri.encode(name)}_${scaledSize}_$resolvedColor${if (rtl) "_rtl" else ""}.png"
     )
 
     val cacheUri = cacheFile.toUri().toString()
@@ -101,6 +100,9 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
       textSize = scaledSize.toFloat()
       textAlign = Paint.Align.CENTER
 
+      // Swap in the mirrored glyphs for supported symbols
+      fontFeatureSettings = if (rtl) "'ss01'" else null
+
       this.color = resolvedColor
     }
 
@@ -110,10 +112,6 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     try {
       val canvas = Canvas(bitmap)
       val y = (scaledSize - (fontMetrics.descent - fontMetrics.ascent)) / 2f - fontMetrics.ascent
-
-      if (mirrored) {
-        canvas.scale(-1f, 1f, scaledSize / 2f, scaledSize / 2f)
-      }
 
       canvas.drawText(symbol, scaledSize / 2f, y, paint)
 
