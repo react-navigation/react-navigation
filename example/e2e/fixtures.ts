@@ -6,13 +6,17 @@ import config from '../app.json' with { type: 'json' };
 
 const scheme = `${config.expo.scheme}://`;
 
+// Platforms with an app that was started and can be reused
+const warmApps = new Set<string>();
+
 export const test = base.extend<{
   /**
    * Open a deep link, e.g. `stack-basic`, without restarting the app.
    */
   open: (path: string) => Promise<void>;
   /**
-   * Restart the app with a deep link, and wait for the given text to show.
+   * Open a deep link from a clean state, and wait for the given text to show.
+   * The app is restarted unless it can be reused.
    */
   launch: (path: string, text: string) => Promise<void>;
   /**
@@ -55,23 +59,41 @@ export const test = base.extend<{
   },
   launch: async (fixtures, provide) => {
     await provide(async (path, text) => {
+      const target = fixtures.screen.getByText(text, { visible: true }).first();
+
       if (fixtures.platform === 'web') {
         await fixtures.app.open(`/${path}`);
-      } else {
-        const { device } = fixtures as typeof fixtures & { device: Device };
+        await expect(target).toBeVisible({ timeout: 60_000 });
 
-        // Opening the app first binds the device session, so the app can be closed
-        // Then opening the link cold starts the app with the link as initial URL
-        await fixtures.app.open();
-        await device.closeApp();
-        await device.openLink(`${scheme}${path}`);
+        return;
       }
 
-      await expect(
-        fixtures.screen.getByText(text, { visible: true }).first()
-      ).toBeVisible({
-        timeout: 60_000,
-      });
+      const { device } = fixtures as typeof fixtures & { device: Device };
+
+      // Reloading the app is slow on Android, so reuse the running app when possible
+      // On iOS, the accessibility tree of a reused app can report stale states
+      if (fixtures.platform === 'android' && warmApps.has(fixtures.platform)) {
+        try {
+          // Going home first unmounts the previous example to start from a clean state
+          await device.openLink(scheme);
+          await device.openLink(`${scheme}${path}`);
+          await expect(target).toBeVisible({ timeout: 10_000 });
+
+          return;
+        } catch {
+          // The previous test may have left the app unusable, so restart it
+          warmApps.delete(fixtures.platform);
+        }
+      }
+
+      // Opening the app first binds the device session, so the app can be closed
+      // Then opening the link cold starts the app with the link as initial URL
+      await fixtures.app.open();
+      await device.closeApp();
+      await device.openLink(`${scheme}${path}`);
+      await expect(target).toBeVisible({ timeout: 60_000 });
+
+      warmApps.add(fixtures.platform);
     });
   },
   scroll: async (fixtures, provide) => {

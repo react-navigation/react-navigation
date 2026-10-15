@@ -32,6 +32,7 @@ const metro = {
 };
 
 // Wait for navigation transitions to finish after an action
+// Android uses the default, since snapshots are slow enough to cover transitions
 const settle = 500;
 
 const bundleUrl = (platform: 'ios' | 'android') =>
@@ -69,7 +70,6 @@ const config: E2EConfig = {
       engine: mobile({
         platform: 'android',
         device: process.env.E2E_ANDROID_DEVICE,
-        settle,
       }),
       app: {
         bundleId: appConfig.expo.android.package,
