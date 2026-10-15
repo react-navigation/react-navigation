@@ -10,7 +10,7 @@ import {
 
 import type { Icon } from './types';
 
-export type PlatformIconStyle = ImageStyle & ViewStyle;
+export type PlatformIconStyle = React.CSSProperties & ImageStyle & ViewStyle;
 
 export type PlatformIconProps = {
   icon: Icon;
