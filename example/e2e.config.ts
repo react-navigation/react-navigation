@@ -12,8 +12,9 @@ const viewport = { width: 390, height: 844 };
 const webApp = {
   url: 'http://127.0.0.1:0',
   command: {
-    executable: 'pnpm',
-    args: ['web', '--host', '127.0.0.1', '--port', '{port}', '--strictPort'],
+    // Run the binaries directly, since running scripts with pnpm verifies dependencies
+    executable: 'vite',
+    args: ['--host', '127.0.0.1', '--port', '{port}', '--strictPort'],
     startupTimeout: 120_000,
     log: '.e2e/logs/web.log',
   },
@@ -22,8 +23,8 @@ const webApp = {
 };
 
 const metro = {
-  executable: 'pnpm',
-  args: ['start', '--port', '8081'],
+  executable: 'expo',
+  args: ['start', '--dev-client', '--port', '8081'],
   env: { CI: '1' },
   startupTimeout: 600_000,
   reuseExisting: true,
