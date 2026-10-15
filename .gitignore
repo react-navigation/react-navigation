@@ -98,9 +98,6 @@ dist/
 
 # @end expo-cli
 
-# Maestro
-maestro-debug-output/
-
 # Yarn
 .yarn-global
 .yarn/*

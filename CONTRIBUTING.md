@@ -45,40 +45,31 @@ Remember to add tests for your change if possible. Run the unit tests by:
 pnpm test
 ```
 
-Before running tests configure Playwright with:
+The e2e tests use [e2e](https://e2e.tester.army). They live in [`example/e2e/tests`](/example/e2e/tests) and the same tests run on web, iOS and Android.
+
+Run the web e2e tests by:
 
 ```sh
-pnpm exec playwright install
+pnpm example e2e:web
 ```
 
-Run the e2e tests by:
+This starts the dev server for the example app and runs the tests in Chromium and Firefox. Missing browsers are downloaded on the first run.
+
+Before running native e2e tests, build the example app and install it on a booted Simulator or Emulator:
 
 ```sh
-pnpm example e2e:web --ui
+pnpm example ios
+pnpm example android
 ```
 
-By default, this will use the local dev server for the app. If you want to test a production build, first build the [example app](/example/) for web:
+Then run the tests by:
 
 ```sh
-pnpm example exec expo export --platform web
+pnpm example e2e:ios
+pnpm example e2e:android
 ```
 
-Then run the tests with the `CI` environment variable:
-
-```sh
-CI=1 pnpm example e2e:web
-```
-
-Before running native e2e tests:
-
-- Start the Emulator or Simulator and install the Expo Go app.
-- Start the Metro server with `pnpm example start`.
-
-Then run the agent-device tests by:
-
-```sh
-pnpm example e2e:native
-```
+This starts the Metro server if it's not already running. If multiple devices are booted, set `E2E_IOS_DEVICE` or `E2E_ANDROID_DEVICE` to the device to use.
 
 ### Commit message convention
 

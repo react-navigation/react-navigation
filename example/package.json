@@ -8,8 +8,9 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "vite",
-    "e2e:native": "node ../scripts/agent-device.ts",
-    "e2e:web": "pnpm exec playwright test --config=e2e/playwright.config.ts"
+    "e2e:web": "e2e run --target chromium --target firefox",
+    "e2e:ios": "e2e run --target ios",
+    "e2e:android": "e2e run --target android"
   },
   "dependencies": {
     "@callstack/liquid-glass": "^0.8.2",
@@ -59,13 +60,16 @@
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@babel/plugin-transform-strict-mode": "^7.29.7",
+    "@e2e-dev/mobile": "^0.12.1",
+    "@e2e-dev/web": "^0.15.0",
     "@expo/metro-config": "~58.0.21",
-    "@playwright/test": "^1.64.1",
     "@types/react": "~19.3.0",
     "@types/react-dom": "~19.3.0",
     "@vitejs/plugin-react": "^6.2.1",
+    "ai": "^7.0.141",
     "arktype": "^2.2.9",
     "babel-preset-expo": "~58.0.24",
+    "e2e": "^0.21.0",
     "expect-type": "^1.4.0",
     "expo-build-disk-cache": "^0.8.0",
     "metro-config": "0.87.3",
@@ -75,7 +79,6 @@
     "valibot": "^1.5.0",
     "vite": "^8.3.6",
     "vite-plugin-commonjs": "^0.10.4",
-    "yaml": "^2.9.1",
     "zod": "^4.6.7"
   },
   "react-navigation": {
