@@ -53,7 +53,10 @@ export function PagerViewAdapter({
   const listeners = React.useRef<Set<Listener>>(new Set()).current;
 
   const pagerRef = React.useRef<ViewPager>(null);
-  const indexRef = React.useRef<number>(index);
+  // The page the underlying (uncontrolled) pager last reported it settled on.
+  // Kept in state so that a swipe or tab press triggers a re-render, letting us
+  // reconcile the pager back to the controlled `index` when they diverge.
+  const [pagerIndex, setPagerIndex] = React.useState(index);
   const navigationStateRef = React.useRef(navigationState);
 
   const position = useAnimatedValue(initialPosition);
@@ -90,11 +93,17 @@ export function PagerViewAdapter({
     if (keyboardDismissMode === 'auto') {
       Keyboard.dismiss();
     }
+  }, [keyboardDismissMode, index]);
 
-    if (indexRef.current !== index) {
+  // `react-native-pager-view` is uncontrolled: it moves on swipe or tab press and
+  // only reports the change afterwards. To keep `TabView` a truly controlled
+  // component, re-assert the controlled `index` on the pager whenever its settled
+  // page drifts away from it (e.g. the parent ignores or overrides `onIndexChange`).
+  React.useEffect(() => {
+    if (pagerIndex !== index) {
       setPage(index);
     }
-  }, [keyboardDismissMode, index, setPage]);
+  }, [index, pagerIndex, setPage]);
 
   const onPageScrollStateChanged = (
     state: PageScrollStateChangedNativeEvent
@@ -171,10 +180,10 @@ export function PagerViewAdapter({
           { useNativeDriver }
         )}
         onPageSelected={(e) => {
-          const index = e.nativeEvent.position;
-          indexRef.current = index;
-          onIndexChange(index);
-          onTabSelect?.({ index });
+          const newIndex = e.nativeEvent.position;
+          setPagerIndex(newIndex);
+          onIndexChange(newIndex);
+          onTabSelect?.({ index: newIndex });
         }}
         onPageScrollStateChanged={onPageScrollStateChanged}
         scrollEnabled={swipeEnabled}
