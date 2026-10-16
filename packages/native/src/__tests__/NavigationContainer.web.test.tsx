@@ -10,6 +10,7 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, render, waitFor } from '@testing-library/react';
+import { StrictMode, useEffect, useRef } from 'react';
 import { Text } from 'react-native';
 
 import { NavigationContainer } from '../NavigationContainer';
@@ -22,6 +23,68 @@ afterEach(() => {
   jest.runOnlyPendingTimers();
   jest.useRealTimers();
 });
+
+test.each([false, true])(
+  'preserves a mount-time replace in a delayed navigator (StrictMode: %s)',
+  (strictMode) => {
+    const createStackNavigator = createNavigatorFactory((props: any) => {
+      const { state, descriptors, render } = useNavigationBuilder(
+        StackRouter,
+        props
+      );
+
+      const route = state.routes[state.index];
+
+      return render(route ? descriptors[route.key]?.render() : null);
+    });
+
+    const Stack = createStackNavigator();
+    const navigation = createNavigationContainerRef<ParamListBase>();
+
+    const FooScreen = ({ navigation }: any): any => {
+      const hasReplaced = useRef(false);
+
+      useEffect(() => {
+        if (!hasReplaced.current) {
+          hasReplaced.current = true;
+          navigation.replace('bar');
+        }
+      }, [navigation]);
+
+      return <Text>[foo]</Text>;
+    };
+
+    const BarScreen = (): any => <Text>[bar]</Text>;
+
+    const Test = ({ ready }: { ready: boolean }) => (
+      <NavigationContainer ref={navigation}>
+        {ready ? (
+          <Stack.Navigator>
+            <Stack.Screen name="foo" component={FooScreen} />
+            <Stack.Screen name="bar" component={BarScreen} />
+          </Stack.Navigator>
+        ) : null}
+      </NavigationContainer>
+    );
+
+    const element = (ready: boolean) =>
+      strictMode ? (
+        <StrictMode>
+          <Test ready={ready} />
+        </StrictMode>
+      ) : (
+        <Test ready={ready} />
+      );
+
+    const root = render(element(false));
+
+    root.rerender(element(true));
+
+    expect(navigation.getCurrentRoute()?.name).toBe('bar');
+    expect(root.getByText('[bar]')).toBeInTheDocument();
+    expect(root.queryByText('[foo]')).not.toBeInTheDocument();
+  }
+);
 
 test('integrates with the history API', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {

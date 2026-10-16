@@ -475,10 +475,11 @@ export function useNavigationBuilder<
 
   const setState = useLatestCallback(
     (state: State | PartialState<State> | undefined) => {
-      if (mountStateRef.current === 'unmounted') {
-        // Store the state locally in case the current navigator is in `Activity`
+      if (mountStateRef.current !== 'mounted') {
         savedStateRef.current = state;
+      }
 
+      if (mountStateRef.current === 'unmounted') {
         // State might have been already cleaned up due to unmount
         // We don't want to update `route.state` in parent
         // Otherwise it will be reused if a new navigator gets mounted
