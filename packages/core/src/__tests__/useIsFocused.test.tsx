@@ -17,16 +17,12 @@ beforeEach(() => {
 
 test('renders correct focus state', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const Test = () => {
@@ -66,16 +62,12 @@ test('renders correct focus state', () => {
 
 test('returns correct focus state after conditional rendering', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
-    );
+    return render(descriptors[state.routes[state.index].key].render());
   };
 
   const TestScreen = () => {

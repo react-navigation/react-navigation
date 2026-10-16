@@ -17,6 +17,28 @@ test('returns undefined for invalid path', () => {
   expect(getStateFromPath<object>('//')).toBeUndefined();
 });
 
+test.each([
+  ['%E=%80%80', '%E=%80%80'],
+  ['%C3', '%C3'],
+  ['%ea%ba%5a%ba', '%ea%baZ%ba'],
+])(
+  'matches the configured route with malformed query value %s',
+  (value, decoded) => {
+    const path = `foo?q=${value}`;
+    const config = { screens: { Foo: 'foo', NotFound: '*' } };
+
+    expect(getStateFromPath(path, config)).toEqual({
+      routes: [
+        {
+          name: 'Foo',
+          params: { q: decoded },
+          path,
+        },
+      ],
+    });
+  }
+);
+
 test('returns undefined for malformed encoded path segment', () => {
   expect(getStateFromPath<object>('foo/%E0%A4%A')).toBeUndefined();
 });

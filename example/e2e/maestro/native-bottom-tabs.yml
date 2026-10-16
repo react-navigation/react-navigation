@@ -1,0 +1,71 @@
+appId: ${APP_ID}
+name: Native Bottom Tabs
+---
+# Native bottom tabs aren't supported on web
+- runFlow:
+    when:
+      true: ${maestro.platform != 'web'}
+    commands:
+      - runFlow:
+          file: ../launch.yml
+          env:
+            LINK: native-bottom-tabs
+            TEXT: 'Article by Gandalf'
+      - tapOn:
+          text: 'Update params'
+      - assertVisible:
+          text: 'Article by Babel fish'
+      - tapOn:
+          text: 'Navigate to feed'
+      - assertVisible:
+          text: 'Replace with contacts'
+      - tapOn:
+          text: 'Albums'
+      - assertVisible:
+          text: 'Go to Contacts'
+      - tapOn:
+          text: 'Go to Contacts'
+      - assertVisible:
+          text: 'Marissa Castillo'
+      - scroll
+      - assertNotVisible:
+          text: 'Marissa Castillo'
+      - tapOn:
+          text: 'Contacts'
+      - extendedWaitUntil:
+          visible:
+            text: 'Marissa Castillo'
+          timeout: 5000
+      - tapOn:
+          text: 'Albums'
+      - assertVisible:
+          text: 'Go to Contacts'
+      # The stack in the article tab pops to top on blur
+      - tapOn:
+          text: 'Article'
+      - assertVisible:
+          text: 'Article by Babel fish'
+      - tapOn:
+          text: 'Navigate to feed'
+      - assertVisible:
+          text: 'Replace with contacts'
+      # Pressing the focused tab pops the stack to top
+      - tapOn:
+          text: 'Article'
+      - assertVisible:
+          text: 'Article by Babel fish'
+      - tapOn:
+          text: 'Feed'
+      - assertVisible:
+          text: 'Joke bot'
+      - scrollUntilVisible:
+          element:
+            text: 'Someone broke into my house and stole 20% of my couch. Ouch!'
+      - assertVisible:
+          text: 'Someone broke into my house and stole 20% of my couch. Ouch!'
+      - assertNotVisible:
+          text: 'Article by Babel fish'
+      - tapOn:
+          text: 'Article'
+      - assertVisible:
+          text: 'Article by Babel fish'

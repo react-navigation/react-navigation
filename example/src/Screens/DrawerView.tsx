@@ -33,7 +33,7 @@ export function DrawerView() {
         return (
           <View style={styles.container}>
             <Button color="tomato" onPress={() => setOpen(false)}>
-              Close drawer
+              Close
             </Button>
           </View>
         );

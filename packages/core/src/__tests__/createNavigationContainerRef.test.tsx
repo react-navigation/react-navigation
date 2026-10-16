@@ -19,22 +19,21 @@ test('adds the listener even if container is mounted later', () => {
   ref.addListener('state', listener);
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       {},
       { title?: string },
       any
     >(MockRouter, props);
-    const { render, options } = descriptors[state.routes[state.index].key];
+    const { render: renderScene, options } =
+      descriptors[state.routes[state.index].key];
 
-    return (
-      <NavigationContent>
-        <main>
-          <h1>{options.title}</h1>
-          <div>{render()}</div>
-        </main>
-      </NavigationContent>
+    return render(
+      <main>
+        <h1>{options.title}</h1>
+        <div>{renderScene()}</div>
+      </main>
     );
   };
 
@@ -67,7 +66,7 @@ test("doesn't restore a removed pre-mount listener when re-attached", () => {
   ref.addListener('ready', listener);
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -78,9 +77,7 @@ test("doesn't restore a removed pre-mount listener when re-attached", () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const App = ({ id }: { id: string }) => (
@@ -109,7 +106,7 @@ test('removes a pre-mount listener with its unsubscribe after the container is m
   const unsubscribe = ref.addListener('state', listener);
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -120,9 +117,7 @@ test('removes a pre-mount listener with its unsubscribe after the container is m
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   render(

@@ -45,6 +45,7 @@ type Props = Omit<
  */
 export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
   const Component = tree.getComponent();
+  const element = <Component />;
 
   function Navigation(
     { linking, ...rest }: Props,
@@ -99,7 +100,7 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
 
     return (
       <NavigationContainer {...rest} ref={ref} linking={memoizedLinking}>
-        <Component />
+        {element}
       </NavigationContainer>
     );
   }

@@ -34,37 +34,34 @@ function DrawerNavigator({
   UNSTABLE_router,
   ...rest
 }: DrawerNavigatorProps) {
-  const { state, descriptors, navigation, NavigationContent } =
-    useNavigationBuilder<
-      DrawerNavigationState<ParamListBase>,
-      DrawerRouterOptions,
-      DrawerActionHelpers<ParamListBase>,
-      DrawerNavigationOptions,
-      DrawerNavigationEventMap
-    >(DrawerRouter, {
-      id,
-      initialRouteName,
-      defaultStatus,
-      backBehavior,
-      UNSTABLE_routeNamesChangeBehavior,
-      children,
-      layout,
-      screenListeners,
-      screenOptions,
-      screenLayout,
-      UNSTABLE_router,
-    });
+  const { state, descriptors, navigation, render } = useNavigationBuilder<
+    DrawerNavigationState<ParamListBase>,
+    DrawerRouterOptions,
+    DrawerActionHelpers<ParamListBase>,
+    DrawerNavigationOptions,
+    DrawerNavigationEventMap
+  >(DrawerRouter, {
+    id,
+    initialRouteName,
+    defaultStatus,
+    backBehavior,
+    UNSTABLE_routeNamesChangeBehavior,
+    children,
+    layout,
+    screenListeners,
+    screenOptions,
+    screenLayout,
+    UNSTABLE_router,
+  });
 
-  return (
-    <NavigationContent>
-      <DrawerView
-        {...rest}
-        defaultStatus={defaultStatus}
-        state={state}
-        descriptors={descriptors}
-        navigation={navigation}
-      />
-    </NavigationContent>
+  return render(
+    <DrawerView
+      {...rest}
+      defaultStatus={defaultStatus}
+      state={state}
+      descriptors={descriptors}
+      navigation={navigation}
+    />
   );
 }
 

@@ -60,23 +60,27 @@ test('preserves reference for navigation objects', () => {
     return null;
   };
 
-  const root = render(<Test />);
+  const root = render(
+    <BaseNavigationContainer>
+      <Test />
+    </BaseNavigationContainer>
+  );
 
-  root.update(<Test />);
+  root.update(
+    <BaseNavigationContainer>
+      <Test />
+    </BaseNavigationContainer>
+  );
 });
 
 test('returns correct value for isFocused', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   let navigation: any;
@@ -141,16 +145,12 @@ test('returns correct value for isFocused after changing screens', () => {
   };
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TestRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   let navigation: any;

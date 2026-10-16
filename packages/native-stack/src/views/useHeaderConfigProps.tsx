@@ -10,6 +10,7 @@ import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   type HeaderBarButtonItemMenuAction,
   type HeaderBarButtonItemSubmenu,
+  type HeaderBarButtonItemVisibilityPriority,
   type HeaderBarButtonItemWithAction,
   type HeaderBarButtonItemWithMenu,
   isSearchBarAvailableForCurrentPlatform,
@@ -29,7 +30,6 @@ import type {
   NativeStackHeaderItemMenuSubmenu,
   NativeStackNavigationOptions,
 } from '../types';
-import { processFonts } from './FontProcessor';
 
 type Props = NativeStackNavigationOptions & {
   headerTopInsetEnabled: boolean;
@@ -71,7 +71,13 @@ const processBarButtonItems = (
           );
         }
 
-        const { badge, label, labelStyle, icon, ...rest } = item;
+        const { badge, label, labelStyle, icon, visibilityPriority, ...rest } =
+          item;
+
+        const processedVisibilityPriority:
+          | HeaderBarButtonItemVisibilityPriority
+          | undefined =
+          visibilityPriority === 'default' ? 'standard' : visibilityPriority;
 
         const processedItemCommon = {
           ...rest,
@@ -82,6 +88,7 @@ const processBarButtonItems = (
             ...labelStyle,
           },
           icon: transformIcon(icon),
+          visibilityPriority: processedVisibilityPriority,
         };
 
         let processedItem:
@@ -164,13 +171,22 @@ const getMenuItem = (
   item: NativeStackHeaderItemMenuAction | NativeStackHeaderItemMenuSubmenu
 ): HeaderBarButtonItemMenuAction | HeaderBarButtonItemSubmenu => {
   if (item.type === 'submenu') {
-    const { label, icon, inline, layout, items, multiselectable, ...rest } =
-      item;
+    const {
+      label,
+      description,
+      icon,
+      inline,
+      layout,
+      items,
+      multiselectable,
+      ...rest
+    } = item;
 
     return {
       ...rest,
       icon: transformIcon(icon),
       title: label,
+      subtitle: description,
       displayAsPalette: layout === 'palette',
       displayInline: inline,
       singleSelection:
@@ -205,7 +221,9 @@ export function useHeaderConfigProps({
   headerLargeTitleStyle,
   headerBackground,
   headerLeft,
+  headerLeftBackgroundVisible,
   headerRight,
+  headerRightBackgroundVisible,
   headerShown,
   headerStyle,
   headerBlurEffect,
@@ -253,17 +271,11 @@ export function useHeaderConfigProps({
       ? 'transparent'
       : colors.card);
 
-  const [backTitleFontFamily, largeTitleFontFamily, titleFontFamily] =
-    processFonts([
-      headerBackTitleStyleFlattened.fontFamily,
-      headerLargeTitleStyleFlattened.fontFamily,
-      headerTitleStyleFlattened.fontFamily,
-    ]);
-
   const backTitleFontSize =
     'fontSize' in headerBackTitleStyleFlattened
       ? headerBackTitleStyleFlattened.fontSize
       : undefined;
+  const backTitleFontFamily = headerBackTitleStyleFlattened.fontFamily;
 
   const titleText = getHeaderTitle({ title, headerTitle }, route.name);
   const titleColor =
@@ -281,6 +293,7 @@ export function useHeaderConfigProps({
       ? headerTitleStyleFlattened.fontSize
       : undefined;
   const titleFontWeight = headerTitleStyleFlattened.fontWeight;
+  const titleFontFamily = headerTitleStyleFlattened.fontFamily;
 
   const largeTitleBackgroundColor = headerLargeStyleFlattened.backgroundColor;
   const largeTitleColor =
@@ -292,6 +305,7 @@ export function useHeaderConfigProps({
       ? headerLargeTitleStyleFlattened.fontSize
       : undefined;
   const largeTitleFontWeight = headerLargeTitleStyleFlattened.fontWeight;
+  const largeTitleFontFamily = headerLargeTitleStyleFlattened.fontFamily;
 
   const headerTitleStyleSupported: TextStyle = { color: titleColor };
 
@@ -407,7 +421,9 @@ export function useHeaderConfigProps({
               return null;
             })
           ) : headerLeftElement != null ? (
-            <ScreenStackHeaderLeftView>
+            <ScreenStackHeaderLeftView
+              hidesSharedBackground={headerLeftBackgroundVisible === false}
+            >
               {headerLeftElement}
             </ScreenStackHeaderLeftView>
           ) : null}
@@ -481,7 +497,9 @@ export function useHeaderConfigProps({
           return null;
         })
       ) : headerRightElement != null ? (
-        <ScreenStackHeaderRightView>
+        <ScreenStackHeaderRightView
+          hidesSharedBackground={headerRightBackgroundVisible === false}
+        >
           {headerRightElement}
         </ScreenStackHeaderRightView>
       ) : null}

@@ -19,8 +19,9 @@ import { ConsumedParamsContext } from './ConsumedParamsContext';
 import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { useNavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
+// eslint-disable-next-line import-x/no-deprecated
 import { NavigationMetaContext } from './NavigationMetaContext';
 import { NavigationRouteContext } from './NavigationProvider';
 import { NavigationStateContext } from './NavigationStateContext';
@@ -462,9 +463,7 @@ export function useNavigationBuilder<
     getIsInitial,
   } = React.useContext(NavigationStateContext);
 
-  const { onEmitEvent, getIsStateEmitted } = React.useContext(
-    NavigationBuilderContext
-  );
+  const { onEmitEvent, getIsStateEmitted } = useNavigationBuilderContext();
 
   const stateCleanupRef = React.useRef<boolean>(false);
   const lastStateRef = React.useRef<State | PartialState<State> | undefined>(
@@ -1045,7 +1044,7 @@ export function useNavigationBuilder<
     descriptors,
   });
 
-  const NavigationContent = useComponent((children: React.ReactNode) => {
+  const render = (children: React.ReactNode) => {
     const element =
       layout != null
         ? layout({
@@ -1072,13 +1071,34 @@ export function useNavigationBuilder<
         </NavigationHelpersContext.Provider>
       </NavigationMetaContext.Provider>
     );
-  });
+  };
+
+  const NavigationContent = useComponent(render);
 
   return {
     state,
     navigation,
     describe,
     descriptors,
+    render,
+    /**
+     * Use the `render` function instead:
+     *
+     * ```diff
+     * -const { NavigationContent } = useNavigationBuilder(Router, props);
+     * +const { render } = useNavigationBuilder(Router, props);
+     *
+     * -return (
+     * -  <NavigationContent>
+     * -    <NavigatorView />
+     * -  </NavigationContent>
+     * +return render(
+     * +  <NavigatorView />
+     * );
+     * ```
+     *
+     * @deprecated
+     */
     NavigationContent,
   };
 }

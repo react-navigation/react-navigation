@@ -10,7 +10,7 @@
     "ios": "expo run:ios",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
     "e2e:web": "npx playwright test --config=e2e/playwright.config.ts",
-    "e2e:native": "maestro test -e APP_ID=host.exp.exponent e2e/maestro"
+    "e2e:native": "node ../scripts/agent-device.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~56.0.17",
@@ -34,8 +34,8 @@
     "react-native-gesture-handler": "~2.31.1",
     "react-native-pager-view": "8.0.1",
     "react-native-reanimated": "4.3.1",
-    "react-native-safe-area-context": "~5.7.0",
-    "react-native-screens": "^4.26.2",
+    "react-native-safe-area-context": "~5.10.0",
+    "react-native-screens": "^4.30.0",
     "react-native-web": "^0.21.2",
     "react-native-worklets": "0.8.3",
     "standard-navigation": "^0.0.8"

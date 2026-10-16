@@ -1,0 +1,284 @@
+name: E2E / iOS
+on:
+  push:
+    branches:
+      - 7.x
+  pull_request:
+    branches:
+      - 7.x
+  schedule:
+    - cron: '0 4 * * *'
+
+env:
+  XCODE_VERSION: '26.3'
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    concurrency:
+      group: ${{ github.workflow_ref }}-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      USE_CCACHE: 1
+      CCACHE_COMPILERCHECK: content
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Install nightly react-native-screens
+        if: github.event_name == 'schedule'
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn up react-native-screens@nightly
+
+      - name: Calculate fingerprint
+        id: calculate-fingerprint
+        run: |
+          FINGERPRINT=$(yarn expo-updates fingerprint:generate --platform ios | jq -r '.hash')
+          echo "Fingerprint for iOS: $FINGERPRINT"
+          echo "fingerprint=$FINGERPRINT" >> "$GITHUB_OUTPUT"
+        working-directory: example
+
+      - name: Restore debug build from cache
+        id: restore-debug-build
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: ios-debug-build/
+          key: ios-debug-build-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+
+      - name: Use appropriate Xcode version
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: Install build dependencies
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        run: brew install ccache
+
+      - name: Cache CocoaPods
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            example/ios/Pods
+            ~/.cocoapods
+            ~/Library/Caches/CocoaPods
+          key: ios-pods-${{ runner.os }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+          restore-keys: |
+            ios-pods-${{ runner.os }}-
+
+      - name: Cache DerivedData
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: example/ios/build
+          key: ios-deriveddata-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+          restore-keys: |
+            ios-deriveddata-${{ runner.os }}-${{ env.XCODE_VERSION }}-
+            ios-deriveddata-${{ runner.os }}-
+
+      - name: Cache ccache
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: ~/.ccache
+          key: ios-ccache-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+          restore-keys: |
+            ios-ccache-${{ runner.os }}-${{ env.XCODE_VERSION }}-
+            ios-ccache-${{ runner.os }}-
+
+      - name: Set ccache directory
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        run: |
+          echo "CCACHE_DIR=$HOME/.ccache" >> "$GITHUB_ENV"
+
+      - name: Build iOS App
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        run: |
+          yarn expo prebuild --platform ios
+          xcodebuild ONLY_ACTIVE_ARCH=YES \
+            -workspace ios/ReactNavigation.xcworkspace \
+            -UseNewBuildSystem=YES \
+            -scheme ReactNavigation \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -sdk iphonesimulator \
+            -derivedDataPath ios/build \
+            -quiet
+        working-directory: example
+
+      - name: Prepare cache folder
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        run: |
+          mkdir ios-debug-build
+          mv example/ios/build/Build/Products/Debug-iphonesimulator/ReactNavigation.app ios-debug-build/ios-debug.app
+
+      - name: Store debug build in cache
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: ios-debug-build/
+          key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
+
+      - name: Pack debug build artifact
+        run: tar -czf ios-debug-build/ios-debug.app.tgz -C ios-debug-build ios-debug.app
+
+      - name: Upload debug build artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ios-debug-build
+          path: ios-debug-build/ios-debug.app.tgz
+          if-no-files-found: error
+          retention-days: 1
+
+  e2e-ios:
+    needs: build-ios
+    runs-on: macos-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    concurrency:
+      group: ${{ github.workflow_ref }}-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      SIMULATOR_NAME: iPhone 17 Pro
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Install nightly react-native-screens
+        if: github.event_name == 'schedule'
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn up react-native-screens@nightly
+
+      - name: Download debug build artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ios-debug-build
+          path: ios-debug-build
+
+      - name: Unpack debug build artifact
+        run: tar -xzf ios-debug-build/ios-debug.app.tgz -C ios-debug-build
+
+      - name: Use appropriate Xcode version
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: Resolve Xcode cache key
+        id: xcode-cache-key
+        run: |
+          XCODE_VERSION="$(xcodebuild -version | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g; s/[[:space:]]$//')"
+          XCODE_KEY="$(echo "$XCODE_VERSION" | tr ' ' '-' | tr -cd '[:alnum:]._-')"
+          echo "key=$XCODE_KEY" >> "$GITHUB_OUTPUT"
+
+      - name: Cache agent-device iOS runner
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: ~/.agent-device/apple-runner/derived
+          key: agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-${{ hashFiles('node_modules/agent-device/package.json') }}
+
+      - name: Start Metro bundler
+        run: yarn example start &
+
+      - name: Boot iOS Simulator
+        timeout-minutes: 5
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -n 1 | awk -F "[()]" '{print $2}')
+
+          if [ -z "$DEVICE_ID" ]; then
+            echo "No available simulator found for the criteria."
+            xcrun simctl list devices available
+            exit 1
+          fi
+
+          echo "Booting $SIMULATOR_NAME simulator with DEVICE_ID=$DEVICE_ID..."
+          xcrun simctl boot "$DEVICE_ID" || true
+
+          while ! xcrun simctl list devices | grep "$DEVICE_ID" | grep -q "(Booted)"; do
+            sleep 2
+          done
+
+          echo "Simulator is booted!"
+
+          # Add deep link handler so we don't see a prompt when running tests
+          /usr/libexec/PlistBuddy "$HOME/Library/Developer/CoreSimulator/Devices/${DEVICE_ID}/data/Library/Preferences/com.apple.launchservices.schemeapproval.plist" -c "add com.apple.CoreSimulator.CoreSimulatorBridge-->rne+7 string org.reactnavigation.example"
+
+      - name: Wait for Metro bundler
+        timeout-minutes: 5
+        run: |
+          until curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=ios&dev=true&minify=false" > /dev/null 2>&1; do
+            sleep 2
+          done
+
+      - name: Install iOS debug app
+        run: |
+          echo "Installing debug app..."
+          xcrun simctl install booted ../ios-debug-build/ios-debug.app
+        working-directory: example
+
+      - name: Start simulator log stream
+        run: |
+          echo "Starting simulator log stream..."
+          xcrun simctl spawn booted log stream --style syslog > ~/agent-device-simulator.log 2>&1 &
+
+      - name: Prepare agent-device iOS runner
+        timeout-minutes: 20
+        run: |
+          mkdir -p agent-device-artifacts agent-device-state
+          echo "Preparing agent-device iOS runner..."
+          node ../node_modules/agent-device/bin/agent-device.mjs \
+            prepare ios-runner \
+            --timeout 600000 \
+            --platform ios \
+            --state-dir agent-device-state \
+            --verbose \
+            --no-record \
+            > agent-device-artifacts/ios-prepare.txt
+        working-directory: example
+
+      - name: Run E2E tests
+        run: |
+          echo "Running native e2e tests..."
+          AGENT_DEVICE_E2E_TIMEOUT_MS=240000 yarn e2e:native --platform ios
+        working-directory: example
+
+      - name: Store E2E output
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: e2e-output-ios
+          path: example/agent-device-artifacts/**/*
+          include-hidden-files: true
+          overwrite: true
+
+      - name: Shutdown simulator
+        if: always()
+        run: xcrun simctl shutdown booted || true
+
+      - name: Store debug output
+        if: failure() || cancelled()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: e2e-artifacts-ios
+          path: example/agent-device-state/**/*.log
+          include-hidden-files: true
+          overwrite: true
+
+      - name: Store device logs
+        if: failure() || cancelled()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: e2e-simulator-output
+          path: |
+            ~/.agent-device/**/*.log
+            ~/agent-device-simulator.log
+          include-hidden-files: true
+          overwrite: true

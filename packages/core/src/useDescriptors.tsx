@@ -7,10 +7,13 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
+import { isArrayEqual } from './isArrayEqual';
+import { isRecordEqual } from './isRecordEqual';
 import {
   type AddKeyedListener,
   type AddListener,
   NavigationBuilderContext,
+  useNavigationBuilderContext,
 } from './NavigationBuilderContext';
 import { NavigationProvider } from './NavigationProvider';
 import { SceneView } from './SceneView';
@@ -84,6 +87,31 @@ type Options<
   emitter: NavigationEventEmitter<EventMap>;
 };
 
+type DescriptorCache<
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  ActionHelpers extends Record<string, () => void>,
+> = Record<
+  string,
+  {
+    descriptor: Descriptor<
+      ScreenOptions,
+      NavigationProp<
+        ParamListBase,
+        string,
+        string | undefined,
+        State,
+        ScreenOptions,
+        EventMap
+      > &
+        ActionHelpers,
+      RouteProp<ParamListBase>
+    >;
+    deps: unknown[];
+  }
+>;
+
 /**
  * Hook to create descriptor objects for the child routes.
  *
@@ -122,9 +150,9 @@ export function useDescriptors<
     onOptionsChange,
     scheduleUpdate,
     flushUpdates,
-    stackRef,
+    withStackTrace,
     getIsStateEmitted,
-  } = React.useContext(NavigationBuilderContext);
+  } = useNavigationBuilderContext();
 
   const context = React.useMemo(
     () => ({
@@ -139,7 +167,7 @@ export function useDescriptors<
       getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
-      stackRef,
+      withStackTrace,
     }),
     [
       navigation,
@@ -153,7 +181,7 @@ export function useDescriptors<
       getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
-      stackRef,
+      withStackTrace,
     ]
   );
 
@@ -172,6 +200,10 @@ export function useDescriptors<
   });
 
   const routes = useRouteCache(state.routes);
+
+  const cache = React.useMemo<{
+    current: DescriptorCache<State, ScreenOptions, EventMap, ActionHelpers>;
+  }>(() => ({ current: {} }), []);
 
   const getOptions = (
     route: RouteProp<ParamListBase, string>,
@@ -223,7 +255,8 @@ export function useDescriptors<
       EventMap
     >,
     customOptions: ScreenOptions,
-    routeState: NavigationState | PartialState<NavigationState> | undefined
+    routeState: NavigationState | PartialState<NavigationState> | undefined,
+    layout: ScreenLayout<ScreenOptions> | undefined
   ) => {
     const config = screens[route.name];
     const screen = config.props;
@@ -237,14 +270,6 @@ export function useDescriptors<
 
         return o;
       });
-
-    const layout =
-      // The `layout` prop passed to `Screen` elements,
-      screen.layout ??
-      // The `screenLayout` props passed to `Group` elements
-      config.layout ??
-      // The default `screenLayout` passed to the navigator
-      screenLayout;
 
     let element = (
       <SceneView
@@ -279,31 +304,67 @@ export function useDescriptors<
     );
   };
 
+  const next: DescriptorCache<State, ScreenOptions, EventMap, ActionHelpers> =
+    {};
+
   const descriptors = routes.reduce<
     Record<
       string,
-      Descriptor<
+      DescriptorCache<
+        State,
         ScreenOptions,
-        NavigationProp<
-          ParamListBase,
-          string,
-          string | undefined,
-          State,
-          ScreenOptions,
-          EventMap
-        > &
-          ActionHelpers,
-        RouteProp<ParamListBase>
-      >
+        EventMap,
+        ActionHelpers
+      >[string]['descriptor']
     >
   >((acc, route, i) => {
     const navigation = navigations[route.key];
     const customOptions = getOptions(route, navigation, options[route.key]);
+    const routeState = state.routes[i].state;
+    const config = screens[route.name];
+    const screen = config.props;
+
+    const layout =
+      // The `layout` prop passed to `Screen` elements,
+      screen.layout ??
+      // The `screenLayout` props passed to `Group` elements
+      config.layout ??
+      // The default `screenLayout` passed to the navigator
+      screenLayout;
+
+    const deps = [
+      route,
+      navigation,
+      routeState,
+      screen.component,
+      screen.getComponent,
+      screen.children,
+      layout,
+      context,
+      theme,
+      getState,
+      setState,
+    ];
+
+    const previous = cache.current[route.key];
+
+    if (
+      previous &&
+      isArrayEqual(previous.deps, deps) &&
+      isRecordEqual(previous.descriptor.options, customOptions)
+    ) {
+      next[route.key] = previous;
+      acc[route.key] = previous.descriptor;
+
+      return acc;
+    }
+
     const element = render(
       route,
       navigation,
       customOptions,
-      state.routes[i].state
+      routeState,
+      layout
     );
 
     acc[route.key] = {
@@ -316,8 +377,17 @@ export function useDescriptors<
       options: customOptions,
     };
 
+    next[route.key] = {
+      descriptor: acc[route.key],
+      deps,
+    };
+
     return acc;
   }, {});
+
+  React.useInsertionEffect(() => {
+    cache.current = next;
+  });
 
   /**
    * Create a descriptor object for a route.
@@ -337,7 +407,9 @@ export function useDescriptors<
 
     const navigation = base;
     const customOptions = getOptions(route, navigation, {});
-    const element = render(route, navigation, customOptions, undefined);
+    const config = screens[route.name];
+    const layout = config.props.layout ?? config.layout ?? screenLayout;
+    const element = render(route, navigation, customOptions, undefined, layout);
 
     return {
       route,

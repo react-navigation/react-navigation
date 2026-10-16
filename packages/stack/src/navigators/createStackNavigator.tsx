@@ -24,6 +24,12 @@ import type {
 } from '../types';
 import { StackView } from '../views/Stack/StackView';
 
+type TabPressEventArg = EventArg<
+  'tabPress',
+  true,
+  { behavior?: { popToTop?: boolean } } | undefined
+>;
+
 function StackNavigator({
   id,
   initialRouteName,
@@ -38,7 +44,7 @@ function StackNavigator({
 }: StackNavigatorProps) {
   const { direction } = useLocale();
 
-  const { state, describe, descriptors, navigation, NavigationContent } =
+  const { state, describe, descriptors, navigation, render } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
       StackRouterOptions,
@@ -70,11 +76,13 @@ function StackNavigator({
       // This is necessary to know if preventDefault() has been called
       handle = requestAnimationFrame(() => {
         const currentState = navigation.getState();
+        const event = e as TabPressEventArg;
 
         if (
           isFocused &&
+          event.data?.behavior?.popToTop !== false &&
           currentState.index > 0 &&
-          !(e as EventArg<'tabPress', true>).defaultPrevented
+          !event.defaultPrevented
         ) {
           // When user taps on already focused tab and we're inside the tab,
           // reset the stack to replicate native behaviour
@@ -92,17 +100,15 @@ function StackNavigator({
     };
   }, [navigation]);
 
-  return (
-    <NavigationContent>
-      <StackView
-        {...rest}
-        direction={direction}
-        state={state}
-        describe={describe}
-        descriptors={descriptors}
-        navigation={navigation}
-      />
-    </NavigationContent>
+  return render(
+    <StackView
+      {...rest}
+      direction={direction}
+      state={state}
+      describe={describe}
+      descriptors={descriptors}
+      navigation={navigation}
+    />
   );
 }
 

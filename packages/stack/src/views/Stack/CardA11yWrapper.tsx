@@ -3,7 +3,6 @@ import { Platform, StyleSheet, View } from 'react-native';
 
 type Props = {
   focused: boolean;
-  active: boolean;
   animated: boolean;
   isNextScreenTransparent: boolean;
   detachCurrentScreen: boolean;
@@ -16,7 +15,6 @@ export const CardA11yWrapper = React.forwardRef(
   (
     {
       focused,
-      active,
       animated,
       isNextScreenTransparent,
       detachCurrentScreen,
@@ -43,9 +41,6 @@ export const CardA11yWrapper = React.forwardRef(
         style={[
           StyleSheet.absoluteFill,
           {
-            // This is necessary to avoid unfocused larger pages increasing scroll area
-            // The issue can be seen on the web when a smaller screen is pushed over a larger one
-            overflow: active ? undefined : 'hidden',
             // We use visibility on web
             display: Platform.OS !== 'web' && isHidden ? 'none' : 'flex',
             // Hide unfocused screens when animation isn't enabled

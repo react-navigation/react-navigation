@@ -1,8 +1,29 @@
 appId: ${APP_ID}
 name: Dynamic Tabs
 ---
-- stopApp
-- openLink:
-    link: exp://127.0.0.1:8081/--/dynamic-tabs
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: dynamic-tabs
+      TEXT: 'Tab 0'
+# On iOS, the tab button's accessibility label is "<title>, tab, <n> of <total>"
+- tapOn:
+    text: 'Add a tab'
 - assertVisible:
-    text: 'Tab 0'
+    text: 'Tab 2(, tab, .*)?'
+- tapOn:
+    text: 'Add a tab'
+- assertVisible:
+    text: 'Tab 3(, tab, .*)?'
+- tapOn:
+    text: 'Add a tab'
+- assertVisible:
+    text: 'Tab 4(, tab, .*)?'
+- tapOn:
+    text: 'Remove a tab'
+- assertNotVisible:
+    text: 'Tab 4(, tab, .*)?'
+- tapOn:
+    text: 'Remove a tab'
+- assertNotVisible:
+    text: 'Tab 3(, tab, .*)?'

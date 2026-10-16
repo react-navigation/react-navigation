@@ -1,8 +1,26 @@
 appId: ${APP_ID}
 name: Drawer View
 ---
-- stopApp
-- openLink:
-    link: exp://127.0.0.1:8081/--/drawer-view
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: drawer-view
+      TEXT: 'Drawer Layout'
 - assertVisible:
-    text: 'Drawer Layout'
+    text: 'Open drawer'
+- tapOn:
+    text: 'Open drawer'
+- extendedWaitUntil:
+    visible:
+      text: 'Close'
+    timeout: 2000
+- tapOn:
+    text: 'Close'
+- extendedWaitUntil:
+    visible:
+      text: 'Open drawer'
+    timeout: 2000
+- tapOn:
+    text: 'Change position (left)'
+- assertVisible:
+    text: 'Change position (right)'

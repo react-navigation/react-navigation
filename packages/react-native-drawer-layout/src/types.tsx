@@ -98,7 +98,7 @@ export type DrawerProps = {
   overlayAccessibilityLabel?: string;
 
   /**
-   * Whether the keyboard should be dismissed when the swipe gesture begins.
+   * Whether the keyboard should be dismissed when the drawer starts opening or closing.
    * Defaults to `'on-drag'`. Set to `'none'` to disable keyboard handling.
    */
   keyboardDismissMode?: 'none' | 'on-drag';

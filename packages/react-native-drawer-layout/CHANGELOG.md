@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.12](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.11...react-native-drawer-layout@4.2.12) (2026-10-13)
+
+### Bug Fixes
+
+* dismiss keyboard when drawer is opened programmatically ([#13287](https://github.com/react-navigation/react-navigation/issues/13287)) ([b24f5d7](https://github.com/react-navigation/react-navigation/commit/b24f5d76a6fe95525a84c17e739602713eb0ee1c)), closes [#13273](https://github.com/react-navigation/react-navigation/issues/13273) - by @MSliwa01
+
+## [4.2.11](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.10...react-native-drawer-layout@4.2.11) (2026-09-29)
+
+### Bug Fixes
+
+* use stable onOpen and onClose for drawer callbacks ([a982f54](https://github.com/react-navigation/react-navigation/commit/a982f5432f2917a42383c02ff9a32f08d2b75436)), closes [#13258](https://github.com/react-navigation/react-navigation/issues/13258) - by @satya164
+
 ## [4.2.10](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.9...react-native-drawer-layout@4.2.10) (2026-08-04)
 
 ### Bug Fixes

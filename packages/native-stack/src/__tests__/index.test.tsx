@@ -1,4 +1,11 @@
-import { afterEach, describe, expect, jest, test } from '@jest/globals';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from '@jest/globals';
 import { Text, useHeaderHeight } from '@react-navigation/elements';
 import { NavigationContainer } from '@react-navigation/native';
 import {
@@ -22,7 +29,13 @@ type NestedStackParamList = {
   C: undefined;
 };
 
+beforeEach(() => {
+  jest.useFakeTimers();
+});
+
 afterEach(() => {
+  jest.runOnlyPendingTimers();
+  jest.useRealTimers();
   jest.restoreAllMocks();
 });
 

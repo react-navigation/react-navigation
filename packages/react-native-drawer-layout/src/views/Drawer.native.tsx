@@ -163,7 +163,14 @@ export function Drawer({
   const translationX = useSharedValue(getDrawerTranslationX(open));
   const gestureState = useSharedValue<GestureState>(GestureState.UNDETERMINED);
 
+  const onOpenLatest = useLatestCallback(onOpen);
+  const onCloseLatest = useLatestCallback(onClose);
+
   const onAnimationStart = useLatestCallback((open: boolean) => {
+    if (drawerType !== 'permanent') {
+      hideKeyboard();
+    }
+
     onTransitionStart?.(!open);
   });
 
@@ -203,17 +210,17 @@ export function Drawer({
       );
 
       if (open) {
-        runOnJS(onOpen)();
+        runOnJS(onOpenLatest)();
       } else {
-        runOnJS(onClose)();
+        runOnJS(onCloseLatest)();
       }
     },
     [
       getDrawerTranslationX,
       onAnimationEnd,
       onAnimationStart,
-      onClose,
-      onOpen,
+      onCloseLatest,
+      onOpenLatest,
       touchStartX,
       touchX,
       translationX,

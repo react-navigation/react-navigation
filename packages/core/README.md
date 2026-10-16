@@ -17,28 +17,31 @@ A basic custom navigator bundling a router and a view looks like this:
 ```js
 import {
   createNavigatorFactory,
+  createScreenFactory,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { StackRouter } from '@react-navigation/routers';
 
 function StackNavigator({ initialRouteName, children, ...rest }) {
-  const { state, navigation, descriptors, NavigationContent } =
-    useNavigationBuilder(StackRouter, {
+  const { state, navigation, descriptors, render } = useNavigationBuilder(
+    StackRouter,
+    {
       initialRouteName,
       children,
-    });
+    }
+  );
 
-  return (
-    <NavigationContent>
-      <StackView
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-        {...rest}
-      />
-    </NavigationContent>
+  return render(
+    <StackView
+      state={state}
+      navigation={navigation}
+      descriptors={descriptors}
+      {...rest}
+    />
   );
 }
 
-export default createNavigatorFactory(StackNavigator);
+export const createStackNavigator = createNavigatorFactory(StackNavigator);
+
+export const createStackScreen = createScreenFactory();
 ```

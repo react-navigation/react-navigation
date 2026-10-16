@@ -5,12 +5,12 @@ import type {
   PartialState,
 } from '@react-navigation/routers';
 import escape from 'escape-string-regexp';
-import * as queryString from 'query-string';
 
 import { arrayStartsWith } from './arrayStartsWith';
 import { findFocusedRoute } from './findFocusedRoute';
 import { getPatternParts, type PatternPart } from './getPatternParts';
 import { isArrayEqual } from './isArrayEqual';
+import * as queryString from './queryString';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 

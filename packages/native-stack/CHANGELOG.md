@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.21.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.20.0...@react-navigation/native-stack@7.21.0) (2026-10-13)
+
+### Features
+
+* add options to hide left and right item backgrounds ([54e18fd](https://github.com/react-navigation/react-navigation/commit/54e18fd30479372544aff9db5446a733604f34b9)) - by @danchily2
+* add visibilityPriority and submenu description to header items ([#13284](https://github.com/react-navigation/react-navigation/issues/13284)) ([6ebba1e](https://github.com/react-navigation/react-navigation/commit/6ebba1efc7bccd49ed2c2817b073da36b39595f9)) - by @satya164
+
+# [7.20.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.19.2...@react-navigation/native-stack@7.20.0) (2026-09-29)
+
+### Features
+
+* add tabBarRepeatedPressBehavior to tabs ([78bfeb9](https://github.com/react-navigation/react-navigation/commit/78bfeb9562ddaf8a1a353a478addd51bda07c0da)) - by @satya164
+
+## [7.19.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.19.1...@react-navigation/native-stack@7.19.2) (2026-09-17)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.19.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.19.0...@react-navigation/native-stack@7.19.1) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.19.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.10...@react-navigation/native-stack@7.19.0) (2026-09-15)
+
+### Features
+
+* use a render callback for custom navigators ([#13238](https://github.com/react-navigation/react-navigation/issues/13238)) ([0706d1a](https://github.com/react-navigation/react-navigation/commit/0706d1aaf3ccc4949cb010af661a542021d392c0)) - by @
+
+## [7.18.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.9...@react-navigation/native-stack@7.18.10) (2026-08-26)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
 ## [7.18.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.8...@react-navigation/native-stack@7.18.9) (2026-08-19)
 
 ### Bug Fixes

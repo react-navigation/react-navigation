@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.21.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.20.0...@react-navigation/bottom-tabs@7.21.0) (2026-10-13)
+
+### Bug Fixes
+
+* defer rendering lazy content with useDeferredValue ([c8992c4](https://github.com/react-navigation/react-navigation/commit/c8992c4440d85d752defbf0a32f2900b146915da)) - by @satya164
+* fix custom active indicator color being ignored in native tabs ([43241cb](https://github.com/react-navigation/react-navigation/commit/43241cb4978d51a46903bc43a67f6cbe50f1e6b5)) - by @satya164
+* fix scroll edge effect flash when switching tabs ([1a716f6](https://github.com/react-navigation/react-navigation/commit/1a716f6e263734ab097ed40e1dc6712c1719ddfc)), closes [#13285](https://github.com/react-navigation/react-navigation/issues/13285) - by @satya164
+
+### Features
+
+* add a tabBarRole option for prominent and search tabs on iOS 27 ([#13283](https://github.com/react-navigation/react-navigation/issues/13283)) ([fb1d9c4](https://github.com/react-navigation/react-navigation/commit/fb1d9c44fa25f5ee8e71b7633e0b76b6c13c8bdf)) - by @satya164
+* add per-tab icon size & active-indicator size options to bottom tabs([#13168](https://github.com/react-navigation/react-navigation/issues/13168)) ([4313967](https://github.com/react-navigation/react-navigation/commit/4313967d6ec038accbce607be35b43776323a2ec)), closes [software-mansion/react-native-screens#4209](https://github.com/software-mansion/react-native-screens/issues/4209) - by @stachbial
+* add tabBarLabelPositionAdjustment option for native tabs on iOS ([#13265](https://github.com/react-navigation/react-navigation/issues/13265)) ([8c3f358](https://github.com/react-navigation/react-navigation/commit/8c3f3589baa2bf0c7b67404b29ad2d03df92ca9c)) - by @hydromoll
+* support tinted image icons on Android and rendering mode for SF Symbol icons ([#13278](https://github.com/react-navigation/react-navigation/issues/13278)) ([51b451d](https://github.com/react-navigation/react-navigation/commit/51b451dc1b488eee4e185a2c0b1201740151672b)), closes [#13282](https://github.com/react-navigation/react-navigation/issues/13282) - by @stachbial
+
+# [7.20.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.19.2...@react-navigation/bottom-tabs@7.20.0) (2026-09-29)
+
+### Bug Fixes
+
+* clear bottom tab animation state after transition ([eee1ddc](https://github.com/react-navigation/react-navigation/commit/eee1ddc2f9b6de1b1da34904028a746d89ffbcdd)) - by @satya164
+
+### Features
+
+* add tabBarRepeatedPressBehavior to tabs ([78bfeb9](https://github.com/react-navigation/react-navigation/commit/78bfeb9562ddaf8a1a353a478addd51bda07c0da)) - by @satya164
+
+## [7.19.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.19.1...@react-navigation/bottom-tabs@7.19.2) (2026-09-17)
+
+### Bug Fixes
+
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([13ce183](https://github.com/react-navigation/react-navigation/commit/13ce183d6cff2c284116a3a0d72502f4964cef09)) - by @satya164
+
+## [7.19.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.19.0...@react-navigation/bottom-tabs@7.19.1) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.19.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.18.18...@react-navigation/bottom-tabs@7.19.0) (2026-09-15)
+
+### Features
+
+* use a render callback for custom navigators ([#13238](https://github.com/react-navigation/react-navigation/issues/13238)) ([0706d1a](https://github.com/react-navigation/react-navigation/commit/0706d1aaf3ccc4949cb010af661a542021d392c0)) - by @
+
+## [7.18.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.18.17...@react-navigation/bottom-tabs@7.18.18) (2026-08-26)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
 ## [7.18.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.18.16...@react-navigation/bottom-tabs@7.18.17) (2026-08-19)
 
 ### Bug Fixes

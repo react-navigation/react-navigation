@@ -319,15 +319,33 @@ export type NativeStackNavigationOptions = {
   headerBackground?: () => React.ReactNode;
   /**
    * Function which returns a React Element to display on the left side of the header.
-   * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
-   * Will be overriden by `headerLeftItems` on iOS.
+   * This replaces the back button. See `headerBackVisible` to show the back button alongside the left element.
+   * Will be overridden by `headerLeftItems` on iOS.
    */
   headerLeft?: (props: NativeStackHeaderBackProps) => React.ReactNode;
   /**
+   * Whether the liquid glass background is visible for the item.
+   *
+   * Only supported on iOS 26.0 and later.
+   * Older versions of iOS and other platforms never show the background.
+   *
+   * Defaults to `true`.
+   */
+  headerLeftBackgroundVisible?: boolean;
+  /**
    * Function which returns a React Element to display on the right side of the header.
-   * Will be overriden by `headerRightItems` on iOS.
+   * Will be overridden by `headerRightItems` on iOS.
    */
   headerRight?: (props: NativeStackHeaderItemProps) => React.ReactNode;
+  /**
+   * Whether the liquid glass background is visible for the item.
+   *
+   * Only supported on iOS 26.0 and later.
+   * Older versions of iOS and other platforms never show the background.
+   *
+   * Defaults to `true`.
+   */
+  headerRightBackgroundVisible?: boolean;
   /**
    * Function which returns an array of items to display as on the left side of the header.
    * Overrides `headerLeft`.
@@ -602,7 +620,7 @@ export type NativeStackNavigationOptions = {
    */
   gestureResponseDistance?: ScreenProps['gestureResponseDistance'];
   /**
-   * The type of animation to use when this screen replaces another screen. Defaults to `pop`.
+   * The type of animation to use when this screen replaces another screen. Defaults to `push`.
    *
    * Supported values:
    * - "push": the new screen will perform push animation.
@@ -794,6 +812,10 @@ export type NativeStackNavigationOptions = {
    * - "landscape_left": landscape-left orientation is permitted.
    * - "landscape_right": landscape-right orientation is permitted.
    *
+   * If not set, the screen inherits the orientation of its parent screen.
+   * If no parent screen sets the `orientation`, it uses the supported orientations in the app's `Info.plist` on iOS,
+   * on Android, it lets the system decide the best orientation.
+   *
    * Only supported on iOS and Android.
    */
   orientation?: ScreenProps['screenOrientation'];
@@ -945,6 +967,18 @@ type SharedHeaderItem = {
    */
   identifier?: string;
   /**
+   * Priority used when the items don't fit in the header.
+   * Items with lower priority are moved to the overflow menu first.
+   *
+   * Only applies to items in `unstable_headerRightItems`.
+   *
+   * Defaults to `default`.
+   * Only available from iOS 27.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitemvisibilitypriority
+   */
+  visibilityPriority?: 'low' | 'default' | 'high';
+  /**
    * A badge to display on a item.
    * Only available from iOS 26.0 and later.
    *
@@ -1067,6 +1101,10 @@ export type NativeStackHeaderItemMenuSubmenu = {
    * Label for the submenu item.
    */
   label: string;
+  /**
+   * The secondary text displayed alongside the label of the submenu item.
+   */
+  description?: string;
   /**
    * Icon for the submenu item.
    */

@@ -2,7 +2,6 @@ import {
   createNavigatorFactory,
   createScreenFactory,
   type EventArg,
-  NavigationMetaContext,
   type NavigatorTypeBagBase,
   type ParamListBase,
   type StackActionHelpers,
@@ -24,6 +23,12 @@ import type {
 } from '../types';
 import { NativeStackView } from '../views/NativeStackView';
 
+type TabPressEventArg = EventArg<
+  'tabPress',
+  true,
+  { origin?: string; behavior?: { popToTop?: boolean } } | undefined
+>;
+
 function NativeStackNavigator({
   id,
   initialRouteName,
@@ -36,7 +41,7 @@ function NativeStackNavigator({
   UNSTABLE_router,
   ...rest
 }: NativeStackNavigatorProps) {
-  const { state, describe, descriptors, navigation, NavigationContent } =
+  const { state, describe, descriptors, navigation, render } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
       StackRouterOptions,
@@ -55,15 +60,7 @@ function NativeStackNavigator({
       UNSTABLE_router,
     });
 
-  const meta = React.useContext(NavigationMetaContext);
-
   React.useEffect(() => {
-    if (meta && 'type' in meta && meta.type === 'native-tabs') {
-      // If we're inside native tabs, we don't need to handle popToTop
-      // It's handled natively by native tabs
-      return;
-    }
-
     let handle: ReturnType<typeof requestAnimationFrame> | undefined;
 
     // @ts-expect-error: there may not be a tab navigator in parent
@@ -76,11 +73,15 @@ function NativeStackNavigator({
       // This is necessary to know if preventDefault() has been called
       handle = requestAnimationFrame(() => {
         const currentState = navigation.getState();
+        const event = e as TabPressEventArg;
 
         if (
           isFocused &&
+          event.data?.behavior?.popToTop !== false &&
+          // Native tabs handle popToTop natively.
+          event.data?.origin !== 'native' &&
           currentState.index > 0 &&
-          !(e as EventArg<'tabPress', true>).defaultPrevented
+          !event.defaultPrevented
         ) {
           // When user taps on already focused tab and we're inside the tab,
           // reset the stack to replicate native behaviour
@@ -96,18 +97,16 @@ function NativeStackNavigator({
       cancelAnimationFrame(handle);
       unsubscribe?.();
     };
-  }, [meta, navigation]);
+  }, [navigation]);
 
-  return (
-    <NavigationContent>
-      <NativeStackView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-        describe={describe}
-      />
-    </NavigationContent>
+  return render(
+    <NativeStackView
+      {...rest}
+      state={state}
+      navigation={navigation}
+      descriptors={descriptors}
+      describe={describe}
+    />
   );
 }
 

@@ -1,11 +1,11 @@
 appId: ${APP_ID}
 name: Modal Stack
 ---
-- stopApp
-- openLink:
-    link: exp://127.0.0.1:8081/--/modal-stack
-- assertVisible:
-    text: 'Article by Gandalf'
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: modal-stack
+      TEXT: 'Article by Gandalf'
 - tapOn:
     text: 'Push albums'
     retryTapIfNoChange: false

@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.8.0...@react-navigation/material-top-tabs@7.8.1) (2026-10-13)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.7.2...@react-navigation/material-top-tabs@7.8.0) (2026-09-29)
+
+### Bug Fixes
+
+* improve memoization for material top tabs ([4465bbe](https://github.com/react-navigation/react-navigation/commit/4465bbe5cf87c8f8adf4451b726510e1a5f2977a)) - by @satya164
+
+### Features
+
+* add tabBarRepeatedPressBehavior to tabs ([78bfeb9](https://github.com/react-navigation/react-navigation/commit/78bfeb9562ddaf8a1a353a478addd51bda07c0da)) - by @satya164
+
+## [7.7.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.7.1...@react-navigation/material-top-tabs@7.7.2) (2026-09-17)
+
+### Bug Fixes
+
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([13ce183](https://github.com/react-navigation/react-navigation/commit/13ce183d6cff2c284116a3a0d72502f4964cef09)) - by @satya164
+
+## [7.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.7.0...@react-navigation/material-top-tabs@7.7.1) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.17...@react-navigation/material-top-tabs@7.7.0) (2026-09-15)
+
+### Features
+
+* use a render callback for custom navigators ([#13238](https://github.com/react-navigation/react-navigation/issues/13238)) ([0706d1a](https://github.com/react-navigation/react-navigation/commit/0706d1aaf3ccc4949cb010af661a542021d392c0)) - by @
+
+## [7.6.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.16...@react-navigation/material-top-tabs@7.6.17) (2026-08-26)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
 ## [7.6.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.15...@react-navigation/material-top-tabs@7.6.16) (2026-08-19)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

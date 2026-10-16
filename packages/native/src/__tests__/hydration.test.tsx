@@ -32,32 +32,23 @@ jest.mock('../useLinking', () => require('../useLinking.tsx'));
 type NavigatorProps = Parameters<typeof useNavigationBuilder>[1];
 
 const StackNavigator = (props: NavigatorProps) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     StackRouter,
     props
   );
 
   const route = state.routes[state.index];
 
-  return (
-    <NavigationContent>
-      <div>{route ? descriptors[route.key]?.render() : null}</div>
-    </NavigationContent>
-  );
+  return render(<div>{route ? descriptors[route.key]?.render() : null}</div>);
 };
 
 const TabNavigator = (props: NavigatorProps) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
-    TabRouter,
-    props
-  );
+  const { state, descriptors, render } = useNavigationBuilder(TabRouter, props);
 
-  return (
-    <NavigationContent>
-      {state.routes.map((route) => (
-        <div key={route.key}>{descriptors[route.key]?.render()}</div>
-      ))}
-    </NavigationContent>
+  return render(
+    state.routes.map((route) => (
+      <div key={route.key}>{descriptors[route.key]?.render()}</div>
+    ))
   );
 };
 

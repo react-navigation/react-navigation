@@ -21,10 +21,12 @@ import useLatestCallback from 'use-latest-callback';
 
 import type {
   DrawerContentComponentProps,
+  DrawerDescriptor,
   DrawerDescriptorMap,
   DrawerHeaderProps,
   DrawerNavigationConfig,
   DrawerNavigationHelpers,
+  Layout,
 } from '../types';
 import { addCancelListener } from '../utils/addCancelListener';
 import { DrawerPositionContext } from '../utils/DrawerPositionContext';
@@ -42,6 +44,77 @@ type Props = DrawerNavigationConfig & {
 };
 
 const DRAWER_BORDER_RADIUS = 16;
+
+type DrawerSceneProps = {
+  descriptor: DrawerDescriptor;
+  isFocused: boolean;
+  shouldFreeze: boolean;
+  detachInactiveScreens: boolean;
+  drawerPosition: 'left' | 'right';
+  layout: Layout;
+};
+
+const DrawerScene = React.memo(function DrawerScene({
+  descriptor,
+  isFocused,
+  shouldFreeze,
+  detachInactiveScreens,
+  drawerPosition,
+  layout,
+}: DrawerSceneProps) {
+  const {
+    freezeOnBlur,
+    header = ({ layout, route, options }: DrawerHeaderProps) => (
+      <Header
+        {...options}
+        layout={layout}
+        title={getHeaderTitle(options, route.name)}
+        headerLeft={
+          drawerPosition === 'left' && options.headerLeft == null
+            ? (props) => <DrawerToggleButton {...props} />
+            : options.headerLeft
+        }
+        headerRight={
+          drawerPosition === 'right' && options.headerRight == null
+            ? (props) => <DrawerToggleButton {...props} />
+            : options.headerRight
+        }
+      />
+    ),
+    headerShown,
+    headerStatusBarHeight,
+    headerTransparent,
+    sceneStyle,
+  } = descriptor.options;
+
+  return (
+    <MaybeScreen
+      style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
+      visible={isFocused}
+      enabled={detachInactiveScreens}
+      freezeOnBlur={freezeOnBlur}
+      shouldFreeze={shouldFreeze}
+    >
+      <Screen
+        focused={isFocused}
+        route={descriptor.route}
+        navigation={descriptor.navigation}
+        headerShown={headerShown}
+        headerStatusBarHeight={headerStatusBarHeight}
+        headerTransparent={headerTransparent}
+        header={header({
+          layout,
+          route: descriptor.route,
+          navigation: descriptor.navigation,
+          options: descriptor.options,
+        })}
+        style={sceneStyle}
+      >
+        {descriptor.render()}
+      </Screen>
+    </MaybeScreen>
+  );
+});
 
 const renderDrawerContentDefault = (props: DrawerContentComponentProps) => (
   <DrawerContent {...props} />
@@ -239,58 +312,16 @@ function DrawerViewBase({
             return null;
           }
 
-          const {
-            freezeOnBlur,
-            header = ({ layout, options }: DrawerHeaderProps) => (
-              <Header
-                {...options}
-                layout={layout}
-                title={getHeaderTitle(options, route.name)}
-                headerLeft={
-                  drawerPosition === 'left' && options.headerLeft == null
-                    ? (props) => <DrawerToggleButton {...props} />
-                    : options.headerLeft
-                }
-                headerRight={
-                  drawerPosition === 'right' && options.headerRight == null
-                    ? (props) => <DrawerToggleButton {...props} />
-                    : options.headerRight
-                }
-              />
-            ),
-            headerShown,
-            headerStatusBarHeight,
-            headerTransparent,
-            sceneStyle,
-          } = descriptor.options;
-
           return (
-            <MaybeScreen
+            <DrawerScene
               key={route.key}
-              style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
-              visible={isFocused}
-              enabled={detachInactiveScreens}
-              freezeOnBlur={freezeOnBlur}
+              descriptor={descriptor}
+              isFocused={isFocused}
               shouldFreeze={!isFocused && !isPreloaded}
-            >
-              <Screen
-                focused={isFocused}
-                route={descriptor.route}
-                navigation={descriptor.navigation}
-                headerShown={headerShown}
-                headerStatusBarHeight={headerStatusBarHeight}
-                headerTransparent={headerTransparent}
-                header={header({
-                  layout: dimensions,
-                  route: descriptor.route,
-                  navigation: descriptor.navigation,
-                  options: descriptor.options,
-                })}
-                style={sceneStyle}
-              >
-                {descriptor.render()}
-              </Screen>
-            </MaybeScreen>
+              detachInactiveScreens={detachInactiveScreens}
+              drawerPosition={drawerPosition}
+              layout={dimensions}
+            />
           );
         })}
       </MaybeScreenContainer>

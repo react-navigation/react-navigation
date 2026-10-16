@@ -15,16 +15,12 @@ beforeEach(() => {
 
 test('gets the current navigation state', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const callback = jest.fn<(state: NavigationState) => void>();
@@ -73,16 +69,12 @@ test('gets the current navigation state', () => {
 
 test('gets the current navigation state with selector', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const callback = jest.fn();
@@ -130,16 +122,12 @@ test('gets the current navigation state with selector', () => {
 
 test('gets the correct value if selector changes', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const callback = jest.fn();
@@ -184,16 +172,12 @@ test('gets the correct value if selector changes', () => {
 
 test('gets the current navigation state at navigator level', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const Test = () => {

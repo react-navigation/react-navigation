@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.45](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.44...@react-navigation/elements@2.9.45) (2026-10-13)
+
+### Bug Fixes
+
+* improve accessibility for custom header searchbar ([aa86a5a](https://github.com/react-navigation/react-navigation/commit/aa86a5a28025913fe29624b0748c846bf1c7ec0b)) - by @satya164
+
+## [2.9.44](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.43...@react-navigation/elements@2.9.44) (2026-09-29)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.43](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.42...@react-navigation/elements@2.9.43) (2026-09-17)
+
+### Bug Fixes
+
+* measure frame size in layout effect ([#13251](https://github.com/react-navigation/react-navigation/issues/13251)) ([13ce183](https://github.com/react-navigation/react-navigation/commit/13ce183d6cff2c284116a3a0d72502f4964cef09)) - by @satya164
+
+## [2.9.42](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.41...@react-navigation/elements@2.9.42) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.41](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.40...@react-navigation/elements@2.9.41) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.40](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.39...@react-navigation/elements@2.9.40) (2026-08-26)
+
+**Note:** Version bump only for package @react-navigation/elements
+
 ## [2.9.39](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.38...@react-navigation/elements@2.9.39) (2026-08-19)
 
 **Note:** Version bump only for package @react-navigation/elements

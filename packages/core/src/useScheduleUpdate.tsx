@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { useNavigationBuilderContext } from './NavigationBuilderContext';
 import { useClientLayoutEffect } from './useClientLayoutEffect';
 
 /**
@@ -12,9 +12,7 @@ import { useClientLayoutEffect } from './useClientLayoutEffect';
  * This lets nested updates be applied from the root down without clobbering each other.
  */
 export function useScheduleUpdate(callback: () => void) {
-  const { scheduleUpdate, flushUpdates } = React.useContext(
-    NavigationBuilderContext
-  );
+  const { scheduleUpdate, flushUpdates } = useNavigationBuilderContext();
 
   React.useInsertionEffect(() => {
     scheduleUpdate(callback);

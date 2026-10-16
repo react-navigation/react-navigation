@@ -1,11 +1,11 @@
 appId: ${APP_ID}
 name: Full History Tabs
 ---
-- stopApp
-- openLink:
-    link: exp://127.0.0.1:8081/--/full-history-tabs
-- assertVisible:
-    text: 'Tab First (-)'
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: full-history-tabs
+      TEXT: 'Tab First (-)'
 - tapOn:
     text: 'Navigate to Second'
     retryTapIfNoChange: false
@@ -27,7 +27,7 @@ name: Full History Tabs
 - assertVisible:
     text: 'Tab Second (4)'
 - tapOn:
-    text: 'First'
+    text: 'First(, tab, .*)?'
     retryTapIfNoChange: false
 - assertVisible:
     text: 'Tab First (2)'

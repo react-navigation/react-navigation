@@ -21,6 +21,12 @@ type ScrollableWrapper =
   | ScrollableView
   | null;
 
+type TabPressEventArg = EventArg<
+  'tabPress',
+  true,
+  { origin?: string; behavior?: { scrollToTop?: boolean } } | undefined
+>;
+
 function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
   if (ref.current == null) {
     return null;
@@ -82,7 +88,7 @@ export function useScrollToTop(ref: React.RefObject<ScrollableWrapper>) {
         // in addition, there are multiple tab implementations
         // @ts-expect-error the `tabPress` event is only available when navigation type is tab
         'tabPress',
-        (e: EventArg<'tabPress', true>) => {
+        (e: TabPressEventArg) => {
           // We should scroll to top only when the screen is focused
           const isFocused = navigation.isFocused();
 
@@ -97,7 +103,14 @@ export function useScrollToTop(ref: React.RefObject<ScrollableWrapper>) {
           requestAnimationFrame(() => {
             const scrollable = getScrollableNode(ref) as ScrollableWrapper;
 
-            if (isFocused && isFirst && scrollable && !e.defaultPrevented) {
+            if (
+              isFocused &&
+              isFirst &&
+              scrollable &&
+              e.data?.behavior?.scrollToTop !== false &&
+              e.data?.origin !== 'native' &&
+              !e.defaultPrevented
+            ) {
               if ('scrollToTop' in scrollable) {
                 scrollable.scrollToTop();
               } else if ('scrollTo' in scrollable) {

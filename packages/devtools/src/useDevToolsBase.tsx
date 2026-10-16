@@ -63,9 +63,9 @@ export function useDevToolsBase(
       return undefined;
     }
 
-    const frames = parseErrorStack(stack)
-      .slice(2)
-      .filter((frame) => frame.file !== '[native code]');
+    const frames = parseErrorStack(stack).filter(
+      (frame) => frame.file !== '[native code]'
+    );
 
     const urlMatch = frames[0]?.file?.match(/^https?:\/\/.+(:\d+)?\//);
 

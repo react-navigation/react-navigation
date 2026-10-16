@@ -55,10 +55,9 @@ export function SafeAreaProviderCompat({ children, style }: Props) {
           );
         }
 
-        // SafeAreaProvider doesn't forward ref
-        // So we only pass onLayout to it
         return (
           <SafeAreaProvider
+            ref={ref}
             initialMetrics={initialMetrics}
             style={style}
             onLayout={onLayout}

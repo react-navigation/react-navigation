@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.24.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.23.0...@react-navigation/core@7.24.0) (2026-10-13)
+
+### Bug Fixes
+
+* capture stack traces for devtools at the call site ([da11ee5](https://github.com/react-navigation/react-navigation/commit/da11ee53985d0e83abc1dfb9108d4b2e5f8b76a5)) - by @satya164
+* cleanup more contexts in NavigationIndependentTree ([a6e4071](https://github.com/react-navigation/react-navigation/commit/a6e4071c05b8495aeef8e661867f017330324d0b)) - by @satya164
+
+### Features
+
+* add getter support to screens for lazy requires ([#13141](https://github.com/react-navigation/react-navigation/issues/13141)) ([6f8ad38](https://github.com/react-navigation/react-navigation/commit/6f8ad386ee9f0dd53a9571bf862acec6156a2849)) - by @satya164
+
+# [7.23.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.22.1...@react-navigation/core@7.23.0) (2026-09-29)
+
+### Bug Fixes
+
+* allow removal prevention when navigation was suspended ([e5ca0bb](https://github.com/react-navigation/react-navigation/commit/e5ca0bb5d505545594b749f923b36f0878770bfd)) - by @satya164
+* don't build root state unless we have a listener ([3757cd0](https://github.com/react-navigation/react-navigation/commit/3757cd0253ae5dcdde790e55878f0a869dcadd08)) - by @satya164
+
+### Features
+
+* add tabBarRepeatedPressBehavior to tabs ([78bfeb9](https://github.com/react-navigation/react-navigation/commit/78bfeb9562ddaf8a1a353a478addd51bda07c0da)) - by @satya164
+
+## [7.22.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.22.0...@react-navigation/core@7.22.1) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/core
+
+# [7.22.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.13...@react-navigation/core@7.22.0) (2026-09-15)
+
+### Features
+
+* use a render callback for custom navigators ([#13238](https://github.com/react-navigation/react-navigation/issues/13238)) ([0706d1a](https://github.com/react-navigation/react-navigation/commit/0706d1aaf3ccc4949cb010af661a542021d392c0)) - by @
+
 ## [7.21.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.12...@react-navigation/core@7.21.13) (2026-08-19)
 
 ### Bug Fixes

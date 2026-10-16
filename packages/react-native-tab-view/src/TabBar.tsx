@@ -464,7 +464,14 @@ export function TabBar<T extends Route>({
             }
 
             animationFrameHandle.current = requestAnimationFrame(() => {
-              setTabWidths({ ...measuredTabWidths.current });
+              const next = { ...measuredTabWidths.current };
+
+              setTabWidths((prev) =>
+                Object.keys(prev).length === Object.keys(next).length &&
+                Object.keys(next).every((key) => prev[key] === next[key])
+                  ? prev
+                  : next
+              );
             });
           }
         : undefined;

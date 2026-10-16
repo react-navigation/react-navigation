@@ -2,8 +2,11 @@ import type { ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
 import { NavigationBuilderContext } from './NavigationBuilderContext';
-import { NavigationStateContext } from './NavigationStateContext';
 import type { NavigationProp } from './types';
+
+export const OptionsGetterContext = React.createContext<
+  ((key: string, getter: () => object | undefined | null) => void) | undefined
+>(undefined);
 
 type Options = {
   key?: string;
@@ -17,17 +20,17 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
     Record<string, () => object | undefined | null>
   >({});
 
-  const { onOptionsChange } = React.useContext(NavigationBuilderContext);
-  const { addOptionsGetter: parentAddOptionsGetter } = React.useContext(
-    NavigationStateContext
-  );
+  const onOptionsChange = React.useContext(
+    NavigationBuilderContext
+  )?.onOptionsChange;
+  const parentAddOptionsGetter = React.useContext(OptionsGetterContext);
 
   const optionsChangeListener = React.useCallback(() => {
     const isFocused = navigation?.isFocused() ?? true;
     const hasChildren = Object.keys(optionsGettersFromChildRef.current).length;
 
     if (isFocused && !hasChildren) {
-      onOptionsChange(optionsRef.current ?? {});
+      onOptionsChange?.(optionsRef.current ?? {});
     }
   }, [navigation, onOptionsChange]);
 

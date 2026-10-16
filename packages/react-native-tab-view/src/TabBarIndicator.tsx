@@ -30,6 +30,9 @@ export type Props<T extends Route> = SceneRendererProps & {
 
 const useNativeDriver = Platform.OS !== 'web';
 
+const isArrayEqual = (a: unknown[], b: unknown[]) =>
+  a.length === b.length && a.every((it, index) => Object.is(it, b[index]));
+
 const calculateSize = (
   value: ViewStyle['width'] | undefined,
   referenceWidth: number
@@ -93,16 +96,13 @@ const getIndicatorWidth = (
   return width;
 };
 
-const getTranslateX = (
-  position: Animated.AnimatedInterpolation<number>,
+const getTranslateXOutputRange = (
   routes: Route[],
   getTabWidth: GetTabWidth,
-  direction: LocaleDirection,
   gap?: number,
   getWidth?: (index: number) => number | undefined
 ) => {
-  const inputRange = routes.map((_, i) => i);
-  const outputRange = routes.map((_, i) => {
+  return routes.map((_, i) => {
     let sumTabWidth = 0;
 
     for (let j = 0; j < i; j++) {
@@ -118,14 +118,6 @@ const getTranslateX = (
 
     return tabOffset + getTabWidth(i) / 2 - indicatorWidth / 2;
   });
-
-  const translateX = position.interpolate({
-    inputRange,
-    outputRange,
-    extrapolate: 'clamp',
-  });
-
-  return Animated.multiply(translateX, direction === 'rtl' ? -1 : 1);
 };
 
 export function TabBarIndicator<T extends Route>({
@@ -206,39 +198,76 @@ export function TabBarIndicator<T extends Route>({
 
   const { routes } = navigationState;
 
-  const transform = [];
-
-  const translateX =
+  const computedTranslateXOutputRange =
     layout.width && routes.length > 1
-      ? getTranslateX(position, routes, getTabWidth, direction, gap, (index) =>
+      ? getTranslateXOutputRange(routes, getTabWidth, gap, (index) =>
           getCenteredIndicatorWidth(getTabWidth(index))
         )
-      : 0;
+      : [];
+
+  const computedScaleXOutputRange =
+    width === 'auto' && constantIndicatorWidth == null
+      ? routes.map((_, i) => {
+          const tabW = getTabWidth(i);
+
+          return (
+            calculateSize(flattenedStyle?.width, tabW) ??
+            getIndicatorWidthWithMargins(tabW, flattenedStyle, direction)
+          );
+        })
+      : [];
+
+  // Keep the output ranges referentially stable while the values are the same
+  // So that the interpolations below aren't recreated on every render
+  const [translateXOutputRange, setTranslateXOutputRange] = React.useState(
+    computedTranslateXOutputRange
+  );
+  const [scaleXOutputRange, setScaleXOutputRange] = React.useState(
+    computedScaleXOutputRange
+  );
+
+  if (!isArrayEqual(translateXOutputRange, computedTranslateXOutputRange)) {
+    setTranslateXOutputRange(computedTranslateXOutputRange);
+  }
+
+  if (!isArrayEqual(scaleXOutputRange, computedScaleXOutputRange)) {
+    setScaleXOutputRange(computedScaleXOutputRange);
+  }
+
+  const translateX = React.useMemo(
+    () =>
+      translateXOutputRange.length
+        ? Animated.multiply(
+            position.interpolate({
+              inputRange: translateXOutputRange.map((_, i) => i),
+              outputRange: translateXOutputRange,
+              extrapolate: 'clamp',
+            }),
+            direction === 'rtl' ? -1 : 1
+          )
+        : 0,
+    [direction, position, translateXOutputRange]
+  );
+
+  const scaleX = React.useMemo(
+    () =>
+      scaleXOutputRange.length > 1
+        ? position.interpolate({
+            inputRange: scaleXOutputRange.map((_, i) => i),
+            outputRange: scaleXOutputRange,
+            extrapolate: 'clamp',
+          })
+        : scaleXOutputRange[0],
+    [position, scaleXOutputRange]
+  );
+
+  const transform = [];
 
   transform.push({ translateX });
 
   if (width === 'auto' && constantIndicatorWidth == null) {
-    const inputRange = routes.map((_, i) => i);
-    const outputRange = inputRange.map((i) => {
-      const tabW = getTabWidth(i);
-
-      return (
-        calculateSize(flattenedStyle?.width, tabW) ??
-        getIndicatorWidthWithMargins(tabW, flattenedStyle, direction)
-      );
-    });
-
     transform.push(
-      {
-        scaleX:
-          routes.length > 1
-            ? position.interpolate({
-                inputRange,
-                outputRange,
-                extrapolate: 'clamp',
-              })
-            : outputRange[0],
-      },
+      { scaleX },
       { translateX: direction === 'rtl' ? -0.5 : 0.5 }
     );
   }

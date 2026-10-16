@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.5.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.5.0...@react-navigation/native@7.5.1) (2026-10-13)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.4.1...@react-navigation/native@7.5.0) (2026-09-29)
+
+### Features
+
+* add tabBarRepeatedPressBehavior to tabs ([78bfeb9](https://github.com/react-navigation/react-navigation/commit/78bfeb9562ddaf8a1a353a478addd51bda07c0da)) - by @satya164
+
+## [7.4.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.4.0...@react-navigation/native@7.4.1) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [7.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.18...@react-navigation/native@7.4.0) (2026-09-15)
+
+### Features
+
+* use a render callback for custom navigators ([#13238](https://github.com/react-navigation/react-navigation/issues/13238)) ([0706d1a](https://github.com/react-navigation/react-navigation/commit/0706d1aaf3ccc4949cb010af661a542021d392c0)) - by @
+
+## [7.3.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.17...@react-navigation/native@7.3.18) (2026-08-26)
+
+### Bug Fixes
+
+* prevent state reset when history.go() takes longer than timeout on web ([#13217](https://github.com/react-navigation/react-navigation/issues/13217)) ([1b309a7](https://github.com/react-navigation/react-navigation/commit/1b309a75fc012d777073b195b8edc58e7f6f38ab)) - by @collectioneur
+
 ## [7.3.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.16...@react-navigation/native@7.3.17) (2026-08-19)
 
 ### Bug Fixes

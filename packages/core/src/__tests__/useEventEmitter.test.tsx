@@ -17,16 +17,14 @@ test('fires focus and blur events in root navigator', () => {
     props: any,
     ref: any
   ): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   });
 
   const firstFocusCallback = jest.fn();
@@ -115,16 +113,14 @@ test('fires focus event after blur', () => {
     props: any,
     ref: any
   ): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   });
 
   const callback = jest.fn();
@@ -183,16 +179,14 @@ test('fires focus and blur events in nested navigator', () => {
     props: any,
     ref: any
   ): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   });
 
   const firstFocusCallback = jest.fn();
@@ -390,8 +384,10 @@ test('fires blur event when a route is removed with a delay', async () => {
     props: any,
     ref: any
   ): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(TestRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      TestRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
@@ -410,12 +406,10 @@ test('fires blur event when a route is removed with a delay', async () => {
       dispatch({ routes: state.routes, descriptors });
     }, [descriptors, state.routes]);
 
-    return (
-      <NavigationContent>
-        {previous.routes.map((route: any) =>
-          previous.descriptors[route.key].render()
-        )}
-      </NavigationContent>
+    return render(
+      previous.routes.map((route: any) =>
+        previous.descriptors[route.key].render()
+      )
     );
   });
 
@@ -466,19 +460,17 @@ test('fires custom events added with addListener', () => {
     props: any,
     ref: any
   ): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => ({ navigation, state }), [
       navigation,
       state,
     ]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   });
 
   const firstCallback: any = jest.fn();
@@ -554,19 +546,17 @@ test("doesn't call same listener multiple times with addListener", () => {
     props: any,
     ref: any
   ): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => ({ navigation, state }), [
       navigation,
       state,
     ]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   });
 
   const callback = jest.fn();
@@ -830,19 +820,17 @@ test('has option to prevent default', () => {
     props: any,
     ref: any
   ): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => ({ navigation, state }), [
       navigation,
       state,
     ]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   });
 
   const callback = (e: any) => {
@@ -893,19 +881,17 @@ test('removes only one listener when unsubscribe is called multiple times', () =
     props: any,
     ref: any
   ): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => ({ navigation, state }), [
       navigation,
       state,
     ]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   });
 
   const firstCallback = jest.fn();

@@ -31,8 +31,22 @@ export type Variant = 'uikit' | 'material';
 export type BottomTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
+   *
+   * When present, `data.behavior` specifies how consumers should handle the tab press:
+   * - `scrollToTop`: whether the content should scroll to top.
+   * - `popToTop`: whether a nested stack should pop to top.
    */
-  tabPress: { data: undefined; canPreventDefault: true };
+  tabPress: {
+    data:
+      | {
+          behavior: {
+            scrollToTop: boolean;
+            popToTop: boolean;
+          };
+        }
+      | undefined;
+    canPreventDefault: true;
+  };
   /**
    * Event which fires on long press on the tab in the tab bar.
    */
@@ -117,6 +131,21 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   title?: string;
 
   /**
+   * Behavior when pressing the tab in the tab bar while it's already focused.
+   *
+   * - `scrollToTop`: scroll the first scroll view in the screen to top
+   * - `popToTop`: pop a nested stack to its first screen
+   *
+   * Both default to `true`.
+   */
+  tabBarRepeatedPressBehavior?:
+    | {
+        scrollToTop?: boolean;
+        popToTop?: boolean;
+      }
+    | undefined;
+
+  /**
    * Title string of a tab displayed in the tab bar
    * or a function that given { focused: boolean, color: string, position: 'below-icon' | 'beside-icon', children: string } returns a React.Node to display in tab bar.
    *
@@ -178,6 +207,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
     color: string;
     size: number;
   }) => React.ReactNode;
+
+  /**
+   * Size of the tab's icon.
+   */
+  tabBarIconSize?: number;
 
   /**
    * Style object for the tab icon.

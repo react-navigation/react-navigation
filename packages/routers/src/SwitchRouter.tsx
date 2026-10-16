@@ -147,6 +147,26 @@ const changeIndex = <Type extends SwitchRouterType>(
 
       if (
         lastHistoryRouteItem?.type === 'route' &&
+        currentRoute.key !== lastHistoryRouteItem.key
+      ) {
+        const previousRoute = state.routes.find(
+          (route) => route.key === lastHistoryRouteItem.key
+        );
+
+        if (
+          previousRoute != null &&
+          previousRoute.params !== lastHistoryRouteItem.params
+        ) {
+          history = [...history];
+          history[lastHistoryRouteItemIndex] = {
+            ...lastHistoryRouteItem,
+            params: previousRoute.params,
+          };
+        }
+      }
+
+      if (
+        lastHistoryRouteItem?.type === 'route' &&
         currentRoute.key === lastHistoryRouteItem.key
       ) {
         // For full-history, only remove if it matches the last route
@@ -412,9 +432,12 @@ export function SwitchRouter<Type extends SwitchRouterType>({
                 ? { ...route, path, params }
                 : route;
 
-          const routes = state.routes.map((item, routeIndex) =>
-            routeIndex === index ? nextRoute : item
-          );
+          const routes =
+            nextRoute === route
+              ? state.routes
+              : state.routes.map((item, routeIndex) =>
+                  routeIndex === index ? nextRoute : item
+                );
 
           const updatedState: State = {
             ...state,
@@ -602,9 +625,12 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             preloadedRouteKeys: state.preloadedRouteKeys
               .filter((key) => key !== route.key)
               .concat(newRoute.key),
-            routes: state.routes.map((route, index) =>
-              index === routeIndex ? newRoute : route
-            ),
+            routes:
+              newRoute === route
+                ? state.routes
+                : state.routes.map((route, index) =>
+                    index === routeIndex ? newRoute : route
+                  ),
             history,
           };
         }

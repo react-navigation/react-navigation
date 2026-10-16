@@ -11,7 +11,7 @@ import { DeprecatedNavigationInChildContext } from './DeprecatedNavigationInChil
 import {
   type ChildActionListener,
   type ChildBeforeRemoveListener,
-  NavigationBuilderContext,
+  useNavigationBuilderContext,
 } from './NavigationBuilderContext';
 import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
@@ -53,7 +53,7 @@ export function useOnAction<State extends NavigationState>({
     addListener: addListenerParent,
     onDispatchAction,
     flushUpdates,
-  } = React.useContext(NavigationBuilderContext);
+  } = useNavigationBuilderContext();
   const navigationInChildEnabled = React.useContext(
     DeprecatedNavigationInChildContext
   );

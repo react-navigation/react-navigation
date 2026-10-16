@@ -15,7 +15,7 @@ import {
 import { NavigationStateContext } from './NavigationStateContext';
 import { StaticContainer } from './StaticContainer';
 import type { NavigationProp, RouteConfigComponent } from './types';
-import { useOptionsGetters } from './useOptionsGetters';
+import { OptionsGetterContext, useOptionsGetters } from './useOptionsGetters';
 
 type Props<State extends NavigationState, ScreenOptions extends {}> = {
   screen: RouteConfigComponent<ParamListBase, string> & { name: string };
@@ -163,17 +163,8 @@ export function SceneView<
       getKey,
       setKey,
       getIsInitial,
-      addOptionsGetter,
     }),
-    [
-      routeState,
-      getCurrentState,
-      setCurrentState,
-      getKey,
-      setKey,
-      getIsInitial,
-      addOptionsGetter,
-    ]
+    [routeState, getCurrentState, setCurrentState, getKey, setKey, getIsInitial]
   );
 
   const ScreenComponent = screen.getComponent
@@ -183,20 +174,22 @@ export function SceneView<
   return (
     <NavigationStateContext.Provider value={context}>
       <NavigationFocusedRouteStateContext.Provider value={focusedRouteState}>
-        <EnsureSingleNavigator>
-          <StaticContainer
-            name={screen.name}
-            render={ScreenComponent || screen.children}
-            navigation={navigation}
-            route={route}
-          >
-            {ScreenComponent !== undefined ? (
-              <ScreenComponent navigation={navigation} route={route} />
-            ) : screen.children !== undefined ? (
-              screen.children({ navigation, route })
-            ) : null}
-          </StaticContainer>
-        </EnsureSingleNavigator>
+        <OptionsGetterContext.Provider value={addOptionsGetter}>
+          <EnsureSingleNavigator>
+            <StaticContainer
+              name={screen.name}
+              render={ScreenComponent || screen.children}
+              navigation={navigation}
+              route={route}
+            >
+              {ScreenComponent !== undefined ? (
+                <ScreenComponent navigation={navigation} route={route} />
+              ) : screen.children !== undefined ? (
+                screen.children({ navigation, route })
+              ) : null}
+            </StaticContainer>
+          </EnsureSingleNavigator>
+        </OptionsGetterContext.Provider>
       </NavigationFocusedRouteStateContext.Provider>
     </NavigationStateContext.Provider>
   );

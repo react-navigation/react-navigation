@@ -35,25 +35,24 @@ function NativeBottomTabNavigator({
   UNSTABLE_routeNamesChangeBehavior,
   ...rest
 }: NativeBottomTabNavigatorProps) {
-  const { state, navigation, descriptors, NavigationContent } =
-    useNavigationBuilder<
-      TabNavigationState<ParamListBase>,
-      TabRouterOptions,
-      TabActionHelpers<ParamListBase>,
-      NativeBottomTabNavigationOptions,
-      NativeBottomTabNavigationEventMap
-    >(TabRouter, {
-      id,
-      initialRouteName,
-      backBehavior,
-      children,
-      layout,
-      screenListeners,
-      screenOptions,
-      screenLayout,
-      UNSTABLE_router,
-      UNSTABLE_routeNamesChangeBehavior,
-    });
+  const { state, navigation, descriptors, render } = useNavigationBuilder<
+    TabNavigationState<ParamListBase>,
+    TabRouterOptions,
+    TabActionHelpers<ParamListBase>,
+    NativeBottomTabNavigationOptions,
+    NativeBottomTabNavigationEventMap
+  >(TabRouter, {
+    id,
+    initialRouteName,
+    backBehavior,
+    children,
+    layout,
+    screenListeners,
+    screenOptions,
+    screenLayout,
+    UNSTABLE_router,
+    UNSTABLE_routeNamesChangeBehavior,
+  });
 
   const focusedRouteKey = state.routes[state.index].key;
   const previousRouteKeyRef = React.useRef(focusedRouteKey);
@@ -85,15 +84,13 @@ function NativeBottomTabNavigator({
     previousRouteKeyRef.current = focusedRouteKey;
   }, [descriptors, focusedRouteKey, navigation]);
 
-  return (
-    <NavigationContent>
-      <NativeBottomTabView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-      />
-    </NavigationContent>
+  return render(
+    <NativeBottomTabView
+      {...rest}
+      state={state}
+      navigation={navigation}
+      descriptors={descriptors}
+    />
   );
 }
 
