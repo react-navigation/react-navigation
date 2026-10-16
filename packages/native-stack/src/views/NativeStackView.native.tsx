@@ -574,7 +574,17 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
   return (
     <SafeAreaProviderCompat>
-      <ScreenStack style={styles.container}>
+      <ScreenStack
+        style={styles.container}
+        onFinishTransitioning={() => {
+          for (const route of state.routes) {
+            navigation.emit({
+              type: 'finishTransitioning',
+              target: route.key,
+            });
+          }
+        }}
+      >
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
 

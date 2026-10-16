@@ -31,6 +31,11 @@ export type NativeStackNavigationEventMap = {
    */
   transitionEnd: { data: { closing: boolean } };
   /**
+   * Event which fires when the native iOS stack finishes a transition,
+   * including modal dismissals. It is sent to every route in the navigator.
+   */
+  finishTransitioning: { data: undefined };
+  /**
    * Event which fires when a swipe back is canceled on iOS.
    */
   gestureCancel: { data: undefined };
