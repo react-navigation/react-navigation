@@ -183,10 +183,7 @@ jobs:
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: ~/.agent-device/apple-runner/derived
-          key: agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-${{ hashFiles('node_modules/agent-device/package.json') }}
-
-      - name: Start Metro bundler
-        run: pnpm --dir example start &
+          key: agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Boot iOS Simulator
         timeout-minutes: 5
@@ -207,16 +204,10 @@ jobs:
           done
 
           echo "Simulator is booted!"
+          echo "E2E_IOS_DEVICE=$DEVICE_ID" >> "$GITHUB_ENV"
 
           # Add deep link handler so we don't see a prompt when running tests
           /usr/libexec/PlistBuddy "$HOME/Library/Developer/CoreSimulator/Devices/${DEVICE_ID}/data/Library/Preferences/com.apple.launchservices.schemeapproval.plist" -c "add com.apple.CoreSimulator.CoreSimulatorBridge-->rne string org.reactnavigation.playground"
-
-      - name: Wait for Metro bundler
-        timeout-minutes: 5
-        run: |
-          until curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=ios&dev=true&minify=false" > /dev/null 2>&1; do
-            sleep 2
-          done
 
       - name: Install iOS debug app
         run: |
@@ -229,48 +220,22 @@ jobs:
           echo "Starting simulator log stream..."
           xcrun simctl spawn booted log stream --style syslog > ~/agent-device-simulator.log 2>&1 &
 
-      - name: Prepare agent-device iOS runner
-        timeout-minutes: 20
-        run: |
-          mkdir -p agent-device-artifacts agent-device-state
-          echo "Preparing agent-device iOS runner..."
-          node ../node_modules/agent-device/bin/agent-device.mjs \
-            prepare ios-runner \
-            --timeout 600000 \
-            --platform ios \
-            --state-dir agent-device-state \
-            --verbose \
-            --no-record \
-            > agent-device-artifacts/ios-prepare.txt
-        working-directory: example
-
       - name: Run E2E tests
-        run: |
-          echo "Running native e2e tests..."
-          AGENT_DEVICE_E2E_TIMEOUT_MS=240000 pnpm e2e:native --platform ios
+        run: pnpm e2e:ios --retries 3 --reporter list,junit
         working-directory: example
 
       - name: Store E2E output
-        if: always()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: e2e-output-ios
-          path: example/agent-device-artifacts/**/*
+          path: example/.e2e/
           include-hidden-files: true
-          overwrite: true
+          if-no-files-found: warn
 
       - name: Shutdown simulator
         if: always()
         run: xcrun simctl shutdown booted || true
-
-      - name: Store debug output
-        if: failure() || cancelled()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: e2e-artifacts-ios
-          path: example/agent-device-state/**/*.log
-          include-hidden-files: true
-          overwrite: true
 
       - name: Store device logs
         if: failure() || cancelled()

@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  playwright:
+  e2e-web:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     concurrency:
@@ -35,7 +35,7 @@ jobs:
       - name: Get Playwright version
         id: playwright
         run: |
-          VERSION=$(pnpm example exec node --print "require('@playwright/test/package.json').version")
+          VERSION=$(pnpm example exec node --print "require(require.resolve('playwright-core/package.json', { paths: [require.resolve('@e2e-dev/web')] })).version")
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Restore Playwright
@@ -48,8 +48,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-playwright-
 
-      - name: Install Playwright
-        run: pnpm example exec playwright install --with-deps
+      - name: Install browsers
+        run: pnpm example exec e2e-web install chromium firefox --with-deps
 
       - name: Cache Playwright
         if: steps.playwright-cache.outputs.cache-hit != 'true'
@@ -59,4 +59,13 @@ jobs:
           key: ${{ steps.playwright-cache.outputs.cache-primary-key }}
 
       - name: Run E2E tests
-        run: pnpm example e2e:web --retries=3
+        run: pnpm example e2e:web --retries 3 --reporter list,junit
+
+      - name: Store E2E output
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: e2e-output-web
+          path: example/.e2e/
+          include-hidden-files: true
+          if-no-files-found: warn

@@ -47,7 +47,6 @@
     "@types/node": "^24.13.2",
     "@types/semver": "^7.7.1",
     "@types/subset-font": "^2.3.0",
-    "agent-device": "^0.21.16",
     "commitlint": "^21.0.2",
     "eslint": "^9.39.5",
     "eslint-config-satya164": "^5.2.0",

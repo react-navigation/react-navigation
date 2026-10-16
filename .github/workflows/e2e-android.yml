@@ -115,13 +115,17 @@ jobs:
     timeout-minutes: 60
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
     concurrency:
-      group: ${{ github.workflow_ref }}-${{ github.ref }}
+      group: ${{ github.workflow_ref }}-${{ github.ref }}-${{ matrix.shard }}
       cancel-in-progress: true
     env:
       AVD_NAME: e2e_emulator
       EMULATOR_PROFILE: pixel_5
-      EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096 -cores 2 -memory 4096'
+      EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096 -cores 4 -memory 6144'
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -173,9 +177,6 @@ jobs:
         run: |
           avdmanager create avd -n "${{ env.AVD_NAME }}" -d "${{ env.EMULATOR_PROFILE }}" -k "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
 
-      - name: Start Metro bundler
-        run: pnpm --dir example start &
-
       - name: Start emulator
         timeout-minutes: 10
         run: |
@@ -183,28 +184,21 @@ jobs:
           adb wait-for-device
           adb shell "while [[ -z \$(getprop sys.boot_completed) ]]; do sleep 1; done"
 
-      - name: Wait for Metro bundler
-        timeout-minutes: 5
-        run: |
-          until curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=android&dev=true&minify=false" > /dev/null 2>&1; do
-            sleep 2
-          done
-
       - name: Run E2E tests
         run: |
           adb install android-debug-build/android-debug.apk
           adb reverse tcp:8081 tcp:8081
           cd example
-          pnpm e2e:native --platform android
+          pnpm e2e:android --shard ${{ matrix.shard }}/2 --retries 3 --reporter list,junit
 
       - name: Store E2E output
-        if: always()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: e2e-output-android
-          path: example/agent-device-artifacts/**/*
+          name: e2e-output-android-${{ matrix.shard }}
+          path: example/.e2e/
           include-hidden-files: true
-          overwrite: true
+          if-no-files-found: warn
 
       - name: Kill emulator
         if: always()
@@ -214,9 +208,7 @@ jobs:
         if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: e2e-artifacts-android
-          path: |
-            example/agent-device-state/**/*.log
-            ~/.agent-device/**/*.log
+          name: e2e-artifacts-android-${{ matrix.shard }}
+          path: ~/.agent-device/**/*.log
           include-hidden-files: true
           overwrite: true
