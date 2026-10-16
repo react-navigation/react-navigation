@@ -113,7 +113,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       getPartialState(initialState == null ? undefined : initialState)
     );
 
-  const consumedParams = useLazyValue(() => new WeakMap<object, true>());
+  const consumedParams = useLazyValue(() => new WeakMap<object, Set<string>>());
 
   const isFirstMountRef = React.useRef<boolean>(true);
 
