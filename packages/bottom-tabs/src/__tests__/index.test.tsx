@@ -20,6 +20,7 @@ import {
   type KeyboardEventListener,
   type KeyboardEventName,
   Platform,
+  StyleSheet,
   View,
 } from 'react-native';
 
@@ -85,6 +86,45 @@ test('handles screens preloading', async () => {
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
+});
+
+test('keeps unfocused scenes attached when detachInactiveScreens is false', () => {
+  const Test = ({ route }: BottomTabScreenProps<BottomTabParamList>) => (
+    <Text>Screen {route.name}</Text>
+  );
+
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
+
+  const { getByText, getByRole } = render(
+    <NavigationContainer>
+      <Tab.Navigator detachInactiveScreens={false}>
+        <Tab.Screen name="A" component={Test} />
+        <Tab.Screen name="B" component={Test} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  fireEvent.press(getByRole('button', { name: 'B, tab, 2 of 2' }), {});
+
+  // The scene of a screen is the closest absolutely positioned ancestor of its content
+  const sceneStyle = (text: string) => {
+    let node = getByText(text, { includeHiddenElements: true }).parent;
+
+    while (node) {
+      const style = StyleSheet.flatten(node.props.style);
+
+      if (style?.position === 'absolute') {
+        return style;
+      }
+
+      node = node.parent;
+    }
+
+    return undefined;
+  };
+
+  expect(sceneStyle('Screen A')).toMatchObject({ opacity: 0 });
+  expect(sceneStyle('Screen B')).toMatchObject({ opacity: 1 });
 });
 
 test('tab bar cannot be tapped when hidden', async () => {
