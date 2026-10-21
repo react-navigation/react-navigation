@@ -240,6 +240,7 @@ export function Header(props: Props) {
   // Users can use `null` instead
   for (const [styleProp, value] of Object.entries(safeStyles)) {
     if (value === undefined) {
+      // eslint-disable-next-line @eslint-react/purity
       Reflect.deleteProperty(safeStyles, styleProp);
     }
   }

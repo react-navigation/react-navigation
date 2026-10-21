@@ -247,12 +247,9 @@ export type NativeStackNavigationOptions = {
    * @platform ios
    */
   headerLargeTitleStyle?:
-    | StyleProp<{
-        fontFamily?: string | undefined;
-        fontSize?: number | undefined;
-        fontWeight?: string | undefined;
-        color?: ColorValue | undefined;
-      }>
+    | StyleProp<
+        Pick<TextStyle, 'fontFamily' | 'fontSize' | 'fontWeight' | 'color'>
+      >
     | undefined;
   /**
    * Whether to show the header. The header is shown by default.
@@ -392,9 +389,7 @@ export type NativeStackNavigationOptions = {
    */
   headerTitleStyle?:
     | StyleProp<
-        Pick<TextStyle, 'fontFamily' | 'fontSize' | 'fontWeight'> & {
-          color?: ColorValue | undefined;
-        }
+        Pick<TextStyle, 'fontFamily' | 'fontSize' | 'fontWeight' | 'color'>
       >
     | undefined;
   /**

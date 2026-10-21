@@ -32,7 +32,7 @@ export type Props = Omit<PressableProps, 'style' | 'onPress'> & {
       ) => void)
     | undefined;
   children: React.ReactNode;
-  ref?: React.Ref<React.ComponentRef<typeof AnimatedPressable>> | undefined;
+  ref?: React.Ref<React.ComponentRef<typeof Pressable>> | undefined;
 };
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -95,7 +95,9 @@ export function PlatformPressable({
 
       // let browser handle "target=_blank" etc.
       const isSelfTarget =
-        e.currentTarget && 'target' in e.currentTarget
+        typeof e.currentTarget === 'object' &&
+        e.currentTarget !== null &&
+        'target' in e.currentTarget
           ? [undefined, null, '', '_self'].includes(e.currentTarget.target)
           : true;
 

@@ -61,7 +61,7 @@ test("throws if theme isn't passed to BaseNavigationContainer", async () => {
   };
 
   const Test = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line @eslint-react/rules-of-hooks
     expect(() => useTheme()).toThrow("Couldn't find a theme");
 
     return null;
@@ -78,7 +78,7 @@ test("throws if theme isn't passed to BaseNavigationContainer", async () => {
 
 test('throws if useTheme is used without BaseNavigationContainer', async () => {
   const Test = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line @eslint-react/rules-of-hooks
     expect(() => useTheme()).toThrow("Couldn't find a theme");
 
     return null;

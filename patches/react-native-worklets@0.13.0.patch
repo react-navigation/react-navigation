@@ -1,0 +1,23 @@
+diff --git a/jest/resolver.js b/jest/resolver.js
+index cd1a80635294eb3c66a00bd4fda2432842091f28..ef80a0754fe3375e281041ac7c77a10d13ac7ea0 100644
+--- a/jest/resolver.js
++++ b/jest/resolver.js
+@@ -1,11 +1,16 @@
+ const path = require('path');
+ 
++// Matches the package directory only, since pnpm also puts `react-native-worklets`
++// in the store directory names of packages that peer-depend on it.
++const WORKLETS_DIR = /[\\/]node_modules[\\/]react-native-worklets[\\/]/;
++
+ /** @type {import('jest-resolve').SyncResolver} */
+ module.exports = (request, options) => {
+   const { defaultResolver } = options;
+   if (
+-    options.basedir.includes('react-native-worklets') ||
+-    request.includes('react-native-worklets')
++    WORKLETS_DIR.test(options.basedir + path.sep) ||
++    request === 'react-native-worklets' ||
++    request.startsWith('react-native-worklets/')
+   ) {
+     const workletOptions = { ...options };
+     workletOptions.extensions = workletOptions.extensions?.filter(

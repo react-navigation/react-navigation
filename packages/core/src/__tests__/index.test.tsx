@@ -47,7 +47,7 @@ test('initializes state for a navigator on navigation', async () => {
   const FooScreen = (props: any) => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'UPDATE' });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
@@ -186,7 +186,7 @@ test('rehydrates state for a navigator on navigation', async () => {
   const BarScreen = (props: any) => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'UPDATE' });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
@@ -248,7 +248,7 @@ test("doesn't rehydrate state if the type of state didn't match router", async (
   const FooScreen = (props: any) => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'UPDATE' });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
@@ -319,7 +319,7 @@ test('initializes state for nested screens in React.Fragment', async () => {
   const TestScreen = (props: any) => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'UPDATE' });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
@@ -375,7 +375,7 @@ test('initializes state for nested screens in Group', async () => {
   const TestScreen = (props: any) => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'UPDATE' });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
@@ -431,7 +431,7 @@ test('initializes state for nested navigator on navigation', async () => {
   const TestScreen = (props: any) => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'UPDATE' });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
@@ -502,7 +502,7 @@ test("doesn't update state if nothing changed", async () => {
   const FooScreen = (props: any) => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'NOOP' });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
@@ -541,7 +541,7 @@ test("doesn't update state if action wasn't handled", async () => {
   const FooScreen = (props: any) => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'INVALID' });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
@@ -589,7 +589,7 @@ test('cleans up state when the navigator unmounts', async () => {
   const FooScreen = (props: any) => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'UPDATE' });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
@@ -1058,7 +1058,7 @@ test('allows state updates by dispatching a function returning an action', async
           ? { type: 'NAVIGATE', payload: { name: state.routeNames[1] } }
           : { type: 'NOOP' }
       );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;

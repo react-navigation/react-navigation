@@ -383,7 +383,7 @@ test('gets navigation by route name', async () => {
 
     expect(() =>
       // @ts-expect-error - types not configured for test
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      // eslint-disable-next-line @eslint-react/rules-of-hooks
       useNavigation('qux')
     ).toThrow(
       "Couldn't find a navigation object for 'qux' in current or any parent screens. Is your component inside the correct screen?"
@@ -391,7 +391,7 @@ test('gets navigation by route name', async () => {
 
     expect(() =>
       // @ts-expect-error - types not configured for test
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      // eslint-disable-next-line @eslint-react/rules-of-hooks
       useNavigation('non-existent')
     ).toThrow(
       "Couldn't find a navigation object for 'non-existent' in current or any parent screens. Is your component inside the correct screen?"
@@ -459,7 +459,7 @@ test('gets navigation in preloaded screen', async () => {
 
     expect(() =>
       // @ts-expect-error - types not configured for test
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      // eslint-disable-next-line @eslint-react/rules-of-hooks
       useNavigation('qux')
     ).toThrow(
       "Couldn't find a navigation object for 'qux' in current or any parent screens. Is your component inside the correct screen?"
@@ -495,7 +495,7 @@ test('throws if called outside a navigation context', async () => {
   expect.assertions(1);
 
   const Test = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line @eslint-react/rules-of-hooks
     expect(() => useNavigation()).toThrow(
       "Couldn't find a navigation object. Is your component inside NavigationContainer?"
     );
