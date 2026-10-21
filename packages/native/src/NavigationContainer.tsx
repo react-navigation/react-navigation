@@ -1,5 +1,6 @@
 import {
   BaseNavigationContainer,
+  CurrentRenderContext,
   getActionFromState,
   getPathFromState,
   getStateFromPath,
@@ -175,7 +176,10 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
     };
   }, [linking]);
 
-  const { getInitialState } = useLinking(refContainer, linkingConfig.options);
+  const { getInitialState, currentRender } = useLinking(
+    refContainer,
+    linkingConfig.options
+  );
 
   // Add additional linking related info to the ref
   // This will be used by the devtools
@@ -317,21 +321,23 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
   return (
     <LocaleDirContext.Provider value={direction}>
       <LinkingContext.Provider value={linkingConfig}>
-        <BaseNavigationContainer
-          {...rest}
-          theme={theme}
-          initialState={
-            rest.initialState ??
-            initialStateFromLink ??
-            initialStateFromPersisted
-          }
-          onStateChange={(state) => {
-            onStateChange?.(state);
-            onPersistState(state);
-            onSerializableCheck(state);
-          }}
-          ref={refContainer}
-        />
+        <CurrentRenderContext.Provider value={currentRender}>
+          <BaseNavigationContainer
+            {...rest}
+            theme={theme}
+            initialState={
+              rest.initialState ??
+              initialStateFromLink ??
+              initialStateFromPersisted
+            }
+            onStateChange={(state) => {
+              onStateChange?.(state);
+              onPersistState(state);
+              onSerializableCheck(state);
+            }}
+            ref={refContainer}
+          />
+        </CurrentRenderContext.Provider>
       </LinkingContext.Provider>
     </LocaleDirContext.Provider>
   );

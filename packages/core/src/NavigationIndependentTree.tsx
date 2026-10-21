@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { CurrentRenderContext } from './CurrentRenderContext';
 import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationFocusedRouteStateContext } from './NavigationFocusedRouteStateContext';
@@ -59,7 +60,11 @@ export function NavigationIndependentTree({
                                     <NavigationFocusedRouteStateContext.Provider
                                       value={undefined}
                                     >
-                                      {children}
+                                      <CurrentRenderContext.Provider
+                                        value={undefined}
+                                      >
+                                        {children}
+                                      </CurrentRenderContext.Provider>
                                     </NavigationFocusedRouteStateContext.Provider>
                                   </IsScreenContext.Provider>
                                 </IsFocusedGetterContext.Provider>

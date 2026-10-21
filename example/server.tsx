@@ -1,15 +1,21 @@
 import { PassThrough } from 'node:stream';
 
-import { ServerContainer } from '@react-navigation/native/server';
+import {
+  ServerContainer,
+  type ServerContainerRef,
+} from '@react-navigation/native/server';
 import {
   getServerResourceDescriptors,
   registerStaticFont,
   resetServerContext,
 } from 'expo-font/build/server';
+import * as React from 'react';
 import { renderToPipeableStream } from 'react-dom/server';
 import { AppRegistry } from 'react-native-web';
 
 import { fonts } from './App';
+
+type RenderResult = { stream: PassThrough } | { redirect: URL };
 
 export function render(location: URL) {
   resetServerContext();
@@ -20,7 +26,9 @@ export function render(location: URL) {
 
   const { element, getStyleElement } = AppRegistry.getApplication('main');
 
-  return new Promise<PassThrough>((resolve, reject) => {
+  const ref = React.createRef<ServerContainerRef>();
+
+  return new Promise<RenderResult>((resolve, reject) => {
     const stream = new PassThrough();
 
     const { pipe, abort } = renderToPipeableStream(
@@ -48,12 +56,22 @@ export function render(location: URL) {
           }
         })}
         {getStyleElement()}
-        <ServerContainer location={location}>{element}</ServerContainer>
+        <ServerContainer ref={ref} location={location}>
+          {element}
+        </ServerContainer>
       </>,
       {
         onShellReady() {
+          const redirect = ref.current?.getRedirect();
+
+          if (redirect) {
+            abort();
+            resolve({ redirect });
+            return;
+          }
+
           pipe(stream);
-          resolve(stream);
+          resolve({ stream });
         },
         onError(error) {
           console.error(error);

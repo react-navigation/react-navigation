@@ -16,10 +16,15 @@ import { isValidElementType } from 'react-is';
 import useLatestCallback from 'use-latest-callback';
 
 import { ConsumedParamsContext } from './ConsumedParamsContext';
+import { CurrentRenderContext } from './CurrentRenderContext';
 import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { useNavigationBuilderContext } from './NavigationBuilderContext';
+import {
+  type FocusedRouteState,
+  NavigationFocusedRouteStateContext,
+} from './NavigationFocusedRouteStateContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { IsScreenContext, NavigationRouteContext } from './NavigationProvider';
 import { NavigationStateContext } from './NavigationStateContext';
@@ -1080,6 +1085,37 @@ export function useNavigationBuilder<
     // @ts-expect-error: this should have both core and custom events, but too much work right now
     emitter,
   });
+
+  const currentRender = React.use(CurrentRenderContext);
+
+  // Write the state of the focused navigator, so that server renderer can get the rendered location
+  // Nested navigators render after their parents, so the deepest focused navigator writes it last
+  // Mutating values like this is not safe in concurrent mode, but it doesn't apply to SSR
+  if (currentRender && navigation.isFocused()) {
+    // Add our state to the innermost route of the parent state
+    const addState = (
+      parent: FocusedRouteState | undefined
+    ): State | PartialState<NavigationState> => {
+      const parentRoute = parent?.routes[0];
+
+      if (parentRoute) {
+        return {
+          routes: [
+            {
+              ...parentRoute,
+              state: addState(parentRoute.state),
+            },
+          ],
+        };
+      }
+
+      return state;
+    };
+
+    currentRender.state = addState(
+      React.use(NavigationFocusedRouteStateContext)
+    );
+  }
 
   const render = (children: React.ReactNode) => {
     const focusedRoute = state.routes[state.index];

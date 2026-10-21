@@ -118,14 +118,24 @@ export default defineConfig((env) => {
 
                 const { render } = await server.ssrLoadModule('/server.tsx');
 
-                const stream = await render(
+                const result = await render(
                   new URL(request.originalUrl, 'http://localhost')
                 );
+
+                if ('redirect' in result) {
+                  response.statusCode = 307;
+                  response.setHeader(
+                    'Location',
+                    result.redirect.pathname + result.redirect.search
+                  );
+                  response.end();
+                  return;
+                }
 
                 response.setHeader('Content-Type', 'text/html');
                 response.write(before);
 
-                await pipeline(stream, response, { end: false });
+                await pipeline(result.stream, response, { end: false });
 
                 response.end(after);
               } catch (error) {

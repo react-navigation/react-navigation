@@ -4,6 +4,10 @@ export {
   createNavigatorFactory,
   type TypedNavigatorFactory,
 } from './createNavigatorFactory';
+export {
+  type CurrentRender,
+  CurrentRenderContext,
+} from './CurrentRenderContext';
 export { getLoaderForState as UNSTABLE_getLoaderForState } from './DataLoading';
 export { findFocusedRoute } from './findFocusedRoute';
 export { getActionFromState } from './getActionFromState';

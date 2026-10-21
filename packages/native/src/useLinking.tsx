@@ -1,5 +1,6 @@
 import {
   CommonActions,
+  type CurrentRender,
   findFocusedRoute,
   getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
@@ -23,6 +24,12 @@ import type { Thenable } from './useThenable';
  * The value 'replace' means the delta is unknown, so we can only replace
  */
 type PopStateDelta = number | 'replace';
+
+type PathOptions = {
+  config: LinkingOptions<ParamListBase>['config'];
+  getStateFromPath: typeof getStateFromPathDefault;
+  getPathFromState: typeof getPathFromStateDefault;
+};
 
 const getRoutesUntilIndex = (state: NavigationState) =>
   state.routes.slice(0, state.index + 1);
@@ -72,6 +79,44 @@ const getStateForPath = (
       item === route ? { ...item, state: childState } : item
     ),
   };
+};
+
+/**
+ * Get the path for the state based on the linking options.
+ */
+const getPathForState = (
+  state: NavigationState | PartialState<NavigationState>,
+  { config, getStateFromPath, getPathFromState }: PathOptions
+): string => {
+  const route = findFocusedRoute(state);
+
+  // If the `route` object contains a `path`, use that path as long as `route.name` and `params` still match
+  // This makes sure that we preserve the original URL for wildcard routes
+  if (route?.path) {
+    let stateForPath: PartialState<NavigationState> | undefined;
+
+    try {
+      stateForPath = getStateFromPath(route.path, config);
+    } catch (e) {
+      console.error(e);
+
+      stateForPath = undefined;
+    }
+
+    if (stateForPath) {
+      const focusedRoute = findFocusedRoute(stateForPath);
+
+      if (
+        focusedRoute &&
+        focusedRoute.name === route.name &&
+        isEqual(focusedRoute.params, route.params)
+      ) {
+        return route.path;
+      }
+    }
+  }
+
+  return getPathFromState(state, config);
 };
 
 /**
@@ -298,6 +343,26 @@ export function useLinking<ParamList extends ParamListBase>(
     getPathFromStateRef.current = getPathFromState;
     getActionFromStateRef.current = getActionFromState;
   });
+
+  // Navigators write their state here during render on the server
+  // Only the container handling the location gets it, so other containers don't overwrite it
+  const [currentRender] = React.useState<CurrentRender | undefined>(() =>
+    server && enabled && !independent ? {} : undefined
+  );
+
+  if (server && currentRender) {
+    // Effects don't run on the server, so the URL is never updated to match the rendered state
+    // Instead we let the server get the path, so it can redirect if it doesn't match the location
+    // Mutating values like this is not safe in concurrent mode, but it doesn't apply to SSR
+    server.getPath = () =>
+      currentRender.state
+        ? getPathForState(currentRender.state, {
+            config,
+            getStateFromPath,
+            getPathFromState,
+          })
+        : undefined;
+  }
 
   const validateRoutesNotExistInRootState = React.useCallback(
     (
@@ -598,40 +663,11 @@ export function useLinking<ParamList extends ParamListBase>(
       route: ReturnType<typeof findFocusedRoute>,
       state: NavigationState | PartialState<NavigationState>
     ): string => {
-      let path;
-
-      // If the `route` object contains a `path`, use that path as long as `route.name` and `params` still match
-      // This makes sure that we preserve the original URL for wildcard routes
-      if (route?.path) {
-        let stateForPath: PartialState<NavigationState> | undefined;
-
-        try {
-          stateForPath = getStateFromPathRef.current(
-            route.path,
-            configRef.current
-          );
-        } catch (e) {
-          console.error(e);
-
-          stateForPath = undefined;
-        }
-
-        if (stateForPath) {
-          const focusedRoute = findFocusedRoute(stateForPath);
-
-          if (
-            focusedRoute &&
-            focusedRoute.name === route.name &&
-            isEqual(focusedRoute.params, route.params)
-          ) {
-            path = route.path;
-          }
-        }
-      }
-
-      if (path == null) {
-        path = getPathFromStateRef.current(state, configRef.current);
-      }
+      let path = getPathForState(state, {
+        config: configRef.current,
+        getStateFromPath: getStateFromPathRef.current,
+        getPathFromState: getPathFromStateRef.current,
+      });
 
       const previousRoute = previousStateRef.current
         ? findFocusedRoute(previousStateRef.current)
@@ -771,5 +807,6 @@ export function useLinking<ParamList extends ParamListBase>(
 
   return {
     getInitialState,
+    currentRender,
   };
 }

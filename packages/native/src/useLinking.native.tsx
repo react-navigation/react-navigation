@@ -221,5 +221,6 @@ export function useLinking<ParamList extends ParamListBase>(
 
   return {
     getInitialState,
+    currentRender: undefined,
   };
 }
