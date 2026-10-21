@@ -359,9 +359,7 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Function that returns a React Element to display as a overlay for the card.
      */
     cardOverlay?:
-      | ((props: {
-          style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-        }) => React.ReactNode)
+      | ((props: StackCardOverlayProps) => React.ReactNode)
       | undefined;
     /**
      * Style object for the card in stack.
@@ -476,6 +474,13 @@ type StackCardInterpolationState = {
    * opening animation (1 - closing, 0 - opening).
    */
   closing: Animated.AnimatedInterpolation<0 | 1>;
+};
+
+export type StackCardOverlayProps = {
+  /**
+   * Style object for the card overlay.
+   */
+  style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
 export type StackCardInterpolationProps = {

@@ -46,7 +46,7 @@ test('throws if route is not available', async () => {
   expect.assertions(1);
 
   const Test = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line @eslint-react/rules-of-hooks
     expect(() => useRoute()).toThrow(
       "Couldn't find a route object. Is your component inside a screen in a navigator?"
     );
@@ -61,7 +61,7 @@ test('throws if not used in a screen', async () => {
   expect.assertions(1);
 
   const Test = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line @eslint-react/rules-of-hooks
     expect(() => useRoute<{ test: { x: number } }, 'test'>('test')).toThrow(
       "Couldn't find a parent screen. Is your component inside a screen in a navigator?"
     );
@@ -87,7 +87,7 @@ test("throws if provided route name doesn't match current route name", async () 
   };
 
   const Test = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line @eslint-react/rules-of-hooks
     expect(() => useRoute<{ test: { x: number } }, 'test'>('test')).toThrow(
       "Couldn't find a route named 'test' in any of the parent screens. Is your component inside the correct screen?"
     );
@@ -207,7 +207,7 @@ test('throws error for non-existent route name', async () => {
 
   const Test = () => {
     expect(() =>
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      // eslint-disable-next-line @eslint-react/rules-of-hooks
       useRoute<{ nonexistent: {} }, 'nonexistent'>('nonexistent')
     ).toThrow(
       "Couldn't find a route named 'nonexistent' in any of the parent screens. Is your component inside the correct screen?"
@@ -241,7 +241,7 @@ test('throws error on accessing a child route from the parent', async () => {
 
   const Test = () => {
     expect(() =>
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      // eslint-disable-next-line @eslint-react/rules-of-hooks
       useRoute<{ foo: {} }, 'foo'>('foo')
     ).toThrow(
       "Couldn't find a parent screen. Is your component inside a screen in a navigator?"
@@ -277,7 +277,7 @@ test('throws error on accessing a sibling route', async () => {
 
   const Test = () => {
     expect(() =>
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      // eslint-disable-next-line @eslint-react/rules-of-hooks
       useRoute<{ bar: {} }, 'bar'>('bar')
     ).toThrow(
       "Couldn't find a route named 'bar' in any of the parent screens. Is your component inside the correct screen?"

@@ -539,6 +539,7 @@ const CatalogHero = () => {
       />
       <Image
         source={FEATURED_DINO.image}
+        resizeMethod="resize"
         style={styles.fillImage}
         resizeMode="cover"
       />
@@ -609,6 +610,7 @@ const DinoCard = React.memo(
           />
           <Image
             source={item.image}
+            resizeMethod="resize"
             style={styles.fillImage}
             resizeMode="contain"
           />
@@ -742,6 +744,7 @@ const DinoDetailScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
       >
         <Image
           source={dino.image}
+          resizeMethod="resize"
           style={styles.fillImage}
           resizeMode="contain"
         />
@@ -843,6 +846,7 @@ const ImageViewerScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
         >
           <Image
             source={dino.image}
+            resizeMethod="resize"
             style={styles.viewerImage}
             resizeMode="contain"
           />

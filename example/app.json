@@ -46,7 +46,8 @@
           "image": "./assets/splash.png",
           "backgroundColor": "#7b61c1"
         }
-      ]
+      ],
+      "expo-status-bar"
     ],
     "buildCacheProvider": {
       "plugin": "expo-build-disk-cache",

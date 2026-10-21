@@ -1,3 +1,5 @@
+const path = require('path');
+
 const { transform } = require('@react-native/jest-preset');
 
 const transformIgnorePatterns = [
@@ -9,6 +11,11 @@ module.exports = {
   projects: [
     {
       preset: '@react-native/jest-preset',
+      // Reanimated isn't a dependency of the root package
+      // So we resolve its Jest resolver from a package that depends on it
+      resolver: require.resolve('react-native-reanimated/jest/resolver', {
+        paths: [path.join(__dirname, 'packages/react-native-drawer-layout')],
+      }),
       setupFilesAfterEnv: ['<rootDir>/jest/setup.js'],
       testEnvironment: 'node',
       testEnvironmentOptions: {

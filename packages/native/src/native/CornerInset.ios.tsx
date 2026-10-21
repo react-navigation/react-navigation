@@ -21,7 +21,13 @@ export function CornerInset({ ref, ...rest }: Props) {
     >(null);
 
   const relayout = React.useCallback(() => {
-    if (nativeRef.current) {
+    // FIXME:
+    // We can only dispatch commands to host components, otherwise we get an error
+    // But the ref is a class component if the native component is mocked with React Native's Jest Preset
+    if (
+      nativeRef.current != null &&
+      !(nativeRef.current instanceof React.Component)
+    ) {
       Commands.relayout(nativeRef.current);
     }
   }, []);
@@ -36,10 +42,8 @@ export function CornerInset({ ref, ...rest }: Props) {
     // We freeze the corner insets after initial measurements
     // This is to avoid the insets getting out of sync during transitions
     // We trigger a relayout explicitly on window resize and transition end
-    // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
     const unsubscribeWindowResize = Dimensions.addEventListener(
       'change',
-      // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
       () => {
         relayout();
 

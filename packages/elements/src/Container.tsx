@@ -43,7 +43,7 @@ export function Container({ ref, inert, children, style }: Props) {
 
   return (
     <View
-      ref={ref as React.Ref<View> | undefined}
+      ref={ref as React.Ref<React.ComponentRef<typeof View>> | undefined}
       aria-hidden={inert}
       style={[{ pointerEvents: inert ? 'none' : 'box-none' }, style]}
       collapsable={false}

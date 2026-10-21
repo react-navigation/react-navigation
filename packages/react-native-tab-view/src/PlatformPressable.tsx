@@ -54,7 +54,9 @@ export function PlatformPressable({
 
       // let browser handle "target=_blank" etc.
       const isSelfTarget =
-        e.currentTarget && 'target' in e.currentTarget
+        typeof e.currentTarget === 'object' &&
+        e.currentTarget !== null &&
+        'target' in e.currentTarget
           ? [undefined, null, '', '_self'].includes(e.currentTarget.target)
           : true;
 

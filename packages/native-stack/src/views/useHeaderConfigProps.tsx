@@ -304,19 +304,12 @@ export function useHeaderConfigProps({
   const largeTitleFontWeight = headerLargeTitleStyleFlattened.fontWeight;
   const largeTitleFontFamily = headerLargeTitleStyleFlattened.fontFamily;
 
-  const headerTitleStyleSupported: TextStyle = { color: titleColor };
-
-  if (headerTitleStyleFlattened.fontFamily != null) {
-    headerTitleStyleSupported.fontFamily = headerTitleStyleFlattened.fontFamily;
-  }
-
-  if (titleFontSize != null) {
-    headerTitleStyleSupported.fontSize = titleFontSize;
-  }
-
-  if (titleFontWeight != null) {
-    headerTitleStyleSupported.fontWeight = titleFontWeight;
-  }
+  const headerTitleStyleSupported: TextStyle = {
+    color: titleColor,
+    ...(titleFontFamily != null ? { fontFamily: titleFontFamily } : null),
+    ...(titleFontSize != null ? { fontSize: titleFontSize } : null),
+    ...(titleFontWeight != null ? { fontWeight: titleFontWeight } : null),
+  };
 
   const canGoBack = headerBack != null;
 
@@ -566,7 +559,8 @@ export function useHeaderConfigProps({
     largeTitleColor,
     largeTitleFontFamily,
     largeTitleFontSize,
-    largeTitleFontWeight,
+    largeTitleFontWeight:
+      largeTitleFontWeight != null ? String(largeTitleFontWeight) : undefined,
     largeTitleHideShadow: headerLargeTitleShadowVisible === false,
     title: titleText,
     titleColor,

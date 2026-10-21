@@ -53,6 +53,8 @@ if (Platform.OS === 'web') {
     AppRegistry.runApplication('main', {
       hydrate: rootTag?.firstElementChild != null,
       initialProps: {},
+      // @ts-expect-error `rootTag` is typed as a `RootTag` in React Native
+      // But with React Native Web, we need to pass a DOM element
       rootTag,
     });
   }

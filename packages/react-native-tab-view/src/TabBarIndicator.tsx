@@ -211,11 +211,11 @@ export function TabBarIndicator<T extends Route>({
   const leftPieceWidth = leftRadiusWidth + CAP_FILL_OVERLAP;
   const rightPieceWidth = rightRadiusWidth + CAP_FILL_OVERLAP;
 
-  let containerLayout: ViewStyle;
-  let leftFillStyle: ViewStyle;
-  let centerFillStyle: ViewStyle;
-  let rightCapStyle: ViewStyle;
-  let rightFillStyle: ViewStyle;
+  let containerLayout: Animated.WithAnimatedValue<ViewStyle>;
+  let leftFillStyle: Animated.WithAnimatedValue<ViewStyle>;
+  let centerFillStyle: Animated.WithAnimatedValue<ViewStyle>;
+  let rightCapStyle: Animated.WithAnimatedValue<ViewStyle>;
+  let rightFillStyle: Animated.WithAnimatedValue<ViewStyle>;
 
   const rightEdges = React.useMemo(
     () =>
