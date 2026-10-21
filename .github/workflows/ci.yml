@@ -32,15 +32,21 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Lint files
-        run: pnpm lint
+      - parallel:
+          - name: Lint files
+            run: pnpm lint
 
-      - name: Typecheck files
-        run: |
-          pnpm typecheck
-          pnpm typecheck:standalone:static
-          pnpm typecheck:standalone:dynamic
-          pnpm typecheck:declarations
+          - name: Typecheck files
+            run: pnpm typecheck
+
+          - name: Typecheck standalone static config
+            run: pnpm typecheck:standalone:static
+
+          - name: Typecheck standalone dynamic config
+            run: pnpm typecheck:standalone:dynamic
+
+          - name: Typecheck declarations
+            run: pnpm typecheck:declarations
 
   unit-test:
     runs-on: ubuntu-latest
@@ -68,9 +74,6 @@ jobs:
 
       - name: Build packages in the monorepo
         run: pnpm lerna run prepack
-
-      - name: Verify types are correct
-        run: pnpm typecheck
 
       - name: Bundle example JavaScript with Metro
         run: pnpm example exec expo export --platform all
