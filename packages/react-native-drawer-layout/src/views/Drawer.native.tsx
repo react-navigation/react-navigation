@@ -563,14 +563,7 @@ export function Drawer({
               },
             ],
     };
-  }, [
-    customWidth,
-    direction,
-    drawerPosition,
-    drawerType,
-    layoutWidth,
-    translateX,
-  ]);
+  });
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
     const drawerWidth = getDrawerWidthNative({
@@ -597,7 +590,7 @@ export function Drawer({
               },
             ],
     };
-  }, [customWidth, drawerPosition, drawerType, layoutWidth, translateX]);
+  });
 
   const progress = useDerivedValue(() => {
     const containerWidth = layoutWidth.get();
@@ -626,7 +619,7 @@ export function Drawer({
     }
 
     return { accessibilityElementsHidden: hidden };
-  }, [drawerType, progress]);
+  });
 
   const drawerContentAnimatedProps = useAnimatedProps<ViewProps>(() => {
     const hidden =
@@ -640,7 +633,7 @@ export function Drawer({
     }
 
     return { accessibilityElementsHidden: hidden };
-  }, [drawerType, progress]);
+  });
 
   return (
     <GestureHandlerRootView style={[styles.container, style]}>
