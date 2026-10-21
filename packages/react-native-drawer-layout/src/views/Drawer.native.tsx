@@ -183,7 +183,6 @@ export function Drawer({
     // Measure the layout again on screen rotation
     let handle: number | undefined;
 
-    // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
     const subscription = Dimensions.addEventListener('change', () => {
       // The measurement is not accurate without the delay
       handle = requestAnimationFrame(() => {
@@ -201,7 +200,7 @@ export function Drawer({
 
     // only measure on initial render
     // subsequent updates will be handled by onLayout
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, []);
 
   const onLayout = React.useCallback(
@@ -563,14 +562,7 @@ export function Drawer({
               },
             ],
     };
-  }, [
-    customWidth,
-    direction,
-    drawerPosition,
-    drawerType,
-    layoutWidth,
-    translateX,
-  ]);
+  });
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
     const drawerWidth = getDrawerWidthNative({
@@ -597,7 +589,7 @@ export function Drawer({
               },
             ],
     };
-  }, [customWidth, drawerPosition, drawerType, layoutWidth, translateX]);
+  });
 
   const progress = useDerivedValue(() => {
     const containerWidth = layoutWidth.get();
@@ -626,7 +618,7 @@ export function Drawer({
     }
 
     return { accessibilityElementsHidden: hidden };
-  }, [drawerType, progress]);
+  });
 
   const drawerContentAnimatedProps = useAnimatedProps<ViewProps>(() => {
     const hidden =
@@ -640,7 +632,7 @@ export function Drawer({
     }
 
     return { accessibilityElementsHidden: hidden };
-  }, [drawerType, progress]);
+  });
 
   return (
     <GestureHandlerRootView style={[styles.container, style]}>

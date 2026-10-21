@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from '@jest/globals';
-import { type ParamListBase } from '@react-navigation/routers';
+import type { ParamListBase } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Text } from 'react-native';
@@ -20,7 +20,7 @@ test("throws if focus state isn't available", async () => {
   expect.assertions(1);
 
   const Test = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line @eslint-react/rules-of-hooks
     expect(() => useIsFocused()).toThrow(
       "Couldn't determine focus state. Is your component inside a screen in a navigator?"
     );

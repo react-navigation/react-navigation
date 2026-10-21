@@ -1,0 +1,43 @@
+diff --git a/jestSetup.js b/jestSetup.js
+index 6ff63dad5e1cc88cccfddaae4fbf06a2a16bf4b3..026f5b514dc4698b284fc439cdf3efa67cc4f48a 100644
+--- a/jestSetup.js
++++ b/jestSetup.js
+@@ -14,6 +14,9 @@ jest.mock('./src/components/touchables', () =>
+ jest.mock('./src/v3/detectors/HostGestureDetector', () =>
+   require('./src/mocks/hostDetector')
+ );
++jest.mock('./src/handlers/gestures/installUIRuntimeBindings', () =>
++  require('./src/mocks/installUIRuntimeBindings')
++);
+ 
+ jest.mock('./lib/module/RNGestureHandlerModule', () =>
+   require('./lib/module/mocks/module')
+@@ -33,3 +36,6 @@ jest.mock('./lib/module/components/GestureComponents', () =>
+ jest.mock('./lib/module/v3/detectors/HostGestureDetector', () =>
+   require('./lib/module/mocks/hostDetector')
+ );
++jest.mock('./lib/module/handlers/gestures/installUIRuntimeBindings', () =>
++  require('./lib/module/mocks/installUIRuntimeBindings')
++);
+diff --git a/lib/module/mocks/installUIRuntimeBindings.js b/lib/module/mocks/installUIRuntimeBindings.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..286ac0815abd06a2c631e707db9d4215567784b2
+--- /dev/null
++++ b/lib/module/mocks/installUIRuntimeBindings.js
+@@ -0,0 +1,5 @@
++"use strict";
++
++export function installUIRuntimeBindings(_getUIRuntimeHolder) {
++  // noop
++}
+diff --git a/src/mocks/installUIRuntimeBindings.tsx b/src/mocks/installUIRuntimeBindings.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..a9cafb3eed72128738e2456b3cad570bc2510cfe
+--- /dev/null
++++ b/src/mocks/installUIRuntimeBindings.tsx
+@@ -0,0 +1,5 @@
++export function installUIRuntimeBindings(
++  _getUIRuntimeHolder: (() => object) | undefined
++) {
++  // noop
++}

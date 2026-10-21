@@ -29,7 +29,7 @@ jobs:
       ORG_GRADLE_PROJECT_reactNativeArchitectures: x86_64
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -48,7 +48,7 @@ jobs:
 
       - name: Restore debug build from cache
         id: restore-debug-build
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: android-debug-build/
           key: android-debug-build-${{ runner.os }}-${{ env.API_LEVEL }}-${{ env.ORG_GRADLE_PROJECT_reactNativeArchitectures }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
@@ -65,14 +65,14 @@ jobs:
 
           - name: Setup JDK
             if: steps.restore-debug-build.outputs.cache-hit != 'true'
-            uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+            uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
             with:
               distribution: ${{ env.JAVA_DISTRIBUTION }}
               java-version: ${{ env.JAVA_VERSION }}
 
           - name: Cache Gradle
             if: steps.restore-debug-build.outputs.cache-hit != 'true'
-            uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+            uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
             with:
               path: |
                 ~/.gradle/caches
@@ -97,13 +97,13 @@ jobs:
 
       - name: Store debug build in cache
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: android-debug-build/
           key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
 
       - name: Upload debug build artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: android-debug-build
           path: android-debug-build/android-debug.apk
@@ -125,10 +125,10 @@ jobs:
       EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096 -cores 2 -memory 4096'
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Setup JDK
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
@@ -179,7 +179,7 @@ jobs:
         run: pnpm --recursive update react-native-screens@nightly --no-save
 
       - name: Download debug build artifact
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           name: android-debug-build
           path: android-debug-build
@@ -211,7 +211,7 @@ jobs:
 
       - name: Store E2E output
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: e2e-output-android
           path: example/agent-device-artifacts/**/*
@@ -224,7 +224,7 @@ jobs:
 
       - name: Store debug output
         if: failure() || cancelled()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: e2e-artifacts-android
           path: |

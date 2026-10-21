@@ -356,7 +356,7 @@ test('switches between the current and named navigation state', async () => {
     const selector = (state: NavigationState) =>
       state.routes[state.index]?.name;
 
-    /* eslint-disable react-hooks/rules-of-hooks -- the same hook is called once in both branches */
+    /* eslint-disable @eslint-react/rules-of-hooks -- the same hook is called once in both branches */
     const name =
       target === 'current'
         ? useNavigationState(selector)
@@ -365,7 +365,7 @@ test('switches between the current and named navigation state', async () => {
             'parent',
             selector
           );
-    /* eslint-enable react-hooks/rules-of-hooks */
+    /* eslint-enable @eslint-react/rules-of-hooks */
 
     return <Text>[name-{name}]</Text>;
   };
@@ -531,7 +531,7 @@ test('throws when used outside a navigator', async () => {
 
   const Test = () => {
     expect(() =>
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      // eslint-disable-next-line @eslint-react/rules-of-hooks
       useNavigationState((state) => state.index)
     ).toThrow(
       "Couldn't get the navigation state. Is your component inside a navigator?"
@@ -549,7 +549,7 @@ test('throws when a selector is not provided', async () => {
   const Test = () => {
     expect(() =>
       // @ts-expect-error a selector is required, testing the runtime guard
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      // eslint-disable-next-line @eslint-react/rules-of-hooks
       useNavigationState()
     ).toThrow('A selector function must be provided (got undefined).');
 
