@@ -46,10 +46,10 @@
   },
   "devDependencies": {
     "@react-navigation/core": "workspace:^",
-    "@types/react": "~19.2.4",
-    "del-cli": "^6.0.0",
-    "react": "19.2.3",
-    "react-native-builder-bob": "^0.42.1",
+    "@types/react": "~19.3.0",
+    "del-cli": "^8.0.1",
+    "react": "19.3.0",
+    "react-native-builder-bob": "^0.44.1",
     "typescript": "~6.0.3"
   },
   "peerDependencies": {

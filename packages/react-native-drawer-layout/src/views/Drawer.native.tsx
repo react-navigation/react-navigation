@@ -412,15 +412,7 @@ export function Drawer({
               },
             ],
     };
-  }, [
-    direction,
-    drawerPosition,
-    drawerType,
-    drawerWidth,
-    isHidden,
-    layout.width,
-    translateX,
-  ]);
+  });
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -442,7 +434,7 @@ export function Drawer({
               },
             ],
     };
-  }, [drawerPosition, drawerType, drawerWidth, translateX]);
+  });
 
   const progress = useDerivedValue(() => {
     return drawerType === 'permanent'
@@ -466,7 +458,7 @@ export function Drawer({
     }
 
     return { accessibilityElementsHidden: hidden };
-  }, [drawerType, progress]);
+  });
 
   const drawerContentAnimatedProps = useAnimatedProps<ViewProps>(() => {
     const hidden =
@@ -480,7 +472,7 @@ export function Drawer({
     }
 
     return { accessibilityElementsHidden: hidden };
-  }, [drawerType, progress]);
+  });
 
   return (
     <GestureHandlerRootView style={[styles.container, style]}>

@@ -6,7 +6,7 @@ import {
   HeaderButton,
   useHeaderHeight,
 } from '@react-navigation/elements';
-import { type PathConfigMap } from '@react-navigation/native';
+import type { PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
   Header as StackHeader,

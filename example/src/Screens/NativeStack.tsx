@@ -296,8 +296,8 @@ export function NativeStack() {
                           return {
                             ...Image.resolveAssetSource(messageCircle),
                             scale:
-                              Image.resolveAssetSource(messageCircle).scale *
-                              1.4,
+                              (Image.resolveAssetSource(messageCircle)?.scale ??
+                                1) * 1.4,
                           };
                         },
                         default: messageCircle,

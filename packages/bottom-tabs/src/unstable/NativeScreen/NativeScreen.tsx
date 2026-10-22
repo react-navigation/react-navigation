@@ -64,7 +64,7 @@ export function NativeScreen({ route, navigation, options, children }: Props) {
 
   const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line @eslint-react/exhaustive-deps
   const setHeaderHeightDebounced = React.useCallback(
     // Debounce the header height updates to avoid excessive re-renders
     debounce(setHeaderHeight, 100),

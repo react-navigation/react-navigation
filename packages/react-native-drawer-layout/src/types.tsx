@@ -1,7 +1,11 @@
 import * as React from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
-import type { PanGesture } from 'react-native-gesture-handler';
 import type { SharedValue } from 'react-native-reanimated';
+
+// `Gesture.Pan()` returns `PanGesture` in gesture handler 2.x and `LegacyPanGesture` in 3.x
+export type PanGesture = ReturnType<
+  typeof import('react-native-gesture-handler').Gesture.Pan
+>;
 
 export type Layout = { width: number; height: number };
 

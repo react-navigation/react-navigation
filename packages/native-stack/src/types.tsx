@@ -268,12 +268,11 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  headerLargeTitleStyle?: StyleProp<{
-    fontFamily?: string;
-    fontSize?: number;
-    fontWeight?: string;
-    color?: string;
-  }>;
+  headerLargeTitleStyle?: StyleProp<
+    Pick<TextStyle, 'fontFamily' | 'fontSize' | 'fontWeight'> & {
+      color?: string;
+    }
+  >;
   /**
    * Whether to show the header. The header is shown by default.
    * Setting this to `false` hides the header.

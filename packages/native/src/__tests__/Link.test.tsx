@@ -38,6 +38,7 @@ const createPressEvent = () => {
 test('navigates on native', () => {
   OS.replaceValue('android');
 
+  // eslint-disable-next-line @eslint-react/error-boundaries
   try {
     const Stack = createStackNavigator<RootParamList>();
 

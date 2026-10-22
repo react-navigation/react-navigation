@@ -185,7 +185,9 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
           'button' in e ? e.button == null || e.button === 0 : true;
 
         const isSelfTarget =
-          e.currentTarget && 'target' in e.currentTarget
+          typeof e.currentTarget === 'object' &&
+          e.currentTarget !== null &&
+          'target' in e.currentTarget
             ? [undefined, null, '', '_self'].includes(e.currentTarget.target)
             : true;
 

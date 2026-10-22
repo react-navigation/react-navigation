@@ -83,7 +83,7 @@ test("lets parent handle the action if child didn't", () => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'REVERSE' });
 
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
@@ -172,7 +172,7 @@ test("lets children handle the action if parent didn't with navigationInChildEna
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'REVERSE' });
 
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
@@ -729,7 +729,7 @@ test("action doesn't bubble to child if target is specified", () => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'REVERSE', target: '0' });
 
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
@@ -784,7 +784,7 @@ test('logs error if no navigator handled the action', () => {
     React.useEffect(() => {
       props.navigation.dispatch({ type: 'UNKNOWN' });
 
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, []);
 
     return null;
