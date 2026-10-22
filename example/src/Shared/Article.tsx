@@ -48,7 +48,7 @@ export function Article({
   author = DEFAULT_AUTHOR,
   ...rest
 }: Props) {
-  const ref = React.useRef<ScrollView>(null);
+  const ref = React.useRef<React.ComponentRef<typeof ScrollView>>(null);
 
   useScrollToTop(ref);
 

@@ -19,7 +19,7 @@ export const GestureDetector = ({
   return <>{children}</>;
 };
 
-export const GestureHandlerRootView = View;
+export const GestureHandlerRootView: typeof View = View;
 
 export const Gesture:
   | typeof import('react-native-gesture-handler').Gesture

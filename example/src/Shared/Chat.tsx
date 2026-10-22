@@ -24,7 +24,7 @@ export function Chat({
   ...rest
 }: Partial<ScrollViewProps & { bottom: boolean }>) {
   const insets = useSafeAreaInsets();
-  const ref = React.useRef<ScrollView>(null);
+  const ref = React.useRef<React.ComponentRef<typeof ScrollView>>(null);
 
   useScrollToTop(ref);
 

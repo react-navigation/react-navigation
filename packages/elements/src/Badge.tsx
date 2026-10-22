@@ -69,9 +69,9 @@ export function Badge({
     }
   }
 
-  // @ts-expect-error: backgroundColor definitely exists
   const { backgroundColor = colors.notification, ...restStyle } =
     StyleSheet.flatten(style) || {};
+  // @ts-expect-error: backgroundColor can be any color value, but `color` only accepts strings, numbers etc.
   const textColor = Color(backgroundColor).isLight() ? 'black' : 'white';
 
   const borderRadius = size / 2;

@@ -109,9 +109,7 @@ export function DrawerItem(props: Props) {
     focused = false,
     allowFontScaling,
     activeTintColor = colors.primary,
-    // eslint-disable-next-line @eslint-react/no-unstable-default-props
     inactiveTintColor = Color(colors.text).alpha(0.68).rgb().string(),
-    // eslint-disable-next-line @eslint-react/no-unstable-default-props
     activeBackgroundColor = Color(activeTintColor).alpha(0.12).rgb().string(),
     inactiveBackgroundColor = 'transparent',
     style,
@@ -123,7 +121,7 @@ export function DrawerItem(props: Props) {
     ...rest
   } = props;
 
-  const { borderRadius = 56 } = StyleSheet.flatten(style || {});
+  const { borderRadius = 56 } = StyleSheet.flatten(style) || {};
   const color = focused ? activeTintColor : inactiveTintColor;
   const backgroundColor = focused
     ? activeBackgroundColor

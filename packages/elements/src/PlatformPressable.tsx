@@ -29,6 +29,11 @@ export type Props = Omit<PressableProps, 'style' | 'onPress'> & {
   children: React.ReactNode;
 };
 
+// Same as `React.ComponentRef<typeof AnimatedPressable>`, but can be named in declaration files
+type PressableRef = React.ComponentRef<
+  ReturnType<typeof Animated.createAnimatedComponent<typeof Pressable>>
+>;
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const ANDROID_VERSION_LOLLIPOP = 21;
@@ -54,7 +59,7 @@ function PlatformPressableInternal(
     children,
     ...rest
   }: Props,
-  ref: React.Ref<React.ComponentRef<typeof AnimatedPressable>>
+  ref: React.Ref<PressableRef>
 ) {
   const { dark } = useTheme();
   const [opacity] = React.useState(() => new Animated.Value(1));
@@ -89,7 +94,9 @@ function PlatformPressableInternal(
 
       // let browser handle "target=_blank" etc.
       const isSelfTarget =
-        e.currentTarget && 'target' in e.currentTarget
+        typeof e.currentTarget === 'object' &&
+        e.currentTarget !== null &&
+        'target' in e.currentTarget
           ? [undefined, null, '', '_self'].includes(e.currentTarget.target)
           : true;
 
@@ -202,7 +209,9 @@ function PlatformPressableInternal(
   );
 }
 
-export const PlatformPressable = React.forwardRef(PlatformPressableInternal);
+export const PlatformPressable: React.ForwardRefExoticComponent<
+  Props & React.RefAttributes<PressableRef>
+> = React.forwardRef(PlatformPressableInternal);
 
 PlatformPressable.displayName = 'PlatformPressable';
 

@@ -26,42 +26,46 @@
     "example": "yarn workspace @react-navigation/example"
   },
   "engines": {
-    "node": ">= 24.13.0"
+    "node": ">= 24.22.1"
   },
   "packageManager": "yarn@4.10.3",
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@babel/plugin-transform-explicit-resource-management": "^7.29.7",
-    "@commitlint/config-conventional": "^19.8.1",
-    "@evilmartians/lefthook": "^1.11.13",
-    "@lerna-lite/cli": "^4.11.0",
-    "@lerna-lite/publish": "^4.11.1",
-    "@lerna-lite/run": "^4.11.1",
-    "@react-native/babel-preset": "0.85.3",
-    "@react-native/jest-preset": "0.85.3",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@evilmartians/lefthook": "^2.2.2",
+    "@lerna-lite/cli": "^5.6.4",
+    "@lerna-lite/publish": "^5.6.4",
+    "@lerna-lite/run": "^5.6.4",
+    "@react-native/babel-preset": "0.88.0",
+    "@react-native/jest-preset": "0.88.0",
     "@types/babel__core": "^7",
     "@types/node": "^24.13.2",
-    "agent-device": "^0.21.16",
+    "agent-device": "^0.21.30",
     "check-dependency-version-consistency": "^5.0.0",
-    "commitlint": "^19.8.1",
-    "eslint": "^9.39.5",
-    "eslint-config-satya164": "^5.2.0",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "jest": "^30.0.0",
+    "commitlint": "^21.2.4",
+    "eslint": "^10.13.0",
+    "eslint-config-satya164": "^5.3.0",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
+    "jest": "~30.5.2",
     "jest-environment-jsdom": "29.7.0",
-    "npm-run-all2": "^8.0.4",
+    "npm-run-all2": "^9.0.4",
     "prettier": "^3.5.3",
-    "react": "19.2.3",
+    "react": "19.3.0",
     "typescript": "~6.0.3"
+  },
+  "resolutions": {
+    "react-native-gesture-handler@npm:~3.3.0": "patch:react-native-gesture-handler@npm%3A3.3.0#~/.yarn/patches/react-native-gesture-handler-npm-3.3.0-9352fe3ab0.patch"
   },
   "jest": {
     "preset": "@react-native/jest-preset",
+    "resolver": "react-native-reanimated/jest/resolver",
     "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
     "setupFilesAfterEnv": [
       "<rootDir>/jest/setup.js"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|standard-navigation)/)"
+      "node_modules/(?!((jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|immer|standard-navigation)/)"
     ],
     "moduleNameMapper": {
       "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src",

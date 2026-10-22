@@ -178,10 +178,10 @@ const getHeaderHeights = (
       headerStyle,
     } = curr.descriptor.options;
 
-    const style = StyleSheet.flatten(headerStyle || {});
+    const style = StyleSheet.flatten(headerStyle);
 
     const height =
-      'height' in style && typeof style.height === 'number'
+      style != null && 'height' in style && typeof style.height === 'number'
         ? style.height
         : previous[curr.route.key];
 

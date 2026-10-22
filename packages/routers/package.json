@@ -44,9 +44,9 @@
     "nanoid": "^3.3.11"
   },
   "devDependencies": {
-    "@jest/globals": "^30.0.0",
-    "del-cli": "^6.0.0",
-    "react-native-builder-bob": "^0.42.1",
+    "@jest/globals": "^30.5.2",
+    "del-cli": "^8.0.1",
+    "react-native-builder-bob": "^0.44.1",
     "typescript": "~6.0.3"
   },
   "react-native-builder-bob": {

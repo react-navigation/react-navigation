@@ -67,7 +67,7 @@ const Footer = () => {
 };
 
 export function NewsFeed(props: Props) {
-  const ref = React.useRef<ScrollView>(null);
+  const ref = React.useRef<React.ComponentRef<typeof ScrollView>>(null);
 
   useScrollToTop(ref);
 

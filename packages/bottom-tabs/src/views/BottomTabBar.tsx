@@ -23,7 +23,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-import { type EdgeInsets } from 'react-native-safe-area-context';
+import type { EdgeInsets } from 'react-native-safe-area-context';
 
 import type {
   BottomTabBarProps,
@@ -247,7 +247,7 @@ export function BottomTabBar({
         }
       });
     } else {
-      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      // eslint-disable-next-line @eslint-react/set-state-in-effect
       setIsTabBarHidden(true);
 
       const animation =

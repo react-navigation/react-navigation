@@ -13,7 +13,11 @@ import type {
   Theme,
 } from '@react-navigation/native';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
-import type { PanGesture } from 'react-native-gesture-handler';
+
+// `Gesture.Pan()` returns `PanGesture` in gesture handler 2.x and `LegacyPanGesture` in 3.x
+type PanGesture = ReturnType<
+  typeof import('react-native-gesture-handler').Gesture.Pan
+>;
 
 export type Scene = {
   route: Route<string>;

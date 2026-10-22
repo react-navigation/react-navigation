@@ -48,20 +48,19 @@
   "dependencies": {
     "@react-navigation/elements": "^2.9.45",
     "color": "^4.2.3",
-    "sf-symbols-typescript": "^2.1.0",
-    "warn-once": "^0.1.1"
+    "sf-symbols-typescript": "^2.1.0"
   },
   "devDependencies": {
-    "@jest/globals": "^30.0.0",
+    "@jest/globals": "^30.5.2",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^13.2.1",
-    "@types/react": "~19.2.4",
-    "del-cli": "^6.0.0",
-    "react": "19.2.3",
-    "react-native": "0.85.3",
-    "react-native-builder-bob": "^0.42.1",
+    "@types/react": "~19.3.0",
+    "del-cli": "^8.0.1",
+    "react": "19.3.0",
+    "react-native": "0.88.0",
+    "react-native-builder-bob": "^0.44.1",
     "react-native-screens": "^4.30.0",
-    "react-test-renderer": "19.2.3",
+    "react-test-renderer": "19.3.0",
     "typescript": "~6.0.3"
   },
   "peerDependencies": {
