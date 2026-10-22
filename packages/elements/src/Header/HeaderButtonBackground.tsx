@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/native';
 import { Animated, StyleSheet } from 'react-native';
 
 import { AnimatedLiquidGlassView } from '../LiquidGlassView';
@@ -8,6 +9,8 @@ type Props = React.ComponentProps<typeof Animated.View> & {
 };
 
 export function HeaderButtonBackground({ plain, style, ...rest }: Props) {
+  const { dark } = useTheme();
+
   if (plain) {
     return <Animated.View style={[styles.container, style]} {...rest} />;
   }
@@ -15,6 +18,7 @@ export function HeaderButtonBackground({ plain, style, ...rest }: Props) {
   return (
     <AnimatedLiquidGlassView
       interactive
+      colorScheme={dark ? 'dark' : 'light'}
       style={[styles.container, style]}
       {...rest}
     />

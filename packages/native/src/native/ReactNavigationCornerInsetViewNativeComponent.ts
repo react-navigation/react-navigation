@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-default-export */
 import * as React from 'react';
 import {
   codegenNativeCommands,
