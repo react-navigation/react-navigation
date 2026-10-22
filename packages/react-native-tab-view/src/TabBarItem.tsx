@@ -112,7 +112,7 @@ const TabBarItemInternal = <T extends Route>({
   labelAllowFontScaling,
   route,
 }: TabBarItemInternalProps<T>) => {
-  const labelColorFromStyle = StyleSheet.flatten(labelStyle || {}).color;
+  const labelColorFromStyle = StyleSheet.flatten(labelStyle || {})?.color;
 
   const activeColor =
     activeColorCustom !== undefined

@@ -56,6 +56,7 @@ test('preserves special property names as ordinary query params', () => {
 
   expect(Object.getPrototypeOf(params)).toBeNull();
   expect(Object.hasOwn(params, '__proto__')).toBe(true);
+  // eslint-disable-next-line no-proto
   expect(params.__proto__).toEqual(['a', 'b']);
   expect(params.constructor).toBe('x');
   expect(params.prototype).toBe('y');

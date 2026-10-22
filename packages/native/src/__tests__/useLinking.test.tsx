@@ -1463,6 +1463,7 @@ test("doesn't leave unhandled rejection when navigation interrupts prevented bac
 
   const onPreventRemove = jest.fn();
 
+  // eslint-disable-next-line @eslint-react/no-nested-component-definitions
   const ProfileScreen = ({ route }: any): any => {
     usePreventRemove(true, onPreventRemove);
 

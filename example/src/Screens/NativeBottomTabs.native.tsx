@@ -172,7 +172,7 @@ export function NativeBottomTabs() {
               <MaterialCommunityIcons
                 name="heart-outline"
                 size={24}
-                color={tintColor}
+                color={typeof tintColor === 'string' ? tintColor : undefined}
               />
             </HeaderButton>
           ),

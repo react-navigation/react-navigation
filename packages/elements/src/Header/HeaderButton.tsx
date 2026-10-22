@@ -40,7 +40,10 @@ function HeaderButtonInternal(
   );
 }
 
-export const HeaderButton = React.forwardRef(HeaderButtonInternal);
+export const HeaderButton: React.ForwardRefExoticComponent<
+  HeaderButtonProps &
+    React.RefAttributes<React.ComponentRef<typeof PlatformPressable>>
+> = React.forwardRef(HeaderButtonInternal);
 
 HeaderButton.displayName = 'HeaderButton';
 

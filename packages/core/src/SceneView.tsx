@@ -105,7 +105,7 @@ export function SceneView<
   // Clear options set by this screen when it is unmounted
   React.useEffect(() => {
     return clearOptions;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, []);
 
   const getIsInitial = React.useCallback(() => isInitialRef.current, []);
@@ -168,7 +168,8 @@ export function SceneView<
   );
 
   const ScreenComponent = screen.getComponent
-    ? screen.getComponent()
+    ? // eslint-disable-next-line @eslint-react/static-components
+      screen.getComponent()
     : screen.component;
 
   return (
@@ -183,6 +184,7 @@ export function SceneView<
               route={route}
             >
               {ScreenComponent !== undefined ? (
+                // eslint-disable-next-line @eslint-react/static-components
                 <ScreenComponent navigation={navigation} route={route} />
               ) : screen.children !== undefined ? (
                 screen.children({ navigation, route })

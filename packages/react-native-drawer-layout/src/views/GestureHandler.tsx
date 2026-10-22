@@ -19,11 +19,15 @@ export const GestureDetector = ({
   return <>{children}</>;
 };
 
-export const GestureHandlerRootView = View;
+export const GestureHandlerRootView: typeof View = View;
 
 export const Gesture:
   | typeof import('react-native-gesture-handler').Gesture
   | undefined = undefined;
+
+export type PanGesture = ReturnType<
+  typeof import('react-native-gesture-handler').Gesture.Pan
+>;
 
 export const enum GestureState {
   UNDETERMINED = 0,

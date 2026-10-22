@@ -130,7 +130,7 @@ export function useNavigationCache<
   // In reality, these deps will rarely change, if ever
   const cache = React.useMemo(
     () => ({ current: {} as NavigationCache<State, ScreenOptions, EventMap> }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     [base, getState, navigation, setOptions, emitter]
   );
 

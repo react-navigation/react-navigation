@@ -33,7 +33,7 @@ export function Drawer({
     progress.value = open ? 1 : 0;
   }, [open, progress]);
 
-  const drawerRef = React.useRef<View>(null);
+  const drawerRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
   const onTransitionStartLatest = useLatestCallback((e: TransitionEvent) => {
     if (e.target === e.currentTarget && e.propertyName === 'transform') {
@@ -105,7 +105,6 @@ export function Drawer({
         },
         // FIXME: width contains `px` on web
         { width: drawerWidth } as ViewStyle,
-        // @ts-expect-error offset contains `calc` for web
         drawerType !== 'permanent'
           ? // Position drawer off-screen by default in closed state
             // And add a translation only when drawer is open

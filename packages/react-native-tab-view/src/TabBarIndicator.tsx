@@ -134,7 +134,7 @@ export function TabBarIndicator<T extends Route>({
   const isIndicatorShown = React.useRef(false);
   const isWidthDynamic = width === 'auto';
 
-  const flattenedStyle = StyleSheet.flatten(style);
+  const flattenedStyle = StyleSheet.flatten(style) ?? undefined;
 
   const hasCustomIndicatorWidth =
     typeof flattenedStyle?.width === 'number' ||
@@ -272,7 +272,7 @@ export function TabBarIndicator<T extends Route>({
     );
   }
 
-  const styleList: StyleProp<ViewStyle> = [];
+  const styleList: Animated.WithAnimatedValue<ViewStyle>[] = [];
 
   // transform doesn't work properly on chrome and opera for linux and android
   // so we need to use width and left/right instead of scaleX and translateX

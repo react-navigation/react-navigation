@@ -9,7 +9,7 @@ const Dummy: any = ({ children }: { children: React.ReactNode }) => (
 export const PanGestureHandler =
   Dummy as React.ComponentType<PanGestureHandlerProperties>;
 
-export const GestureHandlerRootView = View;
+export const GestureHandlerRootView: typeof View = View;
 
 export const GestureState = {
   UNDETERMINED: 0,

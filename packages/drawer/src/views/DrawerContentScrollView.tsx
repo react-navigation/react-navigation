@@ -13,7 +13,7 @@ const SPACING = 12;
 
 function DrawerContentScrollViewInner(
   { contentContainerStyle, style, children, ...rest }: Props,
-  ref?: React.Ref<ScrollView>
+  ref?: React.Ref<React.ComponentRef<typeof ScrollView>>
 ) {
   const drawerPosition = React.useContext(DrawerPositionContext);
   const insets = useSafeAreaInsets();
@@ -44,9 +44,9 @@ function DrawerContentScrollViewInner(
   );
 }
 
-export const DrawerContentScrollView = React.forwardRef(
-  DrawerContentScrollViewInner
-);
+export const DrawerContentScrollView: React.ForwardRefExoticComponent<
+  Props & React.RefAttributes<React.ComponentRef<typeof ScrollView>>
+> = React.forwardRef(DrawerContentScrollViewInner);
 
 const styles = StyleSheet.create({
   container: {
