@@ -131,6 +131,13 @@ export default defineConfig([
     },
   },
   {
+    files: ['**/Native?*.{js,ts,tsx}', '**/?*NativeComponent*.{js,ts,tsx}'],
+
+    rules: {
+      'import-x/no-default-export': 'off',
+    },
+  },
+  {
     files: ['scripts/**'],
 
     rules: {

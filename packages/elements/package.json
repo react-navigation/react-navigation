@@ -51,7 +51,6 @@
     "use-sync-external-store": "^1.7.0"
   },
   "devDependencies": {
-    "@callstack/liquid-glass": "^0.8.2",
     "@jest/globals": "^30.5.2",
     "@react-navigation/native": "workspace:^",
     "@testing-library/jest-dom": "^7.0.1",
@@ -71,7 +70,6 @@
     "typescript": "^6.0.3"
   },
   "peerDependencies": {
-    "@callstack/liquid-glass": ">= 0.6.0",
     "@react-navigation/native": "workspace:^",
     "react": ">= 19.2.0",
     "react-native": "*",

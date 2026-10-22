@@ -12,7 +12,6 @@
     "e2e:web": "pnpm exec playwright test --config=e2e/playwright.config.ts"
   },
   "dependencies": {
-    "@callstack/liquid-glass": "^0.8.2",
     "@expo-google-fonts/nunito": "^0.4.2",
     "@expo-google-fonts/outfit": "^0.4.3",
     "@expo-google-fonts/roboto-slab": "^0.4.2",
