@@ -1,5 +1,3 @@
-#import "ReactNavigationSFSymbolView.h"
-
 #if __has_include("ReactNavigation/ReactNavigation-Swift.h")
 #import "ReactNavigation/ReactNavigation-Swift.h"
 #else
@@ -7,12 +5,14 @@
 #endif
 
 #import <React/RCTConversions.h>
+#import <React/RCTViewComponentView.h>
 #import <react/renderer/components/ReactNavigationSpec/ComponentDescriptors.h>
 #import <react/renderer/components/ReactNavigationSpec/Props.h>
 
-#import <React/RCTFabricComponentsPlugins.h>
-
 using namespace facebook::react;
+
+@interface ReactNavigationSFSymbolView : RCTViewComponentView
+@end
 
 @implementation ReactNavigationSFSymbolView {
     ReactNavigationSFSymbolViewImpl * _view;

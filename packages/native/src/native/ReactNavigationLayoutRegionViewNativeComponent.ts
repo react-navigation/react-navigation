@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-default-export */
 import {
   codegenNativeComponent,
   type CodegenTypes,
