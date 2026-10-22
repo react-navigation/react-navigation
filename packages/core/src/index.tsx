@@ -83,6 +83,7 @@ export type {
   TypedNavigator,
 } from './types';
 export { PrivateValueStore } from './types';
+export { CanGoBackContext, useCanGoBack } from './useCanGoBack';
 export { useFocusEffect } from './useFocusEffect';
 export { IsFocusedContext, useIsFocused } from './useIsFocused';
 export { useNavigation } from './useNavigation';

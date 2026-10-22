@@ -14,6 +14,7 @@ import {
 import { NavigationRootContext } from './NavigationRootContext';
 import { PreventRemoveContext } from './PreventRemoveContext';
 import { StaticTreeContext } from './StaticTreeContext';
+import { CanGoBackContext, CanGoBackRouteKeysContext } from './useCanGoBack';
 import {
   FocusedRouteKeyContext,
   IsFocusedContext,
@@ -55,13 +56,21 @@ export function NavigationIndependentTree({
                                 <IsFocusedGetterContext.Provider
                                   value={undefined}
                                 >
-                                  <IsScreenContext.Provider value={false}>
-                                    <NavigationFocusedRouteStateContext.Provider
+                                  <CanGoBackRouteKeysContext.Provider
+                                    value={undefined}
+                                  >
+                                    <CanGoBackContext.Provider
                                       value={undefined}
                                     >
-                                      {children}
-                                    </NavigationFocusedRouteStateContext.Provider>
-                                  </IsScreenContext.Provider>
+                                      <IsScreenContext.Provider value={false}>
+                                        <NavigationFocusedRouteStateContext.Provider
+                                          value={undefined}
+                                        >
+                                          {children}
+                                        </NavigationFocusedRouteStateContext.Provider>
+                                      </IsScreenContext.Provider>
+                                    </CanGoBackContext.Provider>
+                                  </CanGoBackRouteKeysContext.Provider>
                                 </IsFocusedGetterContext.Provider>
                               </IsFocusedContext.Provider>
                             </NavigationContext.Provider>
