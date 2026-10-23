@@ -16,6 +16,7 @@ export default defineConfig([
     '**/.expo/',
     '**/.pnpm-store/',
     '**/.vscode/',
+    'example/assets/nanoicons/',
   ]),
 
   {

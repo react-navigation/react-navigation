@@ -2,6 +2,7 @@ const path = require('path');
 const { withMetroConfig } = require('react-native-monorepo-config');
 
 const { getDefaultConfig } = require('@expo/metro-config');
+const { withNanoIcons } = require('react-native-nano-icons/metro');
 
 const expoConfig = getDefaultConfig(__dirname);
 
@@ -19,7 +20,7 @@ const defaultConfig = withMetroConfig(expoConfig, {
 });
 
 /** @type {import('metro-config').MetroConfig} */
-module.exports = {
+module.exports = withNanoIcons({
   ...defaultConfig,
 
   resolver: {
@@ -76,4 +77,4 @@ module.exports = {
       };
     },
   },
-};
+});
