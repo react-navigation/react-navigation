@@ -82,6 +82,12 @@ export function HeaderBackButton({
       <HeaderIcon
         icon={backIcon}
         color={color}
+        weight={
+          icon == null
+            ? // Native back buttons use a heavier chevron than other buttons
+              'semibold'
+            : undefined
+        }
         style={[
           styles.icon,
           direction === 'rtl' &&

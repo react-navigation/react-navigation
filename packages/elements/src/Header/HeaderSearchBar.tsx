@@ -37,7 +37,6 @@ type Props = Omit<HeaderSearchBarOptions, 'ref'> & {
   tintColor?: ColorValue | undefined;
   pressColor?: ColorValue | undefined;
   pressOpacity?: number | undefined;
-  statusBarHeight: number;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
   ref?: React.Ref<HeaderSearchBarRef> | undefined;
 };
@@ -71,7 +70,6 @@ export function HeaderSearchBar({
   tintColor,
   pressColor,
   pressOpacity,
-  statusBarHeight,
   style,
   ref,
   ...rest
@@ -181,16 +179,6 @@ export function HeaderSearchBar({
 
   const textColor = tintColor ?? colors.text;
 
-  // When status bar height is provided, add spacing below it
-  // Otherwise, use a smaller top margin to align with the header content
-  const STATUS_BAR_TOP_ADJUSTMENT = 2;
-  const topMargin = Platform.select({
-    ios: statusBarHeight
-      ? statusBarHeight + BUTTON_SPACING
-      : BUTTON_SPACING - STATUS_BAR_TOP_ADJUSTMENT,
-    default: statusBarHeight,
-  });
-
   return (
     <AnimatedLiquidGlassContainerView
       spacing={BUTTON_SPACING}
@@ -199,10 +187,6 @@ export function HeaderSearchBar({
         styles.container,
         Platform.OS === 'ios' && {
           gap: BUTTON_SPACING,
-          margin: BUTTON_SPACING,
-        },
-        {
-          marginTop: topMargin,
         },
         style,
       ]}
@@ -368,7 +352,9 @@ const styles = StyleSheet.create({
     width: SEARCH_ICON_SIZE,
   },
   inputSearchIconIosLegacy: {
-    top: SEARCHBAR_ICON_SPACING,
+    marginTop:
+      -SEARCH_ICON_SIZE / 2 +
+      (SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS - SEARCHBAR_ICON_SPACING) / 2,
   },
   backButton: {
     alignSelf: 'center',

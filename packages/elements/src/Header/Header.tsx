@@ -21,7 +21,10 @@ import { isLiquidGlassSupported } from '../LiquidGlassView';
 import { PlatformColor } from '../PlatformColor';
 import type { HeaderOptions, Icon } from '../types';
 import { useFrameSize } from '../useFrameSize';
-import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
+import {
+  getDefaultHeaderHeight,
+  LIQUID_GLASS_HEADER_BOTTOM_SPACING,
+} from './getDefaultHeaderHeight';
 import { HeaderBackButton } from './HeaderBackButton';
 import { HeaderBackground } from './HeaderBackground';
 import { BUTTON_SIZE, BUTTON_SPACING, HeaderButton } from './HeaderButton';
@@ -63,6 +66,8 @@ const STATUS_BAR_OFFSET = Platform.select({
   default: 0,
 });
 
+const STATUS_BAR_TOP_ADJUSTMENT = 2;
+
 const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
   Object.keys(styles).forEach((styleProp) => {
     const value = styles[styleProp];
@@ -80,6 +85,9 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
 };
 
 const useNativeDriver = Platform.OS !== 'web';
+
+const isLiquidGlassPhone =
+  Platform.OS === 'ios' && !Platform.isPad && isLiquidGlassSupported;
 
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
@@ -361,6 +369,47 @@ export function Header(props: Props) {
     0
   );
 
+  // Native navigation bars with liquid glass on iPhone don't add the safe area insets
+  // They use the standard margins, which are larger on wide phones and in landscape
+  const liquidGlassEdgeSpacing = useFrameSize((frame) =>
+    frame.width > frame.height ? 38 : frame.width >= 414 ? 20 : 16
+  );
+
+  const contentSpacingStyle = isLiquidGlassSupported
+    ? {
+        marginTop:
+          defaultHeight - BUTTON_SIZE - LIQUID_GLASS_HEADER_BOTTOM_SPACING,
+        marginBottom: LIQUID_GLASS_HEADER_BOTTOM_SPACING,
+      }
+    : {
+        marginTop: statusBarSpacing,
+      };
+
+  let searchBarSpacingStyle: ViewStyle;
+
+  if (isLiquidGlassSupported) {
+    searchBarSpacingStyle = {
+      ...contentSpacingStyle,
+      marginHorizontal: isLiquidGlassPhone
+        ? liquidGlassEdgeSpacing
+        : BUTTON_SPACING,
+    };
+  } else if (Platform.OS === 'ios') {
+    // When status bar height is provided, add spacing below it
+    // Otherwise, use a smaller top margin to align with the header content
+    searchBarSpacingStyle = {
+      marginTop: statusBarSpacing
+        ? statusBarSpacing + BUTTON_SPACING
+        : BUTTON_SPACING - STATUS_BAR_TOP_ADJUSTMENT,
+      marginBottom: BUTTON_SPACING,
+      marginHorizontal: BUTTON_SPACING,
+    };
+  } else {
+    searchBarSpacingStyle = {
+      marginTop: statusBarSpacing,
+    };
+  }
+
   return (
     <Animated.View
       style={[
@@ -401,9 +450,9 @@ export function Header(props: Props) {
           styles.content,
           {
             pointerEvents: searchBarVisible ? 'none' : 'auto',
-            marginTop: statusBarSpacing,
             opacity: headerOpacity,
           },
+          contentSpacingStyle,
         ]}
       >
         <UNSTABLE_CornerInset direction="horizontal" edge="left" />
@@ -413,7 +462,9 @@ export function Header(props: Props) {
             headerTitleAlign === 'center' ? styles.expand : styles.shrink,
             {
               minWidth: buttonMinWidth,
-              marginStart: insets.left,
+              marginStart: isLiquidGlassPhone
+                ? liquidGlassEdgeSpacing - BUTTON_OFFSET
+                : insets.left,
             },
           ]}
         >
@@ -444,7 +495,9 @@ export function Header(props: Props) {
             styles.expand,
             {
               minWidth: buttonMinWidth,
-              marginEnd: insets.right,
+              marginEnd: isLiquidGlassPhone
+                ? liquidGlassEdgeSpacing - BUTTON_OFFSET
+                : insets.right,
             },
           ]}
         >
@@ -497,14 +550,17 @@ export function Header(props: Props) {
       {searchBarRendered ? (
         <HeaderSearchBar
           {...headerSearchBarOptions}
-          statusBarHeight={statusBarSpacing}
           visible={searchBarVisible}
           onClose={() => {
             setSearchBarVisible(false);
             headerSearchBarOptions?.onClose?.();
           }}
           tintColor={headerTintColor}
-          style={[StyleSheet.absoluteFill, { opacity: searchBarOpacity }]}
+          style={[
+            StyleSheet.absoluteFill,
+            searchBarSpacingStyle,
+            { opacity: searchBarOpacity },
+          ]}
         />
       ) : null}
     </Animated.View>
