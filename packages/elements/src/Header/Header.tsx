@@ -1,6 +1,6 @@
 import {
   MaterialSymbol,
-  UNSTABLE_CornerInset,
+  UNSTABLE_LayoutInset,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -456,7 +456,11 @@ export function Header(props: Props) {
           contentSpacingStyle,
         ]}
       >
-        <UNSTABLE_CornerInset direction="horizontal" edge="left" />
+        <UNSTABLE_LayoutInset
+          cornerAdaptation="horizontal"
+          collapseUnlessAdapted
+          edge="left"
+        />
         <View
           style={[
             styles.start,
