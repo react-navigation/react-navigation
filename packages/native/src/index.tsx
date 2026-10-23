@@ -7,10 +7,9 @@ export { Link } from './Link';
 export { LinkingContext } from './LinkingContext';
 export { LocaleDirContext } from './LocaleDirContext';
 export {
-  type CornerInsetProps,
-  type CornerInsetRef,
-  CornerInset as UNSTABLE_CornerInset,
-} from './native/CornerInset';
+  type LayoutInsetProps,
+  LayoutInset as UNSTABLE_LayoutInset,
+} from './native/LayoutInset';
 export {
   MaterialSymbol,
   type MaterialSymbolProps,
