@@ -82,6 +82,12 @@
   ReactNavigationSFSymbolViewImpl * _view;
 }
 
+- (void)setSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute
+{
+  [super setSemanticContentAttribute:semanticContentAttribute];
+  _view.semanticContentAttribute = semanticContentAttribute;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
   if (self = [super initWithFrame:frame]) {

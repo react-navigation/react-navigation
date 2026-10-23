@@ -164,7 +164,7 @@ import UIKit
     }
 
     if !needsImageUpdate && props.color != oldProps.color && props.renderingMode == "monochrome" {
-      imageView.tintColor = props.color
+      imageView.tintColor = props.colorPrimary ?? props.color
     }
 
     let effectChanged =
