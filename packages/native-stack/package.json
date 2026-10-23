@@ -46,24 +46,23 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "workspace:^",
-    "warn-once": "^0.1.1"
+    "@react-navigation/elements": "workspace:^"
   },
   "devDependencies": {
-    "@jest/globals": "^30.4.1",
+    "@jest/globals": "^30.5.2",
     "@react-navigation/native": "workspace:^",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/react-native": "^14.0.0",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/react": "~19.2.17",
-    "del-cli": "^7.0.0",
-    "react": "19.2.3",
-    "react-native": "0.85.3",
-    "react-native-builder-bob": "^0.43.0",
-    "react-native-safe-area-context": "~5.10.0",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/react-native": "^14.1.0",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/react": "~19.3.0",
+    "del-cli": "^8.0.1",
+    "react": "19.3.0",
+    "react-native": "0.88.0",
+    "react-native-builder-bob": "^0.44.1",
+    "react-native-safe-area-context": "~5.10.1",
     "react-native-screens": "^4.30.0",
-    "react-native-web": "~0.21.2",
-    "test-renderer": "1.2.0",
+    "react-native-web": "~0.21.4",
+    "test-renderer": "1.3.1",
     "typescript": "^6.0.3"
   },
   "peerDependencies": {

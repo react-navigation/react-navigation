@@ -137,10 +137,8 @@ export function HeaderSearchBar({
     if (Platform.OS === 'web') {
       document?.body?.addEventListener?.('keyup', onKeyup);
     } else {
-      // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
       backHandlerSubscription = BackHandler.addEventListener(
         'hardwareBackPress',
-        // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
         () => {
           cancelSearch();
           return true;
@@ -207,10 +205,12 @@ export function HeaderSearchBar({
             name="magnifyingglass"
             size={SEARCH_ICON_SIZE}
             color={textColor}
-            style={StyleSheet.flatten([
-              styles.inputSearchIconIos,
-              !isLiquidGlassSupported && styles.inputSearchIconIosLegacy,
-            ])}
+            style={
+              StyleSheet.flatten([
+                styles.inputSearchIconIos,
+                !isLiquidGlassSupported && styles.inputSearchIconIosLegacy,
+              ]) ?? undefined
+            }
           />
         ) : null}
         <TextInput
@@ -269,30 +269,33 @@ export function HeaderSearchBar({
         ) : null}
       </HeaderButtonBackground>
       {Platform.OS !== 'ios' ? (
-        <HeaderButton
-          accessibilityLabel={clearButtonAccessibilityLabel}
-          onPress={onClear}
+        <Animated.View
           style={[styles.closeButton, { opacity: clearVisibleAnim }]}
         >
-          <HeaderIcon
-            icon={Platform.select({
-              android: MaterialSymbol.isAvailable()
-                ? {
-                    type: 'materialSymbol',
-                    name: 'close',
-                  }
-                : {
-                    type: 'image',
-                    source: closeIcon,
-                  },
-              default: {
-                type: 'image',
-                source: closeIcon,
-              },
-            })}
-            color={textColor}
-          />
-        </HeaderButton>
+          <HeaderButton
+            accessibilityLabel={clearButtonAccessibilityLabel}
+            onPress={onClear}
+          >
+            <HeaderIcon
+              icon={Platform.select({
+                android: MaterialSymbol.isAvailable()
+                  ? {
+                      type: 'materialSymbol',
+                      name: 'close',
+                    }
+                  : {
+                      type: 'image',
+                      source: closeIcon,
+                    },
+                default: {
+                  type: 'image',
+                  source: closeIcon,
+                },
+              })}
+              color={textColor}
+            />
+          </HeaderButton>
+        </Animated.View>
       ) : null}
       {Platform.OS === 'ios' ? (
         isLiquidGlassSupported ? (
@@ -365,6 +368,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     right: BUTTON_SPACING,
     height: '100%',
+    justifyContent: 'center',
   },
   closeButtonContainerIos: {
     alignSelf: 'center',

@@ -43,6 +43,7 @@ export type {
   StackAnimationName,
   StackCardInterpolatedStyle,
   StackCardInterpolationProps,
+  StackCardOverlayProps,
   StackCardStyleInterpolator,
   StackHeaderInterpolatedStyle,
   StackHeaderInterpolationProps,

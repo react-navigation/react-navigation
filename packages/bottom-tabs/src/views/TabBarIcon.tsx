@@ -1,6 +1,6 @@
 import { Badge, type Icon, PlatformIcon } from '@react-navigation/elements';
 import { MissingIcon } from '@react-navigation/elements/internal';
-import { type Route } from '@react-navigation/native';
+import type { Route } from '@react-navigation/native';
 import * as React from 'react';
 import {
   type ColorValue,
