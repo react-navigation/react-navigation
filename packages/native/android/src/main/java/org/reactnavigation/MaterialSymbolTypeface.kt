@@ -13,21 +13,9 @@ object MaterialSymbolTypeface {
   private val typefaces = ConcurrentHashMap<String, Typeface>()
   private var availableFonts: Map<String, Map<Int, Set<Boolean>>>? = null
   private var symbols: Map<String, String>? = null
-  private var autoMirroredSymbols: Set<String>? = null
 
   fun isAvailable(context: Context): Boolean {
     return getAvailableFonts(context).isNotEmpty()
-  }
-
-  fun isAutoMirrored(context: Context, name: String): Boolean {
-    autoMirroredSymbols?.let { return it.contains(name) }
-
-    val result = context.assets.open("fonts/MaterialSymbols.mirrored").bufferedReader()
-      .useLines { lines -> lines.toSet() }
-
-    autoMirroredSymbols = result
-
-    return result.contains(name)
   }
 
   fun get(context: Context, variant: String?, weight: Int?, fill: Boolean?): MaterialSymbolTypefaceResult {

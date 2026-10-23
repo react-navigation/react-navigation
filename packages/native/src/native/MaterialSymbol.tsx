@@ -40,8 +40,10 @@ import MaterialSymbolsSharp600 from '@react-navigation/material-symbols/assets/f
 import MaterialSymbolsSharp600Filled from '@react-navigation/material-symbols/assets/fonts/MaterialSymbolsSharp_600_Filled.woff2';
 import MaterialSymbolsSharp700 from '@react-navigation/material-symbols/assets/fonts/MaterialSymbolsSharp_700.woff2';
 import MaterialSymbolsSharp700Filled from '@react-navigation/material-symbols/assets/fonts/MaterialSymbolsSharp_700_Filled.woff2';
+import * as React from 'react';
 import type { ImageSourcePropType, ViewStyle } from 'react-native';
 
+import { LocaleDirContext } from '../LocaleDirContext';
 import { FONT_WEIGHTS } from './constants';
 import type {
   MaterialSymbolImageSourceOptions,
@@ -145,6 +147,11 @@ const CSS_TEXT = [
     .${ID}::before {
       content: attr(data-name);
     }
+
+    /* Swap in the mirrored glyphs for supported symbols */
+    .${ID}:dir(rtl) {
+      font-feature-settings: 'ss01';
+    }
   `,
 ].join('\n');
 
@@ -157,6 +164,8 @@ export function MaterialSymbol({
   color = 'black',
   style,
 }: MaterialSymbolProps): React.ReactElement {
+  const direction = React.use(LocaleDirContext);
+
   if (typeof color !== 'string') {
     throw new Error(
       `Invalid color value ${JSON.stringify(color)} for Material Symbol "${name}".`
@@ -171,6 +180,7 @@ export function MaterialSymbol({
       <span
         aria-hidden
         className={ID}
+        dir={direction}
         data-name={name}
         style={{
           boxSizing: 'border-box',
