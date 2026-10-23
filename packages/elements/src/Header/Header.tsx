@@ -1,6 +1,6 @@
 import {
   MaterialSymbol,
-  UNSTABLE_CornerInset,
+  UNSTABLE_LayoutRegionView,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -456,7 +456,12 @@ export function Header(props: Props) {
           contentSpacingStyle,
         ]}
       >
-        <UNSTABLE_CornerInset direction="horizontal" edge="left" />
+        <UNSTABLE_LayoutRegionView
+          region="safeArea"
+          cornerAdaptation="horizontal"
+          cornerAdaptationOnly
+          edges={{ start: 'additive' }}
+        />
         <View
           style={[
             styles.start,
@@ -547,6 +552,12 @@ export function Header(props: Props) {
             ) : null}
           </HeaderButtonBackground>
         </View>
+        <UNSTABLE_LayoutRegionView
+          region="safeArea"
+          cornerAdaptation="horizontal"
+          cornerAdaptationOnly
+          edges={{ end: 'additive' }}
+        />
       </Animated.View>
       {searchBarRendered ? (
         <HeaderSearchBar

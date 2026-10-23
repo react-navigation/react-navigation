@@ -583,3 +583,93 @@ export type ReservedRegionsProps = {
    */
   ref?: React.Ref<HostInstance> | undefined;
 };
+
+type LayoutRegionEdge = 'top' | 'bottom' | 'start' | 'end';
+
+export type LayoutRegionInsetsChangeEvent = {
+  /**
+   * The insets of the region for the view.
+   */
+  insets: Record<LayoutRegionEdge, number>;
+};
+
+export type LayoutRegionViewProps = (
+  | ({
+      /**
+       * The layout region to get the insets from:
+       * - `safeArea` - the area that isn't covered by system UI, such as the status bar, the navigation bar or window controls.
+       * - `readableContent` - the area with a comfortable width for reading text. Requires iOS 26+.
+       */
+      region: 'safeArea' | 'readableContent';
+    } & (
+      | {
+          /**
+           * The direction to inset the content in to avoid the corners of the window.
+           * e.g. on iPadOS, the content is placed next to the window controls with `horizontal`,
+           * and below the window controls with `vertical`.
+           *
+           * The region isn't adapted to the corners if not specified.
+           *
+           * Requires iOS 26+. Ignored on older versions.
+           */
+          cornerAdaptation: 'horizontal' | 'vertical';
+          /**
+           * Whether to only add the space needed to avoid the corners, without the rest of the region.
+           * e.g. the space for the window controls on iPadOS, without the safe area.
+           *
+           * Useful when the region is already handled in the content, such as with the safe area insets.
+           *
+           * @default false
+           */
+          cornerAdaptationOnly?: boolean | undefined;
+        }
+      | {
+          cornerAdaptation?: undefined;
+          cornerAdaptationOnly?: undefined;
+        }
+    ))
+  | {
+      /**
+       * The layout region to get the insets from:
+       * - `bar` - the area for the content of a bar, such as a header
+       *
+       * Requires iOS 27.1+. The insets are 0 on older versions.
+       */
+      region: 'bar';
+      /**
+       * The edge where the bar is placed.
+       */
+      onEdge: LayoutRegionEdge;
+      /**
+       * The size of the bar's content perpendicular to the edge.
+       * e.g. the height of the content of a header on the top edge.
+       */
+      extent: number;
+    }
+) & {
+  /**
+   * The edges to apply the insets of the region to as padding, and how they're combined with the padding from `style`:
+   * - `additive` - the inset is added to the padding from `style`
+   * - `maximum` - the larger of the inset and the padding from `style` is used
+   *
+   * Non-numeric values for padding (such as percentages) are treated as 0 when there's an inset.
+   *
+   * If `edges` is not specified, or a particular edge is not included in `edges`,
+   * the insets for that edge are not applied as the padding.
+   */
+  edges?: Partial<Record<LayoutRegionEdge, 'additive' | 'maximum'>> | undefined;
+  /**
+   * Callback called with an event containing the insets of the region on measurement and changes.
+   */
+  onInsetsChange?:
+    | ((event: NativeSyntheticEvent<LayoutRegionInsetsChangeEvent>) => void)
+    | undefined;
+  /**
+   * Style object for the view.
+   */
+  style?: (React.CSSProperties & ViewStyle) | undefined;
+  /**
+   * Content to lay out inside the region.
+   */
+  children?: React.ReactNode;
+};
