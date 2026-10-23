@@ -20,6 +20,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import { nativeNanoSymbol } from 'react-native-nano-icons/symbols';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import iconCirclePlay from '../../assets/icons/circle-play.png';
@@ -613,12 +614,13 @@ const BottomTabsShowcaseNavigator = createBottomTabNavigator({
       options: {
         title: 'For You',
         tabBarButtonTestID: 'showcase-bottom-tabs-for-you',
-        tabBarIcon: Platform.select<Icon>({
-          ios: { type: 'sfSymbol', name: 'play.circle' },
-          android: { type: 'materialSymbol', name: 'play_circle' },
-          default: { type: 'image', source: iconCirclePlay },
-        }),
-        tabBarBadge: 3,
+        tabBarIcon: ({ focused }) =>
+          Platform.OS === 'web'
+            ? { type: 'image', source: iconCirclePlay }
+            : nativeNanoSymbol(
+                'for-you',
+                focused ? 'multicolor' : 'monochrome'
+              ),
       },
     }),
 
@@ -632,6 +634,7 @@ const BottomTabsShowcaseNavigator = createBottomTabNavigator({
           android: { type: 'materialSymbol', name: 'cell_tower' },
           default: { type: 'image', source: iconRadioTower },
         }),
+        tabBarBadge: 3,
         tabBarMinimizeBehavior: 'onScrollDown',
       },
     }),
