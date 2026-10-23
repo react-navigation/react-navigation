@@ -476,6 +476,12 @@ export function useNavigationBuilder<
   const setState = useLatestCallback(
     (state: State | PartialState<State> | undefined) => {
       if (mountStateRef.current !== 'mounted') {
+        // Store the state locally, so we can use it in these cases:
+        // - If the navigator is in `Activity`, its state gets cleaned up when it's hidden
+        //   So we use this state to restore it when it's shown again
+        // - If a screen navigates in an effect when the navigator mounts
+        //   Child effects run first, so the navigation happens before the navigator's mount effect
+        //   Then we use this state in the mount effect instead of the outdated state from render
         savedStateRef.current = state;
       }
 

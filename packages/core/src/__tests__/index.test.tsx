@@ -684,12 +684,12 @@ test('preserves initial state when navigator mount is delayed in StrictMode', as
   expect(navigation.getCurrentRoute()?.name).toBe('bar');
 });
 
-test.each([false, true])(
-  'preserves mount-time navigation when a navigator mounts later (StrictMode: %s)',
-  async (strictMode) => {
+test.each([{ strict: false }, { strict: true }])(
+  'preserves navigation from a screen effect when navigator mount is delayed (strict mode: $strict)',
+  async ({ strict }) => {
     const TestNavigator = (props: any): any => {
       const { state, descriptors, render } = useNavigationBuilder(
-        StackRouter,
+        MockRouter,
         props
       );
 
@@ -702,50 +702,52 @@ test.each([false, true])(
       return render(descriptors[route.key]?.render());
     };
 
-    const FooScreen = ({ navigation }: any): any => {
-      const hasReplaced = React.useRef(false);
+    const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
+
+    const FooScreen = (props: any) => {
+      const isNavigatedRef = React.useRef(false);
 
       React.useEffect(() => {
-        if (!hasReplaced.current) {
-          hasReplaced.current = true;
-          navigation.replace('bar');
+        // Only navigate in the first run in strict mode
+        if (!isNavigatedRef.current) {
+          isNavigatedRef.current = true;
+          props.navigation.navigate('bar');
         }
-      }, [navigation]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
 
-      return <Text>[foo]</Text>;
+      return <TestScreen {...props} />;
     };
-
-    const BarScreen = (): any => <Text>[bar]</Text>;
 
     const navigation = createNavigationContainerRef<ParamListBase>();
 
-    const Test = ({ ready }: { ready: boolean }) => (
-      <BaseNavigationContainer ref={navigation}>
-        {ready ? (
-          <TestNavigator>
-            <Screen name="foo" component={FooScreen} />
-            <Screen name="bar" component={BarScreen} />
-          </TestNavigator>
-        ) : null}
-      </BaseNavigationContainer>
+    const Wrapper = strict ? React.StrictMode : React.Fragment;
+
+    const Test = ({ condition }: { condition: boolean }) => (
+      <Wrapper>
+        <BaseNavigationContainer ref={navigation}>
+          {condition ? (
+            <TestNavigator>
+              <Screen name="foo" component={FooScreen} />
+              <Screen name="bar" component={TestScreen} />
+            </TestNavigator>
+          ) : null}
+        </BaseNavigationContainer>
+      </Wrapper>
     );
 
-    const element = (ready: boolean) =>
-      strictMode ? (
-        <React.StrictMode>
-          <Test ready={ready} />
-        </React.StrictMode>
-      ) : (
-        <Test ready={ready} />
-      );
+    const root = await render(<Test condition={false} />);
 
-    const root = await render(element(false));
+    await root.rerender(<Test condition />);
 
-    await root.rerender(element(true));
-
+    expect(root).toMatchInlineSnapshot(`
+      <Text>
+        [
+        bar
+        ]
+      </Text>
+    `);
     expect(navigation.getCurrentRoute()?.name).toBe('bar');
-    expect(root.getByText('[bar]')).toBeDefined();
-    expect(root.queryByText('[foo]')).toBeNull();
   }
 );
 
