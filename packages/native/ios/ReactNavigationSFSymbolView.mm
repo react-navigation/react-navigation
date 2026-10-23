@@ -51,7 +51,11 @@ static ReactNavigationSFSymbolViewImplProps *convertProps(const Props::Shared &p
 
     swiftProps.name = RCTNSStringFromString(viewProps.name);
     swiftProps.size = viewProps.size;
-    swiftProps.color = RCTUIColorFromSharedColor(viewProps.color);
+
+    if (viewProps.color) {
+        swiftProps.color = RCTUIColorFromSharedColor(viewProps.color);
+    }
+
     swiftProps.weight = viewProps.weight;
     swiftProps.scale = RCTNSStringFromString(viewProps.scale);
     swiftProps.variableValue = viewProps.variableValue;
