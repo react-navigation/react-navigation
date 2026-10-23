@@ -128,6 +128,17 @@
         },
         "ReactNavigationCornerInsetView": {
           "className": "ReactNavigationCornerInsetView"
+        },
+        "ReactNavigationLiquidGlassView": {
+          "className": "ReactNavigationLiquidGlassView"
+        },
+        "ReactNavigationLiquidGlassContainerView": {
+          "className": "ReactNavigationLiquidGlassContainerView"
+        }
+      },
+      "modules": {
+        "ReactNavigationLiquidGlassModule": {
+          "className": "ReactNavigationLiquidGlassModule"
         }
       }
     }

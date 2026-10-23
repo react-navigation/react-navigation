@@ -12,6 +12,13 @@ export {
   CornerInset as UNSTABLE_CornerInset,
 } from './native/CornerInset';
 export {
+  type LiquidGlassContainerViewProps,
+  type LiquidGlassViewProps,
+  isLiquidGlassSupported as UNSTABLE_isLiquidGlassSupported,
+  LiquidGlassContainerView as UNSTABLE_LiquidGlassContainerView,
+  LiquidGlassView as UNSTABLE_LiquidGlassView,
+} from './native/LiquidGlass';
+export {
   MaterialSymbol,
   type MaterialSymbolProps,
 } from './native/MaterialSymbol';

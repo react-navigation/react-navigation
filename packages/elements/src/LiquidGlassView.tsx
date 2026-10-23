@@ -1,24 +1,17 @@
 import type {
   LiquidGlassContainerViewProps,
   LiquidGlassViewProps,
-} from '@callstack/liquid-glass';
+} from '@react-navigation/native';
 import { Animated, View } from 'react-native';
 
-type AnimatedLiquidGlassViewProps =
-  Animated.AnimatedProps<LiquidGlassViewProps>;
+export const AnimatedLiquidGlassView: Animated.AnimatedComponent<
+  LiquidGlassViewProps,
+  React.ComponentRef<typeof View>
+> = Animated.View;
 
-type AnimatedLiquidGlassContainerViewProps =
-  Animated.AnimatedProps<LiquidGlassContainerViewProps>;
-
-export const LiquidGlassView: React.ComponentType<LiquidGlassViewProps> = View;
-
-export const LiquidGlassContainerView: React.ComponentType<LiquidGlassContainerViewProps> =
-  View;
-
-export const AnimatedLiquidGlassView: React.ComponentType<AnimatedLiquidGlassViewProps> =
-  Animated.View;
-
-export const AnimatedLiquidGlassContainerView: React.ComponentType<AnimatedLiquidGlassContainerViewProps> =
-  Animated.View;
+export const AnimatedLiquidGlassContainerView: Animated.AnimatedComponent<
+  LiquidGlassContainerViewProps,
+  React.ComponentRef<typeof View>
+> = Animated.View;
 
 export const isLiquidGlassSupported = false;
