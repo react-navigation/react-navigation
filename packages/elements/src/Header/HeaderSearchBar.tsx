@@ -1,6 +1,7 @@
 import {
   MaterialSymbol,
   SFSymbol,
+  useLocale,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -76,6 +77,7 @@ export function HeaderSearchBar({
 }: Props) {
   const navigation = useNavigation();
   const { dark, colors, fonts } = useTheme();
+  const { direction } = useLocale();
   const [value, setValue] = React.useState('');
   const [clearVisibleAnim] = React.useState(() => new Animated.Value(0));
 
@@ -188,6 +190,8 @@ export function HeaderSearchBar({
         },
         style,
       ]}
+      // @ts-expect-error: `dir` is supported by React Native Web but missing in React Native's types
+      dir={Platform.OS === 'web' ? direction : undefined}
     >
       {Platform.OS !== 'ios' ? (
         <HeaderBackButton
@@ -237,6 +241,11 @@ export function HeaderSearchBar({
                   ? 'rgba(255, 255, 255, 0.1)'
                   : 'rgba(0, 0, 0, 0.1)',
               },
+            {
+              // TextInput doesn't align text based on the layout direction automatically
+              // So we manually set it based on the layout direction
+              textAlign: direction === 'rtl' ? 'right' : 'left',
+            },
             { color: textColor },
           ]}
         />
@@ -350,12 +359,12 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignSelf: 'center',
-    marginLeft: BUTTON_SPACING / 2,
+    marginStart: BUTTON_SPACING / 2,
   },
   closeButton: {
     position: 'absolute',
     opacity: 0.5,
-    right: BUTTON_SPACING,
+    end: BUTTON_SPACING,
     height: '100%',
     justifyContent: 'center',
   },
@@ -417,8 +426,8 @@ const styles = StyleSheet.create({
           : null),
       },
       default: {
-        paddingLeft: BUTTON_SPACING,
-        paddingRight: BUTTON_SIZE + BUTTON_SPACING,
+        paddingStart: BUTTON_SPACING,
+        paddingEnd: BUTTON_SIZE + BUTTON_SPACING,
       },
     }),
   },
