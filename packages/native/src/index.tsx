@@ -15,6 +15,11 @@ export {
   MaterialSymbol,
   type MaterialSymbolProps,
 } from './native/MaterialSymbol';
+export {
+  type ReservedRegion,
+  type ReservedRegionsProps,
+  ReservedRegions as UNSTABLE_ReservedRegions,
+} from './native/ReservedRegions';
 export { SFSymbol, type SFSymbolProps } from './native/SFSymbol';
 export { NavigationContainer } from './NavigationContainer';
 export { DarkTheme } from './theming/DarkTheme';
