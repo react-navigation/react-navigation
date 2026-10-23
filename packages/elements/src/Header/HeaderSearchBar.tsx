@@ -205,12 +205,7 @@ export function HeaderSearchBar({
             name="magnifyingglass"
             size={SEARCH_ICON_SIZE}
             color={textColor}
-            style={
-              StyleSheet.flatten([
-                styles.inputSearchIconIos,
-                !isLiquidGlassSupported && styles.inputSearchIconIosLegacy,
-              ]) ?? undefined
-            }
+            style={styles.inputSearchIconIos}
           />
         ) : null}
         <TextInput
@@ -256,7 +251,6 @@ export function HeaderSearchBar({
                 transform: [{ scale: clearVisibleAnim }],
               },
               styles.clearButtonIos,
-              !isLiquidGlassSupported && styles.clearButtonIosLegacy,
             ]}
           >
             <SFSymbol
@@ -337,8 +331,8 @@ const SEARCHBAR_FONT_SIZE = Platform.OS === 'ios' ? 17 : 18;
 const SEARCHBAR_ICON_SPACING = 5;
 const SEARCHBAR_HEIGHT_IOS = isLiquidGlassSupported ? BUTTON_SIZE : 36;
 
-// The top inset on iOS is a bit less than the status bar height
-const SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS = -4;
+// Native cancel button is slightly above the center of the search bar
+const CANCEL_BUTTON_OFFSET_IOS = -1;
 
 const styles = StyleSheet.create({
   container: {
@@ -353,11 +347,6 @@ const styles = StyleSheet.create({
     marginTop: -SEARCH_ICON_SIZE / 2,
     height: SEARCH_ICON_SIZE,
     width: SEARCH_ICON_SIZE,
-  },
-  inputSearchIconIosLegacy: {
-    marginTop:
-      -SEARCH_ICON_SIZE / 2 +
-      (SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS - SEARCHBAR_ICON_SPACING) / 2,
   },
   backButton: {
     alignSelf: 'center',
@@ -382,9 +371,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  clearButtonIosLegacy: {
-    top: SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS - SEARCHBAR_ICON_SPACING,
-  },
   clearIconIos: {
     height: CLEAR_ICON_SIZE,
     width: CLEAR_ICON_SIZE,
@@ -392,6 +378,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     alignSelf: 'center',
+    transform: [{ translateY: CANCEL_BUTTON_OFFSET_IOS }],
   },
   cancelText: {
     fontSize: CANCEL_FONT_SIZE,
@@ -405,7 +392,9 @@ const styles = StyleSheet.create({
       ios: isLiquidGlassSupported
         ? {}
         : {
+            height: SEARCHBAR_HEIGHT_IOS,
             minHeight: SEARCHBAR_HEIGHT_IOS,
+            alignSelf: 'center',
           },
       default: {
         borderRadius: 0,
@@ -422,8 +411,6 @@ const styles = StyleSheet.create({
           BUTTON_SPACING + SEARCH_ICON_SIZE + SEARCHBAR_ICON_SPACING * 2,
         ...(!isLiquidGlassSupported
           ? {
-              marginTop: SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS,
-              marginBottom: SEARCHBAR_ICON_SPACING,
               borderRadius: BUTTON_SPACING,
               borderCurve: 'continuous',
             }
