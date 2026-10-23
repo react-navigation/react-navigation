@@ -925,3 +925,37 @@ describe('useHeaderHeight in native-stack', () => {
     expect(headerHeight).toBe(0);
   });
 });
+
+test('notifies the covered route when a native modal transition finishes', async () => {
+  const Stack = createNativeStackNavigator<StackParamList>();
+  const received: string[] = [];
+  const navigation = createNavigationContainerRef<StackParamList>();
+  const Test = ({ route }: NativeStackScreenProps<StackParamList>) => (
+    <Text>Screen {route.name}</Text>
+  );
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator
+        screenListeners={({ route }) => ({
+          finishTransitioning: () => received.push(route.name),
+        })}
+      >
+        <Stack.Screen name="A" component={Test} />
+        <Stack.Screen
+          name="B"
+          component={Test}
+          options={{ presentation: 'modal' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('B'));
+  await fireEvent(screen.getByText('Screen B'), 'finishTransitioning', {
+    nativeEvent: {},
+  });
+
+  expect(received).toEqual(['A', 'B']);
+  expect(navigation.getCurrentRoute()?.name).toBe('B');
+});
