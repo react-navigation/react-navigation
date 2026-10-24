@@ -3,7 +3,7 @@ import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
 import type { NavigationProp } from './types';
-import { CanGoBackContext, CanGoBackRouteKeysContext } from './useCanGoBack';
+import { CanGoBackRouteProvider } from './useCanGoBack';
 import {
   FocusedRouteKeyContext,
   IsFocusedContext,
@@ -70,12 +70,6 @@ export function NavigationProvider({ route, navigation, children }: Props) {
 
   const getIsFocused = useLatestCallback(() => isFocused);
 
-  const parentCanGoBack = React.use(CanGoBackContext);
-  const canGoBack =
-    parentCanGoBack ||
-    React.use(CanGoBackRouteKeysContext)?.has(route.key) ||
-    false;
-
   return React.useMemo(
     () => (
       <NamedNavigationStateListenerProvider name={route.name}>
@@ -85,11 +79,11 @@ export function NavigationProvider({ route, navigation, children }: Props) {
               <NavigationContext.Provider value={navigation}>
                 <IsFocusedContext.Provider value={isFocused}>
                   <IsFocusedGetterContext.Provider value={getIsFocused}>
-                    <CanGoBackContext.Provider value={canGoBack}>
+                    <CanGoBackRouteProvider routeKey={route.key}>
                       <IsScreenContext.Provider value={true}>
                         {children}
                       </IsScreenContext.Provider>
-                    </CanGoBackContext.Provider>
+                    </CanGoBackRouteProvider>
                   </IsFocusedGetterContext.Provider>
                 </IsFocusedContext.Provider>
               </NavigationContext.Provider>
@@ -101,7 +95,6 @@ export function NavigationProvider({ route, navigation, children }: Props) {
     [
       NamedRouteContext,
       NamedRouteContextList,
-      canGoBack,
       children,
       getIsFocused,
       isFocused,

@@ -34,7 +34,7 @@ import {
   type RouteConfig,
 } from './types';
 import { UnhandledActionContext } from './UnhandledActionContext';
-import { CanGoBackContext, CanGoBackRouteKeysContext } from './useCanGoBack';
+import { CanGoBackProvider } from './useCanGoBack';
 import { useChildListeners } from './useChildListeners';
 import { type ScreenConfigWithParent, useDescriptors } from './useDescriptors';
 import { useEventEmitter } from './useEventEmitter';
@@ -1032,47 +1032,6 @@ export function useNavigationBuilder<
     );
   });
 
-  const parentCanGoBack = React.use(CanGoBackContext);
-  const canGoBackRouteKeysRef = React.useRef<Set<string>>(undefined);
-
-  // TODO: this can affect rendering performance of all navigators
-  const canGoBackRouteKeys = React.useMemo(() => {
-    if (parentCanGoBack) {
-      return undefined;
-    }
-
-    const keys = new Set<string>();
-    const options = {
-      routeNames: state.routeNames,
-      routeParamList: {},
-      routeGetIdList: {},
-    };
-
-    for (const route of state.routes) {
-      if (
-        router.getStateForAction(
-          state,
-          { ...CommonActions.goBack(), source: route.key },
-          options
-        ) !== null
-      ) {
-        keys.add(route.key);
-      }
-    }
-
-    const previous = canGoBackRouteKeysRef.current;
-
-    return previous &&
-      keys.size === previous.size &&
-      Array.from(keys).every((key) => previous.has(key))
-      ? previous
-      : keys;
-  }, [parentCanGoBack, router, state]);
-
-  React.useInsertionEffect(() => {
-    canGoBackRouteKeysRef.current = canGoBackRouteKeys;
-  }, [canGoBackRouteKeys]);
-
   const navigation = useNavigationHelpers<
     State,
     ActionHelpers,
@@ -1149,13 +1108,18 @@ export function useNavigationBuilder<
           subscribe={subscribe}
         >
           <FocusedRouteKeyContext.Provider value={focusedRoute.key}>
-            <CanGoBackRouteKeysContext.Provider value={canGoBackRouteKeys}>
+            <CanGoBackProvider
+              router={router}
+              state={state}
+              getState={getState}
+              isSynced={!shouldUpdate}
+            >
               <PreventRemoveProvider>
                 <IsScreenContext.Provider value={false}>
                   {element}
                 </IsScreenContext.Provider>
               </PreventRemoveProvider>
-            </CanGoBackRouteKeysContext.Provider>
+            </CanGoBackProvider>
           </FocusedRouteKeyContext.Provider>
         </NavigationStateListenerProvider>
       </NavigationHelpersContext.Provider>

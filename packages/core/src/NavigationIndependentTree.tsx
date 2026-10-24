@@ -14,7 +14,7 @@ import {
 import { NavigationRootContext } from './NavigationRootContext';
 import { PreventRemoveContext } from './PreventRemoveContext';
 import { StaticTreeContext } from './StaticTreeContext';
-import { CanGoBackContext, CanGoBackRouteKeysContext } from './useCanGoBack';
+import { CanGoBackContext, CanGoBackListenerContext } from './useCanGoBack';
 import {
   FocusedRouteKeyContext,
   IsFocusedContext,
@@ -56,7 +56,7 @@ export function NavigationIndependentTree({
                                 <IsFocusedGetterContext.Provider
                                   value={undefined}
                                 >
-                                  <CanGoBackRouteKeysContext.Provider
+                                  <CanGoBackListenerContext.Provider
                                     value={undefined}
                                   >
                                     <CanGoBackContext.Provider
@@ -70,7 +70,7 @@ export function NavigationIndependentTree({
                                         </NavigationFocusedRouteStateContext.Provider>
                                       </IsScreenContext.Provider>
                                     </CanGoBackContext.Provider>
-                                  </CanGoBackRouteKeysContext.Provider>
+                                  </CanGoBackListenerContext.Provider>
                                 </IsFocusedGetterContext.Provider>
                               </IsFocusedContext.Provider>
                             </NavigationContext.Provider>

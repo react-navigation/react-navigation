@@ -218,7 +218,7 @@ test('returns correct state after conditional rendering', async () => {
   expect(mismatches).toEqual([]);
 });
 
-test('only re-renders when the result changes', async () => {
+test('skips re-renders for unchanged results after the first update', async () => {
   const onRender = jest.fn();
   const navigation = createNavigationContainerRef<ParamListBase>();
 
@@ -242,26 +242,29 @@ test('only re-renders when the result changes', async () => {
   expect(onRender).toHaveBeenCalledTimes(1);
 
   await act(() => navigation.dispatch(CommonActions.setParams({ answer: 42 })));
+
+  expect(onRender).toHaveBeenCalledTimes(2);
+
   await act(() => navigation.navigate('Second'));
   await act(() => navigation.goBack());
 
-  expect(onRender).toHaveBeenCalledTimes(1);
+  expect(onRender).toHaveBeenCalledTimes(2);
 
   await act(() =>
     navigation.dispatch(CommonActions.pushParams({ answer: 43 }))
   );
 
   expect(screen.getByText('First: true')).toBeOnTheScreen();
-  expect(onRender).toHaveBeenCalledTimes(2);
+  expect(onRender).toHaveBeenCalledTimes(3);
 
   await act(() => navigation.dispatch(CommonActions.setParams({ answer: 44 })));
 
-  expect(onRender).toHaveBeenCalledTimes(2);
+  expect(onRender).toHaveBeenCalledTimes(3);
 
   await act(() => navigation.goBack());
 
   expect(screen.getByText('First: false')).toBeOnTheScreen();
-  expect(onRender).toHaveBeenCalledTimes(3);
+  expect(onRender).toHaveBeenCalledTimes(4);
 });
 
 test('keeps the previous state while navigation suspends', async () => {
@@ -394,13 +397,17 @@ test('uses local history after the parent can no longer go back', async () => {
   expect(screen.getByText('Child: true')).toBeOnTheScreen();
   expect(onRender).toHaveBeenCalledWith(true);
 
+  await act(() => navigation.dispatch(CommonActions.setParams({ answer: 0 })));
+
+  expect(onRender).toHaveBeenCalledTimes(2);
+
   await act(() =>
     navigation.dispatch(CommonActions.pushParams({ answer: 42 }))
   );
 
   const state = navigation.getRootState();
 
-  expect(onRender).toHaveBeenCalledTimes(1);
+  expect(onRender).toHaveBeenCalledTimes(2);
 
   if (state === undefined) {
     throw new Error('Expected the navigation state to be initialized.');
@@ -576,4 +583,371 @@ test('updates when the drawer opens or closes', async () => {
   await act(() => navigation.goBack());
 
   expect(screen.getByText('First: false')).toBeOnTheScreen();
+});
+
+test('only checks screens that use the hook and shares the result', async () => {
+  const navigation = createNavigationContainerRef<ParamListBase>();
+  const onCheck = jest.fn();
+  let show: (visible: boolean) => void;
+
+  const Test = () => {
+    const [visible, setVisible] = React.useState(false);
+
+    show = setVisible;
+
+    return visible ? (
+      <>
+        <TestScreen />
+        <TestScreen />
+      </>
+    ) : null;
+  };
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator
+        router={(router) => ({
+          getStateForAction(state, action, options) {
+            if (action.type === 'GO_BACK') {
+              onCheck(action.source);
+            }
+
+            return router.getStateForAction(state, action, options);
+          },
+        })}
+      >
+        <Screen name="First" component={Test} />
+        <Screen name="Second">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => navigation.dispatch(CommonActions.setParams({ answer: 1 })));
+
+  expect(onCheck).not.toHaveBeenCalled();
+
+  await act(() => show(true));
+
+  expect(screen.getAllByText('First: false')).toHaveLength(2);
+  expect(onCheck).toHaveBeenCalledTimes(1);
+
+  await act(() => navigation.navigate('Second'));
+
+  expect(onCheck).toHaveBeenCalledTimes(2);
+  expect(onCheck).toHaveBeenLastCalledWith(
+    navigation.getRootState()?.routes[0]?.key
+  );
+
+  await act(() => show(false));
+  await act(() => navigation.dispatch(CommonActions.setParams({ answer: 2 })));
+
+  expect(onCheck).toHaveBeenCalledTimes(2);
+});
+
+test('skips local checks when the parent can go back', async () => {
+  const navigation = createNavigationContainerRef<ParamListBase>();
+  const onCheck = jest.fn();
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 1,
+        routes: [{ name: 'Home' }, { name: 'Parent' }],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="Home">{() => null}</Screen>
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator
+              router={(router) => ({
+                getStateForAction(state, action, options) {
+                  if (action.type === 'GO_BACK') {
+                    onCheck();
+                  }
+
+                  return router.getStateForAction(state, action, options);
+                },
+              })}
+            >
+              <Screen name="Child" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => navigation.dispatch(CommonActions.pushParams({ answer: 1 })));
+
+  expect(screen.getByText('Child: true')).toBeOnTheScreen();
+  expect(onCheck).not.toHaveBeenCalled();
+
+  const state = navigation.getRootState();
+
+  if (state === undefined) {
+    throw new Error('Expected the navigation state to be initialized.');
+  }
+
+  await act(() =>
+    navigation.resetRoot({
+      ...state,
+      index: 0,
+      routes: state.routes.filter((route) => route.name === 'Parent'),
+    })
+  );
+
+  expect(screen.getByText('Child: true')).toBeOnTheScreen();
+  expect(onCheck).toHaveBeenCalled();
+});
+
+test('keeps the previous parent state while navigation suspends', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
+  const TickContext = React.createContext(0);
+  let update: (tick: number) => void;
+
+  const Test = () => {
+    const canGoBack = useCanGoBack();
+    const tick = React.use(TickContext);
+
+    return <Text>{`${canGoBack}: ${tick}`}</Text>;
+  };
+
+  const Parent = () => {
+    const hasHistory = useNavigationState((state) =>
+      Boolean(state.routes[0]?.history?.length)
+    );
+
+    if (hasHistory) {
+      React.use(promise);
+    }
+
+    return (
+      <TestNavigator>
+        <Screen name="Child" component={Test} />
+      </TestNavigator>
+    );
+  };
+
+  const content = (
+    <React.Suspense fallback={<Text>Loading</Text>}>
+      <BaseNavigationContainer ref={navigation}>
+        <TestNavigator>
+          <Screen name="Parent" component={Parent} />
+        </TestNavigator>
+      </BaseNavigationContainer>
+    </React.Suspense>
+  );
+
+  const App = () => {
+    const [tick, setTick] = React.useState(0);
+
+    update = setTick;
+
+    return <TickContext.Provider value={tick}>{content}</TickContext.Provider>;
+  };
+
+  await render(<App />);
+  await act(() => navigation.dispatch(CommonActions.setParams({ answer: 0 })));
+
+  const state = navigation.getRootState();
+
+  if (state === undefined) {
+    throw new Error('Expected the navigation state to be initialized.');
+  }
+
+  await act(() =>
+    navigation.dispatch({
+      ...CommonActions.pushParams({ answer: 1 }),
+      target: state.key,
+      source: state.routes[0]?.key,
+    })
+  );
+
+  expect(screen.getByText('false: 0')).toBeOnTheScreen();
+
+  await act(() => update(1));
+
+  expect(screen.getByText('false: 1')).toBeOnTheScreen();
+  expect(screen.queryByText('Loading')).toBeNull();
+
+  await act(() => resolve());
+
+  expect(screen.getByText('true: 1')).toBeOnTheScreen();
+});
+
+test('updates when local history is removed during a pending parent navigation', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
+  let removeFirst: () => void;
+
+  const ParentStatus = () => {
+    const hasHistory = useNavigationState((state) =>
+      Boolean(state.routes[0]?.history?.length)
+    );
+
+    if (hasHistory) {
+      React.use(promise);
+    }
+
+    return null;
+  };
+
+  const ChildNavigator = () => {
+    const [includeFirst, setIncludeFirst] = React.useState(true);
+
+    removeFirst = () => setIncludeFirst(false);
+
+    return (
+      <TestNavigator>
+        {includeFirst ? <Screen name="First">{() => null}</Screen> : null}
+        <Screen name="Second" component={TestScreen} />
+      </TestNavigator>
+    );
+  };
+
+  await render(
+    <React.Suspense fallback={<Text>Loading</Text>}>
+      <BaseNavigationContainer
+        ref={navigation}
+        initialState={{
+          routes: [
+            {
+              name: 'Parent',
+              state: {
+                index: 1,
+                routes: [{ name: 'First' }, { name: 'Second' }],
+              },
+            },
+          ],
+        }}
+      >
+        <TestNavigator>
+          <Screen name="Parent">
+            {() => (
+              <>
+                <ParentStatus />
+                <ChildNavigator />
+              </>
+            )}
+          </Screen>
+        </TestNavigator>
+      </BaseNavigationContainer>
+    </React.Suspense>
+  );
+
+  await act(() => navigation.dispatch(CommonActions.setParams({ answer: 0 })));
+
+  const state = navigation.getRootState();
+
+  if (state === undefined) {
+    throw new Error('Expected the navigation state to be initialized.');
+  }
+
+  await act(() =>
+    navigation.dispatch({
+      ...CommonActions.pushParams({ answer: 1 }),
+      target: state.key,
+      source: state.routes[0]?.key,
+    })
+  );
+
+  expect(screen.getByText('Second: true')).toBeOnTheScreen();
+
+  await act(() => removeFirst());
+
+  expect(
+    screen.getByText('Second: false', { includeHiddenElements: true })
+  ).toBeOnTheScreen();
+  expect(screen.getByText('Loading')).toBeOnTheScreen();
+
+  await act(() => resolve());
+
+  expect(screen.getByText('Second: true')).toBeOnTheScreen();
+});
+
+test('uses the current state when parent and child history change together', async () => {
+  const navigation = createNavigationContainerRef<ParamListBase>();
+  const mismatches: boolean[] = [];
+  const ParentHistoryContext = React.createContext(false);
+
+  const Test = React.memo(function Test() {
+    const canGoBack = useCanGoBack();
+    const parentCanGoBack = React.use(ParentHistoryContext);
+    const childCanGoBack = useNavigationState((state) => state.index > 0);
+
+    if (canGoBack !== (parentCanGoBack || childCanGoBack)) {
+      mismatches.push(canGoBack);
+    }
+
+    return <Text>{`Child: ${canGoBack}`}</Text>;
+  });
+
+  const Parent = () => {
+    const canGoBack = useNavigationState((state) =>
+      Boolean(state.routes[0]?.history?.length)
+    );
+
+    return (
+      <ParentHistoryContext.Provider value={canGoBack}>
+        <TestNavigator>
+          <Screen name="First">{() => null}</Screen>
+          <Screen name="Second">{() => <Test />}</Screen>
+        </TestNavigator>
+      </ParentHistoryContext.Provider>
+    );
+  };
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      initialState={{
+        routes: [
+          {
+            name: 'Parent',
+            state: {
+              index: 1,
+              routes: [{ name: 'First' }, { name: 'Second' }],
+            },
+          },
+        ],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="Parent" component={Parent} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => navigation.dispatch(CommonActions.setParams({ answer: 0 })));
+
+  const state = navigation.getRootState();
+  const parent = state?.routes[0];
+  const child = parent?.state;
+
+  if (!state || !parent || !child || child.stale !== false) {
+    throw new Error('Expected the navigation state to be initialized.');
+  }
+
+  await act(() =>
+    navigation.resetRoot({
+      ...state,
+      routes: [
+        {
+          ...parent,
+          history: [{ type: 'params', params: {} }],
+          state: {
+            ...child,
+            index: 0,
+            routes: child.routes.filter((route) => route.name === 'Second'),
+          },
+        },
+      ],
+    })
+  );
+
+  expect(screen.getByText('Child: true')).toBeOnTheScreen();
+  expect(mismatches).toEqual([]);
 });
