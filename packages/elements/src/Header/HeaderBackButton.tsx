@@ -179,7 +179,13 @@ export function HeaderBackButton({
       onPress={handlePress}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
-      style={[styles.container, style]}
+      style={[
+        styles.container,
+        Platform.OS === 'android' &&
+          displayMode === 'minimal' &&
+          styles.androidMinimal,
+        style,
+      ]}
     >
       <React.Fragment>
         {renderBackImage()}
@@ -203,6 +209,10 @@ const styles = StyleSheet.create({
         marginHorizontal: 11,
       },
     }),
+  },
+  androidMinimal: {
+    minWidth: 48,
+    minHeight: 48,
   },
   label: {
     fontSize: 17,
