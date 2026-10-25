@@ -61,6 +61,7 @@ export type ChildBeforeRemoveListener = (
 ) => boolean;
 
 type NavigationBuilderContextValue = {
+  canGoBack?: ((source?: string) => boolean) | undefined;
   onAction?:
     | ((action: NavigationAction, visitedNavigators?: Set<string>) => boolean)
     | undefined;

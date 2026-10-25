@@ -420,6 +420,39 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             return null;
           }
 
+          if (action.source !== undefined) {
+            const sourceIndex = state.routes.findIndex(
+              (route) => route.key === action.source
+            );
+
+            if (sourceIndex === -1) {
+              return null;
+            }
+
+            if (backBehavior === 'history' || backBehavior === 'fullHistory') {
+              const sourceHistoryIndex = state.history.findLastIndex(
+                (item) => item.type === 'route' && item.key === action.source
+              );
+
+              if (sourceHistoryIndex !== -1) {
+                const history = state.history.filter(
+                  (item, index) =>
+                    item.type !== 'route' || index <= sourceHistoryIndex
+                );
+
+                state = {
+                  ...state,
+                  ...changeIndex<Type>(
+                    { routes: state.routes, history },
+                    sourceIndex,
+                    backBehavior,
+                    initialRouteName
+                  ),
+                };
+              }
+            }
+          }
+
           const route = state.routes[index];
 
           if (route == null) {
@@ -468,9 +501,12 @@ export function SwitchRouter<Type extends SwitchRouterType>({
                 ? { ...route, path, params }
                 : route;
 
-          const routes = state.routes.map((item, routeIndex) =>
-            routeIndex === index ? nextRoute : item
-          );
+          const routes =
+            nextRoute === route
+              ? state.routes
+              : state.routes.map((item, routeIndex) =>
+                  routeIndex === index ? nextRoute : item
+                );
 
           const updatedState: State = {
             ...state,
@@ -498,6 +534,39 @@ export function SwitchRouter<Type extends SwitchRouterType>({
         }
 
         case 'GO_BACK': {
+          if (action.source !== undefined) {
+            const sourceHistoryIndex = state.history.findLastIndex(
+              (item) => item.type === 'route' && item.key === action.source
+            );
+
+            if (sourceHistoryIndex === -1) {
+              // The source screen was never visited,
+              // so there's nothing before it to go back to
+              return null;
+            }
+
+            const sourceIndex = state.routes.findIndex(
+              (route) => route.key === action.source
+            );
+
+            // Remove the routes visited after the source from the history
+            // Since we're going back from the source route
+            const history = state.history.filter(
+              (item, index) =>
+                item.type !== 'route' || index <= sourceHistoryIndex
+            );
+
+            state = {
+              ...state,
+              ...changeIndex<Type>(
+                { routes: state.routes, history },
+                sourceIndex,
+                backBehavior,
+                initialRouteName
+              ),
+            };
+          }
+
           const focusedRoute = state.routes[state.index];
 
           if (focusedRoute == null) {
@@ -528,6 +597,9 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             return {
               ...state,
               routes,
+              preloadedRouteKeys: state.preloadedRouteKeys.filter(
+                (key) => key !== focusedRoute.key
+              ),
             };
           }
 
@@ -632,9 +704,12 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             preloadedRouteKeys: state.preloadedRouteKeys
               .filter((key) => key !== route.key)
               .concat(newRoute.key),
-            routes: state.routes.map((route, index) =>
-              index === routeIndex ? newRoute : route
-            ),
+            routes:
+              newRoute === route
+                ? state.routes
+                : state.routes.map((route, index) =>
+                    index === routeIndex ? newRoute : route
+                  ),
             history,
           };
         }

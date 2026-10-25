@@ -5,7 +5,6 @@ import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationFocusedRouteStateContext } from './NavigationFocusedRouteStateContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
-import { NavigationMetaContext } from './NavigationMetaContext';
 import {
   IsScreenContext,
   NamedRouteContextListContext,
@@ -40,41 +39,39 @@ export function NavigationIndependentTree({
         <NavigationRootContext.Provider value={undefined}>
           <NavigationBuilderContext.Provider value={undefined}>
             <StaticTreeContext.Provider value={undefined}>
-              <NavigationMetaContext.Provider value={undefined}>
-                <NavigationHelpersContext.Provider value={undefined}>
-                  <NavigationStateListenerContext.Provider value={undefined}>
-                    <FocusedRouteKeyContext.Provider value={undefined}>
-                      <PreventRemoveContext.Provider value={undefined}>
-                        <NamedNavigationStateListenerListContext.Provider
+              <NavigationHelpersContext.Provider value={undefined}>
+                <NavigationStateListenerContext.Provider value={undefined}>
+                  <FocusedRouteKeyContext.Provider value={undefined}>
+                    <PreventRemoveContext.Provider value={undefined}>
+                      <NamedNavigationStateListenerListContext.Provider
+                        value={undefined}
+                      >
+                        <NamedRouteContextListContext.Provider
                           value={undefined}
                         >
-                          <NamedRouteContextListContext.Provider
-                            value={undefined}
-                          >
-                            <NavigationRouteContext.Provider value={undefined}>
-                              <NavigationContext.Provider value={undefined}>
-                                <IsFocusedContext.Provider value={undefined}>
-                                  <IsFocusedGetterContext.Provider
-                                    value={undefined}
-                                  >
-                                    <IsScreenContext.Provider value={false}>
-                                      <NavigationFocusedRouteStateContext.Provider
-                                        value={undefined}
-                                      >
-                                        {children}
-                                      </NavigationFocusedRouteStateContext.Provider>
-                                    </IsScreenContext.Provider>
-                                  </IsFocusedGetterContext.Provider>
-                                </IsFocusedContext.Provider>
-                              </NavigationContext.Provider>
-                            </NavigationRouteContext.Provider>
-                          </NamedRouteContextListContext.Provider>
-                        </NamedNavigationStateListenerListContext.Provider>
-                      </PreventRemoveContext.Provider>
-                    </FocusedRouteKeyContext.Provider>
-                  </NavigationStateListenerContext.Provider>
-                </NavigationHelpersContext.Provider>
-              </NavigationMetaContext.Provider>
+                          <NavigationRouteContext.Provider value={undefined}>
+                            <NavigationContext.Provider value={undefined}>
+                              <IsFocusedContext.Provider value={undefined}>
+                                <IsFocusedGetterContext.Provider
+                                  value={undefined}
+                                >
+                                  <IsScreenContext.Provider value={false}>
+                                    <NavigationFocusedRouteStateContext.Provider
+                                      value={undefined}
+                                    >
+                                      {children}
+                                    </NavigationFocusedRouteStateContext.Provider>
+                                  </IsScreenContext.Provider>
+                                </IsFocusedGetterContext.Provider>
+                              </IsFocusedContext.Provider>
+                            </NavigationContext.Provider>
+                          </NavigationRouteContext.Provider>
+                        </NamedRouteContextListContext.Provider>
+                      </NamedNavigationStateListenerListContext.Provider>
+                    </PreventRemoveContext.Provider>
+                  </FocusedRouteKeyContext.Provider>
+                </NavigationStateListenerContext.Provider>
+              </NavigationHelpersContext.Provider>
             </StaticTreeContext.Provider>
           </NavigationBuilderContext.Provider>
         </NavigationRootContext.Provider>

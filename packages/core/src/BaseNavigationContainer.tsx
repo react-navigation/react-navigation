@@ -39,13 +39,13 @@ import { useEventEmitter } from './useEventEmitter';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
 import { useLazyValue } from './useLazyValue';
 import { useNavigationIndependentTree } from './useNavigationIndependentTree';
-import { useOptionsGetters } from './useOptionsGetters';
+import { OptionsGetterContext, useOptionsGetters } from './useOptionsGetters';
 import { useSyncState } from './useSyncState';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
 
 type Props<ParamList extends {}> = NavigationContainerProps & {
-  ref?: React.Ref<NavigationContainerRef<ParamList>>;
+  ref?: React.Ref<NavigationContainerRef<ParamList>> | undefined;
 };
 
 /**
@@ -479,18 +479,8 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       getKey,
       setKey,
       getIsInitial,
-      addOptionsGetter,
     }),
-    [
-      state,
-      getState,
-      setState,
-      subscribe,
-      getKey,
-      setKey,
-      getIsInitial,
-      addOptionsGetter,
-    ]
+    [state, getState, setState, subscribe, getKey, setKey, getIsInitial]
   );
 
   const onReadyRef = React.useRef(onReady);
@@ -572,6 +562,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
         case 'GO_BACK':
         case 'POP':
         case 'POP_TO_TOP':
+        case 'DISMISS':
           message += `\n\nIs there any screen to go back to?`;
           break;
         case 'OPEN_DRAWER':
@@ -593,15 +584,17 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
         <NavigationRootContext.Provider value={navigation}>
           <NavigationBuilderContext.Provider value={builderContext}>
             <NavigationStateContext.Provider value={context}>
-              <ConsumedParamsContext.Provider value={consumedParams}>
-                <UnhandledActionContext.Provider
-                  value={onUnhandledAction ?? defaultOnUnhandledAction}
-                >
-                  <EnsureSingleNavigator>
-                    <ThemeProvider value={theme}>{children}</ThemeProvider>
-                  </EnsureSingleNavigator>
-                </UnhandledActionContext.Provider>
-              </ConsumedParamsContext.Provider>
+              <OptionsGetterContext.Provider value={addOptionsGetter}>
+                <ConsumedParamsContext.Provider value={consumedParams}>
+                  <UnhandledActionContext.Provider
+                    value={onUnhandledAction ?? defaultOnUnhandledAction}
+                  >
+                    <EnsureSingleNavigator>
+                      <ThemeProvider value={theme}>{children}</ThemeProvider>
+                    </EnsureSingleNavigator>
+                  </UnhandledActionContext.Provider>
+                </ConsumedParamsContext.Provider>
+              </OptionsGetterContext.Provider>
             </NavigationStateContext.Provider>
           </NavigationBuilderContext.Provider>
         </NavigationRootContext.Provider>

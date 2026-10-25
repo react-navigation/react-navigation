@@ -13,7 +13,7 @@ type LinkBaseProps = {
   disabled?: boolean | undefined;
   id?: string | undefined;
   testID?: string | undefined;
-  onPress?: (e: PressEvent) => void;
+  onPress?: ((e: PressEvent) => void) | undefined;
   numberOfLines?: number | undefined;
   className?: React.AnchorHTMLAttributes<HTMLAnchorElement>['className'];
   style?: (React.CSSProperties & TextStyle) | undefined;

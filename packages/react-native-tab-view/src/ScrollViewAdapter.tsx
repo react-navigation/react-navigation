@@ -15,10 +15,10 @@ import { useMeasureLayout } from './useMeasureLayout';
 
 export type ScrollViewAdapterProps = AdapterProps &
   Omit<ViewProps, 'children'> & {
-    decelerationRate?: 'fast' | 'normal';
-    keyboardShouldPersistTaps?: 'always' | 'never' | 'handled';
-    bounces?: boolean;
-    overScrollMode?: 'always' | 'never' | 'auto';
+    decelerationRate?: 'fast' | 'normal' | undefined;
+    keyboardShouldPersistTaps?: 'always' | 'never' | 'handled' | undefined;
+    bounces?: boolean | undefined;
+    overScrollMode?: 'always' | 'never' | 'auto' | undefined;
   };
 
 type ScrollEvent = Parameters<

@@ -59,7 +59,7 @@ export function useEventEmitter<T extends Record<string, any>>(
     }: {
       type: string;
       data?: any;
-      target?: string;
+      target?: string | undefined;
       canPreventDefault?: boolean;
     }) => {
       const items = listeners.current[type];

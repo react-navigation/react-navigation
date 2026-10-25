@@ -684,6 +684,73 @@ test('preserves initial state when navigator mount is delayed in StrictMode', as
   expect(navigation.getCurrentRoute()?.name).toBe('bar');
 });
 
+test.each([{ strict: false }, { strict: true }])(
+  'preserves navigation from a screen effect when navigator mount is delayed (strict mode: $strict)',
+  async ({ strict }) => {
+    const TestNavigator = (props: any): any => {
+      const { state, descriptors, render } = useNavigationBuilder(
+        MockRouter,
+        props
+      );
+
+      const route = state.routes[state.index];
+
+      if (route == null) {
+        return null;
+      }
+
+      return render(descriptors[route.key]?.render());
+    };
+
+    const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
+
+    const FooScreen = (props: any) => {
+      const isNavigatedRef = React.useRef(false);
+
+      React.useEffect(() => {
+        // Only navigate in the first run in strict mode
+        if (!isNavigatedRef.current) {
+          isNavigatedRef.current = true;
+          props.navigation.navigate('bar');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
+
+      return <TestScreen {...props} />;
+    };
+
+    const navigation = createNavigationContainerRef<ParamListBase>();
+
+    const Wrapper = strict ? React.StrictMode : React.Fragment;
+
+    const Test = ({ condition }: { condition: boolean }) => (
+      <Wrapper>
+        <BaseNavigationContainer ref={navigation}>
+          {condition ? (
+            <TestNavigator>
+              <Screen name="foo" component={FooScreen} />
+              <Screen name="bar" component={TestScreen} />
+            </TestNavigator>
+          ) : null}
+        </BaseNavigationContainer>
+      </Wrapper>
+    );
+
+    const root = await render(<Test condition={false} />);
+
+    await root.rerender(<Test condition />);
+
+    expect(root).toMatchInlineSnapshot(`
+      <Text>
+        [
+        bar
+        ]
+      </Text>
+    `);
+    expect(navigation.getCurrentRoute()?.name).toBe('bar');
+  }
+);
+
 test('preserves state after rendered in `<Activity mode="hidden">`', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, render } = useNavigationBuilder(
@@ -3373,6 +3440,358 @@ test('overrides router with router prop', async () => {
     ],
     stale: false,
   });
+});
+
+test('returns correct value for isFocused', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  let navigation: any;
+
+  const TestScreen = (props: any) => {
+    navigation = props.navigation;
+
+    return null;
+  };
+
+  await render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="second" component={TestScreen} />
+        <Screen name="third">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.isFocused()).toBe(false);
+
+  await act(() => navigation.navigate('second'));
+
+  expect(navigation.isFocused()).toBe(true);
+
+  await act(() => navigation.navigate('third'));
+
+  expect(navigation.isFocused()).toBe(false);
+
+  await act(() => navigation.navigate('second'));
+
+  expect(navigation.isFocused()).toBe(true);
+});
+
+test('returns correct value for isFocused after changing screens', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const router: NonNullable<
+    Parameters<typeof useNavigationBuilder>[1]['router']
+  > = () => {
+    return {
+      getStateForRouteNamesChange(state, { routeNames }) {
+        const routes = routeNames.map(
+          (name) =>
+            state.routes.find((r) => r.name === name) || {
+              name,
+              key: name,
+            }
+        );
+
+        return {
+          ...state,
+          routeNames,
+          routes,
+          index: routes.length - 1,
+        };
+      },
+    };
+  };
+
+  let navigation: any;
+
+  const TestScreen = (props: any) => {
+    navigation = props.navigation;
+
+    return null;
+  };
+
+  const root = await render(
+    <BaseNavigationContainer>
+      <TestNavigator router={router}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="second" component={TestScreen} />
+        <Screen name="third">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.isFocused()).toBe(false);
+
+  await root.rerender(
+    <BaseNavigationContainer>
+      <TestNavigator router={router}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="third">{() => null}</Screen>
+        <Screen name="second" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.isFocused()).toBe(true);
+
+  await root.rerender(
+    <BaseNavigationContainer>
+      <TestNavigator router={router}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="third">{() => null}</Screen>
+        <Screen name="fourth">{() => null}</Screen>
+        <Screen name="second" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.isFocused()).toBe(true);
+
+  await root.rerender(
+    <BaseNavigationContainer>
+      <TestNavigator router={router}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="third">{() => null}</Screen>
+        <Screen name="second" component={TestScreen} />
+        <Screen name="fourth">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.isFocused()).toBe(false);
+});
+
+test('checks can go back from the calling screen', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator initialRouteName="Second">
+        <Screen name="First" component={TestScreen} />
+        <Screen name="Second" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Second');
+
+  expect(screens.First?.navigation.canGoBack()).toBe(false);
+  expect(screens.Second?.navigation.canGoBack()).toBe(true);
+});
+
+test('checks can go back in the parent screen', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator initialRouteName="Other">
+        <Screen name="Home" component={TestScreen} />
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator initialRouteName="Next">
+              <Screen name="Child" component={TestScreen} />
+              <Screen name="Next" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="Other" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Other');
+
+  expect(screens.Child?.navigation.canGoBack()).toBe(true);
+});
+
+test('can go back in the current navigator when its parent cannot go back', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  await render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator initialRouteName="Second">
+              <Screen name="First" component={TestScreen} />
+              <Screen name="Second" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(screens.Second?.navigation.getParent()?.canGoBack()).toBe(false);
+  expect(screens.Second?.navigation.canGoBack()).toBe(true);
+});
+
+test('cannot go back when neither the calling screen nor its containing parent can go back', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator initialRouteName="Other">
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator initialRouteName="Next">
+              <Screen name="Child" component={TestScreen} />
+              <Screen name="Next" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="Other" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Other');
+
+  expect(screens.Child?.navigation.canGoBack()).toBe(false);
+  expect(screens.Next?.navigation.canGoBack()).toBe(true);
+  expect(screens.Other?.navigation.canGoBack()).toBe(true);
+});
+
+test('cannot go back from a removed screen', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const screens: Record<string, any> = {};
+
+  const TestScreen = (props: any) => {
+    screens[props.route.name] = props;
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator initialRouteName="Parent">
+        <Screen name="Home" component={TestScreen} />
+        <Screen name="Parent">
+          {() => (
+            <TestNavigator>
+              <Screen name="Child" component={TestScreen} />
+              <Screen name="Other" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const child = screens.Child?.navigation;
+
+  await act(() => child?.reset({ routes: [{ name: 'Other' }] }));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Other');
+
+  expect(child?.canGoBack()).toBe(false);
+  expect(navigation.canGoBack()).toBe(true);
 });
 
 test('gets immediate parent with getParent()', async () => {

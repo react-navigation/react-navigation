@@ -16,7 +16,7 @@ export type CornerInsetProps = {
    *
    * @default true
    */
-  adaptive?: boolean;
+  adaptive?: boolean | undefined;
   /**
    * Style object for the inset view.
    */
@@ -28,7 +28,7 @@ export type CornerInsetRef = {
 };
 
 type Props = CornerInsetProps & {
-  ref?: React.Ref<CornerInsetRef>;
+  ref?: React.Ref<CornerInsetRef> | undefined;
 };
 
 export function CornerInset({ ref }: Props) {

@@ -7,13 +7,24 @@ import {
   test,
 } from '@jest/globals';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { NavigationContainer } from '@react-navigation/native';
 import {
+  CommonActions,
+  createNavigationContainerRef,
+  type NavigationAction,
+  NavigationContainer,
+  type NavigatorScreenParams,
+  StackActions,
+  usePreventRemove,
+} from '@react-navigation/native';
+import {
+  act,
+  fireEvent,
   isHiddenFromAccessibility,
   render,
   screen,
   userEvent,
 } from '@testing-library/react-native';
+import * as React from 'react';
 import { Button, Platform, Text, View } from 'react-native';
 
 import {
@@ -30,6 +41,18 @@ type NestedStackParamList = {
   C: undefined;
 };
 
+type ParentStackParamList = {
+  A: NavigatorScreenParams<ChildStackParamList>;
+  B: undefined;
+  C: undefined;
+  D: undefined;
+};
+
+type ChildStackParamList = {
+  X: undefined;
+  Y: undefined;
+};
+
 beforeEach(() => {
   jest.useFakeTimers();
 });
@@ -38,6 +61,262 @@ afterEach(() => {
   jest.runOnlyPendingTimers();
   jest.useRealTimers();
   jest.restoreAllMocks();
+});
+
+test('keeps a newly pushed screen when an earlier screen finishes dismissing', async () => {
+  type ParamList = {
+    A: undefined;
+    B: undefined;
+    C: undefined;
+  };
+
+  const Stack = createNativeStackNavigator<ParamList>();
+
+  const navigation = createNavigationContainerRef<ParamList>();
+
+  const Test = ({ route }: NativeStackScreenProps<ParamList>) => (
+    <Text>Screen {route.name}</Text>
+  );
+
+  await render(
+    <NavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 1,
+        routes: [{ name: 'A' }, { name: 'B' }],
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="A" component={Test} />
+        <Stack.Screen name="B" component={Test} />
+        <Stack.Screen name="C" component={Test} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.dispatch(StackActions.push('C')));
+
+  await fireEvent(
+    screen.getByText('Screen B', { includeHiddenElements: true }),
+    'dismissed',
+    { nativeEvent: { dismissCount: 1 } }
+  );
+
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'A',
+    'C',
+  ]);
+
+  expect(isHiddenFromAccessibility(screen.getByText('Screen C'))).toBe(false);
+});
+
+test('removes multiple dismissed screens with params history and keeps a newly pushed screen', async () => {
+  type ParamList = {
+    A: undefined;
+    B: undefined;
+    C: { value: number };
+    D: undefined;
+  };
+
+  const Stack = createNativeStackNavigator<ParamList>();
+
+  const navigation = createNavigationContainerRef<ParamList>();
+
+  const Test = ({ route }: NativeStackScreenProps<ParamList>) => (
+    <Text>Screen {route.name}</Text>
+  );
+
+  await render(
+    <NavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 2,
+        routes: [
+          { name: 'A' },
+          { name: 'B' },
+          { name: 'C', params: { value: 1 } },
+        ],
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="A" component={Test} />
+        <Stack.Screen name="B" component={Test} />
+        <Stack.Screen name="C" component={Test} />
+        <Stack.Screen name="D" component={Test} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.dispatch(CommonActions.pushParams({ value: 2 })));
+
+  await act(() => navigation.dispatch(StackActions.push('D')));
+
+  await fireEvent(
+    screen.getByText('Screen C', { includeHiddenElements: true }),
+    'dismissed',
+    { nativeEvent: { dismissCount: 2 } }
+  );
+
+  expect(isHiddenFromAccessibility(screen.getByText('Screen D'))).toBe(false);
+  expect(
+    screen.queryByText('Screen B', { includeHiddenElements: true })
+  ).toBeNull();
+  expect(
+    screen.queryByText('Screen C', { includeHiddenElements: true })
+  ).toBeNull();
+
+  await act(() => navigation.goBack());
+
+  expect(isHiddenFromAccessibility(screen.getByText('Screen A'))).toBe(false);
+});
+
+test('keeps all screens when a cancelled native dismiss is prevented by a screen below the top', async () => {
+  type ParamList = {
+    A: undefined;
+    B: undefined;
+    C: undefined;
+    D: undefined;
+  };
+
+  const Stack = createNativeStackNavigator<ParamList>();
+
+  const navigation = createNavigationContainerRef<ParamList>();
+
+  let action: NavigationAction | undefined;
+
+  const Test = ({ route }: NativeStackScreenProps<ParamList>) => (
+    <Text>Screen {route.name}</Text>
+  );
+
+  const Protected = ({ route }: NativeStackScreenProps<ParamList>) => {
+    usePreventRemove(true, ({ data }) => {
+      action = data.action;
+    });
+
+    return <Text>Screen {route.name}</Text>;
+  };
+
+  await render(
+    <NavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 3,
+        routes: [{ name: 'A' }, { name: 'B' }, { name: 'C' }, { name: 'D' }],
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="A" component={Test} />
+        <Stack.Screen name="B" component={Protected} />
+        <Stack.Screen name="C" component={Test} />
+        <Stack.Screen name="D" component={Test} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await fireEvent(screen.getByText('Screen D'), 'nativeDismissCancelled', {
+    nativeEvent: { dismissCount: 3 },
+  });
+
+  expect(isHiddenFromAccessibility(screen.getByText('Screen D'))).toBe(false);
+
+  expect(
+    screen.getByText('Screen B', { includeHiddenElements: true })
+  ).toBeTruthy();
+
+  expect(
+    screen.getByText('Screen C', { includeHiddenElements: true })
+  ).toBeTruthy();
+
+  await act(() => {
+    if (action == null) {
+      throw new Error('Expected the dismiss action to be prevented.');
+    }
+
+    navigation.dispatch(action);
+  });
+
+  expect(isHiddenFromAccessibility(screen.getByText('Screen A'))).toBe(false);
+  expect(
+    screen.queryByText('Screen B', { includeHiddenElements: true })
+  ).toBeNull();
+
+  expect(
+    screen.queryByText('Screen C', { includeHiddenElements: true })
+  ).toBeNull();
+
+  expect(
+    screen.queryByText('Screen D', { includeHiddenElements: true })
+  ).toBeNull();
+});
+
+test('preserves retained and preloaded screens when multiple screens are dismissed', async () => {
+  type ParamList = {
+    A: undefined;
+    B: undefined;
+    C: undefined;
+    D: undefined;
+    E: undefined;
+  };
+
+  const Stack = createNativeStackNavigator<ParamList>();
+
+  const navigation = createNavigationContainerRef<ParamList>();
+
+  const Test = ({ route }: NativeStackScreenProps<ParamList>) => (
+    <Text>Screen {route.name}</Text>
+  );
+
+  await render(
+    <NavigationContainer
+      ref={navigation}
+      initialState={{
+        index: 2,
+        routes: [{ name: 'A' }, { name: 'B' }, { name: 'C' }],
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="A" component={Test} />
+        <Stack.Screen name="B" component={Test} />
+        <Stack.Screen name="C" component={Test} />
+        <Stack.Screen name="D" component={Test} />
+        <Stack.Screen name="E" component={Test} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.preload('D'));
+
+  const preloadedRoute = navigation
+    .getRootState()
+    ?.routes.find((route) => route.name === 'D');
+
+  await act(() =>
+    navigation.dispatch({
+      ...StackActions.retain(true),
+      source: preloadedRoute?.key,
+    })
+  );
+
+  await act(() => navigation.preload('E'));
+
+  await fireEvent(screen.getByText('Screen C'), 'dismissed', {
+    nativeEvent: { dismissCount: 2 },
+  });
+
+  expect(isHiddenFromAccessibility(screen.getByText('Screen A'))).toBe(false);
+  expect(
+    isHiddenFromAccessibility(
+      screen.getByText('Screen D', { includeHiddenElements: true })
+    )
+  ).toBe(true);
+  expect(
+    isHiddenFromAccessibility(
+      screen.getByText('Screen E', { includeHiddenElements: true })
+    )
+  ).toBe(true);
+  expect(
+    screen.queryByText('Screen C', { includeHiddenElements: true })
+  ).toBeNull();
 });
 
 test('renders a native-stack navigator with screens', async () => {
@@ -75,6 +354,68 @@ test('renders a native-stack navigator with screens', async () => {
     )
   ).toBe(true);
   expect(isHiddenFromAccessibility(screen.getByText('Screen B'))).toBe(false);
+});
+
+test('inactiveBehavior="unmount" keeps screens with nested navigators mounted', async () => {
+  const Stack = createNativeStackNavigator<ParentStackParamList>();
+  const NestedStack = createNativeStackNavigator<ChildStackParamList>();
+
+  const navigation = createNavigationContainerRef<ParentStackParamList>();
+  const user = userEvent.setup();
+
+  const Counter = ({ name }: { name: string }) => {
+    const [count, setCount] = React.useState(0);
+
+    return (
+      <View>
+        <Text>
+          {name}: {count}
+        </Text>
+        <Button onPress={() => setCount((c) => c + 1)} title="Increment" />
+      </View>
+    );
+  };
+
+  const Nested = () => (
+    <NestedStack.Navigator>
+      <NestedStack.Screen name="X">{() => null}</NestedStack.Screen>
+      <NestedStack.Screen name="Y">
+        {() => <Counter name="Nested" />}
+      </NestedStack.Screen>
+    </NestedStack.Navigator>
+  );
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator screenOptions={{ inactiveBehavior: 'unmount' }}>
+        <Stack.Screen name="A" component={Nested} />
+        <Stack.Screen name="B">{() => <Counter name="Plain" />}</Stack.Screen>
+        <Stack.Screen name="C">{() => null}</Stack.Screen>
+        <Stack.Screen name="D">{() => null}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('A', { screen: 'Y' }));
+  await user.press(screen.getByRole('button', { name: 'Increment' }));
+
+  expect(screen.getByText('Nested: 1')).toBeOnTheScreen();
+
+  await act(() => navigation.navigate('B'));
+  await user.press(screen.getByRole('button', { name: 'Increment' }));
+
+  expect(screen.getByText('Plain: 1')).toBeOnTheScreen();
+
+  await act(() => navigation.navigate('C'));
+  await act(() => navigation.navigate('D'));
+
+  await act(() => navigation.dispatch(StackActions.popTo('B')));
+
+  expect(screen.getByText('Plain: 0')).toBeOnTheScreen();
+
+  await act(() => navigation.dispatch(StackActions.popTo('A')));
+
+  expect(screen.getByText('Nested: 1')).toBeOnTheScreen();
 });
 
 describe('useHeaderHeight in native-stack', () => {

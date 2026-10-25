@@ -58,6 +58,21 @@ declare module '@react-navigation/core' {
   interface Theme extends NativeTheme {}
 }
 
+/**
+ * Names of custom SF Symbols available in the app, such as symbols from the asset catalog.
+ * Custom names can be added using declaration merging:
+ *
+ * ```ts
+ * declare module '@react-navigation/native' {
+ *   interface SFSymbolNames {
+ *     'my.custom.symbol': true;
+ *   }
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface SFSymbolNames {}
+
 export type LocaleDirection = 'ltr' | 'rtl';
 
 export type LinkingPrefix = '*' | (string & {});

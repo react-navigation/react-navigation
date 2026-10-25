@@ -12,6 +12,7 @@ import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   type HeaderBarButtonItemMenuAction,
   type HeaderBarButtonItemSubmenu,
+  type HeaderBarButtonItemVisibilityPriority,
   type HeaderBarButtonItemWithAction,
   type HeaderBarButtonItemWithMenu,
   isSearchBarAvailableForCurrentPlatform,
@@ -73,7 +74,13 @@ const processBarButtonItems = (
           );
         }
 
-        const { badge, label, labelStyle, icon, ...rest } = item;
+        const { badge, label, labelStyle, icon, visibilityPriority, ...rest } =
+          item;
+
+        const processedVisibilityPriority:
+          | HeaderBarButtonItemVisibilityPriority
+          | undefined =
+          visibilityPriority === 'default' ? 'standard' : visibilityPriority;
 
         const processedItemCommon = {
           ...rest,
@@ -84,6 +91,7 @@ const processBarButtonItems = (
             ...labelStyle,
           },
           icon: transformIcon(icon),
+          visibilityPriority: processedVisibilityPriority,
         };
 
         let processedItem:
@@ -164,13 +172,22 @@ const getMenuItem = (
   item: NativeStackHeaderItemMenuAction | NativeStackHeaderItemMenuSubmenu
 ): HeaderBarButtonItemMenuAction | HeaderBarButtonItemSubmenu => {
   if (item.type === 'submenu') {
-    const { label, icon, inline, layout, items, multiselectable, ...rest } =
-      item;
+    const {
+      label,
+      description,
+      icon,
+      inline,
+      layout,
+      items,
+      multiselectable,
+      ...rest
+    } = item;
 
     return {
       ...rest,
       icon: transformIcon(icon),
       title: label,
+      subtitle: description,
       displayAsPalette: layout === 'palette',
       displayInline: inline,
       singleSelection:
@@ -379,21 +396,20 @@ export function useHeaderConfigProps({
       return undefined;
     }
 
-    if (headerBackIcon == null && Platform.OS === 'android') {
-      try {
-        // Use Material Symbol as default back icon on Android
-        // So it's consistent with other material icons
-        // Based on the available variant and weight
-        return MaterialSymbol.getImageSource({
-          name: 'arrow_back',
-          color: tintColor,
-          size: ICON_SIZE,
-        });
-      } catch (e) {
-        // Fallback to default if symbol is not available
-        // This can happen if no font, or multiple fonts are available
-        // Or in tests where native module is not available
-      }
+    if (
+      headerBackIcon == null &&
+      Platform.OS === 'android' &&
+      MaterialSymbol.isAvailable()
+    ) {
+      // Use Material Symbol as default back icon on Android
+      // So it's consistent with other material icons
+      // Based on the available variant and weight
+      return MaterialSymbol.getImageSource({
+        name: 'arrow_back',
+        color: tintColor,
+        size: ICON_SIZE,
+        direction,
+      });
     } else if (headerBackIcon?.type === 'image') {
       return headerBackIcon.source;
     } else if (headerBackIcon?.type === 'materialSymbol') {
@@ -401,13 +417,15 @@ export function useHeaderConfigProps({
         name: headerBackIcon.name,
         variant: headerBackIcon.variant,
         weight: headerBackIcon.weight,
+        fill: headerBackIcon.fill,
         color: tintColor,
         size: ICON_SIZE,
+        direction,
       });
     }
 
     return undefined;
-  }, [headerBackIcon, headerBackVisible, headerShown, tintColor]);
+  }, [direction, headerBackIcon, headerBackVisible, headerShown, tintColor]);
 
   const children = (
     <>
@@ -446,7 +464,7 @@ export function useHeaderConfigProps({
         <>
           {headerLeftElement != null || typeof headerTitle === 'function' ? (
             // The style passed to header left, together with title element being wrapped
-            // in flex view is reqruied for proper header layout, in particular,
+            // in flex view is required for proper header layout, in particular,
             // for the text truncation to work.
             <ScreenStackHeaderLeftView
               style={!isCenterViewRenderedAndroid ? { flex: 1 } : null}

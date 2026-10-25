@@ -141,14 +141,22 @@ async function runStep(page: Page, step: any) {
         });
       }
 
-      const locator = query(page, step.tapOn);
+      const locator = query(page, step.tapOn)
+        .and(page.locator(':not([inert], [inert] *)'))
+        .filter({ visible: true });
 
-      const target = locator.filter({ visible: true }).last();
+      const element = step.tapOn.above
+        ? await findAbove(
+            locator,
+            query(page, step.tapOn.above).filter({ visible: true }).last()
+          )
+        : locator.last();
 
-      const handle = await target.elementHandle();
-      await handle?.waitForElementState('stable');
+      const target = element.locator(
+        'xpath=ancestor-or-self::*[@tabindex][1] | self::*[not(ancestor-or-self::*[@tabindex])]'
+      );
 
-      await target.dispatchEvent('click');
+      await target.click();
 
       break;
     }
@@ -162,12 +170,12 @@ async function runStep(page: Page, step: any) {
     }
 
     case 'assertNotVisible': {
-      const locator = query(page, step.assertNotVisible);
-
-      if (await locator.isVisible()) {
-        await expect(locator).not.toBeInViewport();
-      } else {
-        await expect(locator).toBeHidden();
+      for (const locator of await query(page, step.assertNotVisible).all()) {
+        if (await locator.isVisible()) {
+          await expect(locator).not.toBeInViewport();
+        } else {
+          await expect(locator).toBeHidden();
+        }
       }
 
       break;
@@ -232,6 +240,18 @@ async function runStep(page: Page, step: any) {
 
       await page.mouse.move(viewport.width / 2, viewport.height / 2);
       await page.mouse.wheel(0, viewport.height * 0.75);
+
+      break;
+    }
+
+    case 'scrollUntilVisible': {
+      const locator = query(page, step.scrollUntilVisible.element)
+        .filter({ visible: true })
+        .last();
+
+      await locator.scrollIntoViewIfNeeded({
+        timeout: step.scrollUntilVisible.timeout,
+      });
 
       break;
     }
@@ -305,6 +325,27 @@ async function runStep(page: Page, step: any) {
       throw new Error(`Unknown command: ${JSON.stringify(step)}`);
     }
   }
+}
+
+async function findAbove(locator: Locator, reference: Locator) {
+  await expect(reference).toBeVisible();
+  await expect(locator.first()).toBeVisible();
+
+  const referenceBox = await reference.boundingBox();
+
+  if (referenceBox == null) {
+    throw new Error('Could not get the position of the reference element');
+  }
+
+  for (const element of (await locator.all()).reverse()) {
+    const box = await element.boundingBox();
+
+    if (box != null && box.y + box.height <= referenceBox.y) {
+      return element;
+    }
+  }
+
+  throw new Error('Could not find an element above the reference element');
 }
 
 async function swipe(
@@ -431,7 +472,7 @@ function query(page: Page, by: QueryBy) {
 
   if (typeof by !== 'string' && typeof by.selected === 'boolean') {
     return locator.locator(
-      `xpath=ancestor-or-self::*[@aria-selected="${by.selected}"]`
+      `xpath=self::*[ancestor-or-self::*[@aria-selected="${by.selected}"]]`
     );
   }
 

@@ -166,19 +166,44 @@ export function useOnAction<State extends NavigationState>({
         }
       }
 
+      const isSourceInCurrentNavigator =
+        action.source !== undefined &&
+        state.routes.some((r) => r.key === action.source);
+
       if (onActionParent !== undefined) {
         // Bubble action to the parent if the current navigator didn't handle it
-        if (onActionParent(action, visitedNavigators)) {
+        const parentAction =
+          isSourceInCurrentNavigator && key !== undefined
+            ? {
+                ...action,
+                // If the `source` belonged to the current navigator,
+                // rewrite the `source` to the parent screen's key when bubbling
+                // This will let parent handle it relative to the child that dispatched the action
+                source: key,
+              }
+            : action;
+
+        if (onActionParent(parentAction, visitedNavigators)) {
           return true;
         }
       }
 
       if (typeof action.target === 'string') {
         // If the action wasn't handled by current navigator or a parent navigator, let children handle it
+        const childAction = isSourceInCurrentNavigator
+          ? {
+              ...action,
+              // If the `source` belonged to the current navigator,
+              // remove it when targeting a child navigator
+              // So child navigators can handle it based on the focused screen
+              source: undefined,
+            }
+          : action;
+
         for (let i = actionListeners.length - 1; i >= 0; i--) {
           const listener = actionListeners[i];
 
-          if (listener?.(action, visitedNavigators)) {
+          if (listener?.(childAction, visitedNavigators)) {
             return true;
           }
         }

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.19...react-native-drawer-layout@5.0.0-alpha.20) (2026-10-13)
+
+### Bug Fixes
+
+* dismiss keyboard when drawer is opened programmatically ([#13287](https://github.com/react-navigation/react-navigation/issues/13287)) ([a9e209f](https://github.com/react-navigation/react-navigation/commit/a9e209fdf67e135cdbd8a6507c4216f2bb1eb965)), closes [#13273](https://github.com/react-navigation/react-navigation/issues/13273) - by @MSliwa01
+
 # [5.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.18...react-native-drawer-layout@5.0.0-alpha.19) (2026-09-19)
 
 ### Bug Fixes

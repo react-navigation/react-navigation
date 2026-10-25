@@ -51,6 +51,12 @@ export type StackActionType =
       payload: { enable: boolean };
       source?: string | undefined;
       target?: string | undefined;
+    }
+  | {
+      type: 'DISMISS';
+      payload: { count: number };
+      source?: string | undefined;
+      target?: string | undefined;
     };
 
 export type StackRouterOptions = DefaultRouterOptions;
@@ -71,7 +77,7 @@ export type StackNavigationState<ParamList extends ParamListBase> =
 
 export type StackActionHelpers<ParamList extends ParamListBase> = {
   /**
-   * Replace the current route with a new one.
+   * Replace the current screen with a new one.
    *
    * @param screen Name of the new route that will replace the current one.
    * @param [params] Params object for the new route.
@@ -99,12 +105,15 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   ): void;
 
   /**
-   * Pop a screen from the stack.
+   * Pop a history entry from the stack.
+   * Also dismisses any screens above the current one.
+   *
+   * @param [count=1] Number of history entries to pop. Defaults to 1.
    */
   pop(count?: number): void;
 
   /**
-   * Pop to the first route in the stack, dismissing all other screens.
+   * Pop to the first screen in the stack, dismissing all other screens.
    */
   popToTop(): void;
 
@@ -122,24 +131,32 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
         ? [
             screen: RouteName,
             params?: ParamList[RouteName],
-            options?: { merge?: boolean },
+            options?: { merge?: boolean | undefined },
           ]
         : [
             screen: RouteName,
             params: ParamList[RouteName],
-            options?: { merge?: boolean },
+            options?: { merge?: boolean | undefined },
           ]
       : never
   ): void;
 
   /**
-   * Enable or disable retaining the current route in the stack.
+   * Enable or disable retaining the current screen in the stack.
+   *
    * When a retained route gets removed from the stack,
    * it'll be kept in routes and can be navigated to again.
    *
    * @param enable Whether to retain the current route in the stack or not.
    */
   retain(enable: boolean): void;
+
+  /**
+   * Dismiss a screen from the stack.
+   *
+   * @param [count=1] Number of screens to dismiss. Defaults to 1.
+   */
+  dismiss(count?: number): void;
 };
 
 export const StackActions = {
@@ -164,7 +181,11 @@ export const StackActions = {
   popToTop() {
     return { type: 'POP_TO_TOP' } as const satisfies StackActionType;
   },
-  popTo(name: string, params?: object, options?: { merge?: boolean }) {
+  popTo(
+    name: string,
+    params?: object,
+    options?: { merge?: boolean | undefined }
+  ) {
     return {
       type: 'POP_TO',
       payload: {
@@ -178,6 +199,12 @@ export const StackActions = {
     return {
       type: 'RETAIN',
       payload: { enable },
+    } as const satisfies StackActionType;
+  },
+  dismiss(count: number = 1) {
+    return {
+      type: 'DISMISS',
+      payload: { count },
     } as const satisfies StackActionType;
   },
 };
@@ -464,16 +491,16 @@ export function StackRouter(options: StackRouterOptions) {
 
       switch (action.type) {
         case 'REPLACE': {
+          if (!state.routeNames.includes(action.payload.name)) {
+            return null;
+          }
+
           const currentIndex =
-            action.target === state.key && action.source
+            action.source !== undefined
               ? routes.findIndex((r) => r.key === action.source)
               : state.index;
 
           if (currentIndex === -1) {
-            return null;
-          }
-
-          if (!state.routeNames.includes(action.payload.name)) {
             return null;
           }
 
@@ -516,24 +543,37 @@ export function StackRouter(options: StackRouterOptions) {
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
 
+          let remainingRoutes = routes;
           let route: Route<string> | undefined;
 
           if (action.type === 'NAVIGATE') {
-            const currentRoute = routes[state.index];
+            const currentIndex =
+              action.source !== undefined
+                ? routes.findIndex((r) => r.key === action.source)
+                : state.index;
 
-            if (currentRoute == null) {
-              throw new Error(`Couldn't find a route at index ${state.index}.`);
+            if (currentIndex === -1) {
+              return null;
             }
 
-            if (id !== undefined) {
-              if (
-                currentRoute.name === action.payload.name &&
-                id === getId?.({ params: currentRoute.params })
-              ) {
-                route = currentRoute;
-              } else if (action.payload.pop) {
-                for (let i = routes.length - 1; i >= 0; i--) {
-                  const r = routes[i];
+            /**
+             * When navigating,
+             * - If the current route matches the destination, reuse it.
+             * - Or, if a route matching the destination exists after the current, reuse it.
+             * - Remove all non-matching routes after the current.
+             */
+            remainingRoutes = routes.slice(0, currentIndex + 1);
+            route = routes.find(
+              (route, i) =>
+                i >= currentIndex &&
+                route.name === action.payload.name &&
+                (id === undefined || id === getId?.({ params: route.params }))
+            );
+
+            if (!route && action.payload.pop) {
+              if (id !== undefined) {
+                for (let i = remainingRoutes.length - 1; i >= 0; i--) {
+                  const r = remainingRoutes[i];
 
                   if (r == null) {
                     throw new Error(`Couldn't find a route at index ${i}.`);
@@ -576,13 +616,8 @@ export function StackRouter(options: StackRouterOptions) {
                     }
                   }
                 }
-              }
-            } else {
-              // If the route matches the current one, then navigate to it
-              if (action.payload.name === currentRoute.name) {
-                route = currentRoute;
-              } else if (action.payload.pop) {
-                route = routes.findLast(
+              } else {
+                route = remainingRoutes.findLast(
                   (route) => route.name === action.payload.name
                 );
               }
@@ -619,48 +654,29 @@ export function StackRouter(options: StackRouterOptions) {
             if (action.type === 'NAVIGATE' && action.payload.pop) {
               nextRoutes = [];
 
-              // Get all routes until the matching one
-              for (const r of routes) {
+              // Get all routes before the matching one
+              for (const r of remainingRoutes) {
                 if (r.key === route.key) {
-                  nextRoutes.push({
-                    ...route,
-                    path:
-                      action.payload.path !== undefined
-                        ? action.payload.path
-                        : route.path,
-                    params,
-                  });
                   break;
                 }
 
                 nextRoutes.push(r);
               }
-
-              if (!nextRoutes.some((r) => r.key === route.key)) {
-                nextRoutes.push({
-                  ...route,
-                  path:
-                    action.payload.path !== undefined
-                      ? action.payload.path
-                      : route.path,
-                  params,
-                });
-              }
             } else {
-              nextRoutes = routes.filter((r) => r.key !== route.key);
-              nextRoutes.push({
-                ...route,
-                path:
-                  action.type === 'NAVIGATE' &&
-                  action.payload.path !== undefined
-                    ? action.payload.path
-                    : route.path,
-                params,
-              });
+              nextRoutes = remainingRoutes.filter((r) => r.key !== route.key);
             }
+
+            nextRoutes.push({
+              ...route,
+              path:
+                action.type === 'NAVIGATE' && action.payload.path !== undefined
+                  ? action.payload.path
+                  : route.path,
+              params,
+            });
           } else {
             nextRoutes = [
-              ...routes,
+              ...remainingRoutes,
               {
                 key: `${action.payload.name}-${nanoid()}`,
                 name: action.payload.name,
@@ -671,27 +687,12 @@ export function StackRouter(options: StackRouterOptions) {
             ];
           }
 
-          const lastRoute = nextRoutes[nextRoutes.length - 1];
-
-          if (lastRoute == null) {
-            throw new Error(
-              `Couldn't find a route at index ${nextRoutes.length - 1}.`
-            );
-          }
-
-          return retainRoutes(
-            state,
-            getStateWithRoutes(
-              state,
-              nextRoutes,
-              preloadedRoutes.filter((route) => lastRoute.key !== route.key)
-            )
-          );
+          return retainRoutes(state, getStateWithRoutes(state, nextRoutes));
         }
 
         case 'POP': {
           let currentIndex =
-            action.target === state.key && action.source
+            action.source !== undefined
               ? routes.findIndex((r) => r.key === action.source)
               : state.index;
 
@@ -714,14 +715,10 @@ export function StackRouter(options: StackRouterOptions) {
            * - We have popped the amount of items in count
            * - There are no more items to pop
            *
-           * Routes above the current route (e.g. above the source) are kept intact
+           * Routes above the current route are removed.
            */
           if (route.history?.length || currentIndex > 0) {
             let count = action.payload.count;
-
-            let removedFromIndex: number | undefined;
-
-            const sourceIndex = currentIndex;
 
             while (count > 0 && (route.history?.length || currentIndex > 0)) {
               if (route.history?.length) {
@@ -741,7 +738,6 @@ export function StackRouter(options: StackRouterOptions) {
 
               if (currentIndex > 0 && count > 0) {
                 count = count - 1;
-                removedFromIndex = currentIndex;
                 currentIndex = currentIndex - 1;
 
                 const currentRoute = routes[currentIndex];
@@ -756,18 +752,9 @@ export function StackRouter(options: StackRouterOptions) {
               }
             }
 
-            let nextRoutes =
-              removedFromIndex === undefined
-                ? routes
-                : routes
-                    .slice(0, removedFromIndex)
-                    .concat(routes.slice(sourceIndex + 1));
+            const nextRoutes = routes.slice(0, currentIndex + 1);
 
             if (route !== routes[currentIndex]) {
-              if (nextRoutes === routes) {
-                nextRoutes = [...routes];
-              }
-
               nextRoutes[currentIndex] = route;
             }
 
@@ -775,6 +762,37 @@ export function StackRouter(options: StackRouterOptions) {
           }
 
           return null;
+        }
+
+        case 'DISMISS': {
+          const currentIndex =
+            action.source !== undefined
+              ? routes.findIndex((route) => route.key === action.source)
+              : state.index;
+
+          if (
+            currentIndex === -1 ||
+            routes.length === 1 ||
+            action.payload.count < 1
+          ) {
+            return null;
+          }
+
+          const count = Math.min(
+            action.payload.count,
+            currentIndex + 1,
+            routes.length - 1
+          );
+
+          const firstIndex = currentIndex - count + 1;
+
+          return retainRoutes(
+            state,
+            getStateWithRoutes(
+              state,
+              routes.slice(0, firstIndex).concat(routes.slice(currentIndex + 1))
+            )
+          );
         }
 
         case 'POP_TO_TOP': {
@@ -799,16 +817,16 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         case 'POP_TO': {
-          const currentIndex =
-            action.target === state.key && action.source
-              ? routes.findLastIndex((r) => r.key === action.source)
-              : state.index;
-
-          if (currentIndex === -1) {
+          if (!state.routeNames.includes(action.payload.name)) {
             return null;
           }
 
-          if (!state.routeNames.includes(action.payload.name)) {
+          const currentIndex =
+            action.source !== undefined
+              ? routes.findIndex((r) => r.key === action.source)
+              : state.index;
+
+          if (currentIndex === -1) {
             return null;
           }
 
@@ -971,26 +989,16 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         case 'GO_BACK': {
-          const route = routes[state.index];
-
-          if (route == null) {
-            throw new Error(`Couldn't find a route at index ${state.index}.`);
-          }
-
-          if (state.index > 0 || route.history?.length) {
-            return router.getStateForAction(
-              state,
-              {
-                type: 'POP',
-                payload: { count: 1 },
-                target: action.target,
-                source: action.source,
-              },
-              options
-            );
-          }
-
-          return null;
+          return router.getStateForAction(
+            state,
+            {
+              type: 'POP',
+              payload: { count: 1 },
+              target: action.target,
+              source: action.source,
+            },
+            options
+          );
         }
 
         case 'RETAIN': {

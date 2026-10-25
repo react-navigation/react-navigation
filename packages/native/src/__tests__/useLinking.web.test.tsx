@@ -10,13 +10,17 @@ import {
   type NavigationState,
   type NavigatorScreenParams,
   type ParamListBase,
+  type RouteProp,
   StackActions,
   StackRouter,
   TabRouter,
+  useIsFocused,
+  useNavigation,
   useNavigationBuilder,
   usePreventRemove,
 } from '@react-navigation/core';
-import { act, render, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { Text } from 'react-native';
 
@@ -2138,6 +2142,1095 @@ test("doesn't update URL until navigation to a suspending screen commits", async
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+});
+
+test('preserves updated params on browser back when navigation suspends', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: { Home: '', Profile: 'profile', Settings: 'settings' },
+    },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const SettingsScreen = () => {
+    React.use(promise);
+
+    return <Text>Settings</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Profile" component={TestScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  const homeKey = navigation.getCurrentRoute()?.key;
+
+  await act(async () => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  await act(async () =>
+    navigation.dispatch({
+      ...CommonActions.setParams({ updated: true }),
+      source: homeKey,
+    })
+  );
+
+  await act(async () => navigation.navigate('Settings'));
+
+  expect(window.location.pathname).toBe('/profile');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  expect(navigation.getRootState()?.routes).toEqual([
+    expect.objectContaining({
+      key: homeKey,
+      name: 'Home',
+      params: { updated: true },
+    }),
+  ]);
+  expect(window.location.pathname).toBe('/');
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+
+  act(() => window.history.forward());
+
+  await waitFor(() =>
+    expect(navigation.getCurrentRoute()?.name).toBe('Profile')
+  );
+
+  expect(window.location.pathname).toBe('/profile');
+});
+
+test('replaces an interrupted destination when navigating again from the visible screen', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: { Home: '', Profile: 'profile', Settings: 'settings' },
+    },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const HomeScreen = () => {
+    const navigation = useNavigation();
+
+    return (
+      <button
+        type="button"
+        onClick={() => navigation.dispatch(CommonActions.navigate('Settings'))}
+      >
+        Open settings
+      </button>
+    );
+  };
+
+  const ProfileScreen = () => {
+    React.use(promise);
+
+    return <Text>Profile</Text>;
+  };
+
+  const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Settings" component={TestScreen} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Profile'));
+
+  expect(window.location.pathname).toBe('/');
+
+  await user.click(screen.getByRole('button', { name: 'Open settings' }));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'Home',
+    'Settings',
+  ]);
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('preserves updated params on browser back when nested navigation suspends', async () => {
+  const Stack = createStackNavigator();
+
+  const Tab = createTabNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: {
+          path: '',
+          screens: {
+            Feed: 'feed',
+            Profile: 'profile',
+            Settings: 'settings',
+          },
+        },
+        Chat: 'chat',
+      },
+    },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const SettingsScreen = () => {
+    React.use(promise);
+
+    return <Text>Settings</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Tab.Navigator>
+          <Tab.Screen name="Home">
+            {() => (
+              <Stack.Navigator>
+                <Stack.Screen name="Feed" component={TestScreen} />
+                <Stack.Screen name="Profile" component={TestScreen} />
+                <Stack.Screen name="Settings" component={SettingsScreen} />
+              </Stack.Navigator>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="Chat" component={TestScreen} />
+        </Tab.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  const feedKey = navigation.getCurrentRoute()?.key;
+
+  await act(async () => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  await act(async () =>
+    navigation.dispatch({
+      ...CommonActions.setParams({ updated: true }),
+      source: feedKey,
+    })
+  );
+
+  await act(async () => navigation.navigate('Settings'));
+
+  expect(window.location.pathname).toBe('/profile');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Feed'));
+
+  expect(window.location.pathname).toBe('/feed');
+  expect(navigation.getCurrentRoute()?.params).toEqual({ updated: true });
+  expect(navigation.getRootState()?.routes[0]?.state?.routes).toEqual([
+    expect.objectContaining({ key: feedKey, name: 'Feed' }),
+  ]);
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Feed');
+});
+
+test('goes back from the visible parent screen when navigation suspends', async () => {
+  const Stack = createStackNavigator();
+
+  const Child = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Section: { path: 'section', screens: { Feed: 'feed' } },
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const SettingsScreen = () => {
+    React.use(promise);
+
+    return <Text>Settings</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Section">
+            {() => (
+              <Child.Navigator>
+                <Child.Screen name="Feed" component={TestScreen} />
+              </Child.Navigator>
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Section'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/section/feed'));
+
+  await act(async () => navigation.navigate('Settings'));
+
+  expect(window.location.pathname).toBe('/section/feed');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  expect(window.location.pathname).toBe('/');
+  expect(navigation.getRootState()?.routes).toEqual([
+    expect.objectContaining({ name: 'Home' }),
+  ]);
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('goes back in the visible tab on browser back when switching tabs suspends', async () => {
+  const Tab = createTabNavigator();
+
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: { path: '', screens: { Feed: 'feed', Profile: 'profile' } },
+        Other: {
+          path: 'other',
+          screens: { Start: 'start', Detail: 'detail' },
+        },
+      },
+    },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  let suspendOther = false;
+
+  const DetailScreen = () => {
+    const focused = useIsFocused();
+
+    if (focused && suspendOther) {
+      React.use(promise);
+    }
+
+    return <Text>Detail</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Tab.Navigator backBehavior="history">
+          <Tab.Screen name="Home">
+            {() => (
+              <Stack.Navigator>
+                <Stack.Screen name="Feed" component={TestScreen} />
+                <Stack.Screen name="Profile" component={TestScreen} />
+              </Stack.Navigator>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="Other">
+            {() => (
+              <Stack.Navigator>
+                <Stack.Screen name="Start" component={TestScreen} />
+                <Stack.Screen name="Detail" component={DetailScreen} />
+              </Stack.Navigator>
+            )}
+          </Tab.Screen>
+        </Tab.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Other'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/other/start'));
+
+  await act(async () => navigation.navigate('Detail'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/other/detail'));
+
+  await act(async () => navigation.navigate('Home'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/feed'));
+
+  await act(async () => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  suspendOther = true;
+
+  await act(async () => navigation.navigate('Other'));
+
+  expect(window.location.pathname).toBe('/profile');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Feed'));
+
+  expect(window.location.pathname).toBe('/feed');
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Feed');
+});
+
+test('goes back from the parent screen when a child navigation suspends', async () => {
+  const Stack = createStackNavigator();
+
+  const Child = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Section: {
+          path: 'section',
+          screens: { Feed: 'feed', Profile: 'profile' },
+        },
+      },
+    },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const ProfileScreen = () => {
+    React.use(promise);
+
+    return <Text>Profile</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Section">
+            {() => (
+              <Child.Navigator>
+                <Child.Screen name="Feed" component={TestScreen} />
+                <Child.Screen name="Profile" component={ProfileScreen} />
+              </Child.Navigator>
+            )}
+          </Stack.Screen>
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Section'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/section/feed'));
+
+  await act(async () => navigation.navigate('Profile'));
+
+  expect(window.location.pathname).toBe('/section/feed');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  expect(window.location.pathname).toBe('/');
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('returns to the previous screen on browser back while a reset suspends', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Other: 'other',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const SettingsScreen = () => {
+    React.use(promise);
+
+    return <Text>Settings</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Profile" component={TestScreen} />
+          <Stack.Screen name="Other" component={TestScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  await act(async () => {
+    React.startTransition(() => {
+      navigation.resetRoot({
+        index: 1,
+        routes: [{ name: 'Other' }, { name: 'Settings' }],
+      });
+    });
+  });
+
+  expect(window.location.pathname).toBe('/profile');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  expect(window.location.pathname).toBe('/');
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('returns to the previous screen on browser back while resetting screens in the same navigator suspends', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Other: 'other',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const SettingsScreen = () => {
+    React.use(promise);
+
+    return <Text>Settings</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Profile" component={TestScreen} />
+          <Stack.Screen name="Other" component={TestScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  const state = navigation.getRootState();
+
+  if (state === undefined) {
+    throw new Error('Expected navigation state to be initialized');
+  }
+
+  await act(async () => {
+    React.startTransition(() => {
+      navigation.resetRoot({
+        ...state,
+        index: 1,
+        routes: [
+          { key: 'other', name: 'Other' },
+          { key: 'settings', name: 'Settings' },
+        ],
+      });
+    });
+  });
+
+  expect(window.location.pathname).toBe('/profile');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  expect(window.location.pathname).toBe('/');
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('restores the previous tab on browser back while a tab change suspends', async () => {
+  const Tab = createTabNavigator();
+
+  const linking = {
+    config: { screens: { Home: '', Profile: 'profile', Settings: 'settings' } },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const SettingsScreen = () => {
+    const focused = useIsFocused();
+
+    if (focused) {
+      React.use(promise);
+    }
+
+    return <Text>Settings</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Tab.Navigator backBehavior="history">
+          <Tab.Screen name="Home" component={TestScreen} />
+          <Tab.Screen name="Profile" component={TestScreen} />
+          <Tab.Screen name="Settings" component={SettingsScreen} />
+        </Tab.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  await act(async () => navigation.navigate('Settings'));
+
+  expect(window.location.pathname).toBe('/profile');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  expect(window.location.pathname).toBe('/');
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('restores previous params on browser back while another screen suspends', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: { Home: '', Profile: 'profile/:user', Settings: 'settings' },
+    },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const SettingsScreen = () => {
+    React.use(promise);
+
+    return <Text>Settings</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Profile" component={TestScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Profile', { user: 'alice' }));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile/alice'));
+
+  const profileKey = navigation.getCurrentRoute()?.key;
+
+  await act(async () =>
+    navigation.dispatch(CommonActions.pushParams({ user: 'bob' }))
+  );
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile/bob'));
+
+  await act(async () => navigation.navigate('Settings'));
+
+  expect(window.location.pathname).toBe('/profile/bob');
+
+  act(() => window.history.back());
+
+  await waitFor(() =>
+    expect(navigation.getCurrentRoute()?.params).toEqual({ user: 'alice' })
+  );
+
+  expect(navigation.getCurrentRoute()?.key).toBe(profileKey);
+  expect(window.location.pathname).toBe('/profile/alice');
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'Home',
+    'Profile',
+  ]);
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(window.location.pathname).toBe('/profile/alice');
+});
+
+test('restores previous params on browser back while pushParams suspends', async () => {
+  type ParamList = {
+    Home: undefined;
+    Profile: { user: string };
+  };
+
+  const Stack = createStackNavigator<ParamList>();
+
+  const linking = {
+    config: { screens: { Home: '', Profile: 'profile/:user' } },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const ProfileScreen = ({
+    route,
+  }: {
+    route: RouteProp<ParamList, 'Profile'>;
+  }) => {
+    if (route.params.user === 'charlie') {
+      React.use(promise);
+    }
+
+    return <Text>{route.params.user}</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamList>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Profile', { user: 'alice' }));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile/alice'));
+
+  await act(async () =>
+    navigation.dispatch(CommonActions.pushParams({ user: 'bob' }))
+  );
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile/bob'));
+
+  await act(async () =>
+    navigation.dispatch(CommonActions.pushParams({ user: 'charlie' }))
+  );
+
+  expect(window.location.pathname).toBe('/profile/bob');
+
+  act(() => window.history.back());
+
+  await waitFor(() =>
+    expect(navigation.getCurrentRoute()?.params).toEqual({ user: 'alice' })
+  );
+
+  expect(window.location.pathname).toBe('/profile/alice');
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(navigation.getCurrentRoute()?.params).toEqual({ user: 'alice' });
+});
+
+test('preserves updated params on consecutive browser back presses while the first destination is suspended', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: { screens: { Home: '', Profile: 'profile', Settings: 'settings' } },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  let suspendProfile = false;
+
+  const ProfileScreen = () => {
+    const focused = useIsFocused();
+
+    if (suspendProfile && focused) {
+      React.use(promise);
+    }
+
+    return <Text>Profile</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Settings" component={TestScreen} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  await act(async () => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  await act(async () =>
+    navigation.dispatch({
+      ...CommonActions.setParams({ updated: true }),
+      source: navigation.getRootState()?.routes[0]?.key,
+    })
+  );
+
+  suspendProfile = true;
+
+  act(() => window.history.back());
+
+  await waitFor(() =>
+    expect(navigation.getCurrentRoute()?.name).toBe('Profile')
+  );
+
+  expect(
+    screen
+      .getByText('Settings')
+      .closest('[aria-current]')
+      ?.getAttribute('aria-current')
+  ).toBe('true');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  expect(navigation.getCurrentRoute()?.params).toEqual({ updated: true });
+  expect(window.location.pathname).toBe('/');
+  expect(navigation.getRootState()?.routes).toEqual([
+    expect.objectContaining({ name: 'Home' }),
+  ]);
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  expect(navigation.getCurrentRoute()?.params).toEqual({ updated: true });
+  expect(window.location.pathname).toBe('/');
+});
+
+test('handles browser forward while the back destination is suspended', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: { screens: { Home: '', Profile: 'profile', Settings: 'settings' } },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  let suspendProfile = false;
+
+  const ProfileScreen = () => {
+    const focused = useIsFocused();
+
+    if (suspendProfile && focused) {
+      React.use(promise);
+    }
+
+    return <Text>Profile</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Settings" component={TestScreen} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  await act(async () => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  suspendProfile = true;
+
+  act(() => window.history.back());
+
+  await waitFor(() =>
+    expect(navigation.getCurrentRoute()?.name).toBe('Profile')
+  );
+
+  expect(
+    screen
+      .getByText('Settings')
+      .closest('[aria-current]')
+      ?.getAttribute('aria-current')
+  ).toBe('true');
+
+  act(() => window.history.forward());
+
+  await waitFor(() =>
+    expect(navigation.getCurrentRoute()?.name).toBe('Settings')
+  );
+
+  expect(window.location.pathname).toBe('/settings');
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Settings');
+  expect(window.location.pathname).toBe('/settings');
+
+  act(() => window.history.back());
+
+  await waitFor(() =>
+    expect(navigation.getCurrentRoute()?.name).toBe('Profile')
+  );
+
+  expect(window.location.pathname).toBe('/profile');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  expect(window.location.pathname).toBe('/');
+});
+
+test('handles consecutive browser back presses across nested navigators while a destination is suspended', async () => {
+  const Stack = createStackNavigator();
+
+  const Child = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Section: {
+          path: 'section',
+          screens: { Feed: 'feed', Profile: 'profile' },
+        },
+      },
+    },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  let suspendFeed = false;
+
+  const FeedScreen = () => {
+    const focused = useIsFocused();
+
+    if (suspendFeed && focused) {
+      React.use(promise);
+    }
+
+    return <Text>Feed</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Section">
+            {() => (
+              <Child.Navigator>
+                <Child.Screen name="Feed" component={FeedScreen} />
+                <Child.Screen name="Profile" component={TestScreen} />
+              </Child.Navigator>
+            )}
+          </Stack.Screen>
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(async () => navigation.navigate('Section'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/section/feed'));
+
+  await act(async () => navigation.navigate('Profile'));
+
+  await waitFor(() =>
+    expect(window.location.pathname).toBe('/section/profile')
+  );
+
+  suspendFeed = true;
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Feed'));
+
+  expect(
+    screen
+      .getByText('Profile')
+      .closest('[aria-current]')
+      ?.getAttribute('aria-current')
+  ).toBe('true');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  expect(window.location.pathname).toBe('/');
+
+  await act(async () => {
+    resolve();
+
+    await promise;
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  expect(window.location.pathname).toBe('/');
+
+  act(() => window.history.forward());
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Feed'));
+
+  expect(window.location.pathname).toBe('/section/feed');
+
+  act(() => window.history.forward());
+
+  await waitFor(() =>
+    expect(navigation.getCurrentRoute()?.name).toBe('Profile')
+  );
+
+  expect(window.location.pathname).toBe('/section/profile');
 });
 
 test("doesn't add history entry for navigation interrupted before commit", async () => {

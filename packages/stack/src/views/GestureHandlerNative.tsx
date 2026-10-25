@@ -30,8 +30,5 @@ export function GestureDetector({
 }
 
 export { usePanGesture };
-export type {
-  PanGesture,
-  PanGestureActiveEvent,
-} from 'react-native-gesture-handler';
+export type { PanGesture } from 'react-native-gesture-handler';
 export { GestureHandlerRootView } from 'react-native-gesture-handler';

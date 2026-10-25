@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.59](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.58...@react-navigation/native-stack@8.0.0-alpha.59) (2026-10-13)
+
+### Bug Fixes
+
+* fallback to images when material symbols are not available ([8a45f3d](https://github.com/react-navigation/react-navigation/commit/8a45f3d06ecd2b2ced29e27a4d6d680b51e2c4d6)) - by @satya164
+* keep nested navigators with state mounted with `inactiveBehavior: 'unmount'` ([#13288](https://github.com/react-navigation/react-navigation/issues/13288)) ([bd94cb0](https://github.com/react-navigation/react-navigation/commit/bd94cb04fc711fbbcbd0a6fc242387ed9e65eb38)) - by @satya164
+
+### Features
+
+* accept a direction option in MaterialSymbol.getImageSource ([7ce51a6](https://github.com/react-navigation/react-navigation/commit/7ce51a6977e9767379eaafd886b88200462f998d)) - by @satya164
+* add support for filled material symbols and reduce size ([#13274](https://github.com/react-navigation/react-navigation/issues/13274)) ([d6c10f5](https://github.com/react-navigation/react-navigation/commit/d6c10f5390ce4c54d9b205e0c080ff3d7fff9441)) - by @satya164
+* add visibilityPriority and submenu description to header items ([#13284](https://github.com/react-navigation/react-navigation/issues/13284)) ([020e972](https://github.com/react-navigation/react-navigation/commit/020e9723c34bba4d7d4f1a8c75547fdbfb2f2eb8)) - by @satya164
+* support tinted image icons on Android and rendering mode for SF Symbol icons ([#13278](https://github.com/react-navigation/react-navigation/issues/13278)) ([e50049a](https://github.com/react-navigation/react-navigation/commit/e50049a71517809fec9371c5345e225edfb70477)), closes [#13282](https://github.com/react-navigation/react-navigation/issues/13282) - by @stachbial
+
+# [8.0.0-alpha.58](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.57...@react-navigation/native-stack@8.0.0-alpha.58) (2026-10-02)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [8.0.0-alpha.57](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.56...@react-navigation/native-stack@8.0.0-alpha.57) (2026-09-29)
+
+### Bug Fixes
+
+* support `| undefined` to better work with `exactOptionalPropertyTypes` ([a9f81b8](https://github.com/react-navigation/react-navigation/commit/a9f81b8cf26260f1caeb7a89bfb214eb9483eb69)) - by @satya164
+
+### Features
+
+* add a `tabBarRepeatedPressBehavior` option to tabs ([746e27b](https://github.com/react-navigation/react-navigation/commit/746e27bf0e2b290f8b974198218e6f58209c812c)) - by @satya164
+
+### BREAKING CHANGES
+
+* this also removes `NavigationMetaContext` as it's now
+unused.
+
+# [8.0.0-alpha.56](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.55...@react-navigation/native-stack@8.0.0-alpha.56) (2026-09-22)
+
+### Bug Fixes
+
+* preserve navigator state types in navigation helpers ([34a1051](https://github.com/react-navigation/react-navigation/commit/34a105103e0f2c9f0dc1f1134dfe3202489c21a5)) - by @
+* use the remove action when dismissing stack screens ([fa94afe](https://github.com/react-navigation/react-navigation/commit/fa94afe7964d98d3e69668ecf5370c281125617c)) - by @
+
 # [8.0.0-alpha.55](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.54...@react-navigation/native-stack@8.0.0-alpha.55) (2026-09-19)
 
 ### Bug Fixes

@@ -10,7 +10,7 @@ import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { entries, fromEntries } from '../utilities';
 
-export type FormSheetConfig = {
+type FormSheetConfig = {
   name: string;
   options: NativeStackNavigationOptions;
   params?: {

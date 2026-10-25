@@ -3,7 +3,7 @@ import UIKit
 @objcMembers public class ReactNavigationSFSymbolViewImplProps: NSObject {
   public var name: String?
   public var size: CGFloat = 24
-  public var color: UIColor = .black
+  public var color: UIColor?
   public var weight: Int = 0
   public var scale: String = "medium"
   public var renderingMode: String = "monochrome"
@@ -59,6 +59,12 @@ import UIKit
     fatalError("init(coder:) has not been implemented")
   }
 
+  override public var semanticContentAttribute: UISemanticContentAttribute {
+    didSet {
+      imageView.semanticContentAttribute = semanticContentAttribute
+    }
+  }
+
   @objc public func updateProps(_ props: ReactNavigationSFSymbolViewImplProps, oldProps: ReactNavigationSFSymbolViewImplProps) {
     let needsImageUpdate =
       props.name != oldProps.name ||
@@ -107,7 +113,7 @@ import UIKit
         switch props.renderingMode {
         case "hierarchical":
           configuration = configuration.applying(
-            UIImage.SymbolConfiguration(hierarchicalColor: primaryColor)
+            UIImage.SymbolConfiguration(hierarchicalColor: primaryColor ?? .tintColor)
           )
 
           let image = Self.symbolImage(name: name, configuration: configuration, props: props)
@@ -118,7 +124,7 @@ import UIKit
         case "palette":
           var paletteColors: [UIColor] = []
 
-          paletteColors.append(primaryColor)
+          paletteColors.append(primaryColor ?? .tintColor)
 
           if let secondary = props.colorSecondary {
             paletteColors.append(secondary)

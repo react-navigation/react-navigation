@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.51](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.50...@react-navigation/native@8.0.0-alpha.51) (2026-10-13)
+
+### Bug Fixes
+
+* correctly set size for material symbol ([b0e0a5e](https://github.com/react-navigation/react-navigation/commit/b0e0a5e9a3ea4d2ba99f73bac812a41b022cd9d1)) - by @satya164
+* fallback to images when material symbols are not available ([8a45f3d](https://github.com/react-navigation/react-navigation/commit/8a45f3d06ecd2b2ced29e27a4d6d680b51e2c4d6)) - by @satya164
+* propagate layout direction to sf symbols ([3cdc6f1](https://github.com/react-navigation/react-navigation/commit/3cdc6f1dd6dcbf381ade32b1b84c44ba9d0a0620)) - by @satya164
+* remove unnecessary text from material symbol view ([8e1b7ed](https://github.com/react-navigation/react-navigation/commit/8e1b7ed901182e361f8506d99f49eaa83996cbc5)) - by @satya164
+
+### Features
+
+* accept a direction option in MaterialSymbol.getImageSource ([7ce51a6](https://github.com/react-navigation/react-navigation/commit/7ce51a6977e9767379eaafd886b88200462f998d)) - by @satya164
+* add support for extending SFSymbol name types ([#13166](https://github.com/react-navigation/react-navigation/issues/13166)) ([4ba764e](https://github.com/react-navigation/react-navigation/commit/4ba764e041a96691fa2e0e4052452ebe90f5af7c)) - by @satya164
+* add support for filled material symbols and reduce size ([#13274](https://github.com/react-navigation/react-navigation/issues/13274)) ([d6c10f5](https://github.com/react-navigation/react-navigation/commit/d6c10f5390ce4c54d9b205e0c080ff3d7fff9441)) - by @satya164
+* automatically mirror material symbols on android in RTL ([#13281](https://github.com/react-navigation/react-navigation/issues/13281)) ([b9c9fe6](https://github.com/react-navigation/react-navigation/commit/b9c9fe6ea9b8fcf32f49cb04045d944c1ee86a87)) - by @satya164
+
+# [8.0.0-alpha.50](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.49...@react-navigation/native@8.0.0-alpha.50) (2026-10-02)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [8.0.0-alpha.49](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.48...@react-navigation/native@8.0.0-alpha.49) (2026-09-29)
+
+### Bug Fixes
+
+* support `| undefined` to better work with `exactOptionalPropertyTypes` ([a9f81b8](https://github.com/react-navigation/react-navigation/commit/a9f81b8cf26260f1caeb7a89bfb214eb9483eb69)) - by @satya164
+
+### Features
+
+* add a `tabBarRepeatedPressBehavior` option to tabs ([746e27b](https://github.com/react-navigation/react-navigation/commit/746e27bf0e2b290f8b974198218e6f58209c812c)) - by @satya164
+
+### BREAKING CHANGES
+
+* this also removes `NavigationMetaContext` as it's now
+unused.
+
+# [8.0.0-alpha.48](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.47...@react-navigation/native@8.0.0-alpha.48) (2026-09-22)
+
+### Bug Fixes
+
+* handle browser back from committed navigation state ([6870eda](https://github.com/react-navigation/react-navigation/commit/6870eda74a9fe94a3c7207fa0d473df8d6a67a2a)) - by @
+
 # [8.0.0-alpha.47](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.46...@react-navigation/native@8.0.0-alpha.47) (2026-09-19)
 
 ### Bug Fixes

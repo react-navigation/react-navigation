@@ -17,7 +17,6 @@ export {
 } from './NavigationFocusedRouteStateContext';
 export { NavigationHelpersContext } from './NavigationHelpersContext';
 export { NavigationIndependentTree } from './NavigationIndependentTree';
-export { NavigationMetaContext } from './NavigationMetaContext';
 export {
   IsScreenContext,
   NavigationContext,

@@ -134,6 +134,9 @@ export const PostDetailsScreen = ({
   expectTypeOf(navigation.push)
     .parameter(0)
     .toEqualTypeOf<keyof RootStackParamList>();
+  expectTypeOf(navigation.dismiss).parameters.toEqualTypeOf<
+    [count?: number | undefined]
+  >();
 
   expectTypeOf(navigation.setOptions)
     .parameter(0)
@@ -1584,7 +1587,7 @@ useNavigation('Invalid');
 }
 
 /**
- * Routes from dynamic dynamic navigator should return generic navigation
+ * Routes from dynamic navigator should return generic navigation
  */
 {
   const navigation = useNavigation('TabChat');

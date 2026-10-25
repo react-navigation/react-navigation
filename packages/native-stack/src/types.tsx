@@ -74,6 +74,7 @@ export type NativeStackOptionsArgs<
 
 export type NativeStackNavigationHelpers = NavigationHelpers<
   ParamListBase,
+  StackNavigationState<ParamListBase>,
   NativeStackNavigationEventMap
 >;
 
@@ -376,7 +377,7 @@ export type NativeStackNavigationOptions = {
       }) => React.ReactNode)
     | undefined;
   /**
-   * How to align the the header title.
+   * How to align the header title.
    * Defaults to `left` on platforms other than iOS.
    *
    * Not supported on iOS. It's always `center` on iOS and cannot be changed.
@@ -452,12 +453,14 @@ export type NativeStackNavigationOptions = {
    *
    * @platform android
    */
-  unstable_headerInsets?: {
-    top?: boolean;
-    left?: boolean;
-    right?: boolean;
-    bottom?: boolean;
-  };
+  unstable_headerInsets?:
+    | {
+        top?: boolean | undefined;
+        left?: boolean | undefined;
+        right?: boolean | undefined;
+        bottom?: boolean | undefined;
+      }
+    | undefined;
   /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
@@ -478,7 +481,7 @@ export type NativeStackNavigationOptions = {
   navigationBarHidden?: boolean | undefined;
   /**
    * Sets the status bar animation (similar to the `StatusBar` component).
-   * On Android, setting either `fade` or `slide` will set the transition of status bar color. On iOS, this option applies to appereance animation of the status bar.
+   * On Android, setting either `fade` or `slide` will set the transition of status bar color. On iOS, this option applies to appearance animation of the status bar.
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
    *
    * Defaults to `fade` on iOS and `none` on Android.
@@ -648,7 +651,7 @@ export type NativeStackNavigationOptions = {
    * There is also possibility to specify `fitToContents` literal, which intents to set the sheet height
    * to the height of its contents.
    *
-   * Note that the array **must** be sorted in ascending order. This invariant is verified only in developement mode,
+   * Note that the array **must** be sorted in ascending order. This invariant is verified only in development mode,
    * where violation results in error.
    *
    * **Android is limited to up 3 values in the array** -- any surplus values, beside first three are ignored.
@@ -707,7 +710,7 @@ export type NativeStackNavigationOptions = {
    * The largest sheet detent for which a view underneath won't be dimmed.
    * Works only when `presentation` is set to `formSheet`.
    *
-   * This prop can be set to an number, which indicates index of detent in `sheetAllowedDetents` array for which
+   * This prop can be set to a number, which indicates index of detent in `sheetAllowedDetents` array for which
    * there won't be a dimming view beneath the sheet.
    *
    * Additionaly there are following options available:
@@ -716,7 +719,7 @@ export type NativeStackNavigationOptions = {
    * * `last` - there won't be a dimming view for any detent level.
    *
    * @remark
-   * On iOS, the native implementation might resize the the sheet w/o explicitly changing the detent level, e.g. in case of keyboard appearance.
+   * On iOS, the native implementation might resize the sheet w/o explicitly changing the detent level, e.g. in case of keyboard appearance.
    * In case after such resize the sheet exceeds height for which in regular scenario a dimming view would be applied - it will be applied,
    * even if the detent has not effectively been changed.
    *
@@ -768,6 +771,10 @@ export type NativeStackNavigationOptions = {
    * - "landscape": landscape orientations are permitted.
    * - "landscape_left": landscape-left orientation is permitted.
    * - "landscape_right": landscape-right orientation is permitted.
+   *
+   * If not set, the screen inherits the orientation of its parent screen.
+   * If no parent screen sets the `orientation`, it uses the supported orientations in the app's `Info.plist` on iOS,
+   * on Android, it lets the system decide the best orientation.
    *
    * Only supported on iOS and Android.
    */
@@ -833,7 +840,9 @@ export type NativeStackNavigationOptions = {
   inactiveBehavior?: 'pause' | 'unmount' | 'none' | undefined;
 };
 
-type IconIOS = Extract<Icon, { type: 'image' | 'sfSymbol' }>;
+type IconIOS =
+  | Extract<Icon, { type: 'image' }>
+  | Omit<Extract<Icon, { type: 'sfSymbol' }>, 'renderingMode'>;
 
 type SharedHeaderItem = {
   /**
@@ -899,6 +908,18 @@ type SharedHeaderItem = {
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/identifier
    */
   identifier?: string | undefined;
+  /**
+   * Priority used when the items don't fit in the header.
+   * Items with lower priority are moved to the overflow menu first.
+   *
+   * Only applies to items in `unstable_headerRightItems`.
+   *
+   * Defaults to `default`.
+   * Only available from iOS 27.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitemvisibilitypriority
+   */
+  visibilityPriority?: 'low' | 'default' | 'high' | undefined;
   /**
    * A badge to display on a item.
    * Only available from iOS 26.0 and later.
@@ -1026,6 +1047,10 @@ export type NativeStackHeaderItemMenuSubmenu = {
    * Label for the submenu item.
    */
   label: string;
+  /**
+   * The secondary text displayed alongside the label of the submenu item.
+   */
+  description?: string | undefined;
   /**
    * Icon for the submenu item.
    */

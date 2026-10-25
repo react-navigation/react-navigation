@@ -4,6 +4,8 @@ import { expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
   NavigationContainer,
+  type NavigatorScreenParams,
+  StackActions,
   useFocusEffect,
   useIsFocused,
 } from '@react-navigation/native';
@@ -21,6 +23,18 @@ type StackParamList = {
 
 type NestedStackParamList = {
   D: undefined;
+};
+
+type ParentStackParamList = {
+  A: NavigatorScreenParams<ChildStackParamList>;
+  B: undefined;
+  C: undefined;
+  D: undefined;
+};
+
+type ChildStackParamList = {
+  X: undefined;
+  Y: undefined;
 };
 
 jest.useFakeTimers();
@@ -428,6 +442,69 @@ test('default inactiveBehavior="pause" unmounts effects except last 2 screens', 
   expect(effectActiveB).toBe(true);
 });
 
+test('inactiveBehavior="unmount" keeps screens with nested navigators mounted', async () => {
+  const Stack = createStackNavigator<ParentStackParamList>();
+  const NestedStack = createStackNavigator<ChildStackParamList>();
+
+  const navigation = createNavigationContainerRef<ParentStackParamList>();
+  const user = userEvent.setup();
+
+  const Counter = ({ name }: { name: string }) => {
+    const [count, setCount] = React.useState(0);
+
+    return (
+      <View>
+        <Text>
+          {name}: {count}
+        </Text>
+        <Button onPress={() => setCount((c) => c + 1)} title="Increment" />
+      </View>
+    );
+  };
+
+  const Nested = () => (
+    <NestedStack.Navigator>
+      <NestedStack.Screen name="X">{() => null}</NestedStack.Screen>
+      <NestedStack.Screen name="Y">
+        {() => <Counter name="Nested" />}
+      </NestedStack.Screen>
+    </NestedStack.Navigator>
+  );
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator screenOptions={{ inactiveBehavior: 'unmount' }}>
+        <Stack.Screen name="A" component={Nested} />
+        <Stack.Screen name="B">{() => <Counter name="Plain" />}</Stack.Screen>
+        <Stack.Screen name="C">{() => null}</Stack.Screen>
+        <Stack.Screen name="D">{() => null}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('A', { screen: 'Y' }));
+  await user.press(screen.getByRole('button', { name: 'Increment' }));
+
+  expect(screen.getByText('Nested: 1')).toBeOnTheScreen();
+
+  await act(() => navigation.navigate('B'));
+  await user.press(screen.getByRole('button', { name: 'Increment' }));
+
+  expect(screen.getByText('Plain: 1')).toBeOnTheScreen();
+
+  await act(() => navigation.navigate('C'));
+  await act(() => navigation.navigate('D'));
+  await act(() => jest.runAllTimers());
+
+  await act(() => navigation.dispatch(StackActions.popTo('B')));
+
+  expect(screen.getByText('Plain: 0')).toBeOnTheScreen();
+
+  await act(() => navigation.dispatch(StackActions.popTo('A')));
+
+  expect(screen.getByText('Nested: 1')).toBeOnTheScreen();
+});
+
 test('preloading a screen runs effects', async () => {
   let effectActive = false;
 
@@ -460,7 +537,7 @@ test('preloading a screen runs effects', async () => {
   expect(effectActive).toBe(true);
 });
 
-test('renders back button in the nested stack', async () => {
+test('goes back to the parent screen with the nested stack header button', async () => {
   const StackA = createStackNavigator<NestedStackParamList>();
 
   const StackAScreen = ({ route }: StackScreenProps<StackParamList>) => (
@@ -481,6 +558,7 @@ test('renders back button in the nested stack', async () => {
   );
 
   const StackB = createStackNavigator<StackParamList>();
+
   const user = userEvent.setup();
 
   await render(
@@ -497,4 +575,14 @@ test('renders back button in the nested stack', async () => {
   await user.press(screen.getByRole('button', { name: 'Go to B' }));
 
   expect(screen.getByRole('button', { name: 'A, back' })).not.toBeNull();
+
+  await act(() => jest.runAllTimers());
+
+  await user.press(screen.getByRole('button', { name: 'A, back' }));
+
+  await act(() => jest.runAllTimers());
+
+  expect(screen.getByRole('button', { name: 'Go to B' })).not.toBeNull();
+  expect(screen.queryByRole('button', { name: 'Go to A' })).toBeNull();
+  expect(screen.queryByRole('button', { name: 'A, back' })).toBeNull();
 });

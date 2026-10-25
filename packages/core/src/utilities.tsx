@@ -151,7 +151,7 @@ export type QueryParamInput = string | string[] | null | undefined;
  * Supports repeated params with `+` and `*` suffixes as strings.
  * Params must start with `:` at the beginning of a segment (after `/`).
  */
-export type ExtractParamStrings<Path extends string> =
+type ExtractParamStrings<Path extends string> =
   Path extends `${infer Segment}/${infer Rest}`
     ? ExtractSegmentParam<Segment> & ExtractParamStrings<Rest>
     : ExtractSegmentParam<Path>;
@@ -159,7 +159,7 @@ export type ExtractParamStrings<Path extends string> =
 /**
  * Get the type of params based on the `parse` config and the path pattern.
  */
-export type ExtractParamsType<Params, Parse> = {
+type ExtractParamsType<Params, Parse> = {
   /**
    * Base param types from path pattern
    * Refine the type based on standard schema, then parse function

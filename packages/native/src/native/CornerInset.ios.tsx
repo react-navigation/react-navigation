@@ -9,7 +9,7 @@ import ReactNavigationCornerInsetViewNativeComponent, {
 } from './ReactNavigationCornerInsetViewNativeComponent';
 
 type Props = CornerInsetProps & {
-  ref?: React.Ref<CornerInsetRef>;
+  ref?: React.Ref<CornerInsetRef> | undefined;
 };
 
 export function CornerInset({ ref, ...rest }: Props) {
