@@ -476,7 +476,10 @@ export class CardStack extends React.Component<Props, State> {
           isAnimationEnabled &&
           getIsGestureEnabledByDefault(cardStyleInterpolator),
         headerStyleInterpolator = transitionPreset.headerStyleInterpolator,
-        cardOverlayEnabled,
+        cardOverlayEnabled = descriptor.options.presentation ===
+        'transparentModal'
+          ? false
+          : undefined,
         cardShadowEnabled,
       } = optionsForTransitionConfig;
 

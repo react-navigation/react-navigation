@@ -596,7 +596,7 @@ function Card({
           collapsable={false}
         />
       ) : null}
-      {(overlayEnabled ?? overlayStyle != null) ? (
+      {(overlayEnabled ?? (overlayStyle != null && !isTransparent)) ? (
         <View style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}>
           {overlay({ style: overlayStyle })}
         </View>
