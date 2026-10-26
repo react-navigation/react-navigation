@@ -10,6 +10,7 @@ import {
   type RouteProp,
   StackActions,
   type StackNavigationState,
+  ThemeContext,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -493,43 +494,52 @@ export class StackView extends React.Component<Props, State> {
       }, {});
 
     return (
-      <GestureHandlerWrapper style={styles.container}>
-        <SafeAreaProviderCompat>
-          <SafeAreaInsetsContext.Consumer>
-            {(insets) => (
-              <ModalPresentationContext.Consumer>
-                {(isParentModal) => (
-                  <HeaderShownContext.Consumer>
-                    {(isParentHeaderShown) => (
-                      <CardStack
-                        insets={insets!}
-                        isParentHeaderShown={isParentHeaderShown}
-                        isParentModal={isParentModal}
-                        getPreviousRoute={this.getPreviousRoute}
-                        routes={routes}
-                        openingRouteKeys={openingRouteKeys}
-                        closingRouteKeys={closingRouteKeys}
-                        onOpenRoute={this.handleOpenRoute}
-                        onCloseRoute={this.handleCloseRoute}
-                        onTransitionStart={this.handleTransitionStart}
-                        onTransitionEnd={this.handleTransitionEnd}
-                        renderHeader={this.renderHeader}
-                        state={state}
-                        descriptors={descriptors}
-                        onGestureStart={this.handleGestureStart}
-                        onGestureEnd={this.handleGestureEnd}
-                        onGestureCancel={this.handleGestureCancel}
-                        preloadedDescriptors={preloadedDescriptors}
-                        {...rest}
-                      />
+      <ThemeContext.Consumer>
+        {(theme) => (
+          <GestureHandlerWrapper
+            style={[
+              styles.container,
+              { backgroundColor: theme?.colors.background },
+            ]}
+          >
+            <SafeAreaProviderCompat>
+              <SafeAreaInsetsContext.Consumer>
+                {(insets) => (
+                  <ModalPresentationContext.Consumer>
+                    {(isParentModal) => (
+                      <HeaderShownContext.Consumer>
+                        {(isParentHeaderShown) => (
+                          <CardStack
+                            insets={insets!}
+                            isParentHeaderShown={isParentHeaderShown}
+                            isParentModal={isParentModal}
+                            getPreviousRoute={this.getPreviousRoute}
+                            routes={routes}
+                            openingRouteKeys={openingRouteKeys}
+                            closingRouteKeys={closingRouteKeys}
+                            onOpenRoute={this.handleOpenRoute}
+                            onCloseRoute={this.handleCloseRoute}
+                            onTransitionStart={this.handleTransitionStart}
+                            onTransitionEnd={this.handleTransitionEnd}
+                            renderHeader={this.renderHeader}
+                            state={state}
+                            descriptors={descriptors}
+                            onGestureStart={this.handleGestureStart}
+                            onGestureEnd={this.handleGestureEnd}
+                            onGestureCancel={this.handleGestureCancel}
+                            preloadedDescriptors={preloadedDescriptors}
+                            {...rest}
+                          />
+                        )}
+                      </HeaderShownContext.Consumer>
                     )}
-                  </HeaderShownContext.Consumer>
+                  </ModalPresentationContext.Consumer>
                 )}
-              </ModalPresentationContext.Consumer>
-            )}
-          </SafeAreaInsetsContext.Consumer>
-        </SafeAreaProviderCompat>
-      </GestureHandlerWrapper>
+              </SafeAreaInsetsContext.Consumer>
+            </SafeAreaProviderCompat>
+          </GestureHandlerWrapper>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }
