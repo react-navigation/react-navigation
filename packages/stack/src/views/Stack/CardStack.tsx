@@ -383,9 +383,10 @@ export class CardStack extends React.Component<Props, State> {
             ? transitionPreset.cardStyleInterpolator
             : forNoAnimationCard,
           headerStyleInterpolator = transitionPreset.headerStyleInterpolator,
-          cardOverlayEnabled = (Platform.OS !== 'ios' &&
-            optionsForTransitionConfig.presentation !== 'transparentModal') ||
-            getIsModalPresentation(cardStyleInterpolator),
+          cardOverlayEnabled = descriptor.options.presentation !==
+            'transparentModal' &&
+            (Platform.OS !== 'ios' ||
+              getIsModalPresentation(cardStyleInterpolator)),
         } = optionsForTransitionConfig;
 
         const headerMode: StackHeaderMode =
