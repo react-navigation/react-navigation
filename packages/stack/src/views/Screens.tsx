@@ -29,7 +29,7 @@ export const MaybeScreen = ({
   ...rest
 }: ViewProps & {
   enabled: boolean;
-  active: 0 | 1 | Animated.AnimatedInterpolation<0 | 1>;
+  active: 0 | 1 | 2 | Animated.AnimatedInterpolation<0 | 1 | 2>;
   children: React.ReactNode;
   freezeOnBlur?: boolean;
   shouldFreeze: boolean;

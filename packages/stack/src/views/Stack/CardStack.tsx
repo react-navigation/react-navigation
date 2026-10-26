@@ -90,7 +90,7 @@ type State = {
   scenes: (Scene & { __memo: unknown[] })[];
   gestures: GestureValues;
   layout: Layout;
-  activeStates: (0 | 1 | Animated.AnimatedInterpolation<0 | 1>)[];
+  activeStates: (0 | 1 | 2 | Animated.AnimatedInterpolation<0 | 1 | 2>)[];
   headerHeights: Record<string, number>;
 };
 
@@ -518,12 +518,19 @@ export class CardStack extends React.Component<Props, State> {
           | 1
           | 2;
 
-        const lastActiveState = state.activeStates[index];
         const activeAfterTransition = index >= self.length - activeScreensLimit;
 
-        if (lastActiveState === STATE_INACTIVE && !activeAfterTransition) {
-          // screen was inactive before and it will still be inactive after the transition
+        if (index < self.length - activeScreensLimit - 1) {
+          // screen should be inactive because it is too deep in the stack
+          // activating it during the transition makes the screen container re-attach
+          // all screens above it to keep the order, which can show a blank frame on Android
           activityState = STATE_INACTIVE;
+        } else if (Platform.OS === 'android' && index === self.length - 1) {
+          // On Android, the screen container switches all screens to hardware layers
+          // when no screen is on top, i.e. during the transition
+          // Doing this at the start of a transition can show a blank frame
+          // So we keep the topmost screen on top during the transition
+          activityState = STATE_ON_TOP;
         } else {
           const sceneForActivity = scenes[self.length - 1];
           const outputValue =
