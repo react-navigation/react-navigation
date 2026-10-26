@@ -478,7 +478,7 @@ export type BottomTabHeaderProps = {
 export type BottomTabBarProps = {
   state: TabNavigationState<ParamListBase>;
   descriptors: BottomTabDescriptorMap;
-  navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
+  navigation: BottomTabNavigationHelpers;
   insets: EdgeInsets;
 };
 

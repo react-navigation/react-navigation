@@ -337,10 +337,7 @@ export type MaterialTopTabNavigationConfig = Omit<
 
 export type MaterialTopTabBarProps = SceneRendererProps & {
   state: TabNavigationState<ParamListBase>;
-  navigation: NavigationHelpers<
-    ParamListBase,
-    MaterialTopTabNavigationEventMap
-  >;
+  navigation: MaterialTopTabNavigationHelpers;
   descriptors: MaterialTopTabDescriptorMap;
 };
 

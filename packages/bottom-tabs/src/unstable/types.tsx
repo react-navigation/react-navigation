@@ -548,10 +548,7 @@ export type NativeBottomTabNavigationConfig = {};
 export type NativeBottomTabBarProps = {
   state: TabNavigationState<ParamListBase>;
   descriptors: NativeBottomTabDescriptorMap;
-  navigation: NavigationHelpers<
-    ParamListBase,
-    NativeBottomTabNavigationEventMap
-  >;
+  navigation: NativeBottomTabNavigationHelpers;
   insets: EdgeInsets;
 };
 
