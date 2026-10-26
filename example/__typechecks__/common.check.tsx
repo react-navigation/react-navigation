@@ -12,14 +12,17 @@ import type {
 import { Button } from '@react-navigation/elements';
 import {
   type CompositeScreenProps,
+  type GenericNavigation,
   Link,
   type NavigationAction,
   type NavigationContainerRef,
   type NavigationHelpers,
+  type NavigationState,
   type NavigatorScreenParams,
   type Route,
   type Theme,
   useLinkProps,
+  useNavigation,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -848,3 +851,26 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
   PostDetails
 </Button>;
 <Button<LinkParamList> screen="Login">Albums</Button>;
+
+/**
+ * Check for useNavigation return type
+ */
+{
+  const navigation = useNavigation();
+
+  expectTypeOf(navigation).toEqualTypeOf<
+    GenericNavigation<ReactNavigation.RootParamList>
+  >();
+
+  expectTypeOf(navigation.getState()).toEqualTypeOf<
+    NavigationState | undefined
+  >();
+
+  expectTypeOf(navigation.getState()).toEqualTypeOf<
+    NavigationState | undefined
+  >();
+
+  expectTypeOf(navigation.setParams).parameter(0).toEqualTypeOf<unknown>();
+
+  expectTypeOf(navigation.replaceParams).parameter(0).toEqualTypeOf<unknown>();
+}

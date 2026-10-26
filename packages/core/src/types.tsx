@@ -642,6 +642,57 @@ export type NavigationProp<
   EventConsumer<EventMap & EventMapCore<State>> &
   PrivateValueStore<[ParamList, RouteName, EventMap]>;
 
+/**
+ * A stripped down NavigationProp if the navigator is not known.
+ *
+ * The hook can be used in `NavigationContainer` directly, not inside of a navigator.
+ * So navigator specific methods won't be available.
+ */
+export type GenericNavigation<ParamList extends {}> = Omit<
+  NavigationProp<ParamList>,
+  'getState' | 'setParams' | 'replaceParams' | 'setOptions'
+> & {
+  /**
+   * Returns the navigator's state.
+   *
+   * This may return `undefined` if used outside of a navigator,
+   * as the navigator may not have rendered yet
+   */
+  getState(): NavigationState | undefined;
+
+  /**
+   * Update the param object for the route.
+   * The new params will be shallow merged with the old one.
+   *
+   * @param params Partial params object for the current route.
+   */
+  setParams(
+    // We don't know which route to set params for
+    params: unknown
+  ): void;
+
+  /**
+   * Replace the param object for the route
+   *
+   * @param params Params object for the current route.
+   */
+  replaceParams(
+    // We don't know which route to replace params for
+    params: unknown
+  ): void;
+
+  /**
+   * Update the options for the route.
+   * The options object will be shallow merged with default options object.
+   *
+   * @param options Partial options object for the current screen.
+   */
+  setOptions(
+    // We don't know which navigator to set options for
+    options: unknown
+  ): void;
+};
+
 export type RouteProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = Keyof<ParamList>,
