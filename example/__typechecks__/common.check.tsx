@@ -14,7 +14,9 @@ import {
   type CompositeScreenProps,
   type GenericNavigation,
   Link,
+  type LinkingOptions,
   type NavigationAction,
+  NavigationContainer,
   type NavigationContainerRef,
   type NavigationHelpers,
   type NavigationState,
@@ -873,4 +875,138 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
   expectTypeOf(navigation.setParams).parameter(0).toEqualTypeOf<unknown>();
 
   expectTypeOf(navigation.replaceParams).parameter(0).toEqualTypeOf<unknown>();
+}
+
+/**
+ * Check for `linking` config type validation based on ParamList
+ */
+type LinkingParamList = {
+  Home: NavigatorScreenParams<HomeDrawerParamList>;
+  OptionalHome:
+    | NavigatorScreenParams<{
+        Feed: NavigatorScreenParams<FeedTabParamList> | undefined;
+        Account: undefined;
+      }>
+    | undefined;
+  Albums: NavigatorScreenParams<AlbumTabParamList>;
+  Login: undefined;
+  ScreenData: { screen: string; state: string };
+};
+
+{
+  const linking: LinkingOptions<LinkingParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        Home: {
+          initialRouteName: 'Feed',
+          screens: {
+            Feed: {
+              initialRouteName: 'Latest',
+              screens: {
+                Popular: 'popular',
+                Latest: 'latest',
+              },
+            },
+          },
+        },
+        OptionalHome: {
+          initialRouteName: 'Feed',
+          screens: {
+            Feed: {
+              initialRouteName: 'Latest',
+              screens: {
+                Popular: 'popular',
+                Latest: 'latest',
+              },
+            },
+            Account: 'account',
+          },
+        },
+        Login: 'login',
+        ScreenData: { path: 'screen-data' },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<LinkingParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        Home: {
+          screens: {
+            Feed: {
+              // @ts-expect-error
+              initialRouteName: 'InvalidRoute',
+              screens: {
+                // @ts-expect-error
+                InvalidNested: 'invalid',
+              },
+            },
+          },
+        },
+        OptionalHome: {
+          // @ts-expect-error
+          initialRouteName: 'InvalidRoute',
+          screens: {
+            Feed: {
+              // @ts-expect-error
+              initialRouteName: 'InvalidRoute',
+              screens: {
+                // @ts-expect-error
+                InvalidNested: 'invalid',
+              },
+            },
+          },
+        },
+        Albums: {
+          screens: {
+            Artist: {
+              path: 'artist/:id',
+              // @ts-expect-error - Artist is a leaf route, not a navigator
+              screens: {
+                Invalid: 'invalid',
+              },
+            },
+          },
+        },
+        Login: {
+          // @ts-expect-error - Login is a leaf route, not a navigator
+          screens: {
+            Invalid: 'invalid',
+          },
+        },
+        ScreenData: {
+          // @ts-expect-error - screen and state are ordinary route params
+          screens: {
+            Invalid: 'invalid',
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<LinkingParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        OptionalHome: {
+          screens: {
+            // @ts-expect-error
+            InvalidChild: 'invalid',
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
 }

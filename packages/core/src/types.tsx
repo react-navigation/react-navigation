@@ -1378,9 +1378,27 @@ export type PathConfig<ParamList extends {}> = Partial<PathConfigAlias> & {
 };
 
 export type PathConfigMap<ParamList extends {}> = {
-  [RouteName in keyof ParamList]?: NonNullable<
-    ParamList[RouteName]
-  > extends NavigatorScreenParams<infer T extends {}>
-    ? string | PathConfig<T>
-    : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
+  [RouteName in keyof ParamList]?: PathConfigForParams<ParamList[RouteName]>;
 };
+
+type NavigatorRoutes<Params> = Extract<Params, { screen: PropertyKey }>;
+
+type PathConfigForParams<Params> =
+  | string
+  | (Omit<PathConfig<{}>, 'screens' | 'initialRouteName'> &
+      ([NonNullable<Params>] extends [never]
+        ? unknown
+        : [NonNullable<Params>] extends [
+              NavigatorScreenParams<Record<PropertyKey, unknown>>,
+            ]
+          ? {
+              initialRouteName?: NavigatorRoutes<Params>['screen'];
+              screens?: {
+                [Route in NavigatorRoutes<Params> as Route['screen']]?: PathConfigForParams<
+                  Route extends { params?: infer ChildParams }
+                    ? ChildParams
+                    : never
+                >;
+              };
+            }
+          : unknown));
