@@ -565,6 +565,7 @@ type Props = {
 };
 
 export function NativeStackView({ state, navigation, descriptors }: Props) {
+  const { colors } = useTheme();
   const { setNextDismissedKey } = useDismissedRouteError(state);
 
   useInvalidPreventRemoveError(descriptors);
@@ -574,7 +575,10 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
   return (
     <SafeAreaProviderCompat>
-      <ScreenStack style={styles.container}>
+      <ScreenStack
+        style={styles.container}
+        nativeContainerStyle={{ backgroundColor: colors.background }}
+      >
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
 
