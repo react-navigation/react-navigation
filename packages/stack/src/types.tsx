@@ -2,7 +2,7 @@ import type {
   HeaderBackButtonDisplayMode,
   HeaderBackButtonProps,
   HeaderOptions,
-  HeaderSearchBarRef,
+  HeaderSearchBarCommands,
   HeaderTitleProps,
   Icon,
 } from '@react-navigation/elements';
@@ -140,7 +140,7 @@ export type Scene = {
    * Ref to the search bar in the header of the screen.
    * It's shared between the header and the screen for `useHeaderSearchBar`.
    */
-  headerSearchBarRef: React.RefObject<HeaderSearchBarRef | null>;
+  headerSearchBarRef: React.RefObject<HeaderSearchBarCommands | null>;
 };
 
 export type SceneProgress = {

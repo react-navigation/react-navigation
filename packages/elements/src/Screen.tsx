@@ -14,7 +14,7 @@ import { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 import { HeaderHeightContext } from './Header/HeaderHeightContext';
 import { HeaderSearchBarContext } from './Header/HeaderSearchBarContext';
 import { HeaderShownContext } from './Header/HeaderShownContext';
-import type { HeaderSearchBarRef } from './types';
+import type { HeaderSearchBarCommands } from './types';
 import { useFrameSize } from './useFrameSize';
 
 type Props = {
@@ -40,7 +40,7 @@ export function Screen(props: Props) {
   const parentHeaderHeight = React.use(HeaderHeightContext);
   const parentSearchBarRef = React.use(HeaderSearchBarContext);
 
-  const searchBarRef = React.useRef<HeaderSearchBarRef>(null);
+  const searchBarRef = React.useRef<HeaderSearchBarCommands>(null);
 
   const {
     focused,

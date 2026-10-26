@@ -68,7 +68,7 @@ type IconMaterialSymbol = {
 
 export type Icon = IconSfSymbol | IconMaterialSymbol | IconImage;
 
-export type HeaderSearchBarRef = {
+export type HeaderSearchBarCommands = {
   /**
    * Focus the search bar.
    */

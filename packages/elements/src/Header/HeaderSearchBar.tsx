@@ -25,7 +25,7 @@ import {
 } from '../LiquidGlassView';
 import { PlatformPressable } from '../PlatformPressable';
 import { Text } from '../Text';
-import type { HeaderSearchBarOptions, HeaderSearchBarRef } from '../types';
+import type { HeaderSearchBarCommands, HeaderSearchBarOptions } from '../types';
 import { HeaderBackButton } from './HeaderBackButton';
 import { BUTTON_SIZE, BUTTON_SPACING, HeaderButton } from './HeaderButton';
 import { HeaderButtonBackground } from './HeaderButtonBackground';
@@ -157,7 +157,7 @@ export function HeaderSearchBar({
     };
   }, [cancelSearch, navigation]);
 
-  const handle = React.useMemo<HeaderSearchBarRef>(
+  const handle = React.useMemo<HeaderSearchBarCommands>(
     () => ({
       focus: () => {
         inputRef.current?.focus();

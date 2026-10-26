@@ -1,6 +1,6 @@
 import {
   getDefaultHeaderHeight,
-  type HeaderSearchBarRef,
+  type HeaderSearchBarCommands,
 } from '@react-navigation/elements';
 import {
   ActivityView,
@@ -406,7 +406,7 @@ export class CardStack extends React.Component<Props, State> {
         new Animated.Value(props.closingRouteKeys.includes(route.key) ? 1 : 0);
       const headerSearchBarRef =
         previousScene?.headerSearchBarRef ??
-        React.createRef<HeaderSearchBarRef>();
+        React.createRef<HeaderSearchBarCommands>();
 
       const currentGesture = gestures[route.key];
 

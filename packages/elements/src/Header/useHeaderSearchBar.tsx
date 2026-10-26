@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import type { HeaderSearchBarRef } from '../types';
+import type { HeaderSearchBarCommands } from '../types';
 import { HeaderSearchBarContext } from './HeaderSearchBarContext';
 
-export function useHeaderSearchBar(): HeaderSearchBarRef {
+export function useHeaderSearchBar(): HeaderSearchBarCommands {
   const ref = React.use(HeaderSearchBarContext);
 
   if (ref === undefined) {

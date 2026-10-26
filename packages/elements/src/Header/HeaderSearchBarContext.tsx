@@ -1,8 +1,8 @@
 import type * as React from 'react';
 
 import { getNamedContext } from '../getNamedContext';
-import type { HeaderSearchBarRef } from '../types';
+import type { HeaderSearchBarCommands } from '../types';
 
 export const HeaderSearchBarContext = getNamedContext<
-  React.RefObject<HeaderSearchBarRef | null> | undefined
+  React.RefObject<HeaderSearchBarCommands | null> | undefined
 >('HeaderSearchBarContext', undefined);
