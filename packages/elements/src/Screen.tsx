@@ -149,7 +149,13 @@ export function Screen(props: Props) {
           </View>
         </NavigationProvider>
       ) : null}
-      <View style={[page ? styles.page : styles.content, contentStyle]}>
+      <View
+        style={[page ? styles.page : styles.content, contentStyle]}
+        // A view with only layout styles can get flattened.
+        // Then its children become siblings of the header,
+        // so a child with a higher `zIndex` would be drawn on top of the header.
+        collapsable={false}
+      >
         <HeaderShownContext.Provider
           value={isParentHeaderShown || headerShown !== false}
         >
