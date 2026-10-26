@@ -33,6 +33,11 @@ class MaterialSymbolViewManager : SimpleViewManager<MaterialSymbolView>(),
     view.setWeight(weight)
   }
 
+  @ReactProp(name = "fill")
+  override fun setFill(view: MaterialSymbolView, fill: Int) {
+    view.setFill(fill)
+  }
+
   @ReactProp(name = "size")
   override fun setSize(view: MaterialSymbolView, size: Float) {
     view.setSize(size)
@@ -41,6 +46,12 @@ class MaterialSymbolViewManager : SimpleViewManager<MaterialSymbolView>(),
   @ReactProp(name = "color", customType = "Color")
   override fun setColor(view: MaterialSymbolView, color: Int?) {
     view.setColor(color)
+  }
+
+  override fun onAfterUpdateTransaction(view: MaterialSymbolView) {
+    super.onAfterUpdateTransaction(view)
+
+    view.updateTypeface()
   }
 
   companion object {

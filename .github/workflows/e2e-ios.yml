@@ -56,41 +56,42 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
-      - name: Install build dependencies
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        run: brew install ccache
+      - parallel:
+          - name: Install build dependencies
+            if: steps.restore-debug-build.outputs.cache-hit != 'true'
+            run: brew install ccache
 
-      - name: Cache CocoaPods
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: |
-            example/ios/Pods
-            ~/.cocoapods
-            ~/Library/Caches/CocoaPods
-          key: ios-pods-${{ runner.os }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
-          restore-keys: |
-            ios-pods-${{ runner.os }}-
+          - name: Cache CocoaPods
+            if: steps.restore-debug-build.outputs.cache-hit != 'true'
+            uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+            with:
+              path: |
+                example/ios/Pods
+                ~/.cocoapods
+                ~/Library/Caches/CocoaPods
+              key: ios-pods-${{ runner.os }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+              restore-keys: |
+                ios-pods-${{ runner.os }}-
 
-      - name: Cache DerivedData
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: example/ios/build
-          key: ios-deriveddata-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
-          restore-keys: |
-            ios-deriveddata-${{ runner.os }}-${{ env.XCODE_VERSION }}-
-            ios-deriveddata-${{ runner.os }}-
+          - name: Cache DerivedData
+            if: steps.restore-debug-build.outputs.cache-hit != 'true'
+            uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+            with:
+              path: example/ios/build
+              key: ios-deriveddata-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+              restore-keys: |
+                ios-deriveddata-${{ runner.os }}-${{ env.XCODE_VERSION }}-
+                ios-deriveddata-${{ runner.os }}-
 
-      - name: Cache ccache
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: ~/.ccache
-          key: ios-ccache-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
-          restore-keys: |
-            ios-ccache-${{ runner.os }}-${{ env.XCODE_VERSION }}-
-            ios-ccache-${{ runner.os }}-
+          - name: Cache ccache
+            if: steps.restore-debug-build.outputs.cache-hit != 'true'
+            uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+            with:
+              path: ~/.ccache
+              key: ios-ccache-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+              restore-keys: |
+                ios-ccache-${{ runner.os }}-${{ env.XCODE_VERSION }}-
+                ios-ccache-${{ runner.os }}-
 
       - name: Set ccache directory
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -151,44 +152,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Install nightly react-native-screens
-        if: github.event_name == 'schedule'
-        run: pnpm --recursive update react-native-screens@nightly --no-save
-
-      - name: Download debug build artifact
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
-        with:
-          name: ios-debug-build
-          path: ios-debug-build
-
-      - name: Unpack debug build artifact
-        run: tar -xzf ios-debug-build/ios-debug.app.tgz -C ios-debug-build
-
       - name: Use appropriate Xcode version
         uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
-      - name: Resolve Xcode cache key
-        id: xcode-cache-key
-        run: |
-          XCODE_VERSION="$(xcodebuild -version | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g; s/[[:space:]]$//')"
-          XCODE_KEY="$(echo "$XCODE_VERSION" | tr ' ' '-' | tr -cd '[:alnum:]._-')"
-          echo "key=$XCODE_KEY" >> "$GITHUB_OUTPUT"
-
-      - name: Cache agent-device iOS runner
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: ~/.agent-device/apple-runner/derived
-          key: agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-${{ hashFiles('node_modules/agent-device/package.json') }}
-
-      - name: Start Metro bundler
-        run: pnpm --dir example start &
-
       - name: Boot iOS Simulator
+        id: boot-simulator
         timeout-minutes: 5
         run: |
           DEVICE_ID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -n 1 | awk -F "[()]" '{print $2}')
@@ -210,13 +180,51 @@ jobs:
 
           # Add deep link handler so we don't see a prompt when running tests
           /usr/libexec/PlistBuddy "$HOME/Library/Developer/CoreSimulator/Devices/${DEVICE_ID}/data/Library/Preferences/com.apple.launchservices.schemeapproval.plist" -c "add com.apple.CoreSimulator.CoreSimulatorBridge-->rne string org.reactnavigation.playground"
+        background: true
 
-      - name: Wait for Metro bundler
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Install nightly react-native-screens
+        if: github.event_name == 'schedule'
+        run: pnpm --recursive update react-native-screens@nightly --no-save
+
+      - name: Download debug build artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ios-debug-build
+          path: ios-debug-build
+
+      - name: Unpack debug build artifact
+        run: tar -xzf ios-debug-build/ios-debug.app.tgz -C ios-debug-build
+
+      - name: Resolve Xcode cache key
+        id: xcode-cache-key
+        run: |
+          XCODE_VERSION="$(xcodebuild -version | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g; s/[[:space:]]$//')"
+          XCODE_KEY="$(echo "$XCODE_VERSION" | tr ' ' '-' | tr -cd '[:alnum:]._-')"
+          echo "key=$XCODE_KEY" >> "$GITHUB_OUTPUT"
+
+      - name: Cache agent-device iOS runner
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: ~/.agent-device/apple-runner/derived
+          key: agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-${{ hashFiles('node_modules/agent-device/package.json') }}
+
+      - name: Start Metro bundler
+        run: pnpm --dir example start &
+
+      - name: Warm up Metro bundle
+        id: metro-bundle
         timeout-minutes: 5
         run: |
           until curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=ios&dev=true&minify=false" > /dev/null 2>&1; do
             sleep 2
           done
+        background: true
+
+      - name: Wait for iOS Simulator
+        wait: boot-simulator
 
       - name: Install iOS debug app
         run: |
@@ -243,6 +251,9 @@ jobs:
             --no-record \
             > agent-device-artifacts/ios-prepare.txt
         working-directory: example
+
+      - name: Wait for Metro bundler
+        wait: metro-bundle
 
       - name: Run E2E tests
         run: |

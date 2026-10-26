@@ -220,6 +220,10 @@ export function Drawer({
   const onCloseLatest = useLatestCallback(onClose);
 
   const onAnimationStart = useLatestCallback((open: boolean) => {
+    if (drawerType !== 'permanent') {
+      hideKeyboard();
+    }
+
     onTransitionStart?.(!open);
   });
 

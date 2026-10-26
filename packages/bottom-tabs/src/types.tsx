@@ -194,7 +194,7 @@ type BottomTabCustomOptions = {
    *
    * Only supported with `custom` implementation.
    */
-  tabBarIconStyle?: StyleProp<TextStyle>;
+  tabBarIconStyle?: StyleProp<ViewStyle>;
 
   /**
    * Whether the tab bar gets hidden when the keyboard is shown.
@@ -274,18 +274,105 @@ type BottomTabCustomOptions = {
     | undefined;
 };
 
+type TabBarLabelOffset = {
+  horizontal?: number | undefined;
+  vertical?: number | undefined;
+};
+
 type BottomTabNativeOptions = {
   /**
    * Uses iOS built-in tab bar items with standard iOS styling and localized titles.
-   * If set to `search`, it's positioned next to the tab bar on iOS 26 and above.
    *
-   * The `tabBarIcon` and `tabBarLabel` options will override the icon and label from the system item.
+   * The `tabBarIcon` and `tabBarLabel` options override the icon and label from the system item.
    * If you want to keep the system behavior on iOS, but need to provide icon and label for other platforms,
    * Use `Platform.OS`  or `Platform.select`  to conditionally set `undefined` for `tabBarIcon` and `tabBarLabel` on iOS.
+   *
+   * If set to `search`, it may receive the prominent visual treatment on iOS 26.
+   * See `tabBarRole` for more details on iOS 27 and above.
    *
    * @platform ios
    */
   tabBarSystemItem?: TabsScreenSystemItem | undefined;
+
+  /**
+   * The role of the tab within the system tab bar.
+   *
+   * Supported values:
+   * - `prominent` - the tab gets the prominent visual treatment when supported
+   * - `search` - the tab is used as the system search tab
+   *
+   * If set to `prominent`, the tab may receive special styling to make it stand out,
+   * e.g., being positioned as a separate button next to the tab bar on iOS 27 and above.
+   * Only one tab can have the `prominent` role at a time.
+   * Supported on iOS 27 and above.
+   *
+   * If set to `search`, the tab gets the prominent visual treatment on iOS 26.
+   * On iOS 27 and above, it gets the prominent styling only if `tabBarSearchAutoFocus` is enabled,
+   * and no other tab has the `prominent` role.
+   * The tab uses system search icon and label by default.
+   * They can be overridden by `tabBarSystemItem`, `tabBarIcon`, and `tabBarLabel` options.
+   * Adding or removing the `search` role after the tab is rendered is not supported.
+   * Supported on iOS 26.1 and above.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform ios
+   */
+  tabBarRole?: 'prominent' | 'search' | undefined;
+
+  /**
+   * Whether the search field is automatically focused when the tab is selected.
+   * Cancelling the search selects the previously selected tab.
+   *
+   * Only applies to tabs with `tabBarRole: 'search'`,
+   * and requires `headerSearchBarOptions` to be set in a native stack nested in the tab.
+   *
+   * Defaults to `false`.
+   *
+   * Only supported with `native` implementation.
+   *
+   * Supported on iOS 26.1 and above.
+   *
+   * @platform ios
+   */
+  tabBarSearchAutoFocus?: boolean | undefined;
+
+  /**
+   * Whether the sidebar or the tab bar is preferred when only one of them can be displayed.
+   *
+   * Supported values:
+   * - `auto` - uses the system default (tab bar)
+   * - `sidebar` - the sidebar is displayed when it's available
+   * - `tabBar` - the tab bar is displayed
+   *
+   * Requires `tabBarControllerMode` to be set to `tabSidebar`.
+   *
+   * The sidebar is only available when the horizontal size class is regular,
+   * e.g. on iPad, or on larger iPhones in landscape.
+   *
+   * Defaults to `auto`.
+   *
+   * Only supported with `native` implementation.
+   *
+   * Supported on iOS 27 and above.
+   * Not supported on tvOS.
+   *
+   * @platform ios
+   */
+  tabBarSidebarPreferredPlacement?: 'auto' | 'sidebar' | 'tabBar' | undefined;
+
+  /**
+   * Whether showing and hiding the tab bar is animated.
+   *
+   * Defaults to `true`.
+   *
+   * Only supported with `native` implementation.
+   *
+   * Supported on iOS 18 and above.
+   *
+   * @platform ios
+   */
+  tabBarVisibilityAnimationEnabled?: boolean | undefined;
 
   /**
    * Blur effect applied to the tab bar when tab screen is selected.
@@ -338,6 +425,28 @@ type BottomTabNativeOptions = {
     | undefined;
 
   /**
+   * Offset applied to the tab label relative to its default position.
+   * Positive `vertical` moves the label down, positive `horizontal` moves it right.
+   *
+   * The offset is specified separately for each tab bar item layout:
+   *
+   * - `stacked` - icon above the label, e.g. on iPhone in portrait
+   * - `inline` - icon beside the label in regular width, e.g. on iPad
+   * - `compactInline` - icon beside the label in compact width, e.g. on iPhone in landscape
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform ios
+   */
+  tabBarLabelPositionAdjustment?:
+    | {
+        stacked?: TabBarLabelOffset | undefined;
+        inline?: TabBarLabelOffset | undefined;
+        compactInline?: TabBarLabelOffset | undefined;
+      }
+    | undefined;
+
+  /**
    * Background color of the active indicator.
    *
    * Only supported with `native` implementation.
@@ -354,6 +463,24 @@ type BottomTabNativeOptions = {
    * @platform android
    */
   tabBarActiveIndicatorEnabled?: boolean | undefined;
+
+  /**
+   * Width of the tab's active indicator.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform android
+   */
+  tabBarActiveIndicatorWidth?: number | undefined;
+
+  /**
+   * Height of the tab's active indicator.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform android
+   */
+  tabBarActiveIndicatorHeight?: number | undefined;
 
   /**
    * Function which returns a React element to display as an accessory view.
@@ -432,6 +559,17 @@ export type BottomTabNavigationOptions = {
   tabBarLabelVisibilityMode?: TabBarItemLabelVisibilityMode | undefined;
 
   /**
+   * Size of the tab's icon.
+   *
+   * With `native` implementation, the largest size is used for the icon area in all tabs.
+   * Icons smaller than the largest size are centered in this area.
+   *
+   * Supported on all platforms with `custom` implementation.
+   * Only supported on Android with `native` implementation.
+   */
+  tabBarIconSize?: number | undefined;
+
+  /**
    * Style object for the tab label.
    */
   tabBarLabelStyle?:
@@ -449,8 +587,6 @@ export type BottomTabNavigationOptions = {
    * Providing different icon for focused and unfocused states is supported:
    * - on all platforms with `custom` implementation
    * - on iOS with `native` implementation
-   *
-   * With `native` implementation, `tinted` for `image` can only be disabled on iOS.
    *
    * A React element is only supported with `custom` implementation.
    */

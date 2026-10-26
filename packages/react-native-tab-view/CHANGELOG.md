@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.17...react-native-tab-view@5.0.0-alpha.18) (2026-10-13)
+
+**Note:** Version bump only for package react-native-tab-view
+
 # [5.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.16...react-native-tab-view@5.0.0-alpha.17) (2026-09-29)
 
 ### Bug Fixes

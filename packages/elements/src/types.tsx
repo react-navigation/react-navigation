@@ -1,4 +1,7 @@
-import type { MaterialSymbolProps } from '@react-navigation/native';
+import type {
+  MaterialSymbolProps,
+  SFSymbolProps,
+} from '@react-navigation/native';
 import * as React from 'react';
 import type {
   Animated,
@@ -10,7 +13,6 @@ import type {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import type { SFSymbol } from 'sf-symbols-typescript';
 
 import type { BlurEffectType } from './getBlurBackgroundColor';
 
@@ -46,7 +48,15 @@ type IconSfSymbol = {
   /**
    * Name of the SF Symbol to use as the icon.
    */
-  name: SFSymbol;
+  name: SFSymbolProps['name'];
+  /**
+   * How to color the symbol.
+   * - `monochrome`: Single color, using the tint color.
+   * - `multicolor`: Uses the symbol's built-in multicolor scheme.
+   *
+   * Defaults to a single color for system symbols.
+   */
+  renderingMode?: 'monochrome' | 'multicolor' | undefined;
 };
 
 type IconMaterialSymbol = {
@@ -54,7 +64,7 @@ type IconMaterialSymbol = {
    * - `materialSymbol` - Use a Material Symbol as the icon on Android.
    */
   type: 'materialSymbol';
-} & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight'>;
+} & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight' | 'fill'>;
 
 export type Icon = IconSfSymbol | IconMaterialSymbol | IconImage;
 
@@ -98,6 +108,21 @@ export type HeaderSearchBarOptions = {
    * @platform ios
    */
   cancelButtonText?: string | undefined;
+  /**
+   * Accessibility label for the button that closes the search bar.
+   * Defaults to `Close` on iOS 26+, `cancelButtonText` on older iOS and `Back` on other platforms.
+   */
+  cancelButtonAccessibilityLabel?: string | undefined;
+  /**
+   * Accessibility label for the button that clears the search input.
+   * Defaults to `Clear text`.
+   */
+  clearButtonAccessibilityLabel?: string | undefined;
+  /**
+   * Accessibility label for the header button that opens the search bar.
+   * Defaults to `Search`.
+   */
+  openButtonAccessibilityLabel?: string | undefined;
   /**
    * Sets type of the input. Defaults to `text`.
    */
@@ -151,7 +176,7 @@ export type HeaderOptions = {
     | ((props: HeaderTitleProps) => React.ReactNode)
     | undefined;
   /**
-   * How to align the the header title.
+   * How to align the header title.
    * Defaults to `center` on iOS and `left` on Android.
    */
   headerTitleAlign?: 'left' | 'center' | undefined;

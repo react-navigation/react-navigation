@@ -21,6 +21,7 @@ import useLatestCallback from 'use-latest-callback';
 
 import type {
   DrawerContentComponentProps,
+  DrawerDescriptor,
   DrawerDescriptorMap,
   DrawerHeaderProps,
   DrawerNavigationConfig,
@@ -42,6 +43,68 @@ type Props = DrawerNavigationConfig & {
 };
 
 const DRAWER_BORDER_RADIUS = 16;
+
+type DrawerSceneProps = {
+  descriptor: DrawerDescriptor;
+  isFocused: boolean;
+  mode: 'normal' | 'inert' | 'paused';
+  drawerPosition: 'left' | 'right';
+};
+
+const DrawerScene = React.memo(function DrawerScene({
+  descriptor,
+  isFocused,
+  mode,
+  drawerPosition,
+}: DrawerSceneProps) {
+  const {
+    header = ({ route, options }: DrawerHeaderProps) => (
+      <Header
+        {...options}
+        title={getHeaderTitle(options, route.name)}
+        headerLeft={
+          drawerPosition === 'left' && options.headerLeft == null
+            ? (props) => <DrawerToggleButton {...props} />
+            : options.headerLeft
+        }
+        headerRight={
+          drawerPosition === 'right' && options.headerRight == null
+            ? (props) => <DrawerToggleButton {...props} />
+            : options.headerRight
+        }
+      />
+    ),
+    headerShown,
+    headerStatusBarHeight,
+    headerTransparent,
+    sceneStyle,
+  } = descriptor.options;
+
+  return (
+    <ActivityView
+      mode={mode}
+      visible={isFocused}
+      style={{ ...StyleSheet.absoluteFill, zIndex: isFocused ? 0 : -1 }}
+    >
+      <ScreenContent
+        focused={isFocused}
+        route={descriptor.route}
+        navigation={descriptor.navigation}
+        headerShown={headerShown}
+        headerStatusBarHeight={headerStatusBarHeight}
+        headerTransparent={headerTransparent}
+        header={header({
+          route: descriptor.route,
+          navigation: descriptor.navigation,
+          options: descriptor.options,
+        })}
+        style={sceneStyle}
+      >
+        {descriptor.render()}
+      </ScreenContent>
+    </ActivityView>
+  );
+});
 
 const renderDrawerContentDefault = (props: DrawerContentComponentProps) => (
   <DrawerContent {...props} />
@@ -246,29 +309,7 @@ function DrawerViewBase({
             return null;
           }
 
-          const {
-            inactiveBehavior = 'pause',
-            header = ({ options }: DrawerHeaderProps) => (
-              <Header
-                {...options}
-                title={getHeaderTitle(options, route.name)}
-                headerLeft={
-                  drawerPosition === 'left' && options.headerLeft == null
-                    ? (props) => <DrawerToggleButton {...props} />
-                    : options.headerLeft
-                }
-                headerRight={
-                  drawerPosition === 'right' && options.headerRight == null
-                    ? (props) => <DrawerToggleButton {...props} />
-                    : options.headerRight
-                }
-              />
-            ),
-            headerShown,
-            headerStatusBarHeight,
-            headerTransparent,
-            sceneStyle,
-          } = descriptor.options;
+          const { inactiveBehavior = 'pause' } = descriptor.options;
 
           // For preloaded screens and if lazy is false,
           // Keep them active so that the effects can run
@@ -279,29 +320,13 @@ function DrawerViewBase({
             (lazy === false && !loaded.includes(route.key));
 
           return (
-            <ActivityView
+            <DrawerScene
               key={route.key}
+              descriptor={descriptor}
+              isFocused={isFocused}
               mode={isFocused ? 'normal' : isActive ? 'inert' : 'paused'}
-              visible={isFocused}
-              style={{ ...StyleSheet.absoluteFill, zIndex: isFocused ? 0 : -1 }}
-            >
-              <ScreenContent
-                focused={isFocused}
-                route={descriptor.route}
-                navigation={descriptor.navigation}
-                headerShown={headerShown}
-                headerStatusBarHeight={headerStatusBarHeight}
-                headerTransparent={headerTransparent}
-                header={header({
-                  route: descriptor.route,
-                  navigation: descriptor.navigation,
-                  options: descriptor.options,
-                })}
-                style={sceneStyle}
-              >
-                {descriptor.render()}
-              </ScreenContent>
-            </ActivityView>
+              drawerPosition={drawerPosition}
+            />
           );
         })}
       </Container>

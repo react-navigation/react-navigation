@@ -309,6 +309,13 @@ function Card({
       animationIdRefForCleanup.current++;
       gesture.stopAnimation();
 
+      // In development, StrictMode re-runs effects without unmounting,
+      // e.g. when the card moves to a new position after rearranging.
+      // The stopped animation didn't reach its value, so reset the state,
+      // to make sure that `maybeAnimate` restarts it when effects re-run.
+      isAnimatingRef.current = false;
+      lastToValueRef.current = undefined;
+
       if (animationHandleRef.current) {
         cancelAnimationFrame(animationHandleRef.current);
       }

@@ -1,4 +1,9 @@
-import { SFSymbol, useNavigation, useTheme } from '@react-navigation/native';
+import {
+  MaterialSymbol,
+  SFSymbol,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -32,7 +37,6 @@ type Props = Omit<HeaderSearchBarOptions, 'ref'> & {
   tintColor?: ColorValue | undefined;
   pressColor?: ColorValue | undefined;
   pressOpacity?: number | undefined;
-  statusBarHeight: number;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
   ref?: React.Ref<HeaderSearchBarRef> | undefined;
 };
@@ -54,12 +58,18 @@ export function HeaderSearchBar({
   placeholder = 'Search',
   enterKeyHint = 'search',
   cancelButtonText = 'Cancel',
+  cancelButtonAccessibilityLabel = Platform.OS === 'ios'
+    ? isLiquidGlassSupported
+      ? 'Close'
+      : cancelButtonText
+    : 'Back',
+  clearButtonAccessibilityLabel = 'Clear text',
+  openButtonAccessibilityLabel: _openButtonAccessibilityLabel,
   onChange,
   onClose,
   tintColor,
   pressColor,
   pressOpacity,
-  statusBarHeight,
   style,
   ref,
   ...rest
@@ -169,36 +179,21 @@ export function HeaderSearchBar({
 
   const textColor = tintColor ?? colors.text;
 
-  // When status bar height is provided, add spacing below it
-  // Otherwise, use a smaller top margin to align with the header content
-  const STATUS_BAR_TOP_ADJUSTMENT = 2;
-  const topMargin = Platform.select({
-    ios: statusBarHeight
-      ? statusBarHeight + BUTTON_SPACING
-      : BUTTON_SPACING - STATUS_BAR_TOP_ADJUSTMENT,
-    default: statusBarHeight,
-  });
-
   return (
     <AnimatedLiquidGlassContainerView
       spacing={BUTTON_SPACING}
-      aria-live="polite"
       aria-hidden={!visible}
       style={[
         styles.container,
         Platform.OS === 'ios' && {
           gap: BUTTON_SPACING,
-          margin: BUTTON_SPACING,
-        },
-        {
-          marginTop: topMargin,
         },
         style,
       ]}
     >
       {Platform.OS !== 'ios' ? (
         <HeaderBackButton
-          accessibilityLabel={cancelButtonText}
+          accessibilityLabel={cancelButtonAccessibilityLabel}
           tintColor={tintColor ?? colors.text}
           pressColor={pressColor}
           pressOpacity={pressOpacity}
@@ -221,6 +216,7 @@ export function HeaderSearchBar({
         <TextInput
           {...rest}
           ref={inputRef}
+          accessibilityRole="search"
           onChange={onChange}
           onChangeText={setValue}
           autoFocus={autoFocus}
@@ -251,7 +247,8 @@ export function HeaderSearchBar({
         />
         {Platform.OS === 'ios' ? (
           <PlatformPressable
-            accessibilityLabel="Clear"
+            accessible={hasText}
+            accessibilityLabel={clearButtonAccessibilityLabel}
             onPress={onClear}
             style={[
               {
@@ -273,16 +270,21 @@ export function HeaderSearchBar({
       </HeaderButtonBackground>
       {Platform.OS !== 'ios' ? (
         <HeaderButton
-          accessibilityLabel="Clear"
+          accessibilityLabel={clearButtonAccessibilityLabel}
           onPress={onClear}
           style={[styles.closeButton, { opacity: clearVisibleAnim }]}
         >
           <HeaderIcon
             icon={Platform.select({
-              android: {
-                type: 'materialSymbol',
-                name: 'close',
-              },
+              android: MaterialSymbol.isAvailable()
+                ? {
+                    type: 'materialSymbol',
+                    name: 'close',
+                  }
+                : {
+                    type: 'image',
+                    source: closeIcon,
+                  },
               default: {
                 type: 'image',
                 source: closeIcon,
@@ -296,7 +298,7 @@ export function HeaderSearchBar({
         isLiquidGlassSupported ? (
           <HeaderButtonBackground style={styles.closeButtonContainerIos}>
             <HeaderButton
-              accessibilityLabel={cancelButtonText}
+              accessibilityLabel={cancelButtonAccessibilityLabel}
               onPress={cancelSearch}
             >
               <SFSymbol name="xmark" color={textColor} />
@@ -304,7 +306,7 @@ export function HeaderSearchBar({
           </HeaderButtonBackground>
         ) : (
           <PlatformPressable
-            accessibilityLabel={cancelButtonText}
+            accessibilityLabel={cancelButtonAccessibilityLabel}
             onPress={cancelSearch}
             style={styles.cancelButton}
           >
@@ -350,7 +352,9 @@ const styles = StyleSheet.create({
     width: SEARCH_ICON_SIZE,
   },
   inputSearchIconIosLegacy: {
-    top: SEARCHBAR_ICON_SPACING,
+    marginTop:
+      -SEARCH_ICON_SIZE / 2 +
+      (SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS - SEARCHBAR_ICON_SPACING) / 2,
   },
   backButton: {
     alignSelf: 'center',

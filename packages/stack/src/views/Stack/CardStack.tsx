@@ -104,6 +104,7 @@ type State = {
   gestures: GestureValues;
   layout: Layout;
   headerHeights: HeaderHeights;
+  nestedStateRouteKeys: string[];
 };
 
 const NAMED_TRANSITIONS_PRESETS = {
@@ -575,6 +576,15 @@ export class CardStack extends React.Component<Props, State> {
         state.layout,
         state.headerHeights
       ),
+      // Nested navigators clean up `route.state` when the screen is paused with `Activity`
+      // So we remember routes which had state until they are removed
+      nestedStateRouteKeys: allRoutes
+        .filter(
+          (route) =>
+            ('state' in route && route.state) ||
+            state.nestedStateRouteKeys.includes(route.key)
+        )
+        .map((route) => route.key),
     };
   }
 
@@ -593,6 +603,7 @@ export class CardStack extends React.Component<Props, State> {
       // on mount what the header height is so we have just used the most
       // common cases here.
       headerHeights: {},
+      nestedStateRouteKeys: [],
     };
   }
 
@@ -695,7 +706,8 @@ export class CardStack extends React.Component<Props, State> {
       onTransitionEnd,
     } = this.props;
 
-    const { scenes, layout, gestures, headerHeights } = this.state;
+    const { scenes, layout, gestures, headerHeights, nestedStateRouteKeys } =
+      this.state;
 
     const allRoutes = getAllRoutes(routes, state);
 
@@ -883,7 +895,7 @@ export class CardStack extends React.Component<Props, State> {
                       !isVisible &&
                       // Don't unmount screens with nested navigators
                       // So we don't lose their state
-                      !('state' in route && route.state)
+                      !nestedStateRouteKeys.includes(route.key)
                     ? 'unmounted'
                     : 'paused';
 

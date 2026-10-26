@@ -6,11 +6,14 @@ import {
 } from '@react-navigation/elements/internal';
 import {
   CommonActions,
+  type LocaleDirection,
   MaterialSymbol,
+  type NavigationRoute,
   type ParamListBase,
   type Route,
   StackActions,
   type TabNavigationState,
+  useLocale,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -21,20 +24,22 @@ import {
   Platform,
   PlatformColor,
   StyleSheet,
+  type TextStyle,
 } from 'react-native';
 import {
-  type PlatformIconAndroid,
-  type PlatformIconIOS,
   type PlatformIconShared,
   Tabs,
   type TabsBottomAccessoryEnvironment,
   type TabSelectedEvent,
   type TabSelectionRejectedEvent,
+  type TabsScreenIconAndroid,
+  type TabsScreenIconIOS,
   type TabsScreenItemStateAppearanceAndroid,
   type TabsScreenItemStateAppearanceIOS,
 } from 'react-native-screens';
 
 import type {
+  BottomTabDescriptor,
   BottomTabDescriptorMap,
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
@@ -59,8 +64,8 @@ type TabSelectionPreventedEvent = {
 };
 
 type PlatformIcon = {
-  ios?: PlatformIconIOS | undefined;
-  android?: PlatformIconAndroid | undefined;
+  ios?: TabsScreenIconIOS | undefined;
+  android?: TabsScreenIconAndroid | undefined;
   shared?: PlatformIconShared | undefined;
 };
 
@@ -87,6 +92,9 @@ const ICON_SIZE = Platform.select({
   ios: 25,
   default: 24,
 });
+
+const SUPPORTS_PROMINENT_TAB =
+  Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 27;
 
 function reducer(state: NativeState, action: NativeAction): NativeState {
   switch (action.type) {
@@ -351,73 +359,75 @@ export function BottomTabViewNative({
 
   const shouldHideTabBar = currentOptions.tabBarStyle?.display === 'none';
 
-  let activeIndicatorColor = currentOptions?.tabBarActiveIndicatorColor;
-  let activeTintColor = currentOptions.tabBarActiveTintColor;
-  let inactiveTintColor = currentOptions.tabBarInactiveTintColor;
+  const { activeIndicatorColor, activeTintColor, inactiveTintColor } =
+    React.useMemo(() => {
+      let activeIndicatorColor = currentOptions?.tabBarActiveIndicatorColor;
+      let activeTintColor = currentOptions.tabBarActiveTintColor;
+      let inactiveTintColor = currentOptions.tabBarInactiveTintColor;
 
-  // Derive colors based on Material Design guidelines
-  // https://m3.material.io/components/navigation-bar/specs
-  if (Platform.OS === 'android') {
-    switch (getAndroidColorName(backgroundColor)) {
-      case 'system_surface_container_light':
-      case 'system_surface_container_high_light':
-      case 'system_surface_container_highest_light':
-      case 'system_surface_container_low_light':
-      case 'system_surface_container_lowest_light':
-        inactiveTintColor =
-          inactiveTintColor ??
-          PlatformColor('@android:color/system_on_surface_variant_light');
-        activeTintColor =
-          activeTintColor ??
-          PlatformColor('@android:color/system_on_secondary_container_light');
-        activeIndicatorColor =
-          activeIndicatorColor ??
-          PlatformColor('@android:color/system_secondary_container_light');
-        break;
-      case 'system_surface_container_dark':
-      case 'system_surface_container_high_dark':
-      case 'system_surface_container_highest_dark':
-      case 'system_surface_container_low_dark':
-      case 'system_surface_container_lowest_dark':
-        inactiveTintColor =
-          inactiveTintColor ??
-          PlatformColor('@android:color/system_on_surface_variant_dark');
-        activeTintColor =
-          activeTintColor ??
-          PlatformColor('@android:color/system_on_secondary_container_dark');
-        activeIndicatorColor =
-          activeIndicatorColor ??
-          PlatformColor('@android:color/system_secondary_container_dark');
-        break;
-    }
-  }
+      // Derive colors based on Material Design guidelines
+      // https://m3.material.io/components/navigation-bar/specs
+      if (Platform.OS === 'android') {
+        switch (getAndroidColorName(backgroundColor)) {
+          case 'system_surface_container_light':
+          case 'system_surface_container_high_light':
+          case 'system_surface_container_highest_light':
+          case 'system_surface_container_low_light':
+          case 'system_surface_container_lowest_light':
+            inactiveTintColor =
+              inactiveTintColor ??
+              PlatformColor('@android:color/system_on_surface_variant_light');
+            activeTintColor =
+              activeTintColor ??
+              PlatformColor(
+                '@android:color/system_on_secondary_container_light'
+              );
+            activeIndicatorColor =
+              activeIndicatorColor ??
+              PlatformColor('@android:color/system_secondary_container_light');
+            break;
+          case 'system_surface_container_dark':
+          case 'system_surface_container_high_dark':
+          case 'system_surface_container_highest_dark':
+          case 'system_surface_container_low_dark':
+          case 'system_surface_container_lowest_dark':
+            inactiveTintColor =
+              inactiveTintColor ??
+              PlatformColor('@android:color/system_on_surface_variant_dark');
+            activeTintColor =
+              activeTintColor ??
+              PlatformColor(
+                '@android:color/system_on_secondary_container_dark'
+              );
+            activeIndicatorColor =
+              activeIndicatorColor ??
+              PlatformColor('@android:color/system_secondary_container_dark');
+            break;
+        }
+      }
 
-  inactiveTintColor =
-    inactiveTintColor ??
-    Platform.select({ ios: PlatformColor('label'), default: colors.text });
+      inactiveTintColor =
+        inactiveTintColor ??
+        Platform.select({ ios: PlatformColor('label'), default: colors.text });
 
-  activeTintColor = activeTintColor ?? colors.primary;
+      activeTintColor = activeTintColor ?? colors.primary;
 
-  activeIndicatorColor =
-    activeIndicatorColor ??
-    Platform.select({
-      android: Color(activeTintColor)?.alpha(0.075).string(),
-      default: undefined,
-    });
+      activeIndicatorColor =
+        activeIndicatorColor ??
+        Platform.select({
+          android: Color(activeTintColor)?.alpha(0.075).string(),
+          default: undefined,
+        });
 
-  const onTransitionStart = ({ route }: { route: Route<string> }) => {
-    navigation.emit({
-      type: 'transitionStart',
-      target: route.key,
-    });
-  };
-
-  const onTransitionEnd = ({ route }: { route: Route<string> }) => {
-    navigation.emit({
-      type: 'transitionEnd',
-      target: route.key,
-    });
-  };
+      return { activeIndicatorColor, activeTintColor, inactiveTintColor };
+    }, [
+      currentOptions?.tabBarActiveIndicatorColor,
+      currentOptions.tabBarActiveTintColor,
+      currentOptions.tabBarInactiveTintColor,
+      backgroundColor,
+      colors.primary,
+      colors.text,
+    ]);
 
   const tabBarPosition = useTabBarPosition(currentOptions);
 
@@ -441,6 +451,17 @@ export function BottomTabViewNative({
       : currentOptions.tabBarMinimizeBehavior === 'none'
         ? 'never'
         : currentOptions.tabBarMinimizeBehavior;
+
+  const tabBarSidebarPreferredPlacement =
+    currentOptions.tabBarSidebarPreferredPlacement === 'auto'
+      ? 'automatic'
+      : currentOptions.tabBarSidebarPreferredPlacement;
+
+  const prominentScreenKey = SUPPORTS_PROMINENT_TAB
+    ? state.routes.find(
+        (route) => descriptors[route.key]?.options.tabBarRole === 'prominent'
+      )?.key
+    : undefined;
 
   const bottomAccessory = currentOptions.bottomAccessory;
 
@@ -469,11 +490,15 @@ export function BottomTabViewNative({
         colorScheme={dark ? 'dark' : 'light'}
         nativeContainerStyle={{ backgroundColor: colors.background }}
         ios={{
+          prominentScreenKey,
           bottomAccessory: bottomAccessory
             ? (environment: TabsBottomAccessoryEnvironment) =>
                 bottomAccessory({ placement: environment })
             : undefined,
+          tabBarHiddenAnimationEnabled:
+            currentOptions.tabBarVisibilityAnimationEnabled,
           tabBarControllerMode,
+          tabBarSidebarPreferredPlacement,
           tabBarMinimizeBehavior,
           tabBarTintColor: activeTintColor,
         }}
@@ -487,105 +512,11 @@ export function BottomTabViewNative({
             );
           }
 
-          const { options, render, navigation } = descriptor;
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
-          const {
-            title,
-            lazy = false,
-            inactiveBehavior = 'pause',
-            tabBarLabel,
-            tabBarSelectionEnabled,
-            tabBarRepeatedPressBehavior,
-            tabBarBadgeStyle,
-            tabBarIcon,
-            tabBarBadge,
-            tabBarSystemItem,
-            tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
-            tabBarStyle,
-            tabBarAccessibilityLabel,
-            tabBarButtonTestID,
-            sceneStyle,
-            overrideScrollViewContentInsetAdjustmentBehavior,
-          } = options;
-
-          const {
-            backgroundColor: tabBarBackgroundColor,
-            shadowColor: tabBarShadowColor,
-          } = tabBarStyle || {};
-
-          const tabTitle =
-            // On iOS, `systemItem` already provides a localized label
-            // So we should only use `tabBarLabel` if explicitly provided
-            Platform.OS === 'ios' && tabBarSystemItem != null
-              ? tabBarLabel
-              : getLabel({ label: tabBarLabel, title }, route.name);
-
-          const badgeBackgroundColor =
-            tabBarBadgeStyle?.backgroundColor ?? colors.notification;
-          const badgeTextColor =
-            tabBarBadgeStyle?.color ?? Color.foreground(badgeBackgroundColor);
-
-          const tabItemAppearance: TabsScreenItemStateAppearanceIOS = {
-            tabBarItemTitleFontFamily: fontFamily,
-            tabBarItemTitleFontSize: fontSize,
-            tabBarItemTitleFontWeight: fontWeight,
-            tabBarItemTitleFontStyle: fontStyle,
-            tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
-            tabBarItemIconColor: inactiveTintColor,
-            tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
-          };
-
-          const normalTabItemAppearance: TabsScreenItemStateAppearanceAndroid =
-            {
-              tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
-              tabBarItemIconColor: inactiveTintColor,
-            };
-
-          const selectedTabItemAppearance: TabsScreenItemStateAppearanceAndroid =
-            {
-              tabBarItemTitleFontColor: activeTintColor,
-              tabBarItemIconColor: activeTintColor,
-            };
-
-          const getIcon = (selected: boolean) => {
-            if (typeof tabBarIcon === 'function') {
-              const result = tabBarIcon({
-                focused: selected,
-                size: ICON_SIZE!,
-                color: selected ? activeTintColor : inactiveTintColor,
-              });
-
-              if (React.isValidElement(result)) {
-                throw new Error(
-                  `Returning a React element from 'tabBarIcon' is not supported with native tab bar.`
-                );
-              } else if (
-                result &&
-                typeof result === 'object' &&
-                'type' in result
-              ) {
-                return getPlatformIcon(result);
-              } else {
-                throw new Error(
-                  `The 'tabBarIcon' function must return an icon object (got ${typeof result}).`
-                );
-              }
-            } else if (tabBarIcon != null) {
-              return getPlatformIcon(tabBarIcon);
-            }
-
-            return undefined;
-          };
-
-          // An error is thrown for React Elements in `getIcon`
-          // So we only call it when we actually render a native tab bar
-          const icon = hasCustomTabBar ? undefined : getIcon(false);
-          const selectedIcon =
-            !hasCustomTabBar && typeof tabBarIcon === 'function'
-              ? getIcon(true)
-              : icon;
+          const { lazy = false, inactiveBehavior = 'pause' } =
+            descriptor.options;
 
           // For preloaded screens and if lazy is false,
           // Keep them active so that the effects can run
@@ -597,113 +528,31 @@ export function BottomTabViewNative({
             (lazy === false && !loaded.includes(route.key));
 
           return (
-            <Tabs.Screen
-              onWillAppear={() => onTransitionStart({ route })}
-              onDidAppear={() => onTransitionEnd({ route })}
+            <TabScene
               key={route.key}
-              screenKey={route.key}
-              tabBarItemAccessibilityLabel={tabBarAccessibilityLabel}
-              tabBarItemTestID={tabBarButtonTestID}
-              preventNativeSelection={tabBarSelectionEnabled === false}
-              badgeValue={tabBarBadge?.toString()}
-              title={tabTitle}
-              nativeContainerStyle={{ backgroundColor: colors.background }}
-              specialEffects={{
-                repeatedTabSelection: {
-                  popToRoot: tabBarRepeatedPressBehavior?.popToTop !== false,
-                  scrollToTop:
-                    tabBarRepeatedPressBehavior?.scrollToTop !== false,
-                },
-              }}
-              android={{
-                icon: icon?.android ?? icon?.shared,
-                selectedIcon: selectedIcon?.android ?? selectedIcon?.shared,
-                standardAppearance: {
-                  tabBarBackgroundColor:
-                    tabBarBackgroundColor ?? backgroundColor,
-                  tabBarItemRippleColor: currentOptions?.tabBarRippleColor,
-                  tabBarItemLabelVisibilityMode:
-                    currentOptions?.tabBarLabelVisibilityMode,
-                  normal: normalTabItemAppearance,
-                  selected: selectedTabItemAppearance,
-                  tabBarItemActiveIndicatorColor: activeIndicatorColor,
-                  tabBarItemActiveIndicatorEnabled:
-                    currentOptions?.tabBarActiveIndicatorEnabled,
-                  tabBarItemTitleFontFamily: fontFamily,
-                  tabBarItemTitleFontWeight: fontWeight,
-                  tabBarItemTitleSmallLabelFontSize: fontSize,
-                  tabBarItemTitleLargeLabelFontSize: fontSize,
-                  tabBarItemTitleFontStyle: fontStyle,
-                  tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
-                  tabBarItemBadgeTextColor: badgeTextColor,
-                },
-              }}
-              ios={{
-                icon: icon?.ios ?? icon?.shared,
-                selectedIcon: selectedIcon?.ios ?? selectedIcon?.shared,
-                systemItem: tabBarSystemItem,
-                scrollEdgeAppearance: {
-                  tabBarBackgroundColor,
-                  tabBarShadowColor,
-                  tabBarBlurEffect,
-                  stacked: {
-                    normal: tabItemAppearance,
-                  },
-                  inline: {
-                    normal: tabItemAppearance,
-                  },
-                  compactInline: {
-                    normal: tabItemAppearance,
-                  },
-                },
-                standardAppearance: {
-                  tabBarBackgroundColor,
-                  tabBarShadowColor,
-                  tabBarBlurEffect,
-                  stacked: {
-                    normal: tabItemAppearance,
-                  },
-                  inline: {
-                    normal: tabItemAppearance,
-                  },
-                  compactInline: {
-                    normal: tabItemAppearance,
-                  },
-                },
-                overrideScrollViewContentInsetAdjustmentBehavior,
-              }}
-            >
-              <Deferred
-                lazy={lazy}
-                visible={isFocused || isPreloaded || loaded.includes(route.key)}
-              >
-                <ActivityView
-                  key={route.key}
-                  mode={isFocused ? 'normal' : isActive ? 'inert' : 'paused'}
-                  visible={
-                    // We don't need to hide the content since it's handled natively
-                    // Hiding may also cause flash due to lag after native tab switch
-                    // So we leave it always visible
-                    true
-                  }
-                  style={StyleSheet.absoluteFill}
-                >
-                  <ScreenContent
-                    isFocused={isFocused}
-                    route={route}
-                    navigation={navigation}
-                    options={options}
-                    style={sceneStyle}
-                  >
-                    <AnimatedScreenContent isFocused={isFocused}>
-                      <BottomTabBarHeightContext.Provider value={0}>
-                        {render()}
-                      </BottomTabBarHeightContext.Provider>
-                    </AnimatedScreenContent>
-                  </ScreenContent>
-                </ActivityView>
-              </Deferred>
-            </Tabs.Screen>
+              route={route}
+              descriptor={descriptor}
+              navigation={navigation}
+              isFocused={isFocused}
+              isActive={isActive}
+              lazy={lazy}
+              visible={isFocused || isPreloaded || loaded.includes(route.key)}
+              hasCustomTabBar={hasCustomTabBar}
+              fontFamily={fontFamily}
+              fontWeight={fontWeight}
+              fontSize={fontSize}
+              fontStyle={fontStyle}
+              fontColor={fontColor}
+              backgroundColor={backgroundColor}
+              activeTintColor={activeTintColor}
+              inactiveTintColor={inactiveTintColor}
+              activeIndicatorColor={activeIndicatorColor}
+              rippleColor={currentOptions.tabBarRippleColor}
+              labelVisibilityMode={currentOptions.tabBarLabelVisibilityMode}
+              activeIndicatorEnabled={
+                currentOptions.tabBarActiveIndicatorEnabled
+              }
+            />
           );
         })}
       </Tabs.Host>
@@ -713,6 +562,287 @@ export function BottomTabViewNative({
     </SafeAreaProviderCompat>
   );
 }
+
+type TabSceneProps = {
+  route: NavigationRoute<ParamListBase, string>;
+  descriptor: BottomTabDescriptor;
+  navigation: BottomTabNavigationHelpers;
+  isFocused: boolean;
+  isActive: boolean;
+  lazy: boolean;
+  visible: boolean;
+  hasCustomTabBar: boolean;
+  fontFamily: TextStyle['fontFamily'];
+  fontWeight: TextStyle['fontWeight'];
+  fontSize: TextStyle['fontSize'];
+  fontStyle: TextStyle['fontStyle'];
+  fontColor: TextStyle['color'];
+  backgroundColor: ColorValue;
+  activeTintColor: ColorValue;
+  inactiveTintColor: ColorValue;
+  activeIndicatorColor: ColorValue | undefined;
+  rippleColor: ColorValue | undefined;
+  labelVisibilityMode: BottomTabNavigationOptions['tabBarLabelVisibilityMode'];
+  activeIndicatorEnabled: boolean | undefined;
+};
+
+const TabScene = React.memo(function TabScene({
+  route,
+  descriptor,
+  navigation,
+  isFocused,
+  isActive,
+  lazy,
+  visible,
+  hasCustomTabBar,
+  fontFamily,
+  fontWeight,
+  fontSize,
+  fontStyle,
+  fontColor,
+  backgroundColor,
+  activeTintColor,
+  inactiveTintColor,
+  activeIndicatorColor,
+  rippleColor,
+  labelVisibilityMode,
+  activeIndicatorEnabled,
+}: TabSceneProps) {
+  const { dark, colors } = useTheme();
+  const { direction } = useLocale();
+
+  const onTransitionStart = ({ route }: { route: Route<string> }) => {
+    navigation.emit({
+      type: 'transitionStart',
+      target: route.key,
+    });
+  };
+
+  const onTransitionEnd = ({ route }: { route: Route<string> }) => {
+    navigation.emit({
+      type: 'transitionEnd',
+      target: route.key,
+    });
+  };
+
+  const { options, render } = descriptor;
+
+  const {
+    title,
+    tabBarLabel,
+    tabBarLabelPositionAdjustment,
+    tabBarSelectionEnabled,
+    tabBarRepeatedPressBehavior,
+    tabBarBadgeStyle,
+    tabBarIcon,
+    tabBarIconSize,
+    tabBarActiveIndicatorWidth,
+    tabBarActiveIndicatorHeight,
+    tabBarBadge,
+    tabBarSystemItem,
+    tabBarRole,
+    tabBarSearchAutoFocus,
+    tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
+    tabBarStyle,
+    tabBarAccessibilityLabel,
+    tabBarButtonTestID,
+    sceneStyle,
+    overrideScrollViewContentInsetAdjustmentBehavior,
+  } = options;
+
+  const systemItem =
+    tabBarSystemItem ??
+    // Setting the `role` to 'search' doesn't add title and icon automatically
+    // So we also set `tabBarSystemItem` to 'search' to match SwiftUI's behavior
+    (tabBarRole === 'search' ? 'search' : undefined);
+
+  const {
+    backgroundColor: tabBarBackgroundColor,
+    shadowColor: tabBarShadowColor,
+  } = tabBarStyle || {};
+
+  const tabTitle =
+    // On iOS, `systemItem` already provides a localized label
+    // So we should only use `tabBarLabel` if explicitly provided
+    Platform.OS === 'ios' && systemItem != null
+      ? tabBarLabel
+      : getLabel({ label: tabBarLabel, title }, route.name);
+
+  const badgeBackgroundColor =
+    tabBarBadgeStyle?.backgroundColor ?? colors.notification;
+  const badgeTextColor =
+    tabBarBadgeStyle?.color ?? Color.foreground(badgeBackgroundColor);
+
+  const tabItemAppearance: TabsScreenItemStateAppearanceIOS = {
+    tabBarItemTitleFontFamily: fontFamily,
+    tabBarItemTitleFontSize: fontSize,
+    tabBarItemTitleFontWeight: fontWeight,
+    tabBarItemTitleFontStyle: fontStyle,
+    tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
+    tabBarItemIconColor: inactiveTintColor,
+    tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
+  };
+
+  const tabItemLayoutAppearance = {
+    stacked: {
+      normal: {
+        ...tabItemAppearance,
+        tabBarItemTitlePositionAdjustment:
+          tabBarLabelPositionAdjustment?.stacked,
+      },
+    },
+    inline: {
+      normal: {
+        ...tabItemAppearance,
+        tabBarItemTitlePositionAdjustment:
+          tabBarLabelPositionAdjustment?.inline,
+      },
+    },
+    compactInline: {
+      normal: {
+        ...tabItemAppearance,
+        tabBarItemTitlePositionAdjustment:
+          tabBarLabelPositionAdjustment?.compactInline,
+      },
+    },
+  };
+
+  const normalTabItemAppearance: TabsScreenItemStateAppearanceAndroid = {
+    tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
+    tabBarItemIconColor: inactiveTintColor,
+  };
+
+  const selectedTabItemAppearance: TabsScreenItemStateAppearanceAndroid = {
+    tabBarItemTitleFontColor: activeTintColor,
+    tabBarItemIconColor: activeTintColor,
+  };
+
+  const iconSize =
+    Platform.OS === 'android' ? (tabBarIconSize ?? ICON_SIZE!) : ICON_SIZE!;
+
+  const getIcon = (selected: boolean) => {
+    if (typeof tabBarIcon === 'function') {
+      const result = tabBarIcon({
+        focused: selected,
+        size: iconSize,
+        color: selected ? activeTintColor : inactiveTintColor,
+      });
+
+      if (React.isValidElement(result)) {
+        throw new Error(
+          `Returning a React element from 'tabBarIcon' is not supported with native tab bar.`
+        );
+      } else if (result && typeof result === 'object' && 'type' in result) {
+        return getPlatformIcon(result, direction, iconSize);
+      } else {
+        throw new Error(
+          `The 'tabBarIcon' function must return an icon object (got ${typeof result}).`
+        );
+      }
+    } else if (tabBarIcon != null) {
+      return getPlatformIcon(tabBarIcon, direction, iconSize);
+    }
+
+    return undefined;
+  };
+
+  // An error is thrown for React Elements in `getIcon`
+  // So we only call it when we actually render a native tab bar
+  const icon = hasCustomTabBar ? undefined : getIcon(false);
+  const selectedIcon =
+    !hasCustomTabBar && typeof tabBarIcon === 'function' ? getIcon(true) : icon;
+
+  return (
+    <Tabs.Screen
+      onWillAppear={() => onTransitionStart({ route })}
+      onDidAppear={() => onTransitionEnd({ route })}
+      screenKey={route.key}
+      tabBarItemAccessibilityLabel={tabBarAccessibilityLabel}
+      tabBarItemTestID={tabBarButtonTestID}
+      preventNativeSelection={tabBarSelectionEnabled === false}
+      badgeValue={tabBarBadge?.toString()}
+      title={tabTitle}
+      style={{ backgroundColor: colors.background }}
+      specialEffects={{
+        repeatedTabSelection: {
+          popToRoot: tabBarRepeatedPressBehavior?.popToTop !== false,
+          scrollToTop: tabBarRepeatedPressBehavior?.scrollToTop !== false,
+        },
+      }}
+      android={{
+        icon: icon?.android ?? icon?.shared,
+        selectedIcon: selectedIcon?.android ?? selectedIcon?.shared,
+        standardAppearance: {
+          tabBarBackgroundColor: tabBarBackgroundColor ?? backgroundColor,
+          tabBarItemRippleColor: rippleColor,
+          tabBarItemLabelVisibilityMode: labelVisibilityMode,
+          normal: normalTabItemAppearance,
+          selected: selectedTabItemAppearance,
+          tabBarItemIconSize: tabBarIconSize,
+          tabBarItemActiveIndicatorColor: activeIndicatorColor,
+          tabBarItemActiveIndicatorEnabled: activeIndicatorEnabled,
+          tabBarItemActiveIndicatorWidth: tabBarActiveIndicatorWidth,
+          tabBarItemActiveIndicatorHeight: tabBarActiveIndicatorHeight,
+          tabBarItemTitleFontFamily: fontFamily,
+          tabBarItemTitleFontWeight: fontWeight,
+          tabBarItemTitleSmallLabelFontSize: fontSize,
+          tabBarItemTitleLargeLabelFontSize: fontSize,
+          tabBarItemTitleFontStyle: fontStyle,
+          tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
+          tabBarItemBadgeTextColor: badgeTextColor,
+        },
+      }}
+      ios={{
+        icon: icon?.ios ?? icon?.shared,
+        selectedIcon: selectedIcon?.ios ?? selectedIcon?.shared,
+        systemItem,
+        role: tabBarRole === 'search' ? tabBarRole : undefined,
+        automaticallyActivatesSearch: tabBarSearchAutoFocus,
+        scrollEdgeAppearance: {
+          tabBarBackgroundColor,
+          tabBarShadowColor,
+          tabBarBlurEffect,
+          ...tabItemLayoutAppearance,
+        },
+        standardAppearance: {
+          tabBarBackgroundColor,
+          tabBarShadowColor,
+          tabBarBlurEffect,
+          ...tabItemLayoutAppearance,
+        },
+        overrideScrollViewContentInsetAdjustmentBehavior,
+      }}
+    >
+      <Deferred lazy={lazy} visible={visible}>
+        <ActivityView
+          key={route.key}
+          mode={isFocused ? 'normal' : isActive ? 'inert' : 'paused'}
+          visible={
+            // We don't need to hide the content since it's handled natively
+            // Hiding may also cause flash due to lag after native tab switch
+            // So we leave it always visible
+            true
+          }
+          style={StyleSheet.absoluteFill}
+        >
+          <ScreenContent
+            isFocused={isFocused}
+            route={route}
+            navigation={descriptor.navigation}
+            options={options}
+            style={sceneStyle}
+          >
+            <AnimatedScreenContent isFocused={isFocused}>
+              <BottomTabBarHeightContext.Provider value={0}>
+                {render()}
+              </BottomTabBarHeightContext.Provider>
+            </AnimatedScreenContent>
+          </ScreenContent>
+        </ActivityView>
+      </Deferred>
+    </Tabs.Screen>
+  );
+});
 
 function AnimatedScreenContent({
   isFocused,
@@ -747,11 +877,22 @@ function AnimatedScreenContent({
   );
 }
 
-function getPlatformIcon(icon: Icon): PlatformIcon {
+function getPlatformIcon(
+  icon: Icon,
+  direction: LocaleDirection,
+  size: number
+): PlatformIcon {
   switch (icon.type) {
     case 'sfSymbol':
       return {
-        ios: icon,
+        ios: {
+          type: 'sfSymbol',
+          name: icon.name,
+          renderingMode:
+            icon.renderingMode === 'multicolor'
+              ? 'original'
+              : icon.renderingMode,
+        },
         android: undefined,
         shared: undefined,
       };
@@ -764,29 +905,43 @@ function getPlatformIcon(icon: Icon): PlatformIcon {
             name: icon.name,
             variant: icon.variant,
             weight: icon.weight,
-            size: ICON_SIZE,
+            fill: icon.fill,
+            size,
+            direction,
           }),
         },
         shared: undefined,
       };
-    case 'image':
+    case 'image': {
+      // A `{ uri: 'name' }` source maps to an Android drawable by name.
+      const drawableName =
+        typeof icon.source === 'object' &&
+        'uri' in icon.source &&
+        icon.source.uri?.includes(':') === false
+          ? icon.source.uri
+          : undefined;
+
       return {
-        ios:
-          icon.tinted === false
-            ? {
-                type: 'imageSource',
-                imageSource: icon.source,
-              }
-            : {
-                type: 'templateSource',
-                templateSource: icon.source,
-              },
-        android: undefined,
-        shared: {
+        ios: {
           type: 'imageSource',
           imageSource: icon.source,
+          renderingMode: icon.tinted === false ? 'original' : 'template',
         },
+        android:
+          drawableName != null
+            ? {
+                type: 'drawableResource',
+                name: drawableName,
+                tinting: icon.tinted === false ? 'original' : 'tinted',
+              }
+            : {
+                type: 'imageSource',
+                imageSource: icon.source,
+                tinting: icon.tinted === false ? 'original' : 'tinted',
+              },
+        shared: undefined,
       };
+    }
     default: {
       const _exhaustiveCheck: never = icon;
 

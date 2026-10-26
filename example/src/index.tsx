@@ -70,27 +70,11 @@ const WEB_COLORS = {
   notification: '#f05252',
 } satisfies Theme['colors'];
 
-let previousDirection = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr';
-
-if (Platform.OS === 'web') {
-  if (
-    typeof localStorage !== 'undefined' &&
-    typeof document !== 'undefined' &&
-    document.documentElement
-  ) {
-    const direction = localStorage.getItem(DIRECTION_PERSISTENCE_KEY);
-
-    if (direction !== null) {
-      previousDirection = direction;
-      document.documentElement.dir = direction;
-    }
-  }
-}
-
 type ThemeName = 'light' | 'dark' | 'material' | 'custom';
 
 type AppState = {
   isReady: boolean;
+  isRestored: boolean;
   themeName: ThemeName;
   isRTL: boolean;
 };
@@ -481,10 +465,12 @@ const useAppState = () => {
           return {
             ...state,
             isReady: true,
+            isRestored: true,
           };
         case 'RESTORE_SUCCESS':
           return {
             isReady: true,
+            isRestored: true,
             themeName: action.payload.themeName,
             isRTL: action.payload.isRTL,
           };
@@ -498,8 +484,9 @@ const useAppState = () => {
     },
     {
       themeName: 'custom',
-      isRTL: previousDirection === 'rtl',
+      isRTL: false,
       isReady: Platform.OS === 'web',
+      isRestored: false,
     }
   );
 
@@ -510,10 +497,9 @@ const useAppState = () => {
           THEME_PERSISTENCE_KEY
         );
 
-        const savedDirection =
-          Platform.OS !== 'web'
-            ? await AsyncStorage.getItem(DIRECTION_PERSISTENCE_KEY)
-            : previousDirection;
+        const savedDirection = await AsyncStorage.getItem(
+          DIRECTION_PERSISTENCE_KEY
+        );
 
         dispatch({
           type: 'RESTORE_SUCCESS',
@@ -538,7 +524,7 @@ const useAppState = () => {
   }, []);
 
   React.useEffect(() => {
-    if (!state.isReady) {
+    if (!state.isRestored) {
       return;
     }
 
@@ -556,10 +542,10 @@ const useAppState = () => {
         Appearance.setColorScheme(colorScheme);
       }
     }
-  }, [state.isReady, state.themeName]);
+  }, [state.isRestored, state.themeName]);
 
   React.useEffect(() => {
-    if (!state.isReady) {
+    if (!state.isRestored) {
       return;
     }
 
@@ -569,7 +555,6 @@ const useAppState = () => {
 
     if (Platform.OS === 'web') {
       document.documentElement.dir = direction;
-      localStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
     }
 
     if (state.isRTL !== I18nManager.getConstants().isRTL) {
@@ -579,7 +564,7 @@ const useAppState = () => {
         reloadAppAsync();
       }
     }
-  }, [state.isRTL, state.isReady]);
+  }, [state.isRTL, state.isRestored]);
 
   return [state, dispatch] as const;
 };

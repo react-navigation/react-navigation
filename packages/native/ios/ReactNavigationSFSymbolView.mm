@@ -37,6 +37,13 @@ using namespace facebook::react;
   return self;
 }
 
+- (void)setSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute
+{
+    [super setSemanticContentAttribute:semanticContentAttribute];
+
+    _view.semanticContentAttribute = semanticContentAttribute;
+}
+
 static ReactNavigationSFSymbolViewImplProps *convertProps(const Props::Shared &props) {
     const auto &viewProps = *std::static_pointer_cast<ReactNavigationSFSymbolViewProps const>(props);
 
@@ -44,7 +51,11 @@ static ReactNavigationSFSymbolViewImplProps *convertProps(const Props::Shared &p
 
     swiftProps.name = RCTNSStringFromString(viewProps.name);
     swiftProps.size = viewProps.size;
-    swiftProps.color = RCTUIColorFromSharedColor(viewProps.color);
+
+    if (viewProps.color) {
+        swiftProps.color = RCTUIColorFromSharedColor(viewProps.color);
+    }
+
     swiftProps.weight = viewProps.weight;
     swiftProps.scale = RCTNSStringFromString(viewProps.scale);
     swiftProps.variableValue = viewProps.variableValue;

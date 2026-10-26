@@ -6,45 +6,28 @@ name: Showcase - Bottom Tabs
     env:
       LINK: bottom-tabs-showcase
       TEXT: 'Midnight Waves'
-- runFlow:
-    when:
-      # Android doesn't expose selected state
-      true: ${maestro.platform == 'web' || maestro.platform == 'ios'}
-    commands:
-      - assertVisible:
-          text: 'Albums'
-          selected: true
+- assertVisible:
+    text: 'Albums'
+    selected: true
 - tapOn:
     id: 'open-album-albums'
-- runFlow:
-    when:
-      true: ${maestro.platform == 'web' || maestro.platform == 'ios'}
-    commands:
-      - assertVisible:
-          text: 'Albums'
-          selected: true
+- assertVisible:
+    text: 'Albums'
+    selected: true
 - assertVisible:
     text: 'Midnight Waves'
 - assertVisible:
     text: 'Luna Echo'
 - tapOn:
     text: '.*For You.*'
-- runFlow:
-    when:
-      true: ${maestro.platform == 'web' || maestro.platform == 'ios'}
-    commands:
-      - assertVisible:
-          text: 'For You'
-          selected: true
+- assertVisible:
+    text: 'For You'
+    selected: true
 - tapOn:
     id: 'open-album-for-you'
-- runFlow:
-    when:
-      true: ${maestro.platform == 'web' || maestro.platform == 'ios'}
-    commands:
-      - assertVisible:
-          text: 'For You'
-          selected: true
+- assertVisible:
+    text: 'For You'
+    selected: true
 - assertVisible:
     text: 'Quiet Hours'
 - assertVisible:
@@ -53,22 +36,14 @@ name: Showcase - Bottom Tabs
     text: 'Radio'
 - assertVisible:
     text: 'Velvet FM'
-- runFlow:
-    when:
-      true: ${maestro.platform == 'web' || maestro.platform == 'ios'}
-    commands:
-      - assertVisible:
-          text: 'Radio'
-          selected: true
+- assertVisible:
+    text: 'Radio'
+    selected: true
 - tapOn:
     text: '.*For You.*'
-- runFlow:
-    when:
-      true: ${maestro.platform == 'web' || maestro.platform == 'ios'}
-    commands:
-      - assertVisible:
-          text: 'For You'
-          selected: true
+- assertVisible:
+    text: 'For You'
+    selected: true
 - assertVisible:
     text: 'Quiet Hours'
 - openLink:
@@ -83,7 +58,7 @@ name: Showcase - Bottom Tabs
           selected: true
 - runFlow:
     when:
-      platform: ios
+      true: ${maestro.platform != 'web'}
     commands:
       - assertVisible:
           text: 'For You'
@@ -92,3 +67,28 @@ name: Showcase - Bottom Tabs
     text: 'Signal Lost'
 - assertVisible:
     text: 'Pixel Drift'
+- tapOn:
+    text: 'Search'
+- assertVisible:
+    text: 'Browse Categories'
+- runFlow:
+    when:
+      # On iOS, the search bar is focused automatically when the tab is selected
+      true: ${maestro.platform != 'ios'}
+    commands:
+      - tapOn:
+          text: 'Search'
+          above:
+            text: 'Browse Categories'
+- inputText: 'Chrome'
+- tapOn:
+    text: '.*Chrome Valley.*'
+- assertVisible:
+    text: 'Silver Thread'
+- tapOn:
+    text: 'Albums'
+- assertVisible:
+    text: 'Albums'
+    selected: true
+- assertNotVisible:
+    text: 'Silver Thread'

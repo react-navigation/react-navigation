@@ -133,7 +133,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
 
   /**
    * Type of the drawer. It determines how the drawer looks and animates.
-   * - `front`: Traditional drawer which covers the screen with a overlay behind it.
+   * - `front`: Traditional drawer which covers the screen with an overlay behind it.
    * - `back`: The drawer is revealed behind the screen on swipe.
    * - `slide`: Both the screen and the drawer slide on swipe to reveal the drawer.
    * - `permanent`: A permanent drawer is shown as a sidebar.
@@ -195,7 +195,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
   swipeMinDistance?: number | undefined;
 
   /**
-   * Whether the keyboard should be dismissed when the swipe gesture begins.
+   * Whether the keyboard should be dismissed when the drawer starts opening or closing.
    * Defaults to `'on-drag'`. Set to `'none'` to disable keyboard handling.
    */
   keyboardDismissMode?: 'on-drag' | 'none' | undefined;

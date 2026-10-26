@@ -14,6 +14,7 @@ export interface NativeProps extends ViewProps {
     0 | 100 | 200 | 300 | 400 | 500 | 600 | 700,
     0
   >;
+  fill?: CodegenTypes.WithDefault<CodegenTypes.Int32, -1>;
   size: CodegenTypes.Float;
   color?: ColorValue | undefined;
 }

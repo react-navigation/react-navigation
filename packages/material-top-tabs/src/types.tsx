@@ -238,7 +238,7 @@ export type MaterialTopTabNavigationOptions = {
   tabBarContentContainerStyle?: StyleProp<ViewStyle> | undefined;
 
   /**
-   * Style object for the the tab bar.
+   * Style object for the tab bar.
    */
   tabBarStyle?: StyleProp<ViewStyle> | undefined;
 

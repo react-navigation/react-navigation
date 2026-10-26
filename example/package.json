@@ -50,7 +50,7 @@
     "react-native-pager-view": "^8.0.1",
     "react-native-reanimated": "4.5.3",
     "react-native-safe-area-context": "~5.10.0",
-    "react-native-screens": "^4.26.2",
+    "react-native-screens": "^4.30.0",
     "react-native-showtime": "^0.0.5",
     "react-native-tab-view": "workspace:^",
     "react-native-web": "~0.21.2",
@@ -95,6 +95,10 @@
             500,
             600,
             700
+          ],
+          "fills": [
+            0,
+            1
           ]
         },
         {
@@ -107,6 +111,10 @@
             500,
             600,
             700
+          ],
+          "fills": [
+            0,
+            1
           ]
         },
         {
@@ -119,6 +127,10 @@
             500,
             600,
             700
+          ],
+          "fills": [
+            0,
+            1
           ]
         }
       ]

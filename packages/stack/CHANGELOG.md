@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.60](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.59...@react-navigation/stack@8.0.0-alpha.60) (2026-10-13)
+
+### Bug Fixes
+
+* keep nested navigators with state mounted with `inactiveBehavior: 'unmount'` ([#13288](https://github.com/react-navigation/react-navigation/issues/13288)) ([bd94cb0](https://github.com/react-navigation/react-navigation/commit/bd94cb04fc711fbbcbd0a6fc242387ed9e65eb38)) - by @satya164
+* restart card animation when StrictMode re-runs effects ([2f6c35d](https://github.com/react-navigation/react-navigation/commit/2f6c35d1d2fb408178b1ca1bd5adfb2949bd5a70)) - by @satya164
+
 # [8.0.0-alpha.59](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.58...@react-navigation/stack@8.0.0-alpha.59) (2026-10-02)
 
 **Note:** Version bump only for package @react-navigation/stack

@@ -1,5 +1,6 @@
 import type { ColorValue } from 'react-native';
 
+import type { LocaleDirection, SFSymbolNames } from '../types';
 import type { FONT_WEIGHTS } from './constants';
 import type { MaterialSymbolName } from './MaterialSymbolData';
 
@@ -15,12 +16,13 @@ export type MaterialSymbolOptions = {
    *
    * ```json
    * "react-navigation": {
-   *   "material-symbol": {
+   *   "material-symbols": {
    *     "fonts": [
    *       {
    *         "variant": "rounded",
-   *         "weight": 300,
-   *       },
+   *         "weights": [300],
+   *         "fills": [0, 1]
+   *       }
    *     ]
    *   }
    * }
@@ -38,12 +40,13 @@ export type MaterialSymbolOptions = {
    *
    * ```json
    * "react-navigation": {
-   *   "material-symbol": {
+   *   "material-symbols": {
    *     "fonts": [
    *       {
    *         "variant": "rounded",
-   *         "weight": 300,
-   *       },
+   *         "weights": [300],
+   *         "fills": [0, 1]
+   *       }
    *     ]
    *   }
    * }
@@ -72,6 +75,34 @@ export type MaterialSymbolOptions = {
     | 700
     | undefined;
   /**
+   * Whether to use the filled version of the symbol.
+   *
+   * Can be customized using `react-navigation` key in `package.json`:
+   *
+   * ```json
+   * "react-navigation": {
+   *   "material-symbols": {
+   *     "fonts": [
+   *       {
+   *         "variant": "rounded",
+   *         "weights": [300],
+   *         "fills": [0, 1]
+   *       }
+   *     ]
+   *   }
+   * }
+   * ```
+   *
+   * Here:
+   * - `0`: Unfilled version
+   * - `1`: Filled version
+   *
+   * Automatically set if a single fill is available.
+   *
+   * @default false
+   */
+  fill?: boolean | undefined;
+  /**
    * The size of the symbol.
    *
    * @default 24
@@ -83,6 +114,17 @@ export type MaterialSymbolOptions = {
    * @default 'black'
    */
   color?: ColorValue | undefined;
+};
+
+export type MaterialSymbolImageSourceOptions = MaterialSymbolOptions & {
+  /**
+   * The layout direction to render the symbol for.
+   *
+   * Symbols that support auto-mirroring are flipped horizontally in RTL.
+   *
+   * @default I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'
+   */
+  direction?: LocaleDirection | undefined;
 };
 
 type SFSymbolScale = 'small' | 'medium' | 'large';
@@ -364,7 +406,9 @@ export type SFSymbolOptions = {
   /**
    * The name of the SF Symbol to display.
    */
-  name: import('sf-symbols-typescript').SFSymbol;
+  name:
+    | import('sf-symbols-typescript').SFSymbol
+    | Extract<keyof SFSymbolNames, string>;
   /**
    * The size of the symbol.
    *
