@@ -8,6 +8,7 @@ import {
 } from '@react-navigation/elements';
 import {
   ActivityView,
+  HeaderSearchBarContext,
   SafeAreaProviderCompat,
 } from '@react-navigation/elements/internal';
 import {
@@ -31,6 +32,7 @@ import {
   type ScreenProps,
   ScreenStack,
   ScreenStackItem,
+  type SearchBarCommands,
 } from 'react-native-screens';
 
 import type {
@@ -234,6 +236,9 @@ const SceneView = React.memo(function SceneView({
   const isParentHeaderShown = React.use(HeaderShownContext);
   const parentHeaderHeight = React.use(HeaderHeightContext);
   const parentHeaderBack = React.use(HeaderBackContext);
+  const parentSearchBarRef = React.use(HeaderSearchBarContext);
+
+  const searchBarRef = React.useRef<SearchBarCommands>(null);
 
   const isLandscape = useFrameSize((frame) => frame.width > frame.height);
 
@@ -306,6 +311,7 @@ const SceneView = React.memo(function SceneView({
     headerHeight,
     headerShown: header !== undefined ? false : headerShown,
     headerBack,
+    headerSearchBarRef: searchBarRef,
   });
 
   const headerContainerRef =
@@ -464,97 +470,109 @@ const SceneView = React.memo(function SceneView({
           value={isParentHeaderShown || headerShown !== false}
         >
           <HeaderBackContext.Provider value={headerBack}>
-            {render()}
+            <HeaderSearchBarContext.Provider
+              value={
+                headerShown !== false
+                  ? searchBarRef
+                  : (parentSearchBarRef ?? searchBarRef)
+              }
+            >
+              {render()}
+            </HeaderSearchBarContext.Provider>
           </HeaderBackContext.Provider>
         </HeaderShownContext.Provider>
       </HeaderHeightContext.Provider>
     </AnimatedHeaderHeightContext.Provider>
   );
 
+  // Provide the search bar to the whole screen including the header
+  // So that it's also available in header buttons
   return (
-    <NavigationProvider navigation={navigation} route={route}>
-      <ScreenStackItem
-        key={route.key}
-        screenId={route.key}
-        activityState={isInactive ? 0 : 2}
-        style={StyleSheet.absoluteFill}
-        aria-hidden={!focused}
-        customAnimationOnSwipe={animationMatchesGesture}
-        fullScreenSwipeEnabled={fullScreenGestureEnabled}
-        fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
-        gestureEnabled={
-          Platform.OS === 'android'
-            ? // This prop enables handling of system back gestures on Android
-              // Since we handle them in JS side, we disable this
-              false
-            : gestureEnabled
-        }
-        homeIndicatorHidden={autoHideHomeIndicator}
-        hideKeyboardOnSwipe={keyboardHandlingEnabled}
-        navigationBarHidden={navigationBarHidden}
-        replaceAnimation={animationTypeForReplace}
-        stackPresentation={presentation === 'card' ? 'push' : presentation}
-        stackAnimation={animation}
-        screenOrientation={orientation}
-        sheetAllowedDetents={sheetAllowedDetents}
-        sheetLargestUndimmedDetentIndex={sheetLargestUndimmedDetentIndex}
-        sheetGrabberVisible={sheetGrabberVisible}
-        sheetInitialDetentIndex={sheetInitialDetentIndex}
-        sheetCornerRadius={sheetCornerRadius}
-        sheetElevation={sheetElevation}
-        sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
-        sheetShouldOverflowTopInset={sheetShouldOverflowTopInset}
-        sheetDefaultResizeAnimationEnabled={sheetResizeAnimationEnabled}
-        statusBarAnimation={statusBarAnimation}
-        statusBarHidden={statusBarHidden}
-        statusBarStyle={statusBarStyle}
-        swipeDirection={gestureDirection}
-        transitionDuration={animationDuration}
-        onWillAppear={onWillAppear}
-        onWillDisappear={onWillDisappear}
-        onAppear={onAppear}
-        onDisappear={onDisappear}
-        onDismissed={onDismissed}
-        onGestureCancel={onGestureCancel}
-        onSheetDetentChanged={onSheetDetentChanged}
-        gestureResponseDistance={gestureResponseDistance}
-        nativeBackButtonDismissalEnabled={false} // on Android
-        onHeaderBackButtonClicked={onHeaderBackButtonClicked}
-        preventNativeDismiss={isRemovePrevented} // on iOS
-        scrollEdgeEffects={{
-          bottom: scrollEdgeEffects?.bottom ?? 'automatic',
-          top: scrollEdgeEffects?.top ?? 'automatic',
-          left: scrollEdgeEffects?.left ?? 'automatic',
-          right: scrollEdgeEffects?.right ?? 'automatic',
-        }}
-        onNativeDismissCancelled={onNativeDismissCancelled}
-        onHeaderHeightChange={onHeaderHeightChange}
-        contentStyle={[
-          presentation !== 'transparentModal' &&
-            presentation !== 'containedTransparentModal' && {
-              backgroundColor: colors.background,
-            },
-          contentStyle,
-        ]}
-        headerConfig={headerConfig}
-        unstable_sheetFooter={unstable_sheetFooter}
-      >
-        {activityMode === 'unmounted' ? null : (
-          <ActivityView
-            mode={activityMode}
-            visible={
-              // We don't need to hide the content since it's handled natively
-              // Hiding may also cause flash due to lag after native tab switch
-              // So we leave it always visible
-              true
-            }
-            style={styles.content}
-          >
-            {content}
-          </ActivityView>
-        )}
-      </ScreenStackItem>
-    </NavigationProvider>
+    <HeaderSearchBarContext.Provider value={searchBarRef}>
+      <NavigationProvider navigation={navigation} route={route}>
+        <ScreenStackItem
+          key={route.key}
+          screenId={route.key}
+          activityState={isInactive ? 0 : 2}
+          style={StyleSheet.absoluteFill}
+          aria-hidden={!focused}
+          customAnimationOnSwipe={animationMatchesGesture}
+          fullScreenSwipeEnabled={fullScreenGestureEnabled}
+          fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
+          gestureEnabled={
+            Platform.OS === 'android'
+              ? // This prop enables handling of system back gestures on Android
+                // Since we handle them in JS side, we disable this
+                false
+              : gestureEnabled
+          }
+          homeIndicatorHidden={autoHideHomeIndicator}
+          hideKeyboardOnSwipe={keyboardHandlingEnabled}
+          navigationBarHidden={navigationBarHidden}
+          replaceAnimation={animationTypeForReplace}
+          stackPresentation={presentation === 'card' ? 'push' : presentation}
+          stackAnimation={animation}
+          screenOrientation={orientation}
+          sheetAllowedDetents={sheetAllowedDetents}
+          sheetLargestUndimmedDetentIndex={sheetLargestUndimmedDetentIndex}
+          sheetGrabberVisible={sheetGrabberVisible}
+          sheetInitialDetentIndex={sheetInitialDetentIndex}
+          sheetCornerRadius={sheetCornerRadius}
+          sheetElevation={sheetElevation}
+          sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
+          sheetShouldOverflowTopInset={sheetShouldOverflowTopInset}
+          sheetDefaultResizeAnimationEnabled={sheetResizeAnimationEnabled}
+          statusBarAnimation={statusBarAnimation}
+          statusBarHidden={statusBarHidden}
+          statusBarStyle={statusBarStyle}
+          swipeDirection={gestureDirection}
+          transitionDuration={animationDuration}
+          onWillAppear={onWillAppear}
+          onWillDisappear={onWillDisappear}
+          onAppear={onAppear}
+          onDisappear={onDisappear}
+          onDismissed={onDismissed}
+          onGestureCancel={onGestureCancel}
+          onSheetDetentChanged={onSheetDetentChanged}
+          gestureResponseDistance={gestureResponseDistance}
+          nativeBackButtonDismissalEnabled={false} // on Android
+          onHeaderBackButtonClicked={onHeaderBackButtonClicked}
+          preventNativeDismiss={isRemovePrevented} // on iOS
+          scrollEdgeEffects={{
+            bottom: scrollEdgeEffects?.bottom ?? 'automatic',
+            top: scrollEdgeEffects?.top ?? 'automatic',
+            left: scrollEdgeEffects?.left ?? 'automatic',
+            right: scrollEdgeEffects?.right ?? 'automatic',
+          }}
+          onNativeDismissCancelled={onNativeDismissCancelled}
+          onHeaderHeightChange={onHeaderHeightChange}
+          contentStyle={[
+            presentation !== 'transparentModal' &&
+              presentation !== 'containedTransparentModal' && {
+                backgroundColor: colors.background,
+              },
+            contentStyle,
+          ]}
+          headerConfig={headerConfig}
+          unstable_sheetFooter={unstable_sheetFooter}
+        >
+          {activityMode === 'unmounted' ? null : (
+            <ActivityView
+              mode={activityMode}
+              visible={
+                // We don't need to hide the content since it's handled natively
+                // Hiding may also cause flash due to lag after native tab switch
+                // So we leave it always visible
+                true
+              }
+              style={styles.content}
+            >
+              {content}
+            </ActivityView>
+          )}
+        </ScreenStackItem>
+      </NavigationProvider>
+    </HeaderSearchBarContext.Provider>
   );
 });
 

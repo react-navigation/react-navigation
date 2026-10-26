@@ -1,4 +1,7 @@
-import { getDefaultHeaderHeight } from '@react-navigation/elements';
+import {
+  getDefaultHeaderHeight,
+  type HeaderSearchBarRef,
+} from '@react-navigation/elements';
 import {
   ActivityView,
   SafeAreaProviderCompat,
@@ -401,6 +404,9 @@ export class CardStack extends React.Component<Props, State> {
       const closing =
         previousScene?.closing ??
         new Animated.Value(props.closingRouteKeys.includes(route.key) ? 1 : 0);
+      const headerSearchBarRef =
+        previousScene?.headerSearchBarRef ??
+        React.createRef<HeaderSearchBarRef>();
 
       const currentGesture = gestures[route.key];
 
@@ -540,6 +546,7 @@ export class CardStack extends React.Component<Props, State> {
             : undefined,
         },
         closing,
+        headerSearchBarRef,
         __memo: [
           state.layout,
           descriptor,

@@ -1,5 +1,8 @@
 import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
-import { ActivityView } from '@react-navigation/elements/internal';
+import {
+  ActivityView,
+  HeaderSearchBarContext,
+} from '@react-navigation/elements/internal';
 import {
   NavigationProvider,
   type Route,
@@ -208,7 +211,15 @@ export function HeaderContainer({
                   mode={isFocused ? 'normal' : 'inert'}
                   visible={true}
                 >
-                  {header !== undefined ? header(props) : <Header {...props} />}
+                  <HeaderSearchBarContext.Provider
+                    value={scene.headerSearchBarRef}
+                  >
+                    {header !== undefined ? (
+                      header(props)
+                    ) : (
+                      <Header {...props} />
+                    )}
+                  </HeaderSearchBarContext.Provider>
                 </ActivityView>
               </View>
             </View>

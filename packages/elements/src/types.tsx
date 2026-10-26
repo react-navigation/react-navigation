@@ -69,25 +69,29 @@ type IconMaterialSymbol = {
 export type Icon = IconSfSymbol | IconMaterialSymbol | IconImage;
 
 export type HeaderSearchBarRef = {
+  /**
+   * Focus the search bar.
+   */
   focus: () => void;
+  /**
+   * Remove focus from the search bar.
+   */
   blur: () => void;
+  /**
+   * Set the search bar's content to the given value.
+   */
   setText: (text: string) => void;
+  /**
+   * Remove any text present in the search bar input field.
+   */
   clearText: () => void;
+  /**
+   * Cancel the search and close the search bar.
+   */
   cancelSearch: () => void;
 };
 
 export type HeaderSearchBarOptions = {
-  /**
-   * Ref to imperatively update the search bar.
-   *
-   * Supported operations:
-   * - `focus` - focuses the search bar
-   * - `blur` - removes focus from the search bar
-   * - `setText` - sets the search bar's content to given value
-   * - `clearText` - removes any text present in the search bar input field
-   * - `cancelSearch` - cancel the search and close the search bar
-   */
-  ref?: React.Ref<HeaderSearchBarRef> | undefined;
   /**
    * The auto-capitalization behavior
    */

@@ -12,7 +12,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Container, type Props as ContainerProps } from './Container';
 import { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 import { HeaderHeightContext } from './Header/HeaderHeightContext';
+import { HeaderSearchBarContext } from './Header/HeaderSearchBarContext';
 import { HeaderShownContext } from './Header/HeaderShownContext';
+import type { HeaderSearchBarRef } from './types';
 import { useFrameSize } from './useFrameSize';
 
 type Props = {
@@ -36,6 +38,9 @@ export function Screen(props: Props) {
 
   const isParentHeaderShown = React.use(HeaderShownContext);
   const parentHeaderHeight = React.use(HeaderHeightContext);
+  const parentSearchBarRef = React.use(HeaderSearchBarContext);
+
+  const searchBarRef = React.useRef<HeaderSearchBarRef>(null);
 
   const {
     focused,
@@ -144,7 +149,9 @@ export function Screen(props: Props) {
               }}
               style={{ pointerEvents: 'box-none' }}
             >
-              {header}
+              <HeaderSearchBarContext.Provider value={searchBarRef}>
+                {header}
+              </HeaderSearchBarContext.Provider>
             </View>
           </View>
         </NavigationProvider>
@@ -156,7 +163,15 @@ export function Screen(props: Props) {
           <HeaderHeightContext.Provider
             value={headerShown ? headerHeight : (parentHeaderHeight ?? 0)}
           >
-            {children}
+            <HeaderSearchBarContext.Provider
+              value={
+                headerShown
+                  ? searchBarRef
+                  : (parentSearchBarRef ?? searchBarRef)
+              }
+            >
+              {children}
+            </HeaderSearchBarContext.Provider>
           </HeaderHeightContext.Provider>
         </HeaderShownContext.Provider>
       </View>
