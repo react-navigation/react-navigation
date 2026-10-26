@@ -698,6 +698,8 @@ export type NativeStackNavigationOptions = {
    * Additionaly there is `last` value available, when set the sheet will expand initially to last (largest) detent.
    *
    * Defaults to `0` - which represents first detent in the detents array.
+   *
+   * To change the detent after the sheet is opened, use the `useFormSheet` hook in the screen.
    */
   sheetInitialDetentIndex?: number | 'last' | undefined;
   /**
