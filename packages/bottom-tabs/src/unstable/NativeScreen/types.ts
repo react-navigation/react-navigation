@@ -64,12 +64,9 @@ export type NativeHeaderOptions = {
    *
    * @platform ios
    */
-  headerLargeTitleStyle?: StyleProp<{
-    fontFamily?: string;
-    fontSize?: number;
-    fontWeight?: string;
-    color?: ColorValue;
-  }>;
+  headerLargeTitleStyle?: StyleProp<
+    Pick<TextStyle, 'fontFamily' | 'fontSize' | 'fontWeight' | 'color'>
+  >;
   /**
    * Style object for header. Supported properties:
    * - backgroundColor

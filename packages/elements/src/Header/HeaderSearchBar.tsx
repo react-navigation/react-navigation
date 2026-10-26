@@ -70,7 +70,7 @@ function HeaderSearchBarInternal(
 
   const visibleValueRef = React.useRef(visible);
   const clearVisibleValueRef = React.useRef(false);
-  const inputRef = React.useRef<TextInput>(null);
+  const inputRef = React.useRef<React.ComponentRef<typeof TextInput>>(null);
 
   React.useEffect(() => {
     // Avoid act warning in tests just by rendering header

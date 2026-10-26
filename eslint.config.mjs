@@ -79,7 +79,7 @@ export default defineConfig([
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
 
-      'react-hooks/exhaustive-deps': [
+      '@eslint-react/exhaustive-deps': [
         'error',
         {
           additionalHooks:

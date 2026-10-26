@@ -431,6 +431,7 @@ export function useNavigationBuilder<
     routeKeyList[name] = config.keys;
     routeParamList[name] = config.props.initialParams;
 
+    // eslint-disable-next-line @eslint-react/purity
     Object.assign(routeGetIdList, { [name]: config.props.getId });
   }
 
@@ -607,7 +608,7 @@ export function useNavigationBuilder<
     // Instead, we handle changes to these in the nextState code below. Note
     // that some changes to routeConfigs are explicitly ignored, such as changes
     // to initialParams
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, [currentState, router, isStateValid]);
 
   const previousRouteKeyListRef = React.useRef(routeKeyList);
@@ -852,7 +853,7 @@ export function useNavigationBuilder<
       // causing the initial state to be lost after cleanup wipes the container state.
       lastNotifiedStateRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, []);
 
   const getState = useLatestCallback((): State => {

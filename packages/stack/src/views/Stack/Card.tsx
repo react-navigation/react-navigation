@@ -84,7 +84,11 @@ const hasOpacityStyle = (
   if (style) {
     const flattenedStyle = StyleSheet.flatten(style);
 
-    return 'opacity' in flattenedStyle && flattenedStyle.opacity != null;
+    return (
+      flattenedStyle != null &&
+      'opacity' in flattenedStyle &&
+      flattenedStyle.opacity != null
+    );
   }
 
   return false;
@@ -568,7 +572,7 @@ function Card({
     [gesture, gestureDirection, gestureEnabled]
   );
 
-  const { backgroundColor } = StyleSheet.flatten(contentStyle || {});
+  const backgroundColor = StyleSheet.flatten(contentStyle)?.backgroundColor;
 
   const isTransparent =
     typeof backgroundColor === 'string'

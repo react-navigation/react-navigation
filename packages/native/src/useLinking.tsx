@@ -286,7 +286,7 @@ export function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, []);
 
   const previousIndexRef = React.useRef<number | undefined>(undefined);

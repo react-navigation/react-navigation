@@ -42,7 +42,7 @@ const COVERS = [
 export function Albums(props: Partial<ScrollViewProps>) {
   const dimensions = useWindowDimensions();
 
-  const ref = React.useRef<ScrollView>(null);
+  const ref = React.useRef<React.ComponentRef<typeof ScrollView>>(null);
 
   useScrollToTop(ref);
 

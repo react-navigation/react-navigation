@@ -59,7 +59,6 @@ export function TabView<T extends Route>({
   onSwipeStart,
   onSwipeEnd,
   renderLazyPlaceholder = renderLazyPlaceholderDefault,
-  // eslint-disable-next-line @eslint-react/no-unstable-default-props
   renderTabBar = (props) => <TabBar {...props} />,
   pagerStyle,
   style,
