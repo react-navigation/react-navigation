@@ -372,11 +372,7 @@ export type MaterialTopTabBarProps = Pick<
   'position' | 'subscribe' | 'jumpTo'
 > & {
   state: TabNavigationState<ParamListBase>;
-  navigation: NavigationHelpers<
-    ParamListBase,
-    TabNavigationState<ParamListBase>,
-    MaterialTopTabNavigationEventMap
-  >;
+  navigation: MaterialTopTabNavigationHelpers;
   descriptors: MaterialTopTabDescriptorMap;
 };
 
