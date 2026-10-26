@@ -331,7 +331,10 @@ export function BottomTabItem({
         // Clip ripple effect on Android
         {
           borderRadius,
-          overflow: variant === 'material' ? 'hidden' : 'visible',
+          overflow:
+            Platform.OS === 'android' && variant === 'material'
+              ? 'hidden'
+              : 'visible',
         },
         style,
       ]}
