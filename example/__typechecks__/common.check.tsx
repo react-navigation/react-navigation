@@ -1704,8 +1704,25 @@ useNavigationState('Invalid', (state) => state.index);
 /**
  * Check for `linking` prop type validation based on ParamList
  */
+type LinkingParamList = {
+  Home: NavigatorScreenParams<HomeDrawerParamList>;
+  OptionalHome:
+    | NavigatorScreenParams<{
+        Feed: NavigatorScreenParams<FeedTabParamList> | undefined;
+        Account: undefined;
+      }>
+    | undefined;
+  Albums: NavigatorScreenParams<AlbumTabParamList>;
+  Updates: NavigatorScreenParams<UpdatesTabParamList> | undefined;
+  PostDetails: { id: string; section?: string };
+  Settings: { path: string } | undefined;
+  Login: undefined;
+  NotFound: undefined;
+  ScreenData: { screen: string; state: string };
+};
+
 {
-  const linking: LinkingOptions<RootStackParamList> = {
+  const linking: LinkingOptions<LinkingParamList> = {
     prefixes: ['myapp://'],
     config: {
       screens: {
@@ -1732,7 +1749,7 @@ useNavigationState('Invalid', (state) => state.index);
 }
 
 {
-  const linking: LinkingOptions<RootStackParamList> = {
+  const linking: LinkingOptions<LinkingParamList> = {
     prefixes: ['myapp://'],
     config: {
       screens: {
@@ -1768,7 +1785,7 @@ useNavigationState('Invalid', (state) => state.index);
 }
 
 {
-  const linking: LinkingOptions<RootStackParamList> = {
+  const linking: LinkingOptions<LinkingParamList> = {
     prefixes: ['myapp://'],
     config: {
       screens: {
@@ -1782,7 +1799,7 @@ useNavigationState('Invalid', (state) => state.index);
 }
 
 {
-  const linking: LinkingOptions<RootStackParamList> = {
+  const linking: LinkingOptions<LinkingParamList> = {
     prefixes: ['myapp://'],
     config: {
       screens: {
@@ -1801,7 +1818,7 @@ useNavigationState('Invalid', (state) => state.index);
 }
 
 {
-  const linking: LinkingOptions<RootStackParamList> = {
+  const linking: LinkingOptions<LinkingParamList> = {
     prefixes: ['myapp://'],
     config: {
       screens: {
@@ -1820,7 +1837,7 @@ useNavigationState('Invalid', (state) => state.index);
 }
 
 {
-  const linking: LinkingOptions<RootStackParamList> = {
+  const linking: LinkingOptions<LinkingParamList> = {
     prefixes: ['myapp://'],
     config: {
       screens: {
@@ -1851,7 +1868,7 @@ useNavigationState('Invalid', (state) => state.index);
 }
 
 {
-  const linking: LinkingOptions<RootStackParamList> = {
+  const linking: LinkingOptions<LinkingParamList> = {
     prefixes: ['myapp://'],
     config: {
       screens: {
@@ -1869,7 +1886,7 @@ useNavigationState('Invalid', (state) => state.index);
 }
 
 {
-  const linking: LinkingOptions<RootStackParamList> = {
+  const linking: LinkingOptions<LinkingParamList> = {
     prefixes: ['myapp://'],
     config: {
       screens: {
@@ -1886,7 +1903,7 @@ useNavigationState('Invalid', (state) => state.index);
 }
 
 {
-  const linking: LinkingOptions<RootStackParamList> = {
+  const linking: LinkingOptions<LinkingParamList> = {
     prefixes: ['myapp://'],
     config: {
       screens: {
@@ -1905,7 +1922,7 @@ useNavigationState('Invalid', (state) => state.index);
 }
 
 {
-  const linking: LinkingOptions<RootStackParamList> = {
+  const linking: LinkingOptions<LinkingParamList> = {
     prefixes: ['myapp://'],
     config: {
       screens: {
@@ -1914,6 +1931,167 @@ useNavigationState('Invalid', (state) => state.index);
           initialRouteName: 'InvalidRoute',
           screens: {
             Feed: 'feed',
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<LinkingParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        Home: {
+          initialRouteName: 'Feed',
+          screens: {
+            Feed: {
+              initialRouteName: 'Latest',
+              screens: {
+                Popular: 'popular',
+                Latest: 'latest',
+              },
+            },
+          },
+        },
+        Updates: {
+          initialRouteName: 'Timeline',
+          screens: {
+            Notifications: 'notifications/:type',
+            Timeline: 'timeline',
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<LinkingParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        Home: {
+          screens: {
+            Feed: {
+              // @ts-expect-error
+              initialRouteName: 'InvalidRoute',
+              screens: {
+                // @ts-expect-error
+                InvalidNested: 'invalid',
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<LinkingParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        Albums: {
+          screens: {
+            Artist: {
+              path: 'artist/:id',
+              // @ts-expect-error - Artist is a leaf route, not a navigator
+              screens: {
+                Invalid: 'invalid',
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<LinkingParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        OptionalHome: {
+          initialRouteName: 'Feed',
+          screens: {
+            Feed: {
+              initialRouteName: 'Latest',
+              screens: {
+                Popular: 'popular',
+                Latest: 'latest',
+              },
+            },
+            Account: 'account',
+          },
+        },
+        Login: 'login',
+        ScreenData: { path: 'screen-data' },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<LinkingParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        OptionalHome: {
+          // @ts-expect-error
+          initialRouteName: 'InvalidRoute',
+          screens: {
+            Feed: {
+              // @ts-expect-error
+              initialRouteName: 'InvalidRoute',
+              screens: {
+                // @ts-expect-error
+                InvalidNested: 'invalid',
+              },
+            },
+          },
+        },
+        Login: {
+          // @ts-expect-error - Login is a leaf route, not a navigator
+          screens: {
+            Invalid: 'invalid',
+          },
+        },
+        ScreenData: {
+          // @ts-expect-error - screen and state are ordinary route params
+          screens: {
+            Invalid: 'invalid',
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<LinkingParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        OptionalHome: {
+          screens: {
+            // @ts-expect-error
+            InvalidChild: 'invalid',
           },
         },
       },
