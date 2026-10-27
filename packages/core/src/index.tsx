@@ -1,4 +1,10 @@
 export { BaseNavigationContainer } from './BaseNavigationContainer';
+export {
+  createLoaderContext,
+  type LoaderContext,
+  type LoaderContextInitializer,
+  type LoaderContextToken,
+} from './createLoaderContext';
 export { createNavigationContainerRef } from './createNavigationContainerRef';
 export {
   createNavigatorFactory,

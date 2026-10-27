@@ -6,6 +6,7 @@ import type {
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
+import type { LoaderContext } from './createLoaderContext';
 import {
   combinePatternParts,
   getPatternParts,
@@ -401,10 +402,13 @@ export interface StaticScreenConfig<
    * UNSTABLE_loader: ({ params }) => loadProfile(params.id),
    * ```
    */
-  UNSTABLE_loader?: (options: {
-    name: string;
-    params: AnyToUnknown<Params>;
-  }) => Promise<void>;
+  UNSTABLE_loader?: (
+    options: {
+      name: string;
+      params: AnyToUnknown<Params>;
+    },
+    context: LoaderContext
+  ) => Promise<void>;
 }
 
 export type StaticScreenFactory<in out Bag extends NavigatorTypeBagBase> = <

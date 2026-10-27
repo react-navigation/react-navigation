@@ -158,6 +158,7 @@ export function useDescriptors<
     flushUpdates,
     getIsStateEmitted,
     withStackTrace,
+    loaderContext,
   } = useNavigationBuilderContext();
 
   const context = React.useMemo(
@@ -175,6 +176,7 @@ export function useDescriptors<
       scheduleUpdate,
       flushUpdates,
       withStackTrace,
+      loaderContext,
     }),
     [
       navigation,
@@ -190,6 +192,7 @@ export function useDescriptors<
       scheduleUpdate,
       flushUpdates,
       withStackTrace,
+      loaderContext,
     ]
   );
 

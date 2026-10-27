@@ -10,6 +10,7 @@ import * as React from 'react';
 import { Text } from 'react-native';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
+import type { LoaderContext } from '../createLoaderContext';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { createNavigatorFactory } from '../createNavigatorFactory';
 import { useIsFocused } from '../useIsFocused';
@@ -60,7 +61,12 @@ const TestScreen = ({ route }: any) => {
 };
 
 test('fires loader when an action navigates to a screen with UNSTABLE_loader', async () => {
-  const fn = jest.fn(async (_options: { name: string; params: unknown }) => {});
+  const fn = jest.fn(
+    async (
+      _options: { name: string; params: unknown },
+      _context: LoaderContext
+    ) => {}
+  );
 
   const Root = createTestNavigator({
     screens: {
@@ -89,10 +95,13 @@ test('fires loader when an action navigates to a screen with UNSTABLE_loader', a
   });
 
   expect(fn).toHaveBeenCalledTimes(1);
-  expect(fn).toHaveBeenCalledWith({
-    name: 'Detail',
-    params: { id: '42' },
-  });
+  expect(fn).toHaveBeenCalledWith(
+    {
+      name: 'Detail',
+      params: { id: '42' },
+    },
+    { get: expect.any(Function) }
+  );
 });
 
 test('does not fire any loader when navigating to a screen without UNSTABLE_loader', async () => {
@@ -129,11 +138,17 @@ test('does not fire any loader when navigating to a screen without UNSTABLE_load
 
 test('fires loader for the focused route on reset without index', async () => {
   const homeFn = jest.fn(
-    async (_options: { name: string; params: unknown }) => {}
+    async (
+      _options: { name: string; params: unknown },
+      _context: LoaderContext
+    ) => {}
   );
 
   const detailFn = jest.fn(
-    async (_options: { name: string; params: unknown }) => {}
+    async (
+      _options: { name: string; params: unknown },
+      _context: LoaderContext
+    ) => {}
   );
 
   const Root = createStackTestNavigator({
@@ -171,10 +186,13 @@ test('fires loader for the focused route on reset without index', async () => {
 
   expect(homeFn).not.toHaveBeenCalled();
   expect(detailFn).toHaveBeenCalledTimes(1);
-  expect(detailFn).toHaveBeenCalledWith({
-    name: 'Detail',
-    params: undefined,
-  });
+  expect(detailFn).toHaveBeenCalledWith(
+    {
+      name: 'Detail',
+      params: undefined,
+    },
+    { get: expect.any(Function) }
+  );
 });
 
 test("doesn't wait for the loader before committing the state", async () => {

@@ -1,7 +1,16 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 
+import {
+  initializeLoaderContext,
+  type LoaderContext,
+  type LoaderContextInitializer,
+} from './createLoaderContext';
 import { getStateFromRouteParams } from './getStateFromRouteParams';
 import type { TreeForPathConfig } from './StaticNavigation';
+
+type Loader = (options?: {
+  context?: LoaderContextInitializer | undefined;
+}) => Promise<void>;
 
 function findScreenInConfig(config: TreeForPathConfig['config'], name: string) {
   const screens = config.screens;
@@ -70,7 +79,7 @@ function findInitialRouteName(
 export function getLoaderForState(
   tree: TreeForPathConfig,
   state: PartialState<NavigationState> | NavigationState | undefined
-): (() => Promise<void>) | undefined {
+): Loader | undefined {
   return getLoaderForStateChange(tree, state, undefined, undefined);
 }
 
@@ -79,7 +88,31 @@ export function getLoaderForStateChange(
   state: PartialState<NavigationState> | NavigationState | undefined,
   previousState: PartialState<NavigationState> | NavigationState | undefined,
   consumedParams: WeakMap<object, true> | undefined
-): (() => Promise<void>) | undefined {
+): Loader | undefined {
+  const loader = getLoaderForStateChangeInternal(
+    tree,
+    state,
+    previousState,
+    consumedParams
+  );
+
+  if (loader === undefined) {
+    return undefined;
+  }
+
+  return async (options) => {
+    const context = initializeLoaderContext(options?.context);
+
+    await loader(context);
+  };
+}
+
+function getLoaderForStateChangeInternal(
+  tree: TreeForPathConfig,
+  state: PartialState<NavigationState> | NavigationState | undefined,
+  previousState: PartialState<NavigationState> | NavigationState | undefined,
+  consumedParams: WeakMap<object, true> | undefined
+): ((context: LoaderContext) => Promise<void>) | undefined {
   const focusedRoute = state?.routes[state.index ?? state.routes.length - 1];
   const previousFocusedRoute =
     previousState?.routes[
@@ -114,7 +147,7 @@ export function getLoaderForStateChange(
       ? { ...initialParams, ...focusedRoute.params }
       : undefined;
 
-  const loaders: (() => Promise<void>)[] = [];
+  const loaders: ((context: LoaderContext) => Promise<void>)[] = [];
 
   if (
     isNewlyFocused &&
@@ -123,11 +156,8 @@ export function getLoaderForStateChange(
   ) {
     const loader = item.UNSTABLE_loader;
 
-    loaders.push(() =>
-      loader({
-        name: focusedRoute.name,
-        params,
-      })
+    loaders.push((context) =>
+      loader({ name: focusedRoute.name, params }, context)
     );
   }
 
@@ -182,7 +212,7 @@ export function getLoaderForStateChange(
       }
     }
 
-    const childLoader = getLoaderForStateChange(
+    const childLoader = getLoaderForStateChangeInternal(
       nested,
       childState,
       previousState === undefined
@@ -200,7 +230,7 @@ export function getLoaderForStateChange(
     return undefined;
   }
 
-  return async () => {
-    await Promise.all(loaders.map((l) => l()));
+  return async (context) => {
+    await Promise.all(loaders.map((l) => l(context)));
   };
 }

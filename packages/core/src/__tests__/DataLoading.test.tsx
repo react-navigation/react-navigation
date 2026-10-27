@@ -1,6 +1,7 @@
 import { expect, jest, test } from '@jest/globals';
 import { StackRouter } from '@react-navigation/routers';
 
+import type { LoaderContext } from '../createLoaderContext';
 import { createNavigatorFactory } from '../createNavigatorFactory';
 import { getLoaderForState } from '../DataLoading';
 import { useNavigationBuilder } from '../useNavigationBuilder';
@@ -49,7 +50,12 @@ test('returns undefined when focused route is not in the config', () => {
 });
 
 test('returns the loader for a screen with UNSTABLE_loader', async () => {
-  const fn = jest.fn(async (_options: { name: string; params: unknown }) => {});
+  const fn = jest.fn(
+    async (
+      _options: { name: string; params: unknown },
+      _context: LoaderContext
+    ) => {}
+  );
 
   const Navigator = createTestNavigator({
     screens: {
@@ -70,19 +76,28 @@ test('returns the loader for a screen with UNSTABLE_loader', async () => {
   await loader?.();
 
   expect(fn).toHaveBeenCalledTimes(1);
-  expect(fn).toHaveBeenCalledWith({
-    name: 'Home',
-    params: undefined,
-  });
+  expect(fn).toHaveBeenCalledWith(
+    {
+      name: 'Home',
+      params: undefined,
+    },
+    { get: expect.any(Function) }
+  );
 });
 
 test('uses the last route as focused when state has no index', async () => {
   const homeFn = jest.fn(
-    async (_options: { name: string; params: unknown }) => {}
+    async (
+      _options: { name: string; params: unknown },
+      _context: LoaderContext
+    ) => {}
   );
 
   const detailsFn = jest.fn(
-    async (_options: { name: string; params: unknown }) => {}
+    async (
+      _options: { name: string; params: unknown },
+      _context: LoaderContext
+    ) => {}
   );
 
   const Navigator = createTestNavigator({
@@ -106,14 +121,22 @@ test('uses the last route as focused when state has no index', async () => {
 
   expect(homeFn).not.toHaveBeenCalled();
   expect(detailsFn).toHaveBeenCalledTimes(1);
-  expect(detailsFn).toHaveBeenCalledWith({
-    name: 'Details',
-    params: undefined,
-  });
+  expect(detailsFn).toHaveBeenCalledWith(
+    {
+      name: 'Details',
+      params: undefined,
+    },
+    { get: expect.any(Function) }
+  );
 });
 
 test('merges initialParams with route params for the loader', async () => {
-  const fn = jest.fn(async (_options: { name: string; params: unknown }) => {});
+  const fn = jest.fn(
+    async (
+      _options: { name: string; params: unknown },
+      _context: LoaderContext
+    ) => {}
+  );
 
   const Navigator = createTestNavigator({
     screens: {
@@ -132,19 +155,28 @@ test('merges initialParams with route params for the loader', async () => {
 
   await loader?.();
 
-  expect(fn).toHaveBeenCalledWith({
-    name: 'Profile',
-    params: { id: 'override', tab: 'overview' },
-  });
+  expect(fn).toHaveBeenCalledWith(
+    {
+      name: 'Profile',
+      params: { id: 'override', tab: 'overview' },
+    },
+    { get: expect.any(Function) }
+  );
 });
 
 test('composes loaders from nested navigators with their own name and params', async () => {
   const parentFn = jest.fn(
-    async (_options: { name: string; params: unknown }) => {}
+    async (
+      _options: { name: string; params: unknown },
+      _context: LoaderContext
+    ) => {}
   );
 
   const childFn = jest.fn(
-    async (_options: { name: string; params: unknown }) => {}
+    async (
+      _options: { name: string; params: unknown },
+      _context: LoaderContext
+    ) => {}
   );
 
   const ChildNavigator = createTestNavigator({
@@ -184,16 +216,22 @@ test('composes loaders from nested navigators with their own name and params', a
   await loader?.();
 
   expect(parentFn).toHaveBeenCalledTimes(1);
-  expect(parentFn).toHaveBeenCalledWith({
-    name: 'Home',
-    params: undefined,
-  });
+  expect(parentFn).toHaveBeenCalledWith(
+    {
+      name: 'Home',
+      params: undefined,
+    },
+    { get: expect.any(Function) }
+  );
 
   expect(childFn).toHaveBeenCalledTimes(1);
-  expect(childFn).toHaveBeenCalledWith({
-    name: 'Albums',
-    params: undefined,
-  });
+  expect(childFn).toHaveBeenCalledWith(
+    {
+      name: 'Albums',
+      params: undefined,
+    },
+    { get: expect.any(Function) }
+  );
 });
 
 test('uses the screen from nesting-level when there are multiple screens with same name', async () => {
@@ -677,7 +715,10 @@ test('uses nested static config when static tree is deeper than state', async ()
 
 test('traverses deeply nested navigators via params', async () => {
   const leafFn = jest.fn(
-    async (_options: { name: string; params: unknown }) => {}
+    async (
+      _options: { name: string; params: unknown },
+      _context: LoaderContext
+    ) => {}
   );
 
   const LeafNavigator = createTestNavigator({
@@ -721,8 +762,11 @@ test('traverses deeply nested navigators via params', async () => {
   await loader?.();
 
   expect(leafFn).toHaveBeenCalledTimes(1);
-  expect(leafFn).toHaveBeenCalledWith({
-    name: 'Detail',
-    params: { id: '42' },
-  });
+  expect(leafFn).toHaveBeenCalledWith(
+    {
+      name: 'Detail',
+      params: { id: '42' },
+    },
+    { get: expect.any(Function) }
+  );
 });

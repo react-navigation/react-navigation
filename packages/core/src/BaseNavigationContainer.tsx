@@ -95,6 +95,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
   onStateChange,
   onReady,
   onUnhandledAction,
+  loaderContext,
   theme,
   children,
   ref,
@@ -452,6 +453,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       scheduleUpdate,
       flushUpdates,
       withStackTrace,
+      loaderContext,
     }),
     [
       addListener,
@@ -463,6 +465,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       scheduleUpdate,
       flushUpdates,
       withStackTrace,
+      loaderContext,
     ]
   );
 

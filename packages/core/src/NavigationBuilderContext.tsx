@@ -6,6 +6,7 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
+import type { LoaderContextInitializer } from './createLoaderContext';
 import type { NavigationHelpers } from './types';
 
 export type ListenerMap = {
@@ -61,6 +62,7 @@ export type ChildBeforeRemoveListener = (
 ) => boolean;
 
 type NavigationBuilderContextValue = {
+  loaderContext?: LoaderContextInitializer | undefined;
   canGoBack?: ((source?: string) => boolean) | undefined;
   onAction?:
     | ((action: NavigationAction, visitedNavigators?: Set<string>) => boolean)

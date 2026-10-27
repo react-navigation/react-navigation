@@ -55,6 +55,7 @@ export function useOnAction<State extends NavigationState>({
     addListener: addListenerParent,
     onDispatchAction,
     flushUpdates,
+    loaderContext,
   } = useNavigationBuilderContext();
 
   const tree = React.use(StaticTreeContext);
@@ -144,7 +145,7 @@ export function useOnAction<State extends NavigationState>({
                 consumedParams
               );
 
-              loader?.();
+              loader?.({ context: loaderContext });
             }
 
             setState(result);
@@ -219,6 +220,7 @@ export function useOnAction<State extends NavigationState>({
       flushUpdates,
       getState,
       key,
+      loaderContext,
       onActionParent,
       onDispatchAction,
       onRouteFocusParent,

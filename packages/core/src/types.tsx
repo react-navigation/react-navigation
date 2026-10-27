@@ -10,6 +10,7 @@ import type {
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
+import type { LoaderContextInitializer } from './createLoaderContext';
 import type { Theme as InternalTheme } from './internal';
 import type {
   FlatType,
@@ -478,6 +479,10 @@ export type NavigationHelpers<
   PrivateValueStore<[ParamList, unknown, unknown, unknown]>;
 
 export type NavigationContainerProps = {
+  /**
+   * Synchronous callback which provides context values before each loader invocation.
+   */
+  loaderContext?: LoaderContextInitializer | undefined;
   /**
    * Initial state object for the navigation tree.
    */
