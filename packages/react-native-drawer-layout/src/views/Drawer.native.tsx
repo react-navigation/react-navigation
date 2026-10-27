@@ -88,7 +88,8 @@ export function Drawer({
   children,
   style,
 }: DrawerProps) {
-  const { width: customWidth } = StyleSheet.flatten(drawerStyle) || {};
+  const { width: customWidth, maxWidth: customMaxWidth } =
+    StyleSheet.flatten(drawerStyle) || {};
 
   const isOpen = drawerType === 'permanent' ? true : open;
   const isRight = drawerPosition === 'right';
@@ -100,6 +101,7 @@ export function Drawer({
       const drawerWidth = getDrawerWidthNative({
         containerWidth,
         customWidth,
+        customMaxWidth,
       });
 
       if (drawerPosition === 'left') {
@@ -108,7 +110,7 @@ export function Drawer({
 
       return open ? 0 : drawerWidth;
     },
-    [customWidth, drawerPosition]
+    [customMaxWidth, customWidth, drawerPosition]
   );
 
   const hideStatusBar = React.useCallback(
@@ -474,6 +476,7 @@ export function Drawer({
     const drawerWidth = getDrawerWidthNative({
       containerWidth: layoutWidth.get(),
       customWidth,
+      customMaxWidth,
     });
 
     // Comment stolen from react-native-gesture-handler/DrawerLayout
@@ -524,6 +527,7 @@ export function Drawer({
     const drawerWidth = getDrawerWidthNative({
       containerWidth: layoutWidth.get(),
       customWidth,
+      customMaxWidth,
     });
 
     const distanceFromEdge = layoutWidth.get() - drawerWidth;
@@ -576,6 +580,7 @@ export function Drawer({
     const drawerWidth = getDrawerWidthNative({
       containerWidth: layoutWidth.get(),
       customWidth,
+      customMaxWidth,
     });
 
     return {

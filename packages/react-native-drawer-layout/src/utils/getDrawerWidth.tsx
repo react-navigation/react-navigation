@@ -13,9 +13,11 @@ const DRAWER_DEFAULT_WIDTH_WEB = `min(calc(100% - ${APPROX_APP_BAR_HEIGHT}px), $
 export function getDrawerWidthNative({
   containerWidth,
   customWidth,
+  customMaxWidth,
 }: {
   containerWidth: number;
   customWidth: DimensionValue | undefined | null;
+  customMaxWidth: DimensionValue | undefined | null;
 }) {
   'worklet';
 
@@ -26,18 +28,30 @@ export function getDrawerWidthNative({
     0
   );
 
-  const width = customWidth ?? defaultWidth;
+  let width = customWidth ?? defaultWidth;
+  let maxWidth = customMaxWidth ?? containerWidth;
 
   if (typeof width === 'string' && width.endsWith('%')) {
     // Try to calculate width if a percentage is given
     const percentage = Number(width.replace(/%$/, ''));
 
     if (Number.isFinite(percentage)) {
-      return containerWidth * (percentage / 100);
+      width = containerWidth * (percentage / 100);
     }
   }
 
-  return typeof width === 'number' ? width : defaultWidth;
+  if (typeof maxWidth === 'string' && maxWidth.endsWith('%')) {
+    const percentage = Number(maxWidth.replace(/%$/, ''));
+
+    if (Number.isFinite(percentage)) {
+      maxWidth = containerWidth * (percentage / 100);
+    }
+  }
+
+  return Math.min(
+    typeof width === 'number' ? width : defaultWidth,
+    typeof maxWidth === 'number' ? maxWidth : containerWidth
+  );
 }
 
 export function getDrawerWidthWeb({
