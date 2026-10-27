@@ -1,4 +1,4 @@
-#include "ReactNavigationCornerInsetViewShadowNode.h"
+#include "ReactNavigationLayoutInsetViewShadowNode.h"
 
 #include <react/renderer/core/LayoutContext.h>
 #include <yoga/Yoga.h>
@@ -8,26 +8,26 @@ namespace react {
 
 using namespace yoga;
 
-extern const char ReactNavigationCornerInsetViewComponentName[] =
-    "ReactNavigationCornerInsetView";
+extern const char ReactNavigationLayoutInsetViewComponentName[] =
+    "ReactNavigationLayoutInsetView";
 
-void ReactNavigationCornerInsetViewShadowNode::adjustLayoutWithState() {
+void ReactNavigationLayoutInsetViewShadowNode::adjustLayoutWithState() {
   ensureUnsealed();
 
   const auto &props = getConcreteProps();
   auto state =
-      std::static_pointer_cast<const ReactNavigationCornerInsetViewShadowNode::ConcreteState>(
+      std::static_pointer_cast<const ReactNavigationLayoutInsetViewShadowNode::ConcreteState>(
           getState());
   auto stateData = state->getData();
 
-  Float cornerInset = stateData.cornerInset;
+  Float inset = stateData.inset;
 
-  Dimension dimension = props.edge == ReactNavigationCornerInsetViewEdge::Left ||
-                        props.edge == ReactNavigationCornerInsetViewEdge::Right
+  Dimension dimension = props.edge == ReactNavigationLayoutInsetViewEdge::Left ||
+                        props.edge == ReactNavigationLayoutInsetViewEdge::Right
       ? Dimension::Width
       : Dimension::Height;
 
-  auto newLength = StyleSizeLength::points(cornerInset);
+  auto newLength = StyleSizeLength::points(inset);
   auto currentLength = yogaNode_.style().dimension(dimension);
 
   if (currentLength != newLength) {
