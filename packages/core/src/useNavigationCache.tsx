@@ -86,7 +86,7 @@ export function useNavigationCache<
     routeNames: Record<string, string>;
   }>(
     () => ({ current: {}, routeNames: {} }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     [
       getState,
       parentNavigation,

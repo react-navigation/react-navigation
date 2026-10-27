@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @eslint-react/rules-of-hooks */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import type {

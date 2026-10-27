@@ -3,6 +3,10 @@ packages:
   - example
 allowBuilds:
   '@evilmartians/lefthook': true
+  '@parcel/watcher': false
   core-js: false
   esbuild: false
   unrs-resolver: false
+patchedDependencies:
+  react-native-gesture-handler@3.3.0: patches/react-native-gesture-handler@3.3.0.patch
+  react-native-worklets@0.13.0: patches/react-native-worklets@0.13.0.patch

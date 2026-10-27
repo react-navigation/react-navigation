@@ -341,7 +341,7 @@ export function useLinking<ParamList extends ParamListBase>(
     };
 
     return thenable;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, []);
 
   const previousIndexRef = React.useRef<number | undefined>(undefined);

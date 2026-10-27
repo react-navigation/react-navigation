@@ -9,7 +9,7 @@ import type {
 } from '@react-navigation/core';
 import type { ColorValue as ReactNativeColorValue } from 'react-native';
 
-type ColorValue =
+export type ThemeColor =
   | `#${string}`
   | `rgb(${string})`
   | `rgba(${string})`
@@ -39,12 +39,12 @@ type FontStyle = {
 interface NativeTheme {
   dark: boolean;
   colors: {
-    primary: ColorValue;
-    background: ColorValue;
-    card: ColorValue;
-    text: ColorValue;
-    border: ColorValue;
-    notification: ColorValue;
+    primary: ThemeColor;
+    background: ThemeColor;
+    card: ThemeColor;
+    text: ThemeColor;
+    border: ThemeColor;
+    notification: ThemeColor;
   };
   fonts: {
     regular: FontStyle;

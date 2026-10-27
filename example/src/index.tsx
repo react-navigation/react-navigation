@@ -253,7 +253,7 @@ const Drawer = createDrawerNavigator({
     <CustomDrawerContent {...props} />
   ),
   screenOptions: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line @eslint-react/rules-of-hooks
     const isLargeScreen = React.use(LargeScreenContext);
 
     return {
@@ -264,7 +264,7 @@ const Drawer = createDrawerNavigator({
     Examples: {
       screen: Examples,
       options: () => {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
+        // eslint-disable-next-line @eslint-react/rules-of-hooks
         const isLargeScreen = React.use(LargeScreenContext);
 
         return {

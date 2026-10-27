@@ -10,7 +10,7 @@ on:
     - cron: '0 4 * * *'
 
 env:
-  XCODE_VERSION: '26.3'
+  XCODE_VERSION: '26.6'
 
 jobs:
   build-ios:
@@ -26,7 +26,7 @@ jobs:
       CCACHE_COMPILERCHECK: content
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -45,7 +45,7 @@ jobs:
 
       - name: Restore debug build from cache
         id: restore-debug-build
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ios-debug-build/
           key: ios-debug-build-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
@@ -63,7 +63,7 @@ jobs:
 
           - name: Cache CocoaPods
             if: steps.restore-debug-build.outputs.cache-hit != 'true'
-            uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+            uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
             with:
               path: |
                 example/ios/Pods
@@ -75,7 +75,7 @@ jobs:
 
           - name: Cache DerivedData
             if: steps.restore-debug-build.outputs.cache-hit != 'true'
-            uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+            uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
             with:
               path: example/ios/build
               key: ios-deriveddata-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
@@ -85,7 +85,7 @@ jobs:
 
           - name: Cache ccache
             if: steps.restore-debug-build.outputs.cache-hit != 'true'
-            uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+            uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
             with:
               path: ~/.ccache
               key: ios-ccache-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
@@ -121,7 +121,7 @@ jobs:
 
       - name: Store debug build in cache
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ios-debug-build/
           key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
@@ -130,7 +130,7 @@ jobs:
         run: tar -czf ios-debug-build/ios-debug.app.tgz -C ios-debug-build ios-debug.app
 
       - name: Upload debug build artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ios-debug-build
           path: ios-debug-build/ios-debug.app.tgz
@@ -150,7 +150,7 @@ jobs:
       SIMULATOR_NAME: iPhone 17 Pro
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Use appropriate Xcode version
         uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90
@@ -190,7 +190,7 @@ jobs:
         run: pnpm --recursive update react-native-screens@nightly --no-save
 
       - name: Download debug build artifact
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           name: ios-debug-build
           path: ios-debug-build
@@ -206,7 +206,7 @@ jobs:
           echo "key=$XCODE_KEY" >> "$GITHUB_OUTPUT"
 
       - name: Cache agent-device iOS runner
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ~/.agent-device/apple-runner/derived
           key: agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-${{ hashFiles('node_modules/agent-device/package.json') }}
@@ -263,7 +263,7 @@ jobs:
 
       - name: Store E2E output
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: e2e-output-ios
           path: example/agent-device-artifacts/**/*
@@ -276,7 +276,7 @@ jobs:
 
       - name: Store debug output
         if: failure() || cancelled()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: e2e-artifacts-ios
           path: example/agent-device-state/**/*.log
@@ -285,7 +285,7 @@ jobs:
 
       - name: Store device logs
         if: failure() || cancelled()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: e2e-simulator-output
           path: |

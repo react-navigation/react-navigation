@@ -110,7 +110,6 @@ export function Drawer({
         },
         // FIXME: width contains `px` on web
         { width: drawerWidth } as ViewStyle,
-        // @ts-expect-error offset contains `calc` for web
         drawerType !== 'permanent'
           ? // Position drawer off-screen by default in closed state
             // And add a translation only when drawer is open
