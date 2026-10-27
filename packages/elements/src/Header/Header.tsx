@@ -553,20 +553,23 @@ export function Header(props: Props) {
         </View>
       </Animated.View>
       {searchBarRendered ? (
-        <HeaderSearchBar
-          {...headerSearchBarOptions}
-          visible={searchBarVisible}
-          onClose={() => {
-            setSearchBarVisible(false);
-            headerSearchBarOptions?.onClose?.();
-          }}
-          tintColor={headerTintColor}
-          style={[
-            StyleSheet.absoluteFill,
-            searchBarSpacingStyle,
-            { opacity: searchBarOpacity },
-          ]}
-        />
+        <View style={styles.searchBarContainer}>
+          <UNSTABLE_LayoutInset
+            cornerAdaptation="horizontal"
+            collapseUnlessAdapted
+            edge="left"
+          />
+          <HeaderSearchBar
+            {...headerSearchBarOptions}
+            visible={searchBarVisible}
+            onClose={() => {
+              setSearchBarVisible(false);
+              headerSearchBarOptions?.onClose?.();
+            }}
+            tintColor={headerTintColor}
+            style={[searchBarSpacingStyle, { opacity: searchBarOpacity }]}
+          />
+        </View>
       ) : null}
     </Animated.View>
   );
@@ -632,6 +635,11 @@ const styles = StyleSheet.create({
   },
   background: {
     ...StyleSheet.absoluteFill,
+    pointerEvents: 'box-none',
+  },
+  searchBarContainer: {
+    ...StyleSheet.absoluteFill,
+    flexDirection: 'row',
     pointerEvents: 'box-none',
   },
 });
