@@ -382,8 +382,15 @@ const TabScene = React.memo(function TabScene({
 
   return (
     <MaybeScreen
-      style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
-      active={activityState}
+      style={[
+        StyleSheet.absoluteFill,
+        // Without detaching, an inactive screen would still take the scene off
+        // the window on Android. Keep it attached and hide it instead.
+        detachInactiveScreens
+          ? { zIndex: isFocused ? 0 : -1 }
+          : { opacity: isFocused ? 1 : 0 },
+      ]}
+      active={detachInactiveScreens ? activityState : STATE_ON_TOP}
       enabled={detachInactiveScreens}
       freezeOnBlur={freezeOnBlur}
       shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
