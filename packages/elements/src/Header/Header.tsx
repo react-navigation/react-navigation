@@ -66,8 +66,6 @@ const STATUS_BAR_OFFSET = Platform.select({
   default: 0,
 });
 
-const STATUS_BAR_TOP_ADJUSTMENT = 2;
-
 const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
   Object.keys(styles).forEach((styleProp) => {
     const value = styles[styleProp];
@@ -388,22 +386,19 @@ export function Header(props: Props) {
 
   let searchBarSpacingStyle: ViewStyle;
 
-  if (isLiquidGlassSupported) {
+  if (Platform.OS === 'ios') {
     searchBarSpacingStyle = {
       ...contentSpacingStyle,
-      marginHorizontal: isLiquidGlassPhone
-        ? liquidGlassEdgeSpacing
-        : BUTTON_SPACING,
-    };
-  } else if (Platform.OS === 'ios') {
-    // When status bar height is provided, add spacing below it
-    // Otherwise, use a smaller top margin to align with the header content
-    searchBarSpacingStyle = {
-      marginTop: statusBarSpacing
-        ? statusBarSpacing + BUTTON_SPACING
-        : BUTTON_SPACING - STATUS_BAR_TOP_ADJUSTMENT,
-      marginBottom: BUTTON_SPACING,
-      marginHorizontal: BUTTON_SPACING,
+      ...(isLiquidGlassSupported
+        ? {
+            marginHorizontal: isLiquidGlassPhone
+              ? liquidGlassEdgeSpacing
+              : BUTTON_SPACING,
+          }
+        : {
+            marginStart: insets.left + BUTTON_SPACING,
+            marginEnd: insets.right + BUTTON_SPACING,
+          }),
     };
   } else {
     searchBarSpacingStyle = {
