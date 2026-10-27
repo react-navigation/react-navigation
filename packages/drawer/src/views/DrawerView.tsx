@@ -57,18 +57,27 @@ const DrawerScene = React.memo(function DrawerScene({
   mode,
   drawerPosition,
 }: DrawerSceneProps) {
+  const { direction } = useLocale();
+
+  // The header mirrors in RTL, so `headerLeft` is on the right side
+  // So we check if the drawer is on the start to match toggle button position
+  const isDrawerAtStart =
+    direction === 'rtl'
+      ? drawerPosition === 'right'
+      : drawerPosition === 'left';
+
   const {
     header = ({ route, options }: DrawerHeaderProps) => (
       <Header
         {...options}
         title={getHeaderTitle(options, route.name)}
         headerLeft={
-          drawerPosition === 'left' && options.headerLeft == null
+          isDrawerAtStart && options.headerLeft == null
             ? (props) => <DrawerToggleButton {...props} />
             : options.headerLeft
         }
         headerRight={
-          drawerPosition === 'right' && options.headerRight == null
+          !isDrawerAtStart && options.headerRight == null
             ? (props) => <DrawerToggleButton {...props} />
             : options.headerRight
         }
