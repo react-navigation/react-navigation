@@ -24,18 +24,30 @@ export function getDrawerWidthNative({
     0
   );
 
-  const { width = defaultWidth } = StyleSheet.flatten(drawerStyle) || {};
+  let { width = defaultWidth, maxWidth = layout.width } =
+    StyleSheet.flatten(drawerStyle) || {};
 
   if (typeof width === 'string' && width.endsWith('%')) {
     // Try to calculate width if a percentage is given
     const percentage = Number(width.replace(/%$/, ''));
 
     if (Number.isFinite(percentage)) {
-      return layout.width * (percentage / 100);
+      width = layout.width * (percentage / 100);
     }
   }
 
-  return typeof width === 'number' ? width : defaultWidth;
+  if (typeof maxWidth === 'string' && maxWidth.endsWith('%')) {
+    const percentage = Number(maxWidth.replace(/%$/, ''));
+
+    if (Number.isFinite(percentage)) {
+      maxWidth = layout.width * (percentage / 100);
+    }
+  }
+
+  return Math.min(
+    typeof width === 'number' ? width : defaultWidth,
+    typeof maxWidth === 'number' ? maxWidth : layout.width
+  );
 }
 
 export function getDrawerWidthWeb({
