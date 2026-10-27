@@ -1,6 +1,7 @@
 import {
   MaterialSymbol,
   UNSTABLE_LayoutInset,
+  useLocale,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -90,6 +91,10 @@ const isLiquidGlassPhone =
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
+  const { direction } = useLocale();
+
+  const startInset = direction === 'rtl' ? insets.right : insets.left;
+  const endInset = direction === 'rtl' ? insets.left : insets.right;
 
   const navigation = useNavigation();
   const isParentHeaderShown = React.use(HeaderShownContext);
@@ -396,13 +401,15 @@ export function Header(props: Props) {
               : BUTTON_SPACING,
           }
         : {
-            marginStart: insets.left + BUTTON_SPACING,
-            marginEnd: insets.right + BUTTON_SPACING,
+            marginStart: startInset + BUTTON_SPACING,
+            marginEnd: endInset + BUTTON_SPACING,
           }),
     };
   } else {
     searchBarSpacingStyle = {
       marginTop: statusBarSpacing,
+      marginStart: startInset,
+      marginEnd: endInset,
     };
   }
 
@@ -464,7 +471,7 @@ export function Header(props: Props) {
               minWidth: buttonMinWidth,
               marginStart: isLiquidGlassPhone
                 ? liquidGlassEdgeSpacing - BUTTON_OFFSET
-                : insets.left,
+                : startInset,
             },
           ]}
         >
@@ -497,7 +504,7 @@ export function Header(props: Props) {
               minWidth: buttonMinWidth,
               marginEnd: isLiquidGlassPhone
                 ? liquidGlassEdgeSpacing - BUTTON_OFFSET
-                : insets.right,
+                : endInset,
             },
           ]}
         >
