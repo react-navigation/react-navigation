@@ -413,7 +413,7 @@ const SceneView = React.memo(function SceneView({
       <HeaderHeightContext.Provider
         value={headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)}
       >
-        {headerBackground != null ? (
+        {headerShown !== false && headerBackground != null ? (
           /**
            * To show a custom header background, we render it at the top of the screen below the header
            * The header also needs to be positioned absolutely (with `translucent` style)
