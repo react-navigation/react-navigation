@@ -5,7 +5,6 @@ import * as path from 'node:path';
 import process from 'node:process';
 import { URL } from 'node:url';
 
-import { Font } from 'fonteditor-core';
 import * as hb from 'harfbuzzjs';
 import subsetFont from 'subset-font';
 
@@ -50,10 +49,124 @@ function git(args: string[], input?: string): Buffer {
   );
 }
 
+function writeUInt16s(...values: number[]): Buffer {
+  const buffer = Buffer.alloc(values.length * 2);
+
+  values.forEach((value, i) => {
+    buffer.writeUInt16BE(value, i * 2);
+  });
+
+  return buffer;
+}
+
+function writeRecords(records: [string, Buffer][]): Buffer {
+  const header = Buffer.alloc(2 + records.length * 6);
+
+  header.writeUInt16BE(records.length, 0);
+
+  let offset = header.length;
+
+  records.forEach(([tag, table], i) => {
+    const record = 2 + i * 6;
+
+    header.write(tag, record, 'latin1');
+    header.writeUInt16BE(offset, record + 4);
+
+    offset += table.length;
+  });
+
+  return Buffer.concat([header, ...records.map(([, table]) => table)]);
+}
+
+// Only the ligatures in `rlig` are kept, and `ss01` is added with the new lookup
+// The lookups for the other features are kept, but no feature uses them
+// So subsetting the font again drops them along with the glyphs that they use
+function writeGSUB(gsub: Buffer, lookup: Buffer): Buffer {
+  const featureListOffset = gsub.readUInt16BE(6);
+  const lookupListOffset = gsub.readUInt16BE(8);
+
+  const readUInt16s = (offset: number) =>
+    Array.from({ length: gsub.readUInt16BE(offset) }, (_, i) =>
+      gsub.readUInt16BE(offset + 2 + i * 2)
+    );
+
+  const rlig = Array.from(
+    { length: gsub.readUInt16BE(featureListOffset) },
+    (_, i) => featureListOffset + 2 + i * 6
+  ).find((record) => gsub.toString('latin1', record, record + 4) === 'rlig');
+
+  if (rlig == null) {
+    throw new Error('Could not find the "rlig" feature in "GSUB"');
+  }
+
+  const ligatureLookups = readUInt16s(
+    featureListOffset + gsub.readUInt16BE(rlig + 4) + 2
+  );
+
+  // The offsets inside the lookups are relative and point forward
+  // So the lookups can be moved as a single block without updating them
+  const lookupsStart =
+    lookupListOffset + 2 + gsub.readUInt16BE(lookupListOffset) * 2;
+
+  const lookupOffsets = readUInt16s(lookupListOffset).map(
+    (offset) => lookupListOffset + offset - lookupsStart
+  );
+
+  // The new lookup is listed last, as the lookups run in the order of the list
+  // But it's written first, as the existing lookups can be too far for a 16-bit offset
+  const lookupListHeader = 2 + (lookupOffsets.length + 1) * 2;
+  const offsets = [
+    ...lookupOffsets.map((offset) => lookupListHeader + lookup.length + offset),
+    lookupListHeader,
+  ];
+
+  if (offsets.some((offset) => offset > 0xffff)) {
+    throw new Error('The lookups in "GSUB" are too large to add a feature');
+  }
+
+  const lookupList = Buffer.concat([
+    writeUInt16s(offsets.length, ...offsets),
+    lookup,
+    gsub.subarray(lookupsStart),
+  ]);
+
+  // A script with only a default language system, which uses both features
+  const script = writeUInt16s(4, 0, 0, 0xffff, 2, 0, 1);
+
+  const scriptList = writeRecords([
+    ['DFLT', script],
+    ['latn', script],
+  ]);
+
+  const featureList = writeRecords([
+    ['rlig', writeUInt16s(0, ligatureLookups.length, ...ligatureLookups)],
+    ['ss01', writeUInt16s(0, 1, lookupOffsets.length)],
+  ]);
+
+  return Buffer.concat([
+    writeUInt16s(
+      1,
+      0,
+      10,
+      10 + scriptList.length,
+      10 + scriptList.length + featureList.length
+    ),
+    scriptList,
+    featureList,
+    lookupList,
+  ]);
+}
+
 // The ligatures point to the unfilled glyphs, and `rclt` swaps in the filled glyphs
 // So we copy the outlines of the filled glyphs to the glyphs used by the ligatures
+// The mirrored glyphs for RTL are composite glyphs that flip the original glyphs
+// So they don't need a copy of the outlines, and they're swapped in with `ss01`
 // The tables are edited directly, as `fonteditor-core` drops the ligatures on write
-function copyFilledOutlines(buffer: Buffer, names: string[]): Buffer {
+function editGlyphs(
+  buffer: Buffer,
+  filledNames: string[],
+  mirroredNames: string[]
+): Buffer {
   const tables = new Map<string, Buffer>();
 
   for (let i = 0; i < buffer.readUInt16BE(4); i++) {
@@ -78,8 +191,8 @@ function copyFilledOutlines(buffer: Buffer, names: string[]): Buffer {
   };
 
   const head = Buffer.from(getTable('head'));
-  const maxp = getTable('maxp');
-  const hhea = getTable('hhea');
+  const maxp = Buffer.from(getTable('maxp'));
+  const hhea = Buffer.from(getTable('hhea'));
   const loca = getTable('loca');
   const glyf = getTable('glyf');
   const hmtx = getTable('hmtx');
@@ -96,6 +209,10 @@ function copyFilledOutlines(buffer: Buffer, names: string[]): Buffer {
       ? glyph * 4 + 2
       : metricsCount * 4 + (glyph - metricsCount) * 2;
 
+  // The mirrored glyphs use the last advance width, as they are after `metricsCount`
+  // It's the same for all icons, so it's also the offset to flip them in place
+  const advance = hmtx.readUInt16BE((metricsCount - 1) * 4);
+
   const hbFont = new hb.Font(new hb.Face(new hb.Blob(buffer)));
   const hbBuffer = new hb.Buffer();
 
@@ -108,7 +225,8 @@ function copyFilledOutlines(buffer: Buffer, names: string[]): Buffer {
 
     const [info, ...rest] = hbBuffer.getGlyphInfos();
 
-    if (info == null || rest.length) {
+    // Glyph 0 is `.notdef`, which is used for characters missing in the font
+    if (info == null || info.codepoint === 0 || rest.length) {
       throw new Error(`Could not find a ligature for "${name}"`);
     }
 
@@ -117,13 +235,18 @@ function copyFilledOutlines(buffer: Buffer, names: string[]): Buffer {
 
   const sources = Array.from({ length: glyphCount }, (_, glyph) => glyph);
 
-  for (const name of names) {
+  for (const name of filledNames) {
     sources[shapeName(name, [new hb.Feature('rclt', 0)])] = shapeName(name, []);
   }
 
+  const mirrored = new Set(
+    mirroredNames.map((name) => shapeName(name, [new hb.Feature('rclt', 0)]))
+  );
+
   const glyphs: Buffer[] = [];
-  const newLoca = Buffer.alloc((glyphCount + 1) * 4);
-  const newHmtx = Buffer.from(hmtx);
+  const mirroredGlyphs: Buffer[] = [];
+  const newLoca = Buffer.alloc((glyphCount + mirrored.size + 1) * 4);
+  const newHmtx = Buffer.concat([hmtx, Buffer.alloc(mirrored.size * 2)]);
 
   let position = 0;
 
@@ -143,17 +266,98 @@ function copyFilledOutlines(buffer: Buffer, names: string[]): Buffer {
       hmtx.readInt16BE(getSideBearingOffset(source)),
       getSideBearingOffset(glyph)
     );
+
+    if (!mirrored.has(glyph)) {
+      return;
+    }
+
+    if (data.readInt16BE(0) < 0) {
+      throw new Error(`Mirroring composite glyph ${glyph} is not supported`);
+    }
+
+    const mirroredGlyph = Buffer.alloc(22);
+
+    mirroredGlyph.writeInt16BE(-1, 0);
+    mirroredGlyph.writeInt16BE(advance - data.readInt16BE(6), 2);
+    mirroredGlyph.writeInt16BE(data.readInt16BE(4), 4);
+    mirroredGlyph.writeInt16BE(advance - data.readInt16BE(2), 6);
+    mirroredGlyph.writeInt16BE(data.readInt16BE(8), 8);
+    // ARG_1_AND_2_ARE_WORDS | ARGS_ARE_XY_VALUES | WE_HAVE_AN_X_AND_Y_SCALE
+    // And UNSCALED_COMPONENT_OFFSET, as the spec doesn't define the default
+    mirroredGlyph.writeUInt16BE(0x1043, 10);
+    mirroredGlyph.writeUInt16BE(glyph, 12);
+    mirroredGlyph.writeInt16BE(advance, 14);
+    mirroredGlyph.writeInt16BE(0, 16);
+    // The scales are in the F2Dot14 format, so -1 is -0x4000 and 1 is 0x4000
+    mirroredGlyph.writeInt16BE(-0x4000, 18);
+    mirroredGlyph.writeInt16BE(0x4000, 20);
+
+    mirroredGlyphs.push(mirroredGlyph);
   });
 
-  newLoca.writeUInt32BE(position, glyphCount * 4);
+  mirroredGlyphs.forEach((glyph, i) => {
+    newLoca.writeUInt32BE(position, (glyphCount + i) * 4);
+    glyphs.push(glyph);
+    position += glyph.length;
+
+    newHmtx.writeInt16BE(
+      glyph.readInt16BE(2),
+      getSideBearingOffset(glyphCount + i)
+    );
+  });
+
+  newLoca.writeUInt32BE(position, glyphs.length * 4);
 
   // Use the long format for `loca` since the offsets are written as 32-bit
   head.writeInt16BE(1, 50);
 
+  // Subsetting the font again doesn't extend the bounds for the mirrored glyphs
+  // The side bearings match the bounds, as the advance width is the same
+  const minX = Math.min(
+    head.readInt16BE(36),
+    ...mirroredGlyphs.map((glyph) => glyph.readInt16BE(2))
+  );
+
+  const maxX = Math.max(
+    head.readInt16BE(40),
+    ...mirroredGlyphs.map((glyph) => glyph.readInt16BE(6))
+  );
+
+  head.writeInt16BE(minX, 36);
+  head.writeInt16BE(maxX, 40);
+  hhea.writeInt16BE(Math.min(hhea.readInt16BE(12), minX), 12);
+  hhea.writeInt16BE(Math.min(hhea.readInt16BE(14), advance - maxX), 14);
+  hhea.writeInt16BE(Math.max(hhea.readInt16BE(16), maxX), 16);
+
+  // Each composite glyph has a single simple glyph as the component
+  // So the limits for simple glyphs are also the limits for composite glyphs
+  maxp.writeUInt16BE(glyphs.length, 4);
+  maxp.writeUInt16BE(Math.max(maxp.readUInt16BE(10), maxp.readUInt16BE(6)), 10);
+  maxp.writeUInt16BE(Math.max(maxp.readUInt16BE(12), maxp.readUInt16BE(8)), 12);
+  maxp.writeUInt16BE(Math.max(maxp.readUInt16BE(28), 1), 28);
+  maxp.writeUInt16BE(Math.max(maxp.readUInt16BE(30), 1), 30);
+
+  // Lookup type 1 is a single substitution, and format 2 lists each substitute
+  // In the order of the glyphs in the coverage, which needs to be sorted
+  const coverage = [...mirrored].sort((a, b) => a - b);
+  const lookup = Buffer.concat([
+    writeUInt16s(1, 0, 1, 8),
+    writeUInt16s(
+      2,
+      6 + coverage.length * 2,
+      coverage.length,
+      ...coverage.map((_, i) => glyphCount + i)
+    ),
+    writeUInt16s(1, coverage.length, ...coverage),
+  ]);
+
   tables.set('head', head);
+  tables.set('hhea', hhea);
+  tables.set('maxp', maxp);
   tables.set('loca', newLoca);
   tables.set('glyf', Buffer.concat(glyphs));
   tables.set('hmtx', newHmtx);
+  tables.set('GSUB', writeGSUB(getTable('GSUB'), lookup));
 
   // The checksums and search fields are left empty
   // As subsetting the font again recalculates them
@@ -373,8 +577,7 @@ const drawables = readFiles(
 
 const autoMirroredNames = [...drawables]
   .filter(([, content]) => content.includes('android:autoMirrored="true"'))
-  .map(([file]) => path.basename(file, '_24px.xml'))
-  .sort((a, b) => a.localeCompare(b));
+  .map(([file]) => path.basename(file, '_24px.xml'));
 
 process.stdout.write(' done.\n');
 
@@ -400,44 +603,24 @@ for (const [variant, variableName] of variableFontPaths) {
       process.stdout.write(`Generating ${ttfName}...`);
 
       // The variable fonts are too large to ship, so we generate static fonts
-      // Subsetting also drops the glyph names and the ligatures for icon names
+      // The codepoints and the ligatures point to the same glyphs, so one font has both
+      // The `STAT` table describes the variation axes, which the static fonts don't have
+      const buffer = editGlyphs(
+        await subsetFont(variableBuffer, chars + ligatureChars, {
+          variationAxes,
+          // @ts-expect-error `dropTables` is supported, but missing in `@types/subset-font`
+          dropTables: ['STAT'],
+        }),
+        fill ? names : [],
+        autoMirroredNames
+      );
+
+      // Subsetting with the codepoints drops the ligatures for icon names
       // As the native code draws the icons by codepoint instead of name
-      let ttfBuffer = await subsetFont(variableBuffer, chars, {
-        variationAxes,
-      });
-
-      if (fill) {
-        // The filled glyphs are swapped in with the `rclt` feature
-        // Pointing the codepoints to them lets the unused glyphs be dropped
-        const hbFont = new hb.Font(new hb.Face(new hb.Blob(ttfBuffer)));
-        const hbBuffer = new hb.Buffer();
-
-        const font = Font.create(ttfBuffer, { type: 'ttf', hinting: true });
-        const glyphs = font.get().glyf;
-
-        for (const glyph of glyphs) {
-          glyph.unicode = [];
-        }
-
-        for (const codepoint of uniqueCodepoints) {
-          hbBuffer.reset();
-          hbBuffer.addCodePoints([codepoint]);
-          hbBuffer.guessSegmentProperties();
-
-          hb.shape(hbFont, hbBuffer);
-
-          for (const info of hbBuffer.getGlyphInfos()) {
-            glyphs[info.codepoint]?.unicode.push(codepoint);
-          }
-        }
-
-        ttfBuffer = await subsetFont(
-          font.write({ type: 'ttf', hinting: true, toBuffer: true }),
-          chars
-        );
-      }
-
-      fs.writeFileSync(new URL(ttfName, assets), ttfBuffer);
+      fs.writeFileSync(
+        new URL(ttfName, assets),
+        await subsetFont(buffer, chars)
+      );
 
       process.stdout.write(' done.\n');
 
@@ -447,23 +630,10 @@ for (const [variant, variableName] of variableFontPaths) {
 
       // Web draws the icons by name, so the woff2 fonts keep the ligatures
       // Subsetting with the letters of the names drops the codepoints instead
-      let woff2Buffer = await subsetFont(variableBuffer, ligatureChars, {
-        variationAxes,
-      });
-
-      if (fill) {
-        woff2Buffer = copyFilledOutlines(woff2Buffer, names);
-      }
-
-      // The ligatures for the icon names are in the `rlig` feature
-      // Dropping `rclt` also drops the filled glyphs that are no longer used
-      woff2Buffer = await subsetFont(woff2Buffer, ligatureChars, {
-        // @ts-expect-error `keepFeatures` is supported, but missing in `@types/subset-font`
-        keepFeatures: ['rlig'],
-        targetFormat: 'woff2',
-      });
-
-      fs.writeFileSync(new URL(woff2Name, assets), woff2Buffer);
+      fs.writeFileSync(
+        new URL(woff2Name, assets),
+        await subsetFont(buffer, ligatureChars, { targetFormat: 'woff2' })
+      );
 
       process.stdout.write(' done.\n');
     }
@@ -477,11 +647,6 @@ fs.writeFileSync(
   [...mappings]
     .map(([name, codepoint]) => `${name} ${codepoint.toString(16)}\n`)
     .join('')
-);
-
-fs.writeFileSync(
-  new URL('MaterialSymbols.mirrored', assets),
-  autoMirroredNames.map((name) => `${name}\n`).join('')
 );
 
 fs.writeFileSync(

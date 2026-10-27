@@ -68,9 +68,6 @@ importers:
       eslint-plugin-simple-import-sort:
         specifier: ^13.0.0
         version: 13.0.0(eslint@9.39.5(jiti@2.6.1))
-      fonteditor-core:
-        specifier: ^2.6.3
-        version: 2.6.3
       harfbuzzjs:
         specifier: ^1.6.2
         version: 1.6.2
@@ -4546,9 +4543,6 @@ packages:
 
   flow-enums-runtime@0.0.6:
     resolution: {integrity: sha512-3PYnM29RFXwvAN6Pc/scUfkI7RwhQ/xqyLUyPNlXUp9S40zI8nup9tUSrTLSVnWGBN38FNiGWbwZOB6uR4OGdw==}
-
-  fonteditor-core@2.6.3:
-    resolution: {integrity: sha512-YUryIKjkenjZ41E7JvM3V+02Ak4mTHDDTwBWgs9KBzypzHqLZHuua1UDRevZNTKawmnq1dbBAa70Jddl2+F4FQ==}
 
   fontfaceobserver@2.3.0:
     resolution: {integrity: sha512-6FPvD/IVyT4ZlNe7Wcn5Fb/4ChigpucKYSvD6a+0iMoLn2inpo711eyIcKjmDtE5XNcgAkSH9uN/nfAeZzHEfg==}
@@ -11694,10 +11688,6 @@ snapshots:
   flatted@3.4.2: {}
 
   flow-enums-runtime@0.0.6: {}
-
-  fonteditor-core@2.6.3:
-    dependencies:
-      '@xmldom/xmldom': 0.8.13
 
   fontfaceobserver@2.3.0: {}
 
