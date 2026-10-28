@@ -25,20 +25,20 @@ import {
 } from '../LiquidGlassView';
 import { PlatformPressable } from '../PlatformPressable';
 import { Text } from '../Text';
-import type { HeaderSearchBarOptions, HeaderSearchBarRef } from '../types';
+import type { HeaderSearchBarCommands, HeaderSearchBarOptions } from '../types';
 import { HeaderBackButton } from './HeaderBackButton';
 import { BUTTON_SIZE, BUTTON_SPACING, HeaderButton } from './HeaderButton';
 import { HeaderButtonBackground } from './HeaderButtonBackground';
 import { HeaderIcon } from './HeaderIcon';
+import { HeaderSearchBarContext } from './HeaderSearchBarContext';
 
-type Props = Omit<HeaderSearchBarOptions, 'ref'> & {
+type Props = HeaderSearchBarOptions & {
   visible: boolean;
   onClose: () => void;
   tintColor?: ColorValue | undefined;
   pressColor?: ColorValue | undefined;
   pressOpacity?: number | undefined;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
-  ref?: React.Ref<HeaderSearchBarRef> | undefined;
 };
 
 const INPUT_TYPE_TO_MODE = {
@@ -71,7 +71,6 @@ export function HeaderSearchBar({
   pressColor,
   pressOpacity,
   style,
-  ref,
   ...rest
 }: Props) {
   const navigation = useNavigation();
@@ -158,8 +157,7 @@ export function HeaderSearchBar({
     };
   }, [cancelSearch, navigation]);
 
-  React.useImperativeHandle(
-    ref,
+  const handle = React.useMemo<HeaderSearchBarCommands>(
     () => ({
       focus: () => {
         inputRef.current?.focus();
@@ -176,6 +174,11 @@ export function HeaderSearchBar({
     }),
     [cancelSearch, clearText]
   );
+
+  // Expose the handle to `useHeaderSearchBar` in the screen
+  const ref = React.use(HeaderSearchBarContext);
+
+  React.useImperativeHandle(ref, () => handle, [handle]);
 
   const textColor = tintColor ?? colors.text;
 
