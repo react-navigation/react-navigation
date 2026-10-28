@@ -1,4 +1,5 @@
 import { afterEach, expect, jest, test } from '@jest/globals';
+import { useHeaderSearchBar } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
   createNavigatorFactory,
@@ -9,7 +10,13 @@ import {
 } from '@react-navigation/native';
 import { act, render, screen, userEvent } from '@testing-library/react-native';
 import { useEffect } from 'react';
-import { Keyboard, type KeyboardEventName, Text, View } from 'react-native';
+import {
+  Button,
+  Keyboard,
+  type KeyboardEventName,
+  Text,
+  View,
+} from 'react-native';
 
 import { type BottomTabScreenProps, createBottomTabNavigator } from '../index';
 
@@ -400,4 +407,40 @@ test('pops nested stack to top on blur even when tab transition animation is int
       ]),
     })
   );
+});
+
+test('controls the search bar in the header with useHeaderSearchBar', async () => {
+  const CancelSearch = () => {
+    const searchBar = useHeaderSearchBar();
+
+    return (
+      <Button onPress={() => searchBar.cancelSearch()} title="Cancel search" />
+    );
+  };
+
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
+
+  const onClose = jest.fn();
+  const user = userEvent.setup();
+
+  await render(
+    <NavigationContainer>
+      <Tab.Navigator implementation="custom">
+        <Tab.Screen
+          name="A"
+          component={CancelSearch}
+          options={{ headerShown: true, headerSearchBarOptions: { onClose } }}
+        />
+        <Tab.Screen name="B" component={CancelSearch} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  await user.press(screen.getByRole('button', { name: 'Search' }));
+
+  expect(screen.getByRole('search')).not.toBeNull();
+
+  await user.press(screen.getByRole('button', { name: 'Cancel search' }));
+
+  expect(onClose).toHaveBeenCalledTimes(1);
 });

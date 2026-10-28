@@ -1,6 +1,7 @@
 export { ActivityView } from './ActivityView';
 export { Color } from './Color';
 export { Container, type Props as ContainerProps } from './Container';
+export { HeaderSearchBarContext } from './Header/HeaderSearchBarContext';
 export { isLiquidGlassSupported } from './LiquidGlassView';
 export { MissingIcon } from './MissingIcon';
 export { SafeAreaProviderCompat } from './SafeAreaProviderCompat';

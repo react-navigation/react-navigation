@@ -7,7 +7,7 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import { useMemo } from 'react';
+import { type RefObject, useMemo } from 'react';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   type HeaderBarButtonItemMenuAction,
@@ -23,6 +23,7 @@ import {
   ScreenStackHeaderRightView,
   ScreenStackHeaderSearchBarView,
   SearchBar,
+  type SearchBarCommands,
 } from 'react-native-screens';
 
 import type {
@@ -35,6 +36,7 @@ import type {
 
 type Props = NativeStackNavigationOptions & {
   headerHeight: number;
+  headerSearchBarRef: RefObject<SearchBarCommands | null>;
   headerBack: { title?: string | undefined; href: undefined } | undefined;
   route: Route<string>;
 };
@@ -232,6 +234,7 @@ export function useHeaderConfigProps({
   headerTitleStyle,
   headerTransparent,
   headerSearchBarOptions,
+  headerSearchBarRef,
   headerBack,
   route,
   title,
@@ -532,6 +535,7 @@ export function useHeaderConfigProps({
         <ScreenStackHeaderSearchBarView>
           <SearchBar
             {...headerSearchBarOptions}
+            ref={headerSearchBarRef}
             onChangeText={headerSearchBarOptions.onChange}
           />
         </ScreenStackHeaderSearchBarView>

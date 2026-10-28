@@ -401,9 +401,11 @@ export type NativeStackNavigationOptions = {
    * Options to render a native search bar.
    * You also need to specify `contentInsetAdjustmentBehavior="automatic"` in your `ScrollView`, `FlatList` etc.
    * If you don't have a `ScrollView`, specify `headerTransparent: false`.
+   *
+   * To update the search bar imperatively, use the `useHeaderSearchBar` hook from `@react-navigation/elements` in the screen.
    */
   headerSearchBarOptions?:
-    | (Omit<SearchBarProps, 'onChangeText'> & {
+    | (Omit<SearchBarProps, 'onChangeText' | 'ref'> & {
         onChange?: SearchBarProps['onChangeText'] | undefined;
       })
     | undefined;
@@ -696,6 +698,8 @@ export type NativeStackNavigationOptions = {
    * Additionaly there is `last` value available, when set the sheet will expand initially to last (largest) detent.
    *
    * Defaults to `0` - which represents first detent in the detents array.
+   *
+   * To change the detent after the sheet is opened, use the `useFormSheet` hook in the screen.
    */
   sheetInitialDetentIndex?: number | 'last' | undefined;
   /**
