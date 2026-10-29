@@ -236,6 +236,85 @@ test('dispatches GO_BACK when browser back pops the last stack route', async () 
   expect(state.routes[0]?.name).toBe('Home');
 });
 
+test('removes a custom history entry on browser back', async () => {
+  const CustomHistoryRouter = (options: any) => {
+    const router = StackRouter(options);
+
+    const withHistory = (state: any) => ({
+      ...state,
+      history: state.history ?? [state.routes[state.index].key],
+    });
+
+    return {
+      ...router,
+      getInitialState: (config: any) =>
+        withHistory(router.getInitialState(config)),
+      getRehydratedState: (partialState: any, config: any) =>
+        withHistory(router.getRehydratedState(partialState, config)),
+      getStateForAction: (state: any, action: any, config: any) => {
+        if (action.type === 'OPEN_MODAL') {
+          return { ...state, history: [...state.history, 'modal'] };
+        }
+
+        return router.getStateForAction(state, action, config);
+      },
+    };
+  };
+
+  const createCustomNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      CustomHistoryRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return render(descriptors[route.key]?.render());
+  });
+
+  const Custom = createCustomNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Custom.Navigator>
+        <Custom.Screen name="Home" component={TestScreen} />
+      </Custom.Navigator>
+    </NavigationContainer>
+  );
+
+  const historyLength = window.history.length;
+
+  act(() => navigation.dispatch({ type: 'OPEN_MODAL' }));
+
+  await waitFor(() => expect(window.history.length).toBe(historyLength + 1));
+
+  expect(navigation.getRootState()?.history).toContain('modal');
+
+  act(() => window.history.back());
+
+  await waitFor(() =>
+    expect(navigation.getRootState()?.history).not.toContain('modal')
+  );
+
+  expect(spy).not.toHaveBeenCalled();
+});
+
 test("rolls back browser history when 'beforeRemove' prevents browser back", async () => {
   const Stack = createStackNavigator();
 

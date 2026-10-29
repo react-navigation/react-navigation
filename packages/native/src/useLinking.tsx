@@ -498,6 +498,8 @@ export function useLinking<ParamList extends ParamListBase>(
           recordFocused &&
           latestFocused &&
           currentFocused.key === latestFocused.key &&
+          // `goBack` can't pop custom string history entries, so reset to the record instead
+          typeof currentFocused.history?.at(-1) !== 'string' &&
           // Only combine pending browser history deltas within the same navigator,
           // as history lengths from different navigators aren't comparable.
           (!pending?.state || pendingFocused?.key === currentFocused.key) &&
