@@ -33,7 +33,23 @@ export type TabDescriptor<T extends Route> = {
         size: number;
       }) => React.ReactNode)
     | undefined;
-  badge?: ((props: { route: T }) => React.ReactElement) | undefined;
+  /**
+   * Text to show in a badge on the tab.
+   *
+   * You can also specify a function that returns a React element
+   * to render a custom badge.
+   */
+  badge?:
+    | string
+    | number
+    | ((props: { route: T }) => React.ReactNode)
+    | undefined;
+  /**
+   * Style object for the badge.
+   *
+   * This is not applied if `badge` is a function.
+   */
+  badgeStyle?: StyleProp<TextStyle> | undefined;
   sceneStyle?: StyleProp<ViewStyle> | undefined;
 };
 
