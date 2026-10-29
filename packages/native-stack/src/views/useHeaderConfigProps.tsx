@@ -231,6 +231,7 @@ export function useHeaderConfigProps({
   headerTitleAlign,
   headerTitleStyle,
   headerTransparent,
+  headerUserInterfaceStyle,
   headerSearchBarOptions,
   headerBack,
   route,
@@ -585,6 +586,7 @@ export function useHeaderConfigProps({
     children,
     headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
     headerRightBarButtonItems: processBarButtonItems(rightItems, colors, fonts),
-    experimental_userInterfaceStyle: dark ? 'dark' : 'light',
+    experimental_userInterfaceStyle:
+      headerUserInterfaceStyle ?? (dark ? 'dark' : 'light'),
   } as const;
 }
