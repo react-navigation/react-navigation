@@ -36,10 +36,10 @@ const MaterialDarkDynamicTheme = {
   fonts,
 } as const satisfies Theme;
 
-export const MaterialLightTheme = isDynamicThemeSupported
+export const MaterialLightTheme: Theme = isDynamicThemeSupported
   ? MaterialLightDynamicTheme
   : MaterialLightFallbackTheme;
 
-export const MaterialDarkTheme = isDynamicThemeSupported
+export const MaterialDarkTheme: Theme = isDynamicThemeSupported
   ? MaterialDarkDynamicTheme
   : MaterialDarkFallbackTheme;

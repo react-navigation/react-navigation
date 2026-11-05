@@ -235,7 +235,7 @@ const TabBarItemInternal = <T extends Route>({
     });
 
     // Only measure on mount. onLayout handles updates.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, []);
 
   const onLayout = (event: LayoutChangeEvent) => {

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import { BlurEffectBackground } from '../BlurEffectBackground';
-import { type BlurEffectType } from '../getBlurBackgroundColor';
+import type { BlurEffectType } from '../getBlurBackgroundColor';
 
 type Props = Omit<ViewProps, 'style'> & {
   blurEffect?: BlurEffectType | 'none' | undefined;

@@ -41,12 +41,12 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "nanoid": "^5.1.11"
+    "nanoid": "^6.0.2"
   },
   "devDependencies": {
-    "@jest/globals": "^30.4.1",
-    "del-cli": "^7.0.0",
-    "react-native-builder-bob": "^0.43.0",
+    "@jest/globals": "^30.5.2",
+    "del-cli": "^8.0.1",
+    "react-native-builder-bob": "^0.44.1",
     "typescript": "^6.0.3"
   },
   "react-native-builder-bob": {

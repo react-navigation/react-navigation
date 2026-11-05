@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type LayoutChangeEvent, type View } from 'react-native';
+import type { LayoutChangeEvent, View } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
 import type { Layout } from './types';

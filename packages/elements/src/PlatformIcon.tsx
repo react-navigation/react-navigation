@@ -34,7 +34,7 @@ export function PlatformIcon({
           renderingMode={icon.renderingMode}
           color={color}
           size={size}
-          style={StyleSheet.flatten(style)}
+          style={StyleSheet.flatten(style) ?? undefined}
           {...rest}
         />
       );
@@ -47,7 +47,7 @@ export function PlatformIcon({
           fill={icon.fill}
           size={size}
           color={color}
-          style={StyleSheet.flatten(style)}
+          style={StyleSheet.flatten(style) ?? undefined}
           {...rest}
         />
       );

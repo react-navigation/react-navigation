@@ -1,4 +1,4 @@
-import { type DimensionValue, type ViewStyle } from 'react-native';
+import type { DimensionValue, ViewStyle } from 'react-native';
 
 const APPROX_APP_BAR_HEIGHT = 56;
 const DEFAULT_DRAWER_WIDTH = 360;

@@ -92,7 +92,6 @@ test('tab bar cannot be tapped when hidden', async () => {
 
   const spy = jest
     .spyOn(Keyboard, 'addListener')
-    // @ts-expect-error: types require private fields.
     .mockImplementation((name, callback) => {
       listeners[name].push(callback);
 

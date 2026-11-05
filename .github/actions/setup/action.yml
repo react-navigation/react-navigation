@@ -5,12 +5,12 @@ runs:
   using: composite
   steps:
     - name: Setup Node.js
-      uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+      uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
       with:
         node-version-file: .nvmrc
 
     - name: Install pnpm
-      uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
+      uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413
 
     - name: Get pnpm store path
       id: pnpm-store
@@ -19,7 +19,7 @@ runs:
 
     - name: Restore pnpm store
       id: pnpm-cache
-      uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
       with:
         path: ${{ steps.pnpm-store.outputs.path }}
         key: ${{ runner.os }}-pnpm-store-v1-${{ hashFiles('pnpm-lock.yaml') }}
@@ -36,7 +36,7 @@ runs:
 
     - name: Cache pnpm store
       if: steps.pnpm-cache.outputs.cache-hit != 'true'
-      uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
       with:
         path: ${{ steps.pnpm-store.outputs.path }}
         key: ${{ steps.pnpm-cache.outputs.cache-primary-key }}

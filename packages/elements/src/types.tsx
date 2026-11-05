@@ -225,16 +225,7 @@ export type HeaderOptions = {
   /**
    * Function which returns a React Element to display on the left side of the header.
    */
-  headerLeft?:
-    | ((
-        props: HeaderBackButtonProps & {
-          /**
-           * Whether it's possible to navigate back.
-           */
-          canGoBack?: boolean | undefined;
-        }
-      ) => React.ReactNode)
-    | undefined;
+  headerLeft?: ((props: HeaderLeftProps) => React.ReactNode) | undefined;
   /**
    * Whether the liquid glass background is visible for the item.
    *
@@ -294,9 +285,7 @@ export type HeaderOptions = {
    * You can use this with `headerTransparent` to render a blur view, for example, to create a translucent header.
    */
   headerBackground?:
-    | ((props: {
-        style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-      }) => React.ReactNode)
+    | ((props: HeaderBackgroundProps) => React.ReactNode)
     | undefined;
   /**
    * Style object for the container of the `headerBackground` element.
@@ -460,4 +449,18 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    * Whether label font should scale to respect Text Size accessibility settings.
    */
   allowFontScaling?: boolean | undefined;
+};
+
+export type HeaderLeftProps = HeaderBackButtonProps & {
+  /**
+   * Whether it's possible to navigate back.
+   */
+  canGoBack?: boolean | undefined;
+};
+
+export type HeaderBackgroundProps = {
+  /**
+   * Style object for the header background.
+   */
+  style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };

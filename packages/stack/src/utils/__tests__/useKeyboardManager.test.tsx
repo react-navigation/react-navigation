@@ -181,7 +181,6 @@ describe('useKeyboardManager', () => {
 
       const addListenerSpy = jest
         .spyOn(Keyboard, 'addListener')
-        // @ts-expect-error:  types require private fields.
         .mockImplementation((name, callback) => {
           listeners[name] = [...(listeners[name] ?? []), callback];
 
