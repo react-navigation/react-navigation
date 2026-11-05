@@ -1,4 +1,10 @@
-import type { ColorValue } from 'react-native';
+import type * as React from 'react';
+import type {
+  ColorValue,
+  HostInstance,
+  NativeSyntheticEvent,
+  ViewStyle,
+} from 'react-native';
 
 import type { LocaleDirection, SFSymbolNames } from '../types';
 import type { FONT_WEIGHTS } from './constants';
@@ -509,4 +515,71 @@ export type SFSymbolOptions = {
    * Requires iOS 17+. Ignored on earlier versions.
    */
   contentTransition?: SFSymbolContentTransition | undefined;
+};
+
+export type ReservedRegion = {
+  /**
+   * The identifier of the region.
+   */
+  id: number;
+  /**
+   * The kind of the region.
+   * - `occlusion` - where content is covered by an element, such as Dynamic Island, camera, or window controls
+   * - `division` - where content splits into separate regions, such as at the fold of a hinge
+   *
+   * This can be used to decide how to place and layout your content:
+   * - Content should be placed outside of `occlusion` regions.
+   * - Content can be arranged into separate sections on each side of `division` regions.
+   */
+  kind: 'occlusion' | 'division';
+  /**
+   * The rect of the region relative to the view's coordinates, including the margins.
+   */
+  frame: { x: number; y: number; width: number; height: number };
+  /**
+   * The margins included in the frame around the reserved rect for interactive content.
+   */
+  margins: { top: number; right: number; bottom: number; left: number };
+  /**
+   * Whether the region is currently active.
+   *
+   * A region can become active or inactive as conditions change.
+   * An active region currently affects your view. An inactive region doesn’t.
+   *
+   * For example, the fold of iPhone Duo is active when the device is partially open,
+   * and inactive when it’s fully open.
+   */
+  active: boolean;
+};
+
+export type ReservedRegionsChangeEvent = {
+  /**
+   * The reserved regions that overlap the view.
+   */
+  regions: ReservedRegion[];
+  /**
+   * The size of the view when the regions were read.
+   */
+  size: { width: number; height: number };
+};
+
+export type ReservedRegionsProps = {
+  /**
+   * Callback called with an event containing the reserved regions.
+   */
+  onRegionsChange?:
+    | ((event: NativeSyntheticEvent<ReservedRegionsChangeEvent>) => void)
+    | undefined;
+  /**
+   * Content to render inside the view.
+   */
+  children?: React.ReactNode;
+  /**
+   * Style object for the view.
+   */
+  style?: (React.CSSProperties & ViewStyle) | undefined;
+  /**
+   * Ref to the underlying native view.
+   */
+  ref?: React.Ref<HostInstance> | undefined;
 };
