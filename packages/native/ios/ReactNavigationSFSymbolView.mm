@@ -10,8 +10,6 @@
 #import <react/renderer/components/ReactNavigationSpec/ComponentDescriptors.h>
 #import <react/renderer/components/ReactNavigationSpec/Props.h>
 
-#import <React/RCTFabricComponentsPlugins.h>
-
 using namespace facebook::react;
 
 @implementation ReactNavigationSFSymbolView {

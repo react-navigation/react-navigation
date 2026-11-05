@@ -14,8 +14,6 @@
 #import <QuartzCore/QuartzCore.h>
 #import <react/renderer/components/ReactNavigationSpec/Props.h>
 
-#import <React/RCTFabricComponentsPlugins.h>
-
 using namespace facebook::react;
 
 static NSTimeInterval const ReactNavigationCornerInsetAnimationDuration = 0.2;

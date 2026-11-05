@@ -1,5 +1,3 @@
-/* eslint-disable import-x/no-default-export */
-
 import { type TurboModule, TurboModuleRegistry } from 'react-native';
 
 export interface Spec extends TurboModule {
