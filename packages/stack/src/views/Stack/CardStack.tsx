@@ -178,10 +178,10 @@ const getHeaderHeights = (
       headerStyle,
     } = curr.descriptor.options;
 
-    const style = StyleSheet.flatten(headerStyle || {});
+    const style = StyleSheet.flatten(headerStyle);
 
     const height =
-      'height' in style && typeof style.height === 'number'
+      style != null && 'height' in style && typeof style.height === 'number'
         ? style.height
         : previous[curr.route.key];
 
@@ -287,7 +287,7 @@ export class CardStack extends React.Component<Props, State> {
         new Animated.Value(
           (props.openingRouteKeys.includes(curr.key) &&
             getAnimationEnabled(animation)) ||
-          props.state.preloadedRoutes.includes(curr)
+            props.state.preloadedRoutes.includes(curr)
             ? getDistanceFromOptions(
                 state.layout,
                 descriptor?.options,

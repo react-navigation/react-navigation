@@ -242,6 +242,7 @@ export function Header(props: Props) {
   // Users can use `null` instead
   for (const [styleProp, value] of Object.entries(safeStyles)) {
     if (value === undefined) {
+      // eslint-disable-next-line @eslint-react/purity
       Reflect.deleteProperty(safeStyles, styleProp);
     }
   }
@@ -321,7 +322,8 @@ export function Header(props: Props) {
               // Allow touch through the header when background color is transparent
               headerTransparent &&
               (backgroundStyle.backgroundColor === 'transparent' ||
-                Color(backgroundStyle.backgroundColor).alpha() === 0)
+                (typeof backgroundStyle.backgroundColor === 'string' &&
+                  Color(backgroundStyle.backgroundColor).alpha() === 0))
                 ? 'none'
                 : 'auto'
             }

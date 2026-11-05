@@ -19,7 +19,7 @@ export function Overlay({
     return {
       opacity: progress.value,
     };
-  }, [progress]);
+  });
 
   const animatedProps = useAnimatedProps(() => {
     const active = progress.value > PROGRESS_EPSILON;
@@ -28,7 +28,7 @@ export function Overlay({
       pointerEvents: active ? 'auto' : 'none',
       'aria-hidden': !active,
     } as const;
-  }, [progress]);
+  });
 
   return (
     <Animated.View

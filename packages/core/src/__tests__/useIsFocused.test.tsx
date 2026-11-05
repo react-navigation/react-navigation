@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from '@jest/globals';
-import { type ParamListBase } from '@react-navigation/routers';
+import type { ParamListBase } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 

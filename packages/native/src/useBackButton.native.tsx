@@ -9,10 +9,8 @@ export function useBackButton(
   ref: React.RefObject<NavigationContainerRef<ParamListBase> | null>
 ) {
   React.useEffect(() => {
-    // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
     const subscription = BackHandler.addEventListener(
       'hardwareBackPress',
-      // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
       () => {
         const navigation = ref.current;
 

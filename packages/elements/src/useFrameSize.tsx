@@ -83,7 +83,7 @@ export function useFrameSize<T>(
     return unsubscribe;
 
     // We only need to check for changes on initial render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -106,7 +106,7 @@ export function useFrameSize<T>(
 type FrameSizeProviderProps = {
   initialFrame: Frame;
   render: (props: {
-    ref: React.RefObject<View | null>;
+    ref: React.RefObject<React.ComponentRef<typeof View> | null>;
     onLayout: (event: LayoutChangeEvent) => void;
   }) => React.ReactNode;
 };
@@ -195,7 +195,7 @@ export function FrameSizeProvider({
     listeners.current.forEach((listener) => listener());
   });
 
-  const viewRef = React.useRef<View>(null);
+  const viewRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
   useClientLayoutEffect(() => {
     if (Platform.OS === 'web') {

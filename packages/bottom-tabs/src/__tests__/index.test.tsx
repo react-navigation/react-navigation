@@ -17,7 +17,6 @@ import { act, fireEvent, render } from '@testing-library/react-native';
 import {
   type EmitterSubscription,
   Keyboard,
-  type KeyboardEventListener,
   type KeyboardEventName,
   Platform,
   View,
@@ -89,7 +88,10 @@ test('handles screens preloading', async () => {
 
 test('tab bar cannot be tapped when hidden', async () => {
   // @ts-expect-error: mock implementation for testing
-  const listeners: Record<KeyboardEventName, KeyboardEventListener[]> = {
+  const listeners: Record<
+    KeyboardEventName,
+    Parameters<typeof Keyboard.addListener>[1][]
+  > = {
     keyboardWillShow: [],
     keyboardWillHide: [],
   };

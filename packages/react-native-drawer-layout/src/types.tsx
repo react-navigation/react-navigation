@@ -1,7 +1,8 @@
 import * as React from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
-import type { PanGesture } from 'react-native-gesture-handler';
 import type { SharedValue } from 'react-native-reanimated';
+
+import type { PanGesture } from './views/GestureHandler';
 
 export type Layout = { width: number; height: number };
 

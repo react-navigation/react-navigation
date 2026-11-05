@@ -40,7 +40,7 @@ export function Link<ParamList extends ReactNavigation.RootParamList>({
   style,
   target,
   ...rest
-}: Props<ParamList>) {
+}: Props<ParamList>): React.ReactElement<TextProps> {
   // @ts-expect-error: This is already type-checked by the prop types
   const props = useLinkProps<ParamList>({ screen, params, action, href });
 

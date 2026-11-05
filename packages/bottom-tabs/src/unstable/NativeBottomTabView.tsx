@@ -1,6 +1,6 @@
-import {
-  type ParamListBase,
-  type TabNavigationState,
+import type {
+  ParamListBase,
+  TabNavigationState,
 } from '@react-navigation/native';
 
 import type {

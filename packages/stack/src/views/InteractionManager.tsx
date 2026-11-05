@@ -9,6 +9,7 @@ type InteractionManagerType = {
 let InteractionManager: InteractionManagerType | undefined;
 
 try {
+  // @ts-expect-error `InteractionManager` is removed from the types in newer React Native versions
   InteractionManager = ReactNative.InteractionManager;
 } catch (e) {
   // On newer React Native versions, accessing InteractionManager throws an error

@@ -405,14 +405,28 @@ export type TransitionSpec =
       animation: 'timing';
       config: Omit<
         Animated.TimingAnimationConfig,
-        'toValue' | keyof Animated.AnimationConfig
+        | 'toValue'
+        | 'useNativeDriver'
+        | 'isInteraction'
+        | 'iterations'
+        | 'isLooping'
+        | 'onComplete'
+        | 'platformConfig'
+        | 'debugID'
       >;
     }
   | {
       animation: 'spring';
       config: Omit<
         Animated.SpringAnimationConfig,
-        'toValue' | keyof Animated.AnimationConfig
+        | 'toValue'
+        | 'useNativeDriver'
+        | 'isInteraction'
+        | 'iterations'
+        | 'isLooping'
+        | 'onComplete'
+        | 'platformConfig'
+        | 'debugID'
       >;
     };
 
