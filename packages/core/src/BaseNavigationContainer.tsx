@@ -138,7 +138,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
         return;
       }
 
-      const error = new Error();
+      const error = new Error('Navigation dispatch stack');
 
       if (Error.captureStackTrace) {
         // Available on V8 and Hermes, omits the frames of `entry` and what it called

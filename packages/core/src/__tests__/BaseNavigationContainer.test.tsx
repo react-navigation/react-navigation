@@ -566,7 +566,6 @@ test('emits state events when the state changes', async () => {
 test('emits state events when new navigator mounts', async () => {
   jest.useFakeTimers();
 
-  // eslint-disable-next-line @eslint-react/no-nested-component-definitions, @eslint-react/static-components
   const TestNavigator = (props: any) => {
     const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
@@ -580,7 +579,6 @@ test('emits state events when new navigator mounts', async () => {
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  // eslint-disable-next-line @eslint-react/no-nested-component-definitions
   const NestedNavigator = () => {
     const [isRendered, setIsRendered] = React.useState(false);
 
@@ -595,7 +593,6 @@ test('emits state events when new navigator mounts', async () => {
     }
 
     return (
-      // eslint-disable-next-line @eslint-react/static-components
       <TestNavigator>
         <Screen name="baz">{() => null}</Screen>
         <Screen name="bax">{() => null}</Screen>
@@ -607,7 +604,6 @@ test('emits state events when new navigator mounts', async () => {
 
   const element = (
     <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
-      {/* eslint-disable-next-line @eslint-react/static-components */}
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={NestedNavigator} />

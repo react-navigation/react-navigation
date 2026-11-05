@@ -56,7 +56,6 @@ test('preserves special property names as ordinary query params', () => {
 
   expect(Object.getPrototypeOf(params)).toBeNull();
   expect(Object.hasOwn(params, '__proto__')).toBe(true);
-  // eslint-disable-next-line no-proto
   expect(params.__proto__).toEqual(['a', 'b']);
   expect(params.constructor).toBe('x');
   expect(params.prototype).toBe('y');
@@ -222,7 +221,7 @@ test('encodes bare parameter names', () => {
 });
 
 test('skips holes in sparse arrays', () => {
-  const tags = new Array<string>(3);
+  const tags = Array<string>(3);
   tags[1] = 'value';
 
   expect(stringify({ tags })).toBe('tags=value');
@@ -241,7 +240,7 @@ test.each(['\uD800', '\uDFFF'])(
 test.each(['\uD800', '\uDFFF'])(
   'omits entirely sparse arrays under lone-surrogate key %j',
   (key) => {
-    const values = new Array<string>(3);
+    const values = Array<string>(3);
 
     expect(stringify({ [key]: values })).toBe('');
     expect(stringify({ before: 'a', [key]: values, after: 'b' })).toBe(

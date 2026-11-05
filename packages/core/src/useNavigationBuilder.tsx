@@ -425,7 +425,6 @@ export function useNavigationBuilder<
     routeKeyList[name] = config.keys;
     routeParamList[name] = config.props.initialParams;
 
-    // eslint-disable-next-line @eslint-react/purity
     Object.assign(routeGetIdList, { [name]: config.props.getId });
   }
 

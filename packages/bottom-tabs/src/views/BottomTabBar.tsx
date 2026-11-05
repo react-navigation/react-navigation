@@ -277,7 +277,6 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
         }
       });
     } else {
-      // eslint-disable-next-line @eslint-react/set-state-in-effect
       setIsTabBarHidden(true);
 
       const animate =

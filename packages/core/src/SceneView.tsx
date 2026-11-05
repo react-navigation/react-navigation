@@ -173,8 +173,7 @@ export function SceneView<
   );
 
   const ScreenComponent = screen.getComponent
-    ? // eslint-disable-next-line @eslint-react/static-components
-      screen.getComponent()
+    ? screen.getComponent()
     : screen.component;
 
   return (
@@ -189,7 +188,6 @@ export function SceneView<
               route={route}
             >
               {ScreenComponent !== undefined ? (
-                // eslint-disable-next-line @eslint-react/static-components
                 <ScreenComponent navigation={navigation} route={route} />
               ) : screen.children !== undefined ? (
                 screen.children({ navigation, route })

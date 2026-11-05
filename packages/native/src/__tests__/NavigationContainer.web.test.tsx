@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom/jest-globals';
-
 import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,

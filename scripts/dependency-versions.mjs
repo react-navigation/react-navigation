@@ -3,7 +3,6 @@ import process from 'node:process';
 import { URL } from 'node:url';
 import { styleText } from 'node:util';
 
-// eslint-disable-next-line import-x/no-extraneous-dependencies
 import semver from 'semver';
 
 const root = new URL('../', import.meta.url);

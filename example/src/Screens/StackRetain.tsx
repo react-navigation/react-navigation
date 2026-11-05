@@ -22,7 +22,7 @@ const HomeScreen = () => {
         variant="filled"
         onPress={() => navigation.navigate('RetainCounter')}
       >
-        Let's Go!
+        Let&apos;s Go!
       </Button>
     </ScrollView>
   );

@@ -27,7 +27,6 @@ jest.mock('nanoid/non-secure', () => {
 beforeEach(() => {
   MockRouterKey.current = 0;
 
-  // eslint-disable-next-line import-x/no-extraneous-dependencies
   require('nanoid/non-secure').__key = 0;
 });
 

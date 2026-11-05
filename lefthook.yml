@@ -4,6 +4,9 @@ pre-commit:
     lint:
       glob: '*.{js,ts,tsx}'
       run: pnpm lint {staged_files}
+    format:
+      glob: '*.{js,ts,tsx,json,yml,yaml,md,css}'
+      run: pnpm format --check --no-error-on-unmatched-pattern {staged_files}
     types:
       glob: '*.{json,js,ts,tsx}'
       run: pnpm typecheck

@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom/jest-globals';
-
 import { expect, test } from '@jest/globals';
 import { NavigationContainer } from '@react-navigation/native';
 import { render, screen } from '@testing-library/react';
