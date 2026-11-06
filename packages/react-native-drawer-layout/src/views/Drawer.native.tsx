@@ -249,7 +249,31 @@ export function Drawer({
     previousHasDrawerWidthRef.current = hasDrawerWidth;
   }, [getDrawerTranslationX, hasDrawerWidth, isHidden, open, translationX]);
 
-  React.useLayoutEffect(() => toggleDrawer(open), [open, toggleDrawer]);
+  const previousLayoutRef = React.useRef({
+    open,
+    drawerWidth,
+    getDrawerTranslationX,
+  });
+
+  React.useLayoutEffect(() => {
+    const previous = previousLayoutRef.current;
+
+    previousLayoutRef.current = { open, drawerWidth, getDrawerTranslationX };
+
+    if (
+      open === previous.open &&
+      previous.drawerWidth > 0 &&
+      drawerWidth !== previous.drawerWidth &&
+      translationX.value === previous.getDrawerTranslationX(open)
+    ) {
+      // Update translationX without animation if the drawer width changed while it was at rest
+      // e.g. on rotation, a closed drawer would otherwise show at the old offset and animate away
+      translationX.value = getDrawerTranslationX(open);
+      return;
+    }
+
+    toggleDrawer(open);
+  }, [drawerWidth, getDrawerTranslationX, open, toggleDrawer, translationX]);
 
   const startX = useSharedValue(0);
 
