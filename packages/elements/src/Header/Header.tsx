@@ -560,20 +560,24 @@ export function Header(props: Props) {
         />
       </Animated.View>
       {searchBarRendered ? (
-        <HeaderSearchBar
-          {...headerSearchBarOptions}
-          visible={searchBarVisible}
-          onClose={() => {
-            setSearchBarVisible(false);
-            headerSearchBarOptions?.onClose?.();
-          }}
-          tintColor={headerTintColor}
-          style={[
-            StyleSheet.absoluteFill,
-            searchBarSpacingStyle,
-            { opacity: searchBarOpacity },
-          ]}
-        />
+        <UNSTABLE_LayoutRegionView
+          region="safeArea"
+          cornerAdaptation="horizontal"
+          cornerAdaptationOnly
+          edges={{ start: 'additive', end: 'additive' }}
+          style={StyleSheet.absoluteFill}
+        >
+          <HeaderSearchBar
+            {...headerSearchBarOptions}
+            visible={searchBarVisible}
+            onClose={() => {
+              setSearchBarVisible(false);
+              headerSearchBarOptions?.onClose?.();
+            }}
+            tintColor={headerTintColor}
+            style={[searchBarSpacingStyle, { opacity: searchBarOpacity }]}
+          />
+        </UNSTABLE_LayoutRegionView>
       ) : null}
     </Animated.View>
   );
