@@ -2,6 +2,7 @@ import type {
   HeaderBackButtonDisplayMode,
   HeaderBackButtonProps,
   HeaderOptions,
+  HeaderSearchBarCommands,
   HeaderTitleProps,
   Icon,
 } from '@react-navigation/elements';
@@ -135,6 +136,11 @@ export type Scene = {
    * Animated node representing whether the screen is closing.
    */
   closing: Animated.Value;
+  /**
+   * Ref to the search bar in the header of the screen.
+   * It's shared between the header and the screen for `useHeaderSearchBar`.
+   */
+  headerSearchBarRef: React.RefObject<HeaderSearchBarCommands | null>;
 };
 
 export type SceneProgress = {
