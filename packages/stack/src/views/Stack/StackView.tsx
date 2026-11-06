@@ -484,8 +484,13 @@ export class StackView extends React.Component<Props, State> {
   render() {
     const { state, descriptors: _, ...rest } = this.props;
 
-    const { routes, descriptors, openingRouteKeys, closingRouteKeys } =
-      this.state;
+    const {
+      routes,
+      descriptors,
+      openingRouteKeys,
+      closingRouteKeys,
+      replacingRouteKeys,
+    } = this.state;
 
     const preloadedDescriptors =
       state.preloadedRoutes.reduce<StackDescriptorMap>((acc, route) => {
@@ -517,6 +522,7 @@ export class StackView extends React.Component<Props, State> {
                             routes={routes}
                             openingRouteKeys={openingRouteKeys}
                             closingRouteKeys={closingRouteKeys}
+                            replacingRouteKeys={replacingRouteKeys}
                             onOpenRoute={this.handleOpenRoute}
                             onCloseRoute={this.handleCloseRoute}
                             onTransitionStart={this.handleTransitionStart}
