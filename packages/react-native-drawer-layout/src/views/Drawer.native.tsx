@@ -658,6 +658,7 @@ export function Drawer({
                       : 'row',
                 },
               ]}
+              onAccessibilityEscape={open ? onClose : undefined}
             >
               <Animated.View
                 ref={contentRef}
