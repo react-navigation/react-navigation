@@ -472,7 +472,10 @@ export class CardStack extends React.Component<Props, State> {
 
     let activeStates = state.activeStates;
 
-    if (props.routes.length !== state.routes.length) {
+    if (
+      props.routes.length !== state.routes.length ||
+      props.routes.some((route, i) => route.key !== state.routes[i].key)
+    ) {
       let activeScreensLimit = 1;
 
       for (let i = props.routes.length - 1; i >= 0; i--) {
