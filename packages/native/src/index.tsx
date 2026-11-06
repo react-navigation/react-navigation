@@ -6,11 +6,7 @@ export { createStaticNavigation } from './createStaticNavigation';
 export { Link } from './Link';
 export { LinkingContext } from './LinkingContext';
 export { LocaleDirContext } from './LocaleDirContext';
-export {
-  type CornerInsetProps,
-  type CornerInsetRef,
-  CornerInset as UNSTABLE_CornerInset,
-} from './native/CornerInset';
+export { LayoutRegionView as UNSTABLE_LayoutRegionView } from './native/LayoutRegionView';
 export {
   MaterialSymbol,
   type MaterialSymbolProps,
@@ -18,6 +14,8 @@ export {
 export { ReservedRegions as UNSTABLE_ReservedRegions } from './native/ReservedRegions';
 export { SFSymbol, type SFSymbolProps } from './native/SFSymbol';
 export type {
+  LayoutRegionInsetsChangeEvent,
+  LayoutRegionViewProps,
   ReservedRegion,
   ReservedRegionsChangeEvent,
   ReservedRegionsProps,
