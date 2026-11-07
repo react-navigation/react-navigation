@@ -117,8 +117,20 @@ const getRouteHistory = (
       break;
     case 'history':
     case 'fullHistory':
-    case 'limitedHistory':
       // The history will fill up on navigation
+      break;
+    case 'limitedHistory':
+      initialRouteIndex = routes.findIndex(
+        (route) => route.name === initialRouteName
+      );
+      initialRouteIndex = initialRouteIndex === -1 ? 0 : initialRouteIndex;
+
+      if (index !== initialRouteIndex) {
+        history.unshift({
+          type: TYPE_ROUTE,
+          key: routes[initialRouteIndex].key,
+        });
+      }
       break;
   }
 
@@ -181,41 +193,58 @@ const changeIndex = <Type extends SwitchRouterType>(
         ];
       }
     } else if (backBehavior === 'limitedHistory') {
+      const initialRouteIndex = initialRouteName
+        ? state.routes.findIndex((r) => r.name === initialRouteName)
+        : 0;
+      const homeKey =
+        state.routes[initialRouteIndex === -1 ? 0 : initialRouteIndex].key;
+
       const lastHistoryRouteItemIndex = history.findLastIndex(
         (item) => item.type === 'route'
       );
-
       const lastHistoryRouteItem = history[lastHistoryRouteItemIndex];
 
+      // Remove consecutive duplicate if last route is the same
       if (
         lastHistoryRouteItem?.type === 'route' &&
         currentRoute.key === lastHistoryRouteItem.key
       ) {
-        // If the last route in history is the same as the current route,
-        // remove it to avoid consecutive duplicates (same as fullHistory)
         history = [
           ...history.slice(0, lastHistoryRouteItemIndex),
           ...history.slice(lastHistoryRouteItemIndex + 1),
         ];
       }
 
-      // Count how many times the current route key already appears in history
-      const occurrences = history.filter(
-        (it) => it.type === 'route' && it.key === currentRoute.key
-      ).length;
+      const isHome = currentRoute.key === homeKey;
+      const isAlternatingWithHome =
+        lastHistoryRouteItem?.type === 'route' &&
+        lastHistoryRouteItem.key === homeKey;
 
-      if (occurrences >= 2) {
-        // Remove the oldest occurrence to keep at most 2 per route key
-        const oldestIndex = history.findIndex(
+      if (isHome || isAlternatingWithHome) {
+        // When navigating to Home or alternating between Home and another tab (e.g. a b a b),
+        // cap occurrences at 2 per route key
+        const occurrences = history.filter(
           (it) => it.type === 'route' && it.key === currentRoute.key
-        );
+        ).length;
 
-        if (oldestIndex !== -1) {
-          history = [
-            ...history.slice(0, oldestIndex),
-            ...history.slice(oldestIndex + 1),
-          ];
+        if (occurrences >= 2) {
+          const oldestIndex = history.findIndex(
+            (it) => it.type === 'route' && it.key === currentRoute.key
+          );
+
+          if (oldestIndex !== -1) {
+            history = [
+              ...history.slice(0, oldestIndex),
+              ...history.slice(oldestIndex + 1),
+            ];
+          }
         }
+      } else {
+        // For non-initial routes not directly alternating with Home (e.g. b c b c b c),
+        // keep only one occurrence so that repeated switching does not duplicate them
+        history = history.filter(
+          (it) => it.type !== 'route' || it.key !== currentRoute.key
+        );
       }
     }
 
@@ -550,6 +579,23 @@ export function SwitchRouter<Type extends SwitchRouterType>({
 
         case 'GO_BACK': {
           if (state.history.length === 1) {
+            if (backBehavior === 'limitedHistory') {
+              const initialRouteIndex = initialRouteName
+                ? state.routes.findIndex((r) => r.name === initialRouteName)
+                : 0;
+              const targetIndex =
+                initialRouteIndex === -1 ? 0 : initialRouteIndex;
+
+              if (state.index !== targetIndex) {
+                const homeRoute = state.routes[targetIndex];
+                return {
+                  ...state,
+                  index: targetIndex,
+                  history: [{ type: TYPE_ROUTE, key: homeRoute.key }],
+                };
+              }
+            }
+
             return null;
           }
 

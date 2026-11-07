@@ -3977,15 +3977,13 @@ test('handles YouTube-style tab navigation: Home → Shorts → Profile → Shor
   ) as TabNavigationState<ParamListBase>;
   expect(state.routes[state.index].name).toBe('Home');
 
-  // History maintains sensible tab navigation history capped at 2 entries per tab:
-  // [Home, Shorts, Profile, Shorts, Profile, Home]
+  // Non-initial tabs are visited only once in history, with Home at start and end:
+  // [Home, Shorts, Profile, Home]
   expect(state.history).toEqual([
-    { type: 'route', key: 'Home-test' },
-    { type: 'route', key: 'Shorts-test' },
-    { type: 'route', key: 'Profile-test' },
-    { type: 'route', key: 'Shorts-test' },
-    { type: 'route', key: 'Profile-test' },
-    { type: 'route', key: 'Home-test' },
+    { type: 'route', key: 'Home-test', params: undefined },
+    { type: 'route', key: 'Shorts-test', params: undefined },
+    { type: 'route', key: 'Profile-test', params: undefined },
+    { type: 'route', key: 'Home-test', params: undefined },
   ]);
 
   // Back sequence from Home:
@@ -4005,23 +4003,7 @@ test('handles YouTube-style tab navigation: Home → Shorts → Profile → Shor
   ) as TabNavigationState<ParamListBase>;
   expect(state.routes[state.index].name).toBe('Shorts');
 
-  // 3. Back → Profile
-  state = router.getStateForAction(
-    state,
-    CommonActions.goBack(),
-    options
-  ) as TabNavigationState<ParamListBase>;
-  expect(state.routes[state.index].name).toBe('Profile');
-
-  // 4. Back → Shorts
-  state = router.getStateForAction(
-    state,
-    CommonActions.goBack(),
-    options
-  ) as TabNavigationState<ParamListBase>;
-  expect(state.routes[state.index].name).toBe('Shorts');
-
-  // 5. Back → Home (returned to Home!)
+  // 3. Back → Home (returned to Home!)
   state = router.getStateForAction(
     state,
     CommonActions.goBack(),
@@ -4029,13 +4011,55 @@ test('handles YouTube-style tab navigation: Home → Shorts → Profile → Shor
   ) as TabNavigationState<ParamListBase>;
   expect(state.routes[state.index].name).toBe('Home');
 
-  // 6. Back → null (exit app, no more history)
+  // 4. Back → null (exit app from Home)
   const exitState = router.getStateForAction(
     state,
     CommonActions.goBack(),
     options
   );
   expect(exitState).toBeNull();
+});
+
+test('handles non-initial tabs switching b c b c b c: back goes to b, then a, then exit', () => {
+  const router = TabRouter({
+    backBehavior: 'limitedHistory',
+    initialRouteName: 'Home',
+  });
+  const options: RouterConfigOptions = {
+    routeNames: ['Home', 'Shorts', 'Profile'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  // b c b c b c
+  state = router.getStateForAction(state, TabActions.jumpTo('Shorts'), options) as TabNavigationState<ParamListBase>;
+  state = router.getStateForAction(state, TabActions.jumpTo('Profile'), options) as TabNavigationState<ParamListBase>;
+  state = router.getStateForAction(state, TabActions.jumpTo('Shorts'), options) as TabNavigationState<ParamListBase>;
+  state = router.getStateForAction(state, TabActions.jumpTo('Profile'), options) as TabNavigationState<ParamListBase>;
+  state = router.getStateForAction(state, TabActions.jumpTo('Shorts'), options) as TabNavigationState<ParamListBase>;
+  state = router.getStateForAction(state, TabActions.jumpTo('Profile'), options) as TabNavigationState<ParamListBase>;
+
+  expect(state.routes[state.index].name).toBe('Profile');
+  // Non-initial tabs are kept only once in history: [Home, Shorts, Profile]
+  expect(state.history).toEqual([
+    { type: 'route', key: 'Home-test', params: undefined },
+    { type: 'route', key: 'Shorts-test', params: undefined },
+    { type: 'route', key: 'Profile-test', params: undefined },
+  ]);
+
+  // Back 1 -> Shorts (b)
+  state = router.getStateForAction(state, CommonActions.goBack(), options) as TabNavigationState<ParamListBase>;
+  expect(state.routes[state.index].name).toBe('Shorts');
+
+  // Back 2 -> Home (a, as a is initial)
+  state = router.getStateForAction(state, CommonActions.goBack(), options) as TabNavigationState<ParamListBase>;
+  expect(state.routes[state.index].name).toBe('Home');
+
+  // Back 3 -> null (exit)
+  const exit = router.getStateForAction(state, CommonActions.goBack(), options);
+  expect(exit).toBeNull();
 });
 
 test('repeated tab switching between non-home tabs eventually returns user to Home without endless trap', () => {
