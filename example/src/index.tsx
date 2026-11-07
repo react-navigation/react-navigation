@@ -233,6 +233,7 @@ export function App() {
       <NavigationBar style="auto" />
       <NavigationContainer
         ref={navigationRef}
+        doubleBackToExit
         initialState={initialState}
         onReady={() => {
           SplashScreen.hideAsync();

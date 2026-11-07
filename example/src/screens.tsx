@@ -32,6 +32,7 @@ import { MyStackStatic } from './Screens/StandardNavigator/MyStackStatic';
 import { StaticScreen } from './Screens/Static';
 import { TabPreloadFlow } from './Screens/TabPreloadFlow';
 import { TabView } from './Screens/TabView';
+import { YouTubeTabs } from './Screens/YouTubeTabs';
 
 export const SCREENS = {
   NativeStack,
@@ -48,6 +49,7 @@ export const SCREENS = {
   MaterialTopTabsScreen,
   DynamicTabs,
   FullHistoryTabs,
+  YouTubeTabs,
   MasterDetail,
   AuthFlow,
   ScreenLayout,
