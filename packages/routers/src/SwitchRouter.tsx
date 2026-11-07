@@ -26,6 +26,7 @@ export type SwitchRouterOptions = DefaultRouterOptions & {
    * - `order` - return to the route defined before the focused route
    * - `history` - return to last visited route; if the same route is visited multiple times, the older entries are dropped from the history
    * - `fullHistory` - return to last visited route; doesn't drop duplicate entries unlike `history` - matches behavior of web pages
+   * - `limitedHistory` - return to last visited route; keeps duplicate entries like `fullHistory`, but limits each route to at most 2 occurrences in the history, removing the oldest occurrence when exceeded
    * - `none` - do not handle going back
    */
   backBehavior?: BackBehavior;
@@ -37,6 +38,7 @@ type BackBehavior =
   | 'order'
   | 'history'
   | 'fullHistory'
+  | 'limitedHistory'
   | 'none';
 
 type RouteHistory = {
@@ -115,6 +117,7 @@ const getRouteHistory = (
       break;
     case 'history':
     case 'fullHistory':
+    case 'limitedHistory':
       // The history will fill up on navigation
       break;
   }
@@ -130,7 +133,7 @@ const changeIndex = <Type extends SwitchRouterType>(
 ): Pick<SwitchRouterStateMap[Type], 'index' | 'history'> => {
   let history = state.history;
 
-  if (backBehavior === 'history' || backBehavior === 'fullHistory') {
+  if (backBehavior === 'history' || backBehavior === 'fullHistory' || backBehavior === 'limitedHistory') {
     const currentRoute = state.routes[index];
 
     if (backBehavior === 'history') {
@@ -176,6 +179,43 @@ const changeIndex = <Type extends SwitchRouterType>(
           ...history.slice(0, lastHistoryRouteItemIndex),
           ...history.slice(lastHistoryRouteItemIndex + 1),
         ];
+      }
+    } else if (backBehavior === 'limitedHistory') {
+      const lastHistoryRouteItemIndex = history.findLastIndex(
+        (item) => item.type === 'route'
+      );
+
+      const lastHistoryRouteItem = history[lastHistoryRouteItemIndex];
+
+      if (
+        lastHistoryRouteItem?.type === 'route' &&
+        currentRoute.key === lastHistoryRouteItem.key
+      ) {
+        // If the last route in history is the same as the current route,
+        // remove it to avoid consecutive duplicates (same as fullHistory)
+        history = [
+          ...history.slice(0, lastHistoryRouteItemIndex),
+          ...history.slice(lastHistoryRouteItemIndex + 1),
+        ];
+      }
+
+      // Count how many times the current route key already appears in history
+      const occurrences = history.filter(
+        (it) => it.type === 'route' && it.key === currentRoute.key
+      ).length;
+
+      if (occurrences >= 2) {
+        // Remove the oldest occurrence to keep at most 2 per route key
+        const oldestIndex = history.findIndex(
+          (it) => it.type === 'route' && it.key === currentRoute.key
+        );
+
+        if (oldestIndex !== -1) {
+          history = [
+            ...history.slice(0, oldestIndex),
+            ...history.slice(oldestIndex + 1),
+          ];
+        }
       }
     }
 

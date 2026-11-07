@@ -751,6 +751,7 @@ test.each<{
     | 'order'
     | 'history'
     | 'fullHistory'
+    | 'limitedHistory'
     | 'none';
   expectedRoute: string | undefined;
 }>([
@@ -759,6 +760,7 @@ test.each<{
   { backBehavior: 'order', expectedRoute: 'baz' },
   { backBehavior: 'history', expectedRoute: 'baz' },
   { backBehavior: 'fullHistory', expectedRoute: 'baz' },
+  { backBehavior: 'limitedHistory', expectedRoute: 'baz' },
   { backBehavior: 'none', expectedRoute: undefined },
 ])(
   'updates history when the focused route key changes with backBehavior: $backBehavior',
@@ -807,9 +809,10 @@ test.each<{
   }
 );
 
-test.each<{ backBehavior: 'history' | 'fullHistory' }>([
+test.each<{ backBehavior: 'history' | 'fullHistory' | 'limitedHistory' }>([
   { backBehavior: 'history' },
   { backBehavior: 'fullHistory' },
+  { backBehavior: 'limitedHistory' },
 ])(
   'does not add an unfocused route with a changed key to $backBehavior',
   ({ backBehavior }) => {
@@ -3440,4 +3443,649 @@ test('preserves params when preload replaces the focused route with fullHistory'
       { type: 'route', key: 'bar-test', params: { answer: 43 } },
     ],
   });
+});
+
+
+test('handles Home/Search repeated navigation with backBehavior: limitedHistory', () => {
+  // Simulates: Home → Search → Home → Search → Home → Search
+  // Expected Back sequence: Search → Home → Search → Home → exit
+  const router = TabRouter({ backBehavior: 'limitedHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['Home', 'Search', 'Cart', 'Profile'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  // Initial state: on Home
+  expect(state.index).toBe(0);
+  expect(state.routes[state.index].name).toBe('Home');
+  expect(state.history).toEqual([
+    { type: 'route', key: 'Home-test' },
+  ]);
+
+  // Navigate: Home → Search
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Search'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.index).toBe(1);
+  expect(state.routes[state.index].name).toBe('Search');
+
+  // Navigate: Search → Home
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Home'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.index).toBe(0);
+  expect(state.routes[state.index].name).toBe('Home');
+
+  // Navigate: Home → Search
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Search'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.index).toBe(1);
+
+  // Navigate: Search → Home
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Home'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.index).toBe(0);
+
+  // Navigate: Home → Search
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Search'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.index).toBe(1);
+  expect(state.routes[state.index].name).toBe('Search');
+
+  // Now we're on Search after: Home → Search → Home → Search → Home → Search
+  // History should be bounded: [Home, Search, Home, Search]
+  expect(state.history).toEqual([
+    { type: 'route', key: 'Home-test' },
+    { type: 'route', key: 'Search-test' },
+    { type: 'route', key: 'Home-test' },
+    { type: 'route', key: 'Search-test' },
+  ]);
+
+  // Back 1: Search → Home
+  const back1 = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(back1.index).toBe(0);
+  expect(back1.routes[back1.index].name).toBe('Home');
+  expect(back1.history).toEqual([
+    { type: 'route', key: 'Home-test' },
+    { type: 'route', key: 'Search-test' },
+    { type: 'route', key: 'Home-test' },
+  ]);
+
+  // Back 2: Home → Search
+  const back2 = router.getStateForAction(
+    back1,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(back2.index).toBe(1);
+  expect(back2.routes[back2.index].name).toBe('Search');
+  expect(back2.history).toEqual([
+    { type: 'route', key: 'Home-test' },
+    { type: 'route', key: 'Search-test' },
+  ]);
+
+  // Back 3: Search → Home
+  const back3 = router.getStateForAction(
+    back2,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(back3.index).toBe(0);
+  expect(back3.routes[back3.index].name).toBe('Home');
+  expect(back3.history).toEqual([
+    { type: 'route', key: 'Home-test' },
+  ]);
+
+  // Back 4: Home → exit (null)
+  const back4 = router.getStateForAction(
+    back3,
+    CommonActions.goBack(),
+    options
+  );
+  expect(back4).toBeNull();
+});
+
+test('limitedHistory does not create unlimited history with repeated switching', () => {
+  const router = TabRouter({ backBehavior: 'limitedHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['Home', 'Search', 'Cart', 'Profile'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  // Switch between Home and Search 100 times
+  for (let i = 0; i < 100; i++) {
+    state = router.getStateForAction(
+      state,
+      TabActions.jumpTo('Search'),
+      options
+    ) as TabNavigationState<ParamListBase>;
+
+    state = router.getStateForAction(
+      state,
+      TabActions.jumpTo('Home'),
+      options
+    ) as TabNavigationState<ParamListBase>;
+  }
+
+  // History should be bounded — each tab at most 2 entries = max 4
+  const routeHistory = state.history.filter((h) => h.type === 'route');
+  expect(routeHistory.length).toBeLessThanOrEqual(4);
+
+  // Specifically: we're on Home after the last switch
+  // History should be [Search, Home, Search, Home]
+  expect(state.history).toEqual([
+    { type: 'route', key: 'Search-test' },
+    { type: 'route', key: 'Home-test' },
+    { type: 'route', key: 'Search-test' },
+    { type: 'route', key: 'Home-test' },
+  ]);
+});
+
+test('limitedHistory preserves normal back behavior for Cart and Profile tabs', () => {
+  const router = TabRouter({ backBehavior: 'limitedHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['Home', 'Search', 'Cart', 'Profile'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  // Navigate: Home → Cart
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Cart'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.index).toBe(2);
+  expect(state.routes[state.index].name).toBe('Cart');
+  expect(state.history).toEqual([
+    { type: 'route', key: 'Home-test' },
+    { type: 'route', key: 'Cart-test' },
+  ]);
+
+  // Back from Cart → Home
+  const back1 = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(back1.index).toBe(0);
+  expect(back1.routes[back1.index].name).toBe('Home');
+
+  // Back from Home → exit (null)
+  const back2 = router.getStateForAction(
+    back1,
+    CommonActions.goBack(),
+    options
+  );
+  expect(back2).toBeNull();
+
+  // Navigate: Home → Profile
+  state = router.getStateForAction(
+    back1,
+    TabActions.jumpTo('Profile'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.index).toBe(3);
+  expect(state.routes[state.index].name).toBe('Profile');
+
+  // Back from Profile → Home
+  const back3 = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(back3.index).toBe(0);
+  expect(back3.routes[back3.index].name).toBe('Home');
+});
+
+test('limitedHistory with multiple tabs visited in sequence', () => {
+  const router = TabRouter({ backBehavior: 'limitedHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['Home', 'Search', 'Cart', 'Profile'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  // Navigate: Home → Search → Cart → Profile
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Search'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Cart'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Profile'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.index).toBe(3);
+  expect(state.history).toEqual([
+    { type: 'route', key: 'Home-test' },
+    { type: 'route', key: 'Search-test' },
+    { type: 'route', key: 'Cart-test' },
+    { type: 'route', key: 'Profile-test' },
+  ]);
+
+  // Back from Profile → Cart
+  const back1 = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(back1.routes[back1.index].name).toBe('Cart');
+
+  // Back from Cart → Search
+  const back2 = router.getStateForAction(
+    back1,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(back2.routes[back2.index].name).toBe('Search');
+
+  // Back from Search → Home
+  const back3 = router.getStateForAction(
+    back2,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(back3.routes[back3.index].name).toBe('Home');
+
+  // Back from Home → exit (null)
+  const back4 = router.getStateForAction(
+    back3,
+    CommonActions.goBack(),
+    options
+  );
+  expect(back4).toBeNull();
+});
+
+test('limitedHistory caps at 2 occurrences per route across many tabs', () => {
+  const router = TabRouter({ backBehavior: 'limitedHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['A', 'B', 'C'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  // Navigate: A → B → C → A → B → C → A
+  const sequence = ['B', 'C', 'A', 'B', 'C', 'A'];
+  for (const tab of sequence) {
+    state = router.getStateForAction(
+      state,
+      TabActions.jumpTo(tab),
+      options
+    ) as TabNavigationState<ParamListBase>;
+  }
+
+  // Currently on A. Each route should appear at most 2 times
+  const keyCounts = new Map<string, number>();
+  for (const item of state.history) {
+    if (item.type === 'route') {
+      keyCounts.set(item.key, (keyCounts.get(item.key) ?? 0) + 1);
+    }
+  }
+
+  for (const [, count] of keyCounts) {
+    expect(count).toBeLessThanOrEqual(2);
+  }
+
+  // Total history should be at most 2 * 3 = 6
+  expect(state.history.length).toBeLessThanOrEqual(6);
+});
+
+test('restores correct history on rehydrating with backBehavior: limitedHistory', () => {
+  const router = TabRouter({ backBehavior: 'limitedHistory' });
+
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getRehydratedState(
+      {
+        index: 2,
+        routes: [
+          { key: 'foo-0', name: 'foo' },
+          { key: 'bar-0', name: 'bar' },
+          { key: 'baz-0', name: 'baz' },
+          { key: 'qux-0', name: 'qux' },
+        ],
+      },
+      options
+    )
+  ).toEqual({
+    key: 'tab-test',
+    index: 2,
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo-0', name: 'foo' },
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-0', name: 'baz' },
+      { key: 'qux-0', name: 'qux' },
+    ],
+    history: [{ key: 'baz-0', type: 'route' }],
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: [],
+  });
+});
+
+test('handles back action with backBehavior: limitedHistory', () => {
+  const router = TabRouter({ backBehavior: 'limitedHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  // Back from initial state should return null
+  expect(
+    router.getStateForAction(state, CommonActions.goBack(), options)
+  ).toBeNull();
+
+  // bar → qux
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('qux'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(
+    router.getStateForAction(state, CommonActions.goBack(), options)
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: [],
+    key: 'tab-test',
+    index: 0,
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar-test', name: 'bar' },
+      { key: 'baz-test', name: 'baz' },
+      { key: 'qux-test', name: 'qux' },
+    ],
+    history: [{ type: 'route', key: 'bar-test' }],
+  });
+
+  // bar → qux → baz
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('baz'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  // Back from baz → qux
+  expect(
+    router.getStateForAction(state, CommonActions.goBack(), options)
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: [],
+    key: 'tab-test',
+    index: 2,
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar-test', name: 'bar' },
+      { key: 'baz-test', name: 'baz' },
+      { key: 'qux-test', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'qux-test' },
+    ],
+  });
+});
+
+test('limitedHistory does not break nested stack navigator back behavior', () => {
+  // When a tab has a nested stack, GO_BACK at the tab level should return null
+  // if the router can't handle it (it propagates to the nested stack).
+  // The tab router only handles GO_BACK when there's history to pop.
+  const router = TabRouter({ backBehavior: 'limitedHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['Home', 'Search'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  // On initial route with no history to pop, GO_BACK returns null
+  // This allows nested navigators (like stacks) to handle the back action
+  const result = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  );
+  expect(result).toBeNull();
+
+  // Navigate to Search
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Search'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  // Now GO_BACK should work at tab level (Search → Home)
+  const backResult = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(backResult.index).toBe(0);
+  expect(backResult.routes[backResult.index].name).toBe('Home');
+
+  // After going back to Home, GO_BACK returns null again
+  // allowing any nested stack to handle its own back
+  const nestedBack = router.getStateForAction(
+    backResult,
+    CommonActions.goBack(),
+    options
+  );
+  expect(nestedBack).toBeNull();
+});
+
+
+test('handles YouTube-style tab navigation: Home → Shorts → Profile → Shorts → Profile → Home', () => {
+  const router = TabRouter({ backBehavior: 'limitedHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['Home', 'Shorts', 'Profile'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+  expect(state.routes[state.index].name).toBe('Home');
+  expect(state.history).toEqual([{ type: 'route', key: 'Home-test' }]);
+
+  // Home → Shorts
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Shorts'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.routes[state.index].name).toBe('Shorts');
+
+  // Shorts → Profile
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Profile'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.routes[state.index].name).toBe('Profile');
+
+  // Profile → Shorts
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Shorts'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.routes[state.index].name).toBe('Shorts');
+
+  // Shorts → Profile
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Profile'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.routes[state.index].name).toBe('Profile');
+
+  // Profile → Home
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('Home'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.routes[state.index].name).toBe('Home');
+
+  // History maintains sensible tab navigation history capped at 2 entries per tab:
+  // [Home, Shorts, Profile, Shorts, Profile, Home]
+  expect(state.history).toEqual([
+    { type: 'route', key: 'Home-test' },
+    { type: 'route', key: 'Shorts-test' },
+    { type: 'route', key: 'Profile-test' },
+    { type: 'route', key: 'Shorts-test' },
+    { type: 'route', key: 'Profile-test' },
+    { type: 'route', key: 'Home-test' },
+  ]);
+
+  // Back sequence from Home:
+  // 1. Back → Profile
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.routes[state.index].name).toBe('Profile');
+
+  // 2. Back → Shorts
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.routes[state.index].name).toBe('Shorts');
+
+  // 3. Back → Profile
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.routes[state.index].name).toBe('Profile');
+
+  // 4. Back → Shorts
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.routes[state.index].name).toBe('Shorts');
+
+  // 5. Back → Home (returned to Home!)
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+  expect(state.routes[state.index].name).toBe('Home');
+
+  // 6. Back → null (exit app, no more history)
+  const exitState = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  );
+  expect(exitState).toBeNull();
+});
+
+test('repeated tab switching between non-home tabs eventually returns user to Home without endless trap', () => {
+  const router = TabRouter({ backBehavior: 'limitedHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['Home', 'Shorts', 'Profile'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  // User starts at Home, then switches between Shorts and Profile 20 times
+  for (let i = 0; i < 20; i++) {
+    state = router.getStateForAction(
+      state,
+      TabActions.jumpTo('Shorts'),
+      options
+    ) as TabNavigationState<ParamListBase>;
+
+    state = router.getStateForAction(
+      state,
+      TabActions.jumpTo('Profile'),
+      options
+    ) as TabNavigationState<ParamListBase>;
+  }
+
+  // History is bounded: Home at bottom, followed by at most 2 Shorts and 2 Profiles
+  expect(state.history.length).toBeLessThanOrEqual(5);
+  expect(state.history[0]).toEqual({ type: 'route', key: 'Home-test' });
+
+  // Pressing back will navigate through the recent history and ALWAYS return to Home in at most 4 steps
+  let backCount = 0;
+  while (state.routes[state.index].name !== 'Home') {
+    state = router.getStateForAction(
+      state,
+      CommonActions.goBack(),
+      options
+    ) as TabNavigationState<ParamListBase>;
+    backCount++;
+    expect(backCount).toBeLessThanOrEqual(4);
+  }
+
+  expect(state.routes[state.index].name).toBe('Home');
+
+  // Next back exits
+  const exitState = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  );
+  expect(exitState).toBeNull();
 });
