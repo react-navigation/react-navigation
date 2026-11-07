@@ -1,24 +1,23 @@
 import '@expo/metro-runtime'; // Necessary for Fast Refresh on Web
-import './gesture-handler';
 
-import { Assets } from '@react-navigation/elements';
+import { NavigationContainer } from '@react-navigation/native';
 import { registerRootComponent } from 'expo';
-import { Asset } from 'expo-asset';
-import * as React from 'react';
+import * as SplashScreen from 'expo-splash-screen';
 import { LogBox } from 'react-native';
 
-import { App } from './src/index';
+import { YouTubeTabs } from './src/Screens/YouTubeTabs';
 
 LogBox.ignoreLogs([
   'Open debugger to view warnings',
-  'findHostInstance_DEPRECATED is deprecated in StrictMode',
-  'findNodeHandle is deprecated in StrictMode',
 ]);
 
-Asset.loadAsync(Assets);
-
 registerRootComponent(() => (
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <NavigationContainer
+    doubleBackToExit
+    onReady={() => {
+      SplashScreen.hideAsync();
+    }}
+  >
+    <YouTubeTabs />
+  </NavigationContainer>
 ));

@@ -4,50 +4,66 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { Button, Text } from '@react-navigation/elements';
 import {
-  type NavigatorScreenParams,
   type PathConfigMap,
   useNavigation,
 } from '@react-navigation/native';
-import {
-  createStackNavigator,
-  type StackNavigationProp,
-} from '@react-navigation/stack';
-import { StyleSheet, View } from 'react-native';
+import * as React from 'react';
+import { BackHandler, Platform, StyleSheet, ToastAndroid, View } from 'react-native';
 
-import { useDoubleBackToExit } from '../useDoubleBackToExit';
-
-type HomeStackParamList = {
-  HomeMain: undefined;
-  VideoDetails: { id: string };
+export type YouTubeTabsParamList = {
+  Home: undefined;
+  Shorts: undefined;
+  Profile: undefined;
 };
 
-const HomeStack = createStackNavigator<HomeStackParamList>();
+const Tab = createBottomTabNavigator<YouTubeTabsParamList>();
 
-function HomeMainScreen() {
-  const navigation = useNavigation<StackNavigationProp<HomeStackParamList>>();
-  const tabNavigation = useNavigation<BottomTabNavigationProp<YouTubeTabsParamList>>();
+function HomeScreen() {
+  const navigation = useNavigation<BottomTabNavigationProp<YouTubeTabsParamList>>();
+  const [exitNotice, setExitNotice] = React.useState<string | null>(null);
+  const lastPressRef = React.useRef<number | null>(null);
 
-  // Wire up double-back-to-exit for this screen tree
-  useDoubleBackToExit(navigation);
+  const handleGoBack = () => {
+    if (navigation.canGoBack()) {
+      lastPressRef.current = null;
+      setExitNotice(null);
+      navigation.goBack();
+      return;
+    }
+
+    const now = Date.now();
+    if (lastPressRef.current != null && now - lastPressRef.current <= 2000) {
+      lastPressRef.current = null;
+      setExitNotice('Exited app!');
+      if (Platform.OS === 'android') {
+        BackHandler.exitApp();
+      } else {
+        alert('App exited!');
+      }
+      return;
+    }
+
+    lastPressRef.current = now;
+    setExitNotice('Press back again to exit');
+    if (Platform.OS === 'android') {
+      ToastAndroid.show('Press back again to exit', ToastAndroid.SHORT);
+    }
+    setTimeout(() => {
+      setExitNotice((curr) => (curr === 'Press back again to exit' ? null : curr));
+    }, 2000);
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Home Feed</Text>
       <Text style={styles.subheading}>
-        Primary tab with limitedHistory and double-press back to exit.
+        Primary tab with limitedHistory (capped at 2 per tab)
       </Text>
       <View style={styles.buttons}>
         <Button
-          onPress={() => {
-            navigation.navigate('VideoDetails', { id: 'sample-video-1' });
-          }}
-        >
-          Open Video Details (Nested Stack)
-        </Button>
-        <Button
           variant="tinted"
           onPress={() => {
-            tabNavigation.navigate('Shorts');
+            navigation.navigate('Shorts');
           }}
         >
           Go to Shorts
@@ -55,49 +71,30 @@ function HomeMainScreen() {
         <Button
           variant="tinted"
           onPress={() => {
-            tabNavigation.navigate('Profile');
+            navigation.navigate('Profile');
           }}
         >
           Go to Profile
         </Button>
+        <Button variant="plain" onPress={handleGoBack}>
+          Go back
+        </Button>
       </View>
+      {exitNotice ? (
+        <Text style={styles.exitNotice}>{exitNotice}</Text>
+      ) : null}
     </View>
-  );
-}
-
-function VideoDetailsScreen() {
-  const navigation = useNavigation<StackNavigationProp<HomeStackParamList>>();
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Video Details (Nested Stack)</Text>
-      <Text style={styles.subheading}>
-        Pressing Android Back here pops this screen first before tab history.
-      </Text>
-      <Button onPress={() => navigation.goBack()}>Go back</Button>
-    </View>
-  );
-}
-
-function HomeStackNavigator() {
-  return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen
-        name="HomeMain"
-        component={HomeMainScreen}
-        options={{ title: 'Home' }}
-      />
-      <HomeStack.Screen
-        name="VideoDetails"
-        component={VideoDetailsScreen}
-        options={{ title: 'Video Details' }}
-      />
-    </HomeStack.Navigator>
   );
 }
 
 function ShortsScreen() {
   const navigation = useNavigation<BottomTabNavigationProp<YouTubeTabsParamList>>();
+
+  const handleGoBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -105,7 +102,7 @@ function ShortsScreen() {
       <View style={styles.buttons}>
         <Button onPress={() => navigation.navigate('Home')}>Go to Home</Button>
         <Button onPress={() => navigation.navigate('Profile')}>Go to Profile</Button>
-        <Button variant="plain" onPress={() => navigation.goBack()}>
+        <Button variant="plain" onPress={handleGoBack}>
           Go back
         </Button>
       </View>
@@ -116,13 +113,19 @@ function ShortsScreen() {
 function ProfileScreen() {
   const navigation = useNavigation<BottomTabNavigationProp<YouTubeTabsParamList>>();
 
+  const handleGoBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Profile</Text>
       <View style={styles.buttons}>
         <Button onPress={() => navigation.navigate('Home')}>Go to Home</Button>
         <Button onPress={() => navigation.navigate('Shorts')}>Go to Shorts</Button>
-        <Button variant="plain" onPress={() => navigation.goBack()}>
+        <Button variant="plain" onPress={handleGoBack}>
           Go back
         </Button>
       </View>
@@ -130,22 +133,8 @@ function ProfileScreen() {
   );
 }
 
-export type YouTubeTabsParamList = {
-  Home: NavigatorScreenParams<HomeStackParamList> | undefined;
-  Shorts: undefined;
-  Profile: undefined;
-};
-
-const Tab = createBottomTabNavigator<YouTubeTabsParamList>();
-
 const linking: PathConfigMap<YouTubeTabsParamList> = {
-  Home: {
-    path: 'home',
-    screens: {
-      HomeMain: '',
-      VideoDetails: 'video/:id',
-    },
-  },
+  Home: 'home',
   Shorts: 'shorts',
   Profile: 'profile',
 };
@@ -155,20 +144,12 @@ export function YouTubeTabs() {
     <Tab.Navigator
       backBehavior="limitedHistory"
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
       }}
     >
-      <Tab.Screen name="Home" component={HomeStackNavigator} />
-      <Tab.Screen
-        name="Shorts"
-        component={ShortsScreen}
-        options={{ headerShown: true }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{ headerShown: true }}
-      />
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Shorts" component={ShortsScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
@@ -185,7 +166,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   heading: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   subheading: {
@@ -198,5 +179,15 @@ const styles = StyleSheet.create({
     gap: 12,
     width: '100%',
     maxWidth: 320,
+  },
+  exitNotice: {
+    marginTop: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: '#333',
+    color: '#fff',
+    borderRadius: 8,
+    fontSize: 14,
+    fontWeight: '600',
   },
 });

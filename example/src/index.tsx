@@ -2,6 +2,31 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const memoryStorage = new Map<string, string>();
+const safeAsyncStorage = {
+  getItem: async (key: string) => {
+    try {
+      return await AsyncStorage.getItem(key);
+    } catch {
+      return memoryStorage.get(key) ?? null;
+    }
+  },
+  setItem: async (key: string, value: string) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch {
+      memoryStorage.set(key, value);
+    }
+  },
+  removeItem: async (key: string) => {
+    try {
+      await AsyncStorage.removeItem(key);
+    } catch {
+      memoryStorage.delete(key);
+    }
+  },
+};
 import {
   useLogger,
   useReduxDevToolsExtension,
@@ -143,7 +168,7 @@ export function App() {
         const initialUrl = await Linking.getInitialURL();
 
         if (Platform.OS !== 'web' && initialUrl === null) {
-          const savedState = await AsyncStorage.getItem(
+          const savedState = await safeAsyncStorage.getItem(
             NAVIGATION_PERSISTENCE_KEY
           );
 
@@ -155,7 +180,7 @@ export function App() {
         }
       } finally {
         try {
-          const themeName = await AsyncStorage.getItem(THEME_PERSISTENCE_KEY);
+          const themeName = await safeAsyncStorage.getItem(THEME_PERSISTENCE_KEY);
 
           setTheme(themeName === 'dark' ? DarkTheme : DefaultTheme);
         } catch (e) {
@@ -163,7 +188,7 @@ export function App() {
         }
 
         try {
-          const direction = await AsyncStorage.getItem(
+          const direction = await safeAsyncStorage.getItem(
             DIRECTION_PERSISTENCE_KEY
           );
 
@@ -186,7 +211,7 @@ export function App() {
 
     const name = theme.dark ? 'dark' : 'light';
 
-    AsyncStorage.setItem(THEME_PERSISTENCE_KEY, name);
+    safeAsyncStorage.setItem(THEME_PERSISTENCE_KEY, name);
 
     if (Platform.OS === 'web') {
       document.documentElement.style.colorScheme = name;
@@ -198,7 +223,7 @@ export function App() {
   React.useEffect(() => {
     const direction = isRTL ? 'rtl' : 'ltr';
 
-    AsyncStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
+    safeAsyncStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
 
     if (Platform.OS === 'web') {
       document.documentElement.dir = direction;
@@ -239,7 +264,7 @@ export function App() {
           SplashScreen.hideAsync();
         }}
         onStateChange={(state) =>
-          AsyncStorage.setItem(
+          safeAsyncStorage.setItem(
             NAVIGATION_PERSISTENCE_KEY,
             JSON.stringify(state)
           )
@@ -254,6 +279,7 @@ export function App() {
         }}
       >
         <Stack.Navigator
+          initialRouteName="YouTubeTabs"
           screenOptions={{
             headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
           }}
@@ -359,7 +385,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <ErrorBoundary
       onError={() => {
-        AsyncStorage.removeItem(NAVIGATION_PERSISTENCE_KEY);
+        safeAsyncStorage.removeItem(NAVIGATION_PERSISTENCE_KEY);
       }}
     >
       <ActionSheetProvider>
