@@ -143,6 +143,29 @@ export type DocumentTitleOptions = {
   ) => string;
 };
 
+export type DoubleBackToExitOptions = {
+  /**
+   * Whether double-press back to exit is enabled. Defaults to true.
+   */
+  enabled?: boolean;
+  /**
+   * Message to display on the first back press. Defaults to `'Press back again to exit'`.
+   */
+  message?: string;
+  /**
+   * Timeout in milliseconds within which a second press exits. Defaults to `2000` (2 seconds).
+   */
+  timeout?: number;
+  /**
+   * Custom callback to show the exit message. Defaults to `ToastAndroid.show`.
+   */
+  showMessage?: (message: string) => void;
+  /**
+   * Custom callback to exit the application. Defaults to `BackHandler.exitApp`.
+   */
+  exitApp?: () => void;
+};
+
 export type ServerContainerRef = {
   getCurrentOptions(): Record<string, any> | undefined;
 };

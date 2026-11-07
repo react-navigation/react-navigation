@@ -17,6 +17,7 @@ import { LocaleDirContext } from './LocaleDirContext';
 import { DefaultTheme } from './theming/DefaultTheme';
 import type {
   DocumentTitleOptions,
+  DoubleBackToExitOptions,
   LinkingOptions,
   LocaleDirection,
 } from './types';
@@ -65,6 +66,10 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
    * unless `documentTitle.enabled` is `false`.
    */
   documentTitle?: DocumentTitleOptions;
+  /**
+   * Options to control double-press Android hardware back button to exit the application.
+   */
+  doubleBackToExit?: boolean | DoubleBackToExitOptions;
 };
 
 function NavigationContainerInner(
@@ -74,6 +79,7 @@ function NavigationContainerInner(
     linking,
     fallback = null,
     documentTitle,
+    doubleBackToExit,
     ...rest
   }: Props<ParamListBase>,
   ref?: React.Ref<NavigationContainerRef<ParamListBase> | null>
@@ -87,7 +93,7 @@ function NavigationContainerInner(
   const refContainer =
     React.useRef<NavigationContainerRef<ParamListBase>>(null);
 
-  useBackButton(refContainer);
+  useBackButton(refContainer, doubleBackToExit);
   useDocumentTitle(refContainer, documentTitle);
 
   const { getInitialState } = useLinking(refContainer, {

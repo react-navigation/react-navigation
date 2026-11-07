@@ -20,4 +20,5 @@ export { useLinkTo } from './useLinkTo';
 export { useLocale } from './useLocale';
 export { useRoutePath } from './useRoutePath';
 export { useScrollToTop } from './useScrollToTop';
+export { useDoubleBackToExit } from './useDoubleBackToExit';
 export * from '@react-navigation/core';
