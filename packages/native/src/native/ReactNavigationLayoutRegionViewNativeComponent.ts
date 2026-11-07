@@ -18,7 +18,7 @@ type EdgeMode = CodegenTypes.WithDefault<'off' | 'additive' | 'maximum', 'off'>;
 
 export interface NativeProps extends ViewProps {
   region?: CodegenTypes.WithDefault<
-    'safeArea' | 'readableContent' | 'bar',
+    'safeArea' | 'margins' | 'readableContent' | 'bar',
     'safeArea'
   >;
   cornerAdaptation?: CodegenTypes.WithDefault<

@@ -214,8 +214,9 @@ export function ComponentsLayoutRegionView(_: StaticScreenProps<{}>) {
       >
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           <UNSTABLE_LayoutRegionView
-            region="safeArea"
-            edges={{ start: 'additive', end: 'additive' }}
+            region="margins"
+            edges={{ start: 'maximum', end: 'maximum' }}
+            style={styles.sidebarMargins}
           >
             <UNSTABLE_LayoutRegionView
               region="safeArea"
@@ -306,7 +307,7 @@ export function ComponentsLayoutRegionView(_: StaticScreenProps<{}>) {
             />
           </UNSTABLE_LayoutRegionView>
           <UNSTABLE_LayoutRegionView
-            region={isReadableContentSupported ? 'readableContent' : 'safeArea'}
+            region={isReadableContentSupported ? 'readableContent' : 'margins'}
             edges={{ bottom: 'additive', start: 'additive', end: 'additive' }}
             style={styles.article}
           >
@@ -373,8 +374,10 @@ const styles = StyleSheet.create({
   secondary: {
     opacity: 0.5,
   },
-  sidebarContent: {
+  sidebarMargins: {
     padding: 8,
+  },
+  sidebarContent: {
     gap: 4,
   },
   item: {
@@ -409,7 +412,8 @@ const styles = StyleSheet.create({
     marginTop: BAR_HEIGHT,
   },
   article: {
-    padding: 24,
+    padding: 16,
+    paddingTop: 24,
   },
   title: {
     fontSize: 34,

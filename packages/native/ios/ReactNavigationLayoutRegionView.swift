@@ -39,6 +39,14 @@ private class LayoutMeasurementView: UIView {
       onChange?(self)
     }
   }
+
+  override func layoutMarginsDidChange() {
+    super.layoutMarginsDidChange()
+
+    if #unavailable(iOS 26.0) {
+      onChange?(self)
+    }
+  }
 }
 
 @objc public class ReactNavigationLayoutRegionViewImpl: NSObject {
@@ -122,19 +130,26 @@ private class LayoutMeasurementView: UIView {
 
   private func measureInsets(in measurementView: UIView) -> NSDirectionalEdgeInsets {
     guard #available(iOS 26.0, *) else {
-      if props.region != "safeArea" || props.cornerAdaptationOnly {
+      if props.cornerAdaptationOnly {
         return .zero
       }
 
-      let insets = measurementView.safeAreaInsets
-      let isRTL = measurementView.effectiveUserInterfaceLayoutDirection == .rightToLeft
+      switch props.region {
+      case "safeArea":
+        let insets = measurementView.safeAreaInsets
+        let isRTL = measurementView.effectiveUserInterfaceLayoutDirection == .rightToLeft
 
-      return NSDirectionalEdgeInsets(
-        top: insets.top,
-        leading: isRTL ? insets.right : insets.left,
-        bottom: insets.bottom,
-        trailing: isRTL ? insets.left : insets.right
-      )
+        return NSDirectionalEdgeInsets(
+          top: insets.top,
+          leading: isRTL ? insets.right : insets.left,
+          bottom: insets.bottom,
+          trailing: isRTL ? insets.left : insets.right
+        )
+      case "margins":
+        return measurementView.directionalLayoutMargins
+      default:
+        return .zero
+      }
     }
 
     if props.region == "bar" {
@@ -179,9 +194,11 @@ private class LayoutMeasurementView: UIView {
     in measurementView: UIView,
     cornerAdaptation: UIView.LayoutRegion.AdaptivityAxis?
   ) -> NSDirectionalEdgeInsets {
-    let region: UIView.LayoutRegion = props.region == "readableContent"
-      ? .readableContent(cornerAdaptation: cornerAdaptation)
-      : .safeArea(cornerAdaptation: cornerAdaptation)
+    let region: UIView.LayoutRegion = switch props.region {
+    case "margins": .margins(cornerAdaptation: cornerAdaptation)
+    case "readableContent": .readableContent(cornerAdaptation: cornerAdaptation)
+    default: .safeArea(cornerAdaptation: cornerAdaptation)
+    }
 
     return measurementView.directionalEdgeInsets(for: region)
   }
@@ -233,10 +250,6 @@ private class LayoutMeasurementView: UIView {
     // The hidden view is in front of the content,
     // so we need to turn off touches to avoid blocking interactions with the content
     measurementView.isUserInteractionEnabled = false
-
-    // UIKit adds a default 8pt layout margin to views
-    // We explicitly set it to 0 to get only the insets
-    measurementView.directionalLayoutMargins = .zero
 
     measurementView.onChange = { [weak self] measurementView in
       guard let self else {

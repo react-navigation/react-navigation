@@ -598,9 +598,10 @@ export type LayoutRegionViewProps = (
       /**
        * The layout region to get the insets from:
        * - `safeArea` - the area that isn't covered by system UI, such as the status bar, the navigation bar or window controls.
+       * - `margins` - the safe area with additional spacing from the edges, such as for content in a container.
        * - `readableContent` - the area with a comfortable width for reading text. Requires iOS 26+.
        */
-      region: 'safeArea' | 'readableContent';
+      region: 'safeArea' | 'margins' | 'readableContent';
     } & (
       | {
           /**
