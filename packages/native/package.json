@@ -53,6 +53,9 @@
     "!**/.*"
   ],
   "sideEffects": false,
+  "swiftpmConfig": {
+    "name": "ReactNavigation"
+  },
   "publishConfig": {
     "access": "public"
   },
