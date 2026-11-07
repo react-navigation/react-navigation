@@ -50,7 +50,7 @@ export function MaterialTopTabBar({
   descriptors,
   ...rest
 }: MaterialTopTabBarProps) {
-  const { colors, dark } = useTheme();
+  const { colors, dark, fonts } = useTheme();
   const { direction } = useLocale();
   const { buildHref } = useLinkBuilder();
 
@@ -89,6 +89,7 @@ export function MaterialTopTabBar({
         tabBarButtonTestID,
         tabBarAccessibilityLabel,
         tabBarBadge,
+        tabBarBadgeStyle,
         tabBarShowIcon,
         tabBarShowLabel,
         tabBarIcon,
@@ -109,12 +110,15 @@ export function MaterialTopTabBar({
         tabBarButtonTestID,
         tabBarAccessibilityLabel,
         tabBarBadge,
+        tabBarBadgeStyle,
         tabBarShowIcon,
         tabBarShowLabel,
         tabBarIcon,
         tabBarAllowFontScaling,
         tabBarLabelStyle,
         typeof tabBarLabel === 'function' && focused,
+        colors.notification,
+        fonts.medium,
       ];
 
       if (
@@ -124,6 +128,20 @@ export function MaterialTopTabBar({
         deps.every((dep, index) => Object.is(dep, previous.deps[index]))
       ) {
         return [route.key, previous];
+      }
+
+      let badgeStyle;
+
+      if (tabBarBadge != null && typeof tabBarBadge !== 'function') {
+        const { backgroundColor = colors.notification, ...restBadgeStyle } =
+          StyleSheet.flatten(tabBarBadgeStyle) ?? {};
+
+        badgeStyle = {
+          backgroundColor,
+          color: Color.foreground(backgroundColor),
+          ...fonts.medium,
+          ...restBadgeStyle,
+        };
       }
 
       let icon;
@@ -164,6 +182,7 @@ export function MaterialTopTabBar({
         testID: tabBarButtonTestID,
         accessibilityLabel: tabBarAccessibilityLabel,
         badge: tabBarBadge,
+        badgeStyle,
         icon,
         label:
           tabBarShowLabel === false
