@@ -1,6 +1,7 @@
 import {
   MaterialSymbol,
   UNSTABLE_LayoutRegionView,
+  useLocale,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -66,8 +67,6 @@ const STATUS_BAR_OFFSET = Platform.select({
   default: 0,
 });
 
-const STATUS_BAR_TOP_ADJUSTMENT = 2;
-
 const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
   Object.keys(styles).forEach((styleProp) => {
     const value = styles[styleProp];
@@ -92,6 +91,10 @@ const isLiquidGlassPhone =
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
+  const { direction } = useLocale();
+
+  const startInset = direction === 'rtl' ? insets.right : insets.left;
+  const endInset = direction === 'rtl' ? insets.left : insets.right;
 
   const navigation = useNavigation();
   const isParentHeaderShown = React.use(HeaderShownContext);
@@ -388,26 +391,25 @@ export function Header(props: Props) {
 
   let searchBarSpacingStyle: ViewStyle;
 
-  if (isLiquidGlassSupported) {
+  if (Platform.OS === 'ios') {
     searchBarSpacingStyle = {
       ...contentSpacingStyle,
-      marginHorizontal: isLiquidGlassPhone
-        ? liquidGlassEdgeSpacing
-        : BUTTON_SPACING,
-    };
-  } else if (Platform.OS === 'ios') {
-    // When status bar height is provided, add spacing below it
-    // Otherwise, use a smaller top margin to align with the header content
-    searchBarSpacingStyle = {
-      marginTop: statusBarSpacing
-        ? statusBarSpacing + BUTTON_SPACING
-        : BUTTON_SPACING - STATUS_BAR_TOP_ADJUSTMENT,
-      marginBottom: BUTTON_SPACING,
-      marginHorizontal: BUTTON_SPACING,
+      ...(isLiquidGlassSupported
+        ? {
+            marginHorizontal: isLiquidGlassPhone
+              ? liquidGlassEdgeSpacing
+              : BUTTON_SPACING,
+          }
+        : {
+            marginStart: startInset + BUTTON_SPACING,
+            marginEnd: endInset + BUTTON_SPACING,
+          }),
     };
   } else {
     searchBarSpacingStyle = {
       marginTop: statusBarSpacing,
+      marginStart: startInset,
+      marginEnd: endInset,
     };
   }
 
@@ -470,7 +472,7 @@ export function Header(props: Props) {
               minWidth: buttonMinWidth,
               marginStart: isLiquidGlassPhone
                 ? liquidGlassEdgeSpacing - BUTTON_OFFSET
-                : insets.left,
+                : startInset,
             },
           ]}
         >
@@ -503,7 +505,7 @@ export function Header(props: Props) {
               minWidth: buttonMinWidth,
               marginEnd: isLiquidGlassPhone
                 ? liquidGlassEdgeSpacing - BUTTON_OFFSET
-                : insets.right,
+                : endInset,
             },
           ]}
         >

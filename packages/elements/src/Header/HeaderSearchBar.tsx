@@ -1,6 +1,7 @@
 import {
   MaterialSymbol,
   SFSymbol,
+  useLocale,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -76,6 +77,7 @@ export function HeaderSearchBar({
 }: Props) {
   const navigation = useNavigation();
   const { dark, colors, fonts } = useTheme();
+  const { direction } = useLocale();
   const [value, setValue] = React.useState('');
   const [clearVisibleAnim] = React.useState(() => new Animated.Value(0));
 
@@ -188,6 +190,8 @@ export function HeaderSearchBar({
         },
         style,
       ]}
+      // @ts-expect-error: `dir` is supported by React Native Web but missing in React Native's types
+      dir={Platform.OS === 'web' ? direction : undefined}
     >
       {Platform.OS !== 'ios' ? (
         <HeaderBackButton
@@ -205,12 +209,7 @@ export function HeaderSearchBar({
             name="magnifyingglass"
             size={SEARCH_ICON_SIZE}
             color={textColor}
-            style={
-              StyleSheet.flatten([
-                styles.inputSearchIconIos,
-                !isLiquidGlassSupported && styles.inputSearchIconIosLegacy,
-              ]) ?? undefined
-            }
+            style={styles.inputSearchIconIos}
           />
         ) : null}
         <TextInput
@@ -242,6 +241,11 @@ export function HeaderSearchBar({
                   ? 'rgba(255, 255, 255, 0.1)'
                   : 'rgba(0, 0, 0, 0.1)',
               },
+            {
+              // TextInput doesn't align text based on the layout direction automatically
+              // So we manually set it based on the layout direction
+              textAlign: direction === 'rtl' ? 'right' : 'left',
+            },
             { color: textColor },
           ]}
         />
@@ -256,7 +260,6 @@ export function HeaderSearchBar({
                 transform: [{ scale: clearVisibleAnim }],
               },
               styles.clearButtonIos,
-              !isLiquidGlassSupported && styles.clearButtonIosLegacy,
             ]}
           >
             <SFSymbol
@@ -337,8 +340,8 @@ const SEARCHBAR_FONT_SIZE = Platform.OS === 'ios' ? 17 : 18;
 const SEARCHBAR_ICON_SPACING = 5;
 const SEARCHBAR_HEIGHT_IOS = isLiquidGlassSupported ? BUTTON_SIZE : 36;
 
-// The top inset on iOS is a bit less than the status bar height
-const SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS = -4;
+// Native cancel button is slightly above the center of the search bar
+const CANCEL_BUTTON_OFFSET_IOS = -1;
 
 const styles = StyleSheet.create({
   container: {
@@ -354,19 +357,14 @@ const styles = StyleSheet.create({
     height: SEARCH_ICON_SIZE,
     width: SEARCH_ICON_SIZE,
   },
-  inputSearchIconIosLegacy: {
-    marginTop:
-      -SEARCH_ICON_SIZE / 2 +
-      (SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS - SEARCHBAR_ICON_SPACING) / 2,
-  },
   backButton: {
     alignSelf: 'center',
-    marginLeft: BUTTON_SPACING / 2,
+    marginStart: BUTTON_SPACING / 2,
   },
   closeButton: {
     position: 'absolute',
     opacity: 0.5,
-    right: BUTTON_SPACING,
+    end: BUTTON_SPACING,
     height: '100%',
     justifyContent: 'center',
   },
@@ -382,9 +380,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  clearButtonIosLegacy: {
-    top: SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS - SEARCHBAR_ICON_SPACING,
-  },
   clearIconIos: {
     height: CLEAR_ICON_SIZE,
     width: CLEAR_ICON_SIZE,
@@ -392,6 +387,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     alignSelf: 'center',
+    transform: [{ translateY: CANCEL_BUTTON_OFFSET_IOS }],
   },
   cancelText: {
     fontSize: CANCEL_FONT_SIZE,
@@ -405,7 +401,9 @@ const styles = StyleSheet.create({
       ios: isLiquidGlassSupported
         ? {}
         : {
+            height: SEARCHBAR_HEIGHT_IOS,
             minHeight: SEARCHBAR_HEIGHT_IOS,
+            alignSelf: 'center',
           },
       default: {
         borderRadius: 0,
@@ -422,16 +420,14 @@ const styles = StyleSheet.create({
           BUTTON_SPACING + SEARCH_ICON_SIZE + SEARCHBAR_ICON_SPACING * 2,
         ...(!isLiquidGlassSupported
           ? {
-              marginTop: SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS,
-              marginBottom: SEARCHBAR_ICON_SPACING,
               borderRadius: BUTTON_SPACING,
               borderCurve: 'continuous',
             }
           : null),
       },
       default: {
-        paddingLeft: BUTTON_SPACING,
-        paddingRight: BUTTON_SIZE + BUTTON_SPACING,
+        paddingStart: BUTTON_SPACING,
+        paddingEnd: BUTTON_SIZE + BUTTON_SPACING,
       },
     }),
   },
