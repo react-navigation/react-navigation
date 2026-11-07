@@ -111,4 +111,41 @@ describe('iOS implementation', () => {
     expect(onTabSelect).toHaveBeenCalledTimes(1);
     expect(onTabSelect).toHaveBeenCalledWith({ index: 1 });
   });
+
+  test('keeps the pager on the controlled index when the parent rejects a change', async () => {
+    const user = userEvent.setup();
+    const onTabSelect = jest.fn();
+
+    const Pinned = () => {
+      const [routes] = React.useState([
+        { key: 'first', title: 'First' },
+        { key: 'second', title: 'Second' },
+      ]);
+
+      // Fully controlled parent: the index is pinned to 0 and requested
+      // changes via `onIndexChange` are intentionally not applied.
+      return (
+        <TabView
+          navigationState={{ index: 0, routes }}
+          renderScene={renderScene}
+          onIndexChange={() => {}}
+          onTabSelect={onTabSelect}
+        />
+      );
+    };
+
+    await render(<Pinned />);
+
+    await act(() => jest.runAllTimers());
+
+    await user.press(screen.getByLabelText('Second'));
+
+    await act(() => jest.runAllTimers());
+
+    // Since the parent keeps the index pinned to 0, a controlled TabView must
+    // drive the pager back to index 0 instead of leaving it on the pressed tab.
+    // `onTabSelect` fires for every settled page, so its last call reflects the
+    // page the pager actually ended up on.
+    expect(onTabSelect).toHaveBeenLastCalledWith({ index: 0 });
+  });
 });
