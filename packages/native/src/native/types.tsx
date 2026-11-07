@@ -563,7 +563,7 @@ export type ReservedRegionsChangeEvent = {
   size: { width: number; height: number };
 };
 
-export type ReservedRegionsProps = {
+export type ReservedRegionsViewProps = {
   /**
    * Callback called with an event containing the reserved regions.
    */

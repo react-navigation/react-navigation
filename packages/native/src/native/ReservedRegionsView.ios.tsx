@@ -1,12 +1,12 @@
 import ReactNavigationReservedRegionsViewNativeComponent from './ReactNavigationReservedRegionsViewNativeComponent';
-import type { ReservedRegionsProps } from './types';
+import type { ReservedRegionsViewProps } from './types';
 
-export function ReservedRegions({
+export function ReservedRegionsView({
   ref,
   onRegionsChange,
   children,
   style,
-}: ReservedRegionsProps) {
+}: ReservedRegionsViewProps) {
   return (
     <ReactNavigationReservedRegionsViewNativeComponent
       ref={ref}

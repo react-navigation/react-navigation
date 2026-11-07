@@ -1,4 +1,4 @@
-import type { ReservedRegionsProps } from './types';
+import type { ReservedRegionsViewProps } from './types';
 
 /**
  * View that provides coordinates for the regions reserved by another entity,
@@ -6,7 +6,10 @@ import type { ReservedRegionsProps } from './types';
  *
  * Reserved regions are available on iOS 27.1 and later.
  */
-export function ReservedRegions({ children, style }: ReservedRegionsProps) {
+export function ReservedRegionsView({
+  children,
+  style,
+}: ReservedRegionsViewProps) {
   return (
     <div
       style={{

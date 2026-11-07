@@ -1,12 +1,12 @@
 import { View } from 'react-native';
 
-import type { ReservedRegionsProps } from './types';
+import type { ReservedRegionsViewProps } from './types';
 
-export function ReservedRegions({
+export function ReservedRegionsView({
   ref,
   children,
   style,
-}: ReservedRegionsProps) {
+}: ReservedRegionsViewProps) {
   return (
     <View ref={ref} style={[style, { pointerEvents: 'box-none' }]}>
       {children}

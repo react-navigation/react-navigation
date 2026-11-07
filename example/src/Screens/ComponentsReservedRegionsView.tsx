@@ -6,7 +6,7 @@ import { Text } from '@react-navigation/elements';
 import {
   type ReservedRegionsChangeEvent,
   type StaticScreenProps,
-  UNSTABLE_ReservedRegions,
+  UNSTABLE_ReservedRegionsView,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -30,7 +30,7 @@ At last I decided that it had.
 It came into the scullery no more; but I lay all the tenth day in the close darkness, buried among coals and firewood, not daring even to crawl out for the drink for which I craved. It was the eleventh day before I ventured so far from my security.
 `;
 
-export function ComponentsReservedRegions(_: StaticScreenProps<{}>) {
+export function ComponentsReservedRegionsView(_: StaticScreenProps<{}>) {
   const { colors } = useTheme();
 
   const [{ regions, size }, setLayout] =
@@ -77,7 +77,7 @@ export function ComponentsReservedRegions(_: StaticScreenProps<{}>) {
     return (
       <View style={[styles.centered, { backgroundColor: colors.background }]}>
         <Text style={{ color: colors.text }}>
-          ReservedRegions is only available on iOS
+          ReservedRegionsView is only available on iOS
         </Text>
       </View>
     );
@@ -86,7 +86,7 @@ export function ComponentsReservedRegions(_: StaticScreenProps<{}>) {
   const bookmarkWidth = statusArea ? statusArea.frame.width - 12 : 0;
 
   return (
-    <UNSTABLE_ReservedRegions
+    <UNSTABLE_ReservedRegionsView
       style={styles.container}
       onRegionsChange={(e) => setLayout(e.nativeEvent)}
     >
@@ -202,12 +202,12 @@ export function ComponentsReservedRegions(_: StaticScreenProps<{}>) {
           />
         </View>
       )}
-    </UNSTABLE_ReservedRegions>
+    </UNSTABLE_ReservedRegionsView>
   );
 }
 
-ComponentsReservedRegions.title = 'Components - Reserved Regions';
-ComponentsReservedRegions.linking = {};
+ComponentsReservedRegionsView.title = 'Components - Reserved Regions View';
+ComponentsReservedRegionsView.linking = {};
 
 const styles = StyleSheet.create({
   centered: {

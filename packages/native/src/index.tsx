@@ -11,14 +11,14 @@ export {
   MaterialSymbol,
   type MaterialSymbolProps,
 } from './native/MaterialSymbol';
-export { ReservedRegions as UNSTABLE_ReservedRegions } from './native/ReservedRegions';
+export { ReservedRegionsView as UNSTABLE_ReservedRegionsView } from './native/ReservedRegionsView';
 export { SFSymbol, type SFSymbolProps } from './native/SFSymbol';
 export type {
   LayoutRegionInsetsChangeEvent,
   LayoutRegionViewProps,
   ReservedRegion,
   ReservedRegionsChangeEvent,
-  ReservedRegionsProps,
+  ReservedRegionsViewProps,
 } from './native/types';
 export { NavigationContainer } from './NavigationContainer';
 export { DarkTheme } from './theming/DarkTheme';
