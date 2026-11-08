@@ -9,9 +9,10 @@ export function ReservedRegionsView({
 }: ReservedRegionsViewProps) {
   return (
     <ReactNavigationReservedRegionsViewNativeComponent
-      ref={ref}
       onRegionsChange={onRegionsChange}
       style={[style, { pointerEvents: 'box-none' }]}
+      // @ts-expect-error: the ref type covers the div on Web too, but union produces type error
+      ref={ref}
     >
       {children}
     </ReactNavigationReservedRegionsViewNativeComponent>

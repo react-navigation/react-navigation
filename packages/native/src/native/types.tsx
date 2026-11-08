@@ -579,9 +579,9 @@ export type ReservedRegionsViewProps = {
    */
   style?: (React.CSSProperties & ViewStyle) | undefined;
   /**
-   * Ref to the underlying native view.
+   * Ref to the underlying native view or DOM element.
    */
-  ref?: React.Ref<HostInstance> | undefined;
+  ref?: React.Ref<HostInstance | HTMLDivElement> | undefined;
 };
 
 type LayoutRegionEdge = 'top' | 'bottom' | 'start' | 'end';
