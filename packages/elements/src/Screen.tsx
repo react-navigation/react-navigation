@@ -128,7 +128,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    flex: 1,
+    // FIXME: A numeric flex shorthand uses a percentage basis in browsers.
+    // With nested views, it slows down layout in Safari on iOS 27.
+    // So we explicitly set flex properties with `flexBasis: 0`.
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
   },
   header: {
     zIndex: 1,
