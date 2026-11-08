@@ -134,6 +134,8 @@ export type TabBarVisibilityAnimationConfig =
 
 export type TabAnimationName = 'none' | 'fade' | 'shift';
 
+export type TabBarPosition = 'bottom' | 'left' | 'right' | 'top';
+
 type BottomTabCustomOptions = {
   /**
    * How the screen should animate when switching tabs.
@@ -259,7 +261,7 @@ type BottomTabCustomOptions = {
    *
    * Only supported with `custom` implementation or if custom tab bar is provided.
    */
-  tabBarPosition?: 'bottom' | 'left' | 'right' | 'top' | undefined;
+  tabBarPosition?: TabBarPosition | undefined;
 
   /**
    * Background color for the active tab.

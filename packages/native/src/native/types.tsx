@@ -584,13 +584,13 @@ export type ReservedRegionsViewProps = {
   ref?: React.Ref<HostInstance | HTMLDivElement> | undefined;
 };
 
-type LayoutRegionEdge = 'top' | 'bottom' | 'start' | 'end';
+type Edge = 'top' | 'bottom' | 'start' | 'end';
 
 export type LayoutRegionInsetsChangeEvent = {
   /**
    * The insets of the region for the view.
    */
-  insets: Record<LayoutRegionEdge, number>;
+  insets: Record<Edge, number>;
 };
 
 export type LayoutRegionViewProps = (
@@ -624,7 +624,7 @@ export type LayoutRegionViewProps = (
       /**
        * The edge where the bar is placed.
        */
-      onEdge: LayoutRegionEdge;
+      onEdge: Edge;
       /**
        * The size of the bar's content perpendicular to the edge.
        * e.g. the height of the content of a header on the top edge.
@@ -642,7 +642,7 @@ export type LayoutRegionViewProps = (
    * If `edges` is not specified, or a particular edge is not included in `edges`,
    * the insets for that edge are not applied as the padding.
    */
-  edges?: Partial<Record<LayoutRegionEdge, 'additive' | 'maximum'>> | undefined;
+  edges?: Partial<Record<Edge, 'additive' | 'maximum'>> | undefined;
   /**
    * Callback called with an event containing the insets of the region on measurement and changes.
    */
@@ -661,4 +661,21 @@ export type LayoutRegionViewProps = (
    * Ref to the underlying native view or DOM element.
    */
   ref?: React.Ref<HostInstance | HTMLDivElement> | undefined;
+};
+
+export type OverlayInsetsProviderProps = {
+  /**
+   * Insets of custom overlays such as headers, tab bars, etc. for the content.
+   *
+   * If system insets are higher than the overlay insets, they take precedence.
+   */
+  insets?: Partial<Record<Edge, number>> | undefined;
+  /**
+   * Content to render inside the view.
+   */
+  children?: React.ReactNode;
+  /**
+   * Style object for the view.
+   */
+  style?: (React.CSSProperties & ViewStyle) | undefined;
 };

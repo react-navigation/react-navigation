@@ -263,6 +263,28 @@ export function BottomTabViewCustom({
     [tabBarLayoutWidth, tabBarLayoutHeight]
   );
 
+  const insets = React.useMemo(
+    () =>
+      focusedOptions?.tabBarTransparent
+        ? {
+            ...(tabBarPosition === 'left'
+              ? { start: tabBarLayoutWidth }
+              : null),
+            ...(tabBarPosition === 'right' ? { end: tabBarLayoutWidth } : null),
+            ...(tabBarPosition === 'top' ? { top: tabBarLayoutHeight } : null),
+            ...(tabBarPosition === 'bottom'
+              ? { bottom: tabBarLayoutHeight }
+              : null),
+          }
+        : undefined,
+    [
+      focusedOptions?.tabBarTransparent,
+      tabBarPosition,
+      tabBarLayoutWidth,
+      tabBarLayoutHeight,
+    ]
+  );
+
   const tabBarElement = (
     <TabBarLayoutCallbackContext.Provider key="tabbar" value={onTabBarLayout}>
       {tabBar({
@@ -330,6 +352,7 @@ export function BottomTabViewCustom({
               isActive={isActive}
               isAnimatingRoute={isAnimatingRoute}
               tabAnimation={tabAnimation}
+              insets={insets}
               tabBarLayout={tabBarLayout}
             />
           );
@@ -351,6 +374,7 @@ type TabSceneProps = {
   isActive: boolean;
   isAnimatingRoute: boolean;
   tabAnimation: Animated.Value;
+  insets: React.ComponentProps<typeof ScreenContent>['insets'];
   tabBarLayout: { width: number; height: number };
 };
 
@@ -364,6 +388,7 @@ const TabScene = React.memo(function TabScene({
   isAnimatingRoute,
   tabAnimation,
   tabBarLayout,
+  insets,
 }: TabSceneProps) {
   const { navigation, options, render } = descriptor;
 
@@ -389,6 +414,7 @@ const TabScene = React.memo(function TabScene({
         route={route}
         navigation={navigation}
         options={options}
+        insets={insets}
       >
         <TabBarLayoutContext.Provider value={tabBarLayout}>
           {render()}

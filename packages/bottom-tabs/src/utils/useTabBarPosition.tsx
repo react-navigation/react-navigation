@@ -1,14 +1,14 @@
 import { useLocale } from '@react-navigation/native';
 
-import type { BottomTabNavigationOptions } from '../types';
+import type { BottomTabNavigationOptions, TabBarPosition } from '../types';
 
 export function useTabBarPosition({
   tabBarPosition: customTabBarPosition,
   tabBarControllerMode,
-}: BottomTabNavigationOptions) {
+}: BottomTabNavigationOptions): TabBarPosition {
   const { direction } = useLocale();
 
-  let tabBarPosition: 'left' | 'right' | 'top' | 'bottom';
+  let tabBarPosition: TabBarPosition;
 
   if (tabBarControllerMode != null) {
     if (tabBarControllerMode === 'tabSidebar') {

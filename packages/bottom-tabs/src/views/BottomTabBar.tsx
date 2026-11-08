@@ -305,31 +305,40 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
 
   const onLayout = React.use(TabBarLayoutCallbackContext);
 
+  const onMeasure = React.useCallback(
+    (width: number, height: number) => {
+      onLayout?.(
+        !sidebar && isTabBarHidden ? { width: 0, height: 0 } : { width, height }
+      );
+
+      if (sidebar) {
+        return;
+      }
+
+      setLayout((layout) => {
+        if (height === layout.height) {
+          return layout;
+        } else {
+          return { height };
+        }
+      });
+    },
+    [onLayout, sidebar, isTabBarHidden]
+  );
+
   const handleLayout = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
 
-    onLayout?.({ width, height });
-
-    if (sidebar) {
-      return;
-    }
-
-    setLayout((layout) => {
-      if (height === layout.height) {
-        return layout;
-      } else {
-        return { height };
-      }
-    });
+    onMeasure(width, height);
   };
 
   const tabBarRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
   React.useLayoutEffect(() => {
     tabBarRef.current?.measure((_x, _y, width, height) => {
-      onLayout?.({ width, height });
+      onMeasure(width, height);
     });
-  }, [onLayout, tabBarPosition]);
+  }, [onMeasure, tabBarPosition]);
 
   const { routes } = state;
 
