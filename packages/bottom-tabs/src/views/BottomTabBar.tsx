@@ -204,6 +204,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
     tabBarVariant = 'uikit',
     tabBarStyle,
     tabBarBackground,
+    tabBarTransparent,
     tabBarActiveTintColor,
     tabBarInactiveTintColor,
     tabBarActiveBackgroundColor,
@@ -357,7 +358,9 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
           ? styles.start
           : tabBarPosition === 'right'
             ? styles.end
-            : styles.bottom,
+            : tabBarPosition === 'top'
+              ? styles.top
+              : styles.bottom,
         (
           Platform.OS === 'web'
             ? tabBarPosition === 'right'
@@ -421,6 +424,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
         {
           pointerEvents: isTabBarHidden ? 'none' : 'auto',
         },
+        tabBarTransparent ? styles.transparent : null,
         tabBarStyle,
       ]}
       onLayout={sidebar ? undefined : handleLayout}
@@ -631,11 +635,26 @@ const styles = StyleSheet.create({
     bottom: 0,
     end: 0,
   },
+  top: {
+    start: 0,
+    end: 0,
+    top: 0,
+    elevation: 8,
+  },
   bottom: {
     start: 0,
     end: 0,
     bottom: 0,
     elevation: 8,
+  },
+  transparent: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    elevation: 0,
   },
   bottomContent: {
     flex: 1,
