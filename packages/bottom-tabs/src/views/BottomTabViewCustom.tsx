@@ -32,8 +32,8 @@ import type {
   BottomTabSceneStyleInterpolator,
 } from '../types';
 import { BottomTabAnimationContext } from '../utils/BottomTabAnimationContext';
-import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
+import { BottomTabBarLayoutCallbackContext } from '../utils/BottomTabBarLayoutCallbackContext';
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
 import { useTabBarPosition } from '../utils/useTabBarPosition';
 import { BottomTabBar, getTabBarHeight } from './BottomTabBar';
@@ -240,20 +240,33 @@ export function BottomTabViewCustom({
     })
   );
 
+  const [tabBarWidth, setTabBarWidth] = React.useState(0);
+
+  const tabBarPosition = useTabBarPosition(focusedOptions ?? {});
+
+  const onTabBarLayout = React.useCallback(
+    ({ width, height }: { width: number; height: number }) => {
+      if (tabBarPosition === 'left' || tabBarPosition === 'right') {
+        setTabBarWidth(width);
+      } else {
+        setTabBarHeight(height);
+      }
+    },
+    [tabBarPosition]
+  );
+
   const tabBarElement = (
-    <BottomTabBarHeightCallbackContext.Provider
+    <BottomTabBarLayoutCallbackContext.Provider
       key="tabbar"
-      value={setTabBarHeight}
+      value={onTabBarLayout}
     >
       {tabBar({
         state: state,
         descriptors: descriptors,
         navigation: navigation,
       })}
-    </BottomTabBarHeightCallbackContext.Provider>
+    </BottomTabBarLayoutCallbackContext.Provider>
   );
-
-  const tabBarPosition = useTabBarPosition(focusedOptions ?? {});
 
   return (
     <SafeAreaProviderCompat
@@ -315,7 +328,12 @@ export function BottomTabViewCustom({
               isActive={isActive}
               isAnimatingRoute={isAnimatingRoute}
               tabAnimation={tabAnimation}
-              tabBarHeight={tabBarPosition === 'bottom' ? tabBarHeight : 0}
+              tabBarPosition={tabBarPosition}
+              tabBarSize={
+                tabBarPosition === 'left' || tabBarPosition === 'right'
+                  ? tabBarWidth
+                  : tabBarHeight
+              }
             />
           );
         })}
@@ -336,7 +354,8 @@ type TabSceneProps = {
   isActive: boolean;
   isAnimatingRoute: boolean;
   tabAnimation: Animated.Value;
-  tabBarHeight: number;
+  tabBarPosition: ReturnType<typeof useTabBarPosition>;
+  tabBarSize: number;
 };
 
 const TabScene = React.memo(function TabScene({
@@ -348,7 +367,8 @@ const TabScene = React.memo(function TabScene({
   isActive,
   isAnimatingRoute,
   tabAnimation,
-  tabBarHeight,
+  tabBarPosition,
+  tabBarSize,
 }: TabSceneProps) {
   const { navigation, options, render } = descriptor;
 
@@ -357,6 +377,7 @@ const TabScene = React.memo(function TabScene({
     sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
       .sceneStyleInterpolator,
     sceneStyle: customSceneStyle,
+    tabBarTransparent,
   } = options;
 
   const animationEnabled = hasAnimation(descriptor.options);
@@ -374,8 +395,17 @@ const TabScene = React.memo(function TabScene({
         route={route}
         navigation={navigation}
         options={options}
+        insets={{
+          [tabBarPosition === 'left'
+            ? 'start'
+            : tabBarPosition === 'right'
+              ? 'end'
+              : tabBarPosition]: tabBarTransparent ? tabBarSize : 0,
+        }}
       >
-        <BottomTabBarHeightContext.Provider value={tabBarHeight}>
+        <BottomTabBarHeightContext.Provider
+          value={tabBarPosition === 'bottom' ? tabBarSize : 0}
+        >
           {render()}
         </BottomTabBarHeightContext.Provider>
       </ScreenContent>

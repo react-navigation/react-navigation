@@ -12,6 +12,7 @@ export {
   type MaterialSymbolProps,
 } from './native/MaterialSymbol';
 export { ReservedRegionsView as UNSTABLE_ReservedRegionsView } from './native/ReservedRegionsView';
+export { SafeAreaInsetsProvider as UNSTABLE_SafeAreaInsetsProvider } from './native/SafeAreaInsetsProvider';
 export { SFSymbol, type SFSymbolProps } from './native/SFSymbol';
 export type {
   LayoutRegionInsetsChangeEvent,
@@ -19,6 +20,7 @@ export type {
   ReservedRegion,
   ReservedRegionsChangeEvent,
   ReservedRegionsViewProps,
+  SafeAreaInsetsProviderProps,
 } from './native/types';
 export { NavigationContainer } from './NavigationContainer';
 export { DarkTheme } from './theming/DarkTheme';

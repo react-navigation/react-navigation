@@ -35,7 +35,7 @@ import type {
   BottomTabDescriptorMap,
   BottomTabNavigationHelpers,
 } from '../types';
-import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
+import { BottomTabBarLayoutCallbackContext } from '../utils/BottomTabBarLayoutCallbackContext';
 import { useIsKeyboardShown } from '../utils/useIsKeyboardShown';
 import { useTabBarPosition } from '../utils/useTabBarPosition';
 import { BottomTabItem } from './BottomTabItem';
@@ -236,7 +236,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
   const insets = useSafeAreaInsets();
   const isKeyboardShown = useIsKeyboardShown();
 
-  const onHeightChange = React.use(BottomTabBarHeightCallbackContext);
+  const onLayout = React.use(BottomTabBarLayoutCallbackContext);
 
   const shouldShowTabBar = !(tabBarHideOnKeyboard && isKeyboardShown);
 
@@ -304,9 +304,13 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
   });
 
   const handleLayout = (e: LayoutChangeEvent) => {
-    const { height } = e.nativeEvent.layout;
+    const { width, height } = e.nativeEvent.layout;
 
-    onHeightChange?.(height);
+    onLayout?.({ width, height });
+
+    if (tabBarPosition === 'left' || tabBarPosition === 'right') {
+      return;
+    }
 
     setLayout((layout) => {
       if (height === layout.height) {
@@ -316,6 +320,14 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
       }
     });
   };
+
+  const tabBarRef = React.useRef<React.ComponentRef<typeof View>>(null);
+
+  React.useLayoutEffect(() => {
+    tabBarRef.current?.measure((_x, _y, width, height) => {
+      onLayout?.({ width, height });
+    });
+  }, [onLayout, tabBarPosition]);
 
   const { routes } = state;
 
@@ -353,6 +365,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
 
   return (
     <Animated.View
+      ref={tabBarRef}
       style={[
         tabBarPosition === 'left'
           ? styles.start
@@ -427,7 +440,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
         tabBarTransparent ? styles.transparent : null,
         tabBarStyle,
       ]}
-      onLayout={sidebar ? undefined : handleLayout}
+      onLayout={handleLayout}
     >
       <View style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]}>
         {tabBarBackgroundElement}
