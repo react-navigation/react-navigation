@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/elements';
 import {
   type Route,
+  UNSTABLE_SafeAreaInsetsProvider as SafeAreaInsetsProvider,
   useLinkBuilder,
   useLocale,
   useTheme,
@@ -181,6 +182,7 @@ function CardContainerInner({
     gestureVelocityImpact,
     headerMode,
     headerShown,
+    headerTransparent,
     transitionSpec,
   } = scene.descriptor.options;
 
@@ -284,7 +286,10 @@ function CardContainerInner({
                 style: styles.header,
               })
             : null}
-          <View style={styles.scene}>
+          <SafeAreaInsetsProvider
+            insets={{ top: headerTransparent ? (headerHeight?.value ?? 0) : 0 }}
+            style={styles.scene}
+          >
             <HeaderBackContext.Provider value={headerBack}>
               <HeaderShownContext.Provider
                 value={isParentHeaderShown || headerShown !== false}
@@ -300,7 +305,7 @@ function CardContainerInner({
                 </HeaderHeightContext.Provider>
               </HeaderShownContext.Provider>
             </HeaderBackContext.Provider>
-          </View>
+          </SafeAreaInsetsProvider>
         </ModalPresentationContext.Provider>
       </View>
     </Card>

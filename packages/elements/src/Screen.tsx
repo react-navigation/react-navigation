@@ -3,6 +3,8 @@ import {
   NavigationProvider,
   type ParamListBase,
   type RouteProp,
+  type SafeAreaInsetsProviderProps,
+  UNSTABLE_SafeAreaInsetsProvider as SafeAreaInsetsProvider,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -24,6 +26,7 @@ type Props = {
   headerShown?: boolean | undefined;
   headerStatusBarHeight?: number | undefined;
   headerTransparent?: boolean | undefined;
+  insets?: SafeAreaInsetsProviderProps['insets'];
   pageOverflowEnabled?: boolean | undefined;
   contentStyle?: ViewProps['style'] | undefined;
   style?: ContainerProps['style'] | undefined;
@@ -31,7 +34,7 @@ type Props = {
 };
 
 export function Screen(props: Props) {
-  const insets = useSafeAreaInsets();
+  const safeAreaInsets = useSafeAreaInsets();
   const { colors } = useTheme();
 
   const isParentHeaderShown = React.use(HeaderShownContext);
@@ -43,7 +46,8 @@ export function Screen(props: Props) {
     header,
     headerShown = true,
     headerTransparent,
-    headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
+    insets,
+    headerStatusBarHeight = isParentHeaderShown ? 0 : safeAreaInsets.top,
     navigation,
     route,
     children,
@@ -149,23 +153,34 @@ export function Screen(props: Props) {
           </View>
         </NavigationProvider>
       ) : null}
-      <View
-        style={[page ? styles.page : styles.content, contentStyle]}
-        // A view with only layout styles can get flattened.
-        // Then its children become siblings of the header,
-        // so a child with a higher `zIndex` would be drawn on top of the header.
-        collapsable={false}
+      <SafeAreaInsetsProvider
+        insets={{
+          ...insets,
+          top:
+            headerShown && headerTransparent
+              ? headerHeight
+              : (insets?.top ?? 0),
+        }}
+        style={page ? styles.page : styles.content}
       >
-        <HeaderShownContext.Provider
-          value={isParentHeaderShown || headerShown !== false}
+        <View
+          style={[page ? styles.page : styles.content, contentStyle]}
+          // A view with only layout styles can get flattened.
+          // Then its children can become siblings of the header (e.g. on Android),
+          // so a child with a higher `zIndex` would be drawn on top of the header.
+          collapsable={false}
         >
-          <HeaderHeightContext.Provider
-            value={headerShown ? headerHeight : (parentHeaderHeight ?? 0)}
+          <HeaderShownContext.Provider
+            value={isParentHeaderShown || headerShown !== false}
           >
-            {children}
-          </HeaderHeightContext.Provider>
-        </HeaderShownContext.Provider>
-      </View>
+            <HeaderHeightContext.Provider
+              value={headerShown ? headerHeight : (parentHeaderHeight ?? 0)}
+            >
+              {children}
+            </HeaderHeightContext.Provider>
+          </HeaderShownContext.Provider>
+        </View>
+      </SafeAreaInsetsProvider>
     </Container>
   );
 }

@@ -357,6 +357,7 @@ const TabScene = React.memo(function TabScene({
     sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
       .sceneStyleInterpolator,
     sceneStyle: customSceneStyle,
+    tabBarTransparent,
   } = options;
 
   const animationEnabled = hasAnimation(descriptor.options);
@@ -374,6 +375,7 @@ const TabScene = React.memo(function TabScene({
         route={route}
         navigation={navigation}
         options={options}
+        insets={{ bottom: tabBarTransparent ? tabBarHeight : 0 }}
       >
         <BottomTabBarHeightContext.Provider value={tabBarHeight}>
           {render()}

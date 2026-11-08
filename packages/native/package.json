@@ -131,6 +131,9 @@
         },
         "ReactNavigationReservedRegionsView": {
           "className": "ReactNavigationReservedRegionsView"
+        },
+        "ReactNavigationSafeAreaInsetsProvider": {
+          "className": "ReactNavigationSafeAreaInsetsProvider"
         }
       }
     }

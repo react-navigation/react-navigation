@@ -674,3 +674,18 @@ export type LayoutRegionViewProps = (
    */
   children?: React.ReactNode;
 };
+
+export type SafeAreaInsetsProviderProps = {
+  /**
+   * Safe area insets for the content.
+   */
+  insets?: Partial<Record<LayoutRegionEdge, number>> | undefined;
+  /**
+   * Content to render inside the view.
+   */
+  children?: React.ReactNode;
+  /**
+   * Style object for the view.
+   */
+  style?: (React.CSSProperties & ViewStyle) | undefined;
+};
