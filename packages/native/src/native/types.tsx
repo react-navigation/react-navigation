@@ -662,3 +662,18 @@ export type LayoutRegionViewProps = (
    */
   ref?: React.Ref<HostInstance | HTMLDivElement> | undefined;
 };
+
+export type OverlayInsetsProviderProps = {
+  /**
+   * Safe area insets for the content.
+   */
+  insets?: Partial<Record<LayoutRegionEdge, number>> | undefined;
+  /**
+   * Content to render inside the view.
+   */
+  children?: React.ReactNode;
+  /**
+   * Style object for the view.
+   */
+  style?: (React.CSSProperties & ViewStyle) | undefined;
+};

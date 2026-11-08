@@ -330,6 +330,7 @@ export function BottomTabViewCustom({
               isActive={isActive}
               isAnimatingRoute={isAnimatingRoute}
               tabAnimation={tabAnimation}
+              tabBarPosition={tabBarPosition}
               tabBarLayout={tabBarLayout}
             />
           );
@@ -351,6 +352,7 @@ type TabSceneProps = {
   isActive: boolean;
   isAnimatingRoute: boolean;
   tabAnimation: Animated.Value;
+  tabBarPosition: ReturnType<typeof useTabBarPosition>;
   tabBarLayout: { width: number; height: number };
 };
 
@@ -363,6 +365,7 @@ const TabScene = React.memo(function TabScene({
   isActive,
   isAnimatingRoute,
   tabAnimation,
+  tabBarPosition,
   tabBarLayout,
 }: TabSceneProps) {
   const { navigation, options, render } = descriptor;
@@ -372,6 +375,7 @@ const TabScene = React.memo(function TabScene({
     sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
       .sceneStyleInterpolator,
     sceneStyle: customSceneStyle,
+    tabBarTransparent,
   } = options;
 
   const animationEnabled = hasAnimation(descriptor.options);
@@ -389,6 +393,17 @@ const TabScene = React.memo(function TabScene({
         route={route}
         navigation={navigation}
         options={options}
+        insets={{
+          [tabBarPosition === 'left'
+            ? 'start'
+            : tabBarPosition === 'right'
+              ? 'end'
+              : tabBarPosition]: tabBarTransparent
+            ? tabBarPosition === 'left' || tabBarPosition === 'right'
+              ? tabBarLayout.width
+              : tabBarLayout.height
+            : 0,
+        }}
       >
         <TabBarLayoutContext.Provider value={tabBarLayout}>
           {render()}

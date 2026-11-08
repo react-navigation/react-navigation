@@ -11,11 +11,13 @@ export {
   MaterialSymbol,
   type MaterialSymbolProps,
 } from './native/MaterialSymbol';
+export { OverlayInsetsProvider as UNSTABLE_OverlayInsetsProvider } from './native/OverlayInsetsProvider';
 export { ReservedRegionsView as UNSTABLE_ReservedRegionsView } from './native/ReservedRegionsView';
 export { SFSymbol, type SFSymbolProps } from './native/SFSymbol';
 export type {
   LayoutRegionInsetsChangeEvent,
   LayoutRegionViewProps,
+  OverlayInsetsProviderProps,
   ReservedRegion,
   ReservedRegionsChangeEvent,
   ReservedRegionsViewProps,

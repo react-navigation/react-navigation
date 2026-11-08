@@ -13,6 +13,7 @@ export function ScreenContent({
   route,
   navigation,
   options,
+  insets,
   style,
   children,
 }: {
@@ -20,6 +21,7 @@ export function ScreenContent({
   route: Route<string>;
   navigation: BottomTabNavigationProp<ParamListBase>;
   options: BottomTabNavigationOptions;
+  insets?: React.ComponentProps<typeof Screen>['insets'];
   style?: React.ComponentProps<typeof Screen>['style'];
   children: React.ReactNode;
 }) {
@@ -38,6 +40,7 @@ export function ScreenContent({
       navigation={navigation}
       headerShown={headerShown}
       headerTransparent={headerTransparent}
+      insets={insets}
       header={
         hasDefaultHeader ? (
           <Header {...options} title={getHeaderTitle(options, route.name)} />

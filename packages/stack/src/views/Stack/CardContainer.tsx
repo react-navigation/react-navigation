@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/elements';
 import {
   type Route,
+  UNSTABLE_OverlayInsetsProvider as OverlayInsetsProvider,
   useLinkBuilder,
   useLocale,
   useTheme,
@@ -182,6 +183,7 @@ function CardContainerInner({
     gestureVelocityImpact,
     headerMode,
     headerShown,
+    headerTransparent,
     transitionSpec,
   } = scene.descriptor.options;
 
@@ -285,7 +287,10 @@ function CardContainerInner({
                 style: styles.header,
               })
             : null}
-          <View style={styles.scene}>
+          <OverlayInsetsProvider
+            insets={{ top: headerTransparent ? (headerHeight?.value ?? 0) : 0 }}
+            style={styles.scene}
+          >
             <HeaderBackContext.Provider value={headerBack}>
               <HeaderShownContext.Provider
                 value={isParentHeaderShown || headerShown !== false}
@@ -301,7 +306,7 @@ function CardContainerInner({
                 </HeaderHeightContext.Provider>
               </HeaderShownContext.Provider>
             </HeaderBackContext.Provider>
-          </View>
+          </OverlayInsetsProvider>
         </ModalPresentationContext.Provider>
       </View>
     </Card>
@@ -319,5 +324,6 @@ const styles = StyleSheet.create({
   },
   scene: {
     flex: 1,
+    zIndex: 0,
   },
 });
