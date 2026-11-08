@@ -298,10 +298,20 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Function which returns a React Element to use as background for the tab bar.
    * You could render an image, a gradient, blur view etc.
    *
-   * When using `BlurView`, make sure to set `position: 'absolute'` in `tabBarStyle` as well.
+   * When using `BlurView`, make sure to set `tabBarTransparent` to `true` as well.
    * You'd also need to use `useBottomTabBarHeight()` to add a bottom padding to your content.
    */
   tabBarBackground?: () => React.ReactNode;
+
+  /**
+   * Boolean indicating whether the tab bar is transparent.
+   *
+   * Setting this to `true` makes the tab bar absolutely positioned,
+   * and changes the background to `transparent` unless specified in `tabBarBackground`.
+   *
+   * Defaults to `false`.
+   */
+  tabBarTransparent?: boolean;
 
   /**
    * Position of the tab bar on the screen. Defaults to `bottom`.

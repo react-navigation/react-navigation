@@ -181,6 +181,7 @@ export function BottomTabBar({
     tabBarVariant = 'uikit',
     tabBarStyle,
     tabBarBackground,
+    tabBarTransparent,
     tabBarActiveTintColor,
     tabBarInactiveTintColor,
     tabBarActiveBackgroundColor,
@@ -325,7 +326,9 @@ export function BottomTabBar({
           ? styles.start
           : tabBarPosition === 'right'
             ? styles.end
-            : styles.bottom,
+            : tabBarPosition === 'top'
+              ? styles.top
+              : styles.bottom,
         (
           Platform.OS === 'web'
             ? tabBarPosition === 'right'
@@ -386,6 +389,7 @@ export function BottomTabBar({
                 paddingHorizontal: Math.max(insets.left, insets.right),
               },
             ],
+        tabBarTransparent ? styles.transparent : null,
         tabBarStyle,
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
@@ -584,11 +588,26 @@ const styles = StyleSheet.create({
     bottom: 0,
     end: 0,
   },
+  top: {
+    start: 0,
+    end: 0,
+    top: 0,
+    elevation: 8,
+  },
   bottom: {
     start: 0,
     end: 0,
     bottom: 0,
     elevation: 8,
+  },
+  transparent: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    elevation: 0,
   },
   bottomContent: {
     flex: 1,
