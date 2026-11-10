@@ -96,10 +96,7 @@ export const SheetScreen = React.memo(function SheetScreen({
         });
       }}
       onNativeDismiss={() => {
-        onNativeDismiss({
-          key: route.key,
-          markNativelyDismissed: !isRemovePrevented,
-        });
+        onNativeDismiss({ key: route.key, markNativelyDismissed: true });
       }}
       onNativeDismissPrevented={() => {
         onNativeDismissPrevented(route.key);

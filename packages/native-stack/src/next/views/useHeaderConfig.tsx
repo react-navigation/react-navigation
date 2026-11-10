@@ -16,6 +16,7 @@ export type HeaderConfigOptions = {
   headerTitleText: string;
   canGoBack: boolean;
   tintColor: ColorValue;
+  isRemovePrevented: boolean;
 };
 
 export type HeaderConfigResult = {

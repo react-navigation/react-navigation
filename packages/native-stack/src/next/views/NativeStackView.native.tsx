@@ -3,9 +3,10 @@ import {
   type ParamListBase,
   StackActions,
   type StackNavigationState,
+  useLocale,
+  useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform } from 'react-native';
 import { Stack } from 'react-native-screens';
 
 import type {
@@ -18,6 +19,7 @@ import { CardScreen } from './CardScreen';
 import {
   type NativeStackViewState,
   type NativeStackViewStateAction,
+  SUPPORTS_FORM_SHEET,
   useViewState,
 } from './NativeStackViewState';
 import { SheetScreen } from './SheetScreen';
@@ -33,8 +35,6 @@ type NativeStackViewContentProps = Props &
     dispatch: React.Dispatch<NativeStackViewStateAction>;
   };
 
-const SUPPORTS_FORM_SHEET = Platform.OS === 'android' || Platform.OS === 'ios';
-
 function NativeStackViewContent({
   state,
   navigation,
@@ -44,6 +44,9 @@ function NativeStackViewContent({
   dispatch,
 }: NativeStackViewContentProps) {
   useInvalidPreventRemoveError(descriptors);
+
+  const { direction } = useLocale();
+  const { dark } = useTheme();
 
   const { setNextDismissedKey } = useDismissedRouteError(state);
 
@@ -168,17 +171,6 @@ function NativeStackViewContent({
           );
         }
 
-        if (popped?.focusedReplacementKey != null) {
-          const replacementDescriptor =
-            descriptors[popped.focusedReplacementKey];
-
-          if (replacementDescriptor?.options.presentation === 'formSheet') {
-            throw new Error(
-              `The form sheet route '${replacementDescriptor.route.name}' cannot replace '${route.name}' in the same native stack. Wait for the previous sheet to close before presenting another sheet.`
-            );
-          }
-        }
-
         result.sheets.push(<SheetScreen key={route.key} {...props} />);
       } else {
         const previousRoute =
@@ -209,7 +201,9 @@ function NativeStackViewContent({
 
   return (
     <SafeAreaProviderCompat>
-      <Stack.Host>{cards}</Stack.Host>
+      <Stack.Host direction={direction} colorScheme={dark ? 'dark' : 'light'}>
+        {cards}
+      </Stack.Host>
       {sheets}
     </SafeAreaProviderCompat>
   );

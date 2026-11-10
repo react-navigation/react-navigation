@@ -6,14 +6,36 @@ import {
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Platform } from 'react-native';
-import { Stack } from 'react-native-screens';
+import {
+  Stack,
+  type StackScreenAnimation,
+  type StackScreenAnimationPresetName,
+} from 'react-native-screens';
 
 import type {
   NativeStackDescriptor,
   NativeStackNavigationHelpers,
+  NativeStackNavigationOptions,
 } from '../../types';
 import { CardContent } from './CardContent';
 import { useHeaderConfig } from './useHeaderConfig';
+
+const ANIMATION_PRESETS: Partial<
+  Record<
+    NonNullable<NativeStackNavigationOptions['animation']>,
+    StackScreenAnimationPresetName
+  >
+> = {
+  default: 'default',
+  none: 'none',
+  fade: 'fade',
+  fade_from_bottom: 'fadeFromBottom',
+  slide_from_bottom: 'slideFromBottom',
+  slide_from_right: 'slideFromRight',
+  slide_from_left: 'slideFromLeft',
+  ios_from_right: 'iosFromRight',
+  ios_from_left: 'iosFromLeft',
+};
 
 type Props = {
   descriptor: NativeStackDescriptor;
@@ -108,6 +130,8 @@ export const CardScreen = React.memo(function CardScreen({
         canGoBack,
       });
 
+  const isRemovePrevented = preventedRoutes[route.key]?.preventRemove === true;
+
   const {
     platformConfig,
     headerConfigRef,
@@ -122,9 +146,9 @@ export const CardScreen = React.memo(function CardScreen({
     headerTitleText,
     canGoBack,
     tintColor,
+    isRemovePrevented,
   });
 
-  const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
   // Nested navigators clean up `route.state` when the screen is paused with `Activity`
   // So we remember if the route had state until the screen is removed
   const [hadNestedState, setHadNestedState] = React.useState(hasNestedState);
@@ -162,11 +186,30 @@ export const CardScreen = React.memo(function CardScreen({
     }
   }
 
+  const animationPreset =
+    options.animation == null
+      ? undefined
+      : ANIMATION_PRESETS[options.animation];
+
+  const animation: StackScreenAnimation | undefined =
+    animationPreset == null ||
+    animationPreset === 'default' ||
+    animationPreset === 'none' ||
+    options.animationDuration == null
+      ? animationPreset
+      : {
+          type: 'preset',
+          name: animationPreset,
+          duration: options.animationDuration,
+        };
+
   return (
     <Stack.Screen
       screenKey={route.key}
       activityMode={isPopped || isDetached ? 'detached' : 'attached'}
       preventNativeDismiss={isRemovePrevented}
+      animation={animation}
+      replaceAnimation={options.animationTypeForReplace ?? 'push'}
       onWillAppear={() =>
         navigation.emit({
           type: 'transitionStart',

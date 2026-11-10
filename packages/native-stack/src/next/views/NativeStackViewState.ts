@@ -4,11 +4,15 @@ import type {
   StackNavigationState,
 } from '@react-navigation/native';
 import * as React from 'react';
+import { Platform } from 'react-native';
 
 import type {
   NativeStackDescriptor,
   NativeStackDescriptorMap,
 } from '../../types';
+
+export const SUPPORTS_FORM_SHEET =
+  Platform.OS === 'android' || Platform.OS === 'ios';
 
 export type NativeStackViewState = {
   previous: {
@@ -22,7 +26,6 @@ export type NativeStackViewState = {
     {
       descriptor: NativeStackDescriptor;
       previousDescriptor: NativeStackDescriptor | undefined;
-      focusedReplacementKey: string | undefined;
     }
   >;
   nativelyDismissedRouteKeys: Set<string>;
@@ -64,10 +67,10 @@ export function reducer(
 
       const focusedRoute = action.routes[action.index];
 
-      const focusedReplacementKey =
+      const focusedReplacementDescriptor =
         focusedRoute != null &&
         !previousActiveRoutes.some((route) => route.key === focusedRoute.key)
-          ? focusedRoute.key
+          ? action.descriptors[focusedRoute.key]
           : undefined;
 
       let previousRetainedActiveRouteIndex = -1;
@@ -103,6 +106,16 @@ export function reducer(
           continue;
         }
 
+        if (
+          SUPPORTS_FORM_SHEET &&
+          descriptor.options.presentation === 'formSheet' &&
+          focusedReplacementDescriptor?.options.presentation === 'formSheet'
+        ) {
+          throw new Error(
+            `The form sheet route '${focusedReplacementDescriptor.route.name}' cannot replace '${route.name}' in the same native stack. Wait for the previous sheet to close before presenting another sheet.`
+          );
+        }
+
         const previousRoute = previousActiveRoutes[index - 1];
 
         // Store a snapshot of the previous route's latest available descriptor
@@ -118,7 +131,6 @@ export function reducer(
         poppedByKey.set(route.key, {
           descriptor,
           previousDescriptor,
-          focusedReplacementKey,
         });
       }
 

@@ -3,9 +3,10 @@ import {
   type LocaleDirection,
   MaterialSymbol,
   useLocale,
+  useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import type { ColorValue } from 'react-native';
+import { type ColorValue, StyleSheet } from 'react-native';
 import type {
   StackHeaderConfigProps,
   StackHeaderConfigRef,
@@ -29,6 +30,9 @@ type StackHeaderToolbarMenuAndroid = NonNullable<
 type StackHeaderToolbarMenuElementAndroid = NonNullable<
   StackHeaderToolbarMenuAndroid['children']
 >[number];
+
+const BACK_ICON_SIZE = 24;
+
 type AndroidToolbarMenuIconState = {
   tintEnabled: boolean;
   normalTint: ColorValue;
@@ -43,6 +47,7 @@ export function useHeaderConfig({
   tintColor,
 }: HeaderConfigOptions): HeaderConfigResult {
   const { direction } = useLocale();
+  const { colors, fonts } = useTheme();
 
   const toolbarMenu = options.unstable_headerToolbarMenu;
   const headerConfigRef = React.useRef<StackHeaderConfigRef>(null);
@@ -70,7 +75,7 @@ export function useHeaderConfig({
         const nextIconState = {
           tintEnabled:
             'icon' in options
-              ? isAndroidIconTintEnabled(options.icon)
+              ? options.icon?.type !== 'image' || options.icon.tinted !== false
               : currentIconState.tintEnabled,
           normalTint:
             'iconTintColor' in options
@@ -116,19 +121,76 @@ export function useHeaderConfig({
       ? options.headerBackground?.()
       : null;
 
-  const isBackIconTintEnabled = isAndroidIconTintEnabled(
-    options.headerBackIcon
+  const headerBackIcon =
+    options.headerBackIcon?.type === 'sfSymbol'
+      ? undefined
+      : options.headerBackIcon;
+
+  const isBackIconTintEnabled =
+    headerBackIcon?.type !== 'image' || headerBackIcon.tinted !== false;
+
+  const isBackIconVisible = !(
+    hasCustomHeader ||
+    options.headerShown === false ||
+    options.headerBackVisible === false
   );
-  const usesTintedBackImage =
-    options.headerBackIcon?.type === 'image' && isBackIconTintEnabled;
+
+  const backButtonIcon: StackHeaderConfigAndroid['backButtonIcon'] =
+    !isBackIconVisible
+      ? undefined
+      : headerBackIcon != null
+        ? getAndroidIcon(headerBackIcon, tintColor, direction)
+        : MaterialSymbol.isAvailable()
+          ? {
+              type: 'imageSource',
+              imageSource: MaterialSymbol.getImageSource({
+                name: 'arrow_back',
+                color: tintColor,
+                size: BACK_ICON_SIZE,
+                direction,
+              }),
+            }
+          : undefined;
+
+  const headerStyle = StyleSheet.flatten(options.headerStyle) ?? {};
+  const headerTitleStyle = {
+    ...fonts.medium,
+    ...StyleSheet.flatten(options.headerTitleStyle),
+  };
+  const headerLargeTitleStyle = {
+    ...fonts.medium,
+    ...StyleSheet.flatten(options.headerLargeTitleStyle),
+  };
+
+  const titleColor = headerTitleStyle.color ?? tintColor;
+  const usesHeaderBackground = hasHeaderBackground && !ignoresHeaderBackground;
+
+  const backgroundColor =
+    headerStyle.backgroundColor ??
+    (options.headerTransparent || usesHeaderBackground
+      ? 'transparent'
+      : colors.card);
+
+  const scrolledBackgroundColor =
+    headerStyle.backgroundColor ??
+    (options.headerTransparent ||
+    (usesHeaderBackground && headerBackgroundElement == null)
+      ? 'transparent'
+      : colors.card);
+
+  const isTitleCentered = options.headerTitleAlign === 'center';
+
   const platformConfig: HeaderConfigResult['platformConfig'] = {
     android: {
-      type: options.unstable_headerType,
+      // FIXME: The native side throws when these props are reset to `null`
+      // So we pass the default values instead of `undefined`
+      type: options.unstable_headerType ?? 'small',
       backgroundSubview:
         headerBackgroundElement == null
           ? undefined
           : {
-              collapseMode: options.unstable_headerBackgroundCollapseMode,
+              collapseMode:
+                options.unstable_headerBackgroundCollapseMode ?? 'off',
               render: () => <>{headerBackgroundElement}</>,
             },
       leadingSubview: usesHeaderLeftElement
@@ -141,30 +203,31 @@ export function useHeaderConfig({
       trailingSubview: usesHeaderRightElement
         ? { render: () => <>{headerRightElement}</> }
         : undefined,
-      // Image icons are tinted by default unless `tinted` is disabled. The
-      // normal tint also keeps the icon visible when a state tint is present,
-      // since the native header otherwise uses a transparent normal tint.
-      backButtonTintColorNormal: isBackIconTintEnabled
-        ? (options.headerTintColor ??
-          (usesTintedBackImage ||
-          options.unstable_headerBackButtonTintColorPressed != null ||
-          options.unstable_headerBackButtonTintColorFocused != null
-            ? tintColor
-            : undefined))
-        : undefined,
+      backButtonTintColorNormal: isBackIconTintEnabled ? tintColor : undefined,
       backButtonTintColorPressed: isBackIconTintEnabled
         ? options.unstable_headerBackButtonTintColorPressed
         : undefined,
       backButtonTintColorFocused: isBackIconTintEnabled
         ? options.unstable_headerBackButtonTintColorFocused
         : undefined,
-      backButtonIcon:
-        hasCustomHeader ||
-        options.headerShown === false ||
-        options.headerBackVisible === false ||
-        options.headerBackIcon == null
-          ? undefined
-          : getAndroidIcon(options.headerBackIcon, tintColor, direction),
+      backButtonIcon,
+      overflowIconTintColorNormal: tintColor,
+      backgroundColor,
+      scrolledBackgroundColor,
+      titleCentered: isTitleCentered,
+      subtitleCentered: isTitleCentered,
+      titleColor,
+      titleFontFamily: headerTitleStyle.fontFamily,
+      titleFontSize: headerTitleStyle.fontSize,
+      titleFontWeight: headerTitleStyle.fontWeight,
+      collapsedTitleColor: titleColor,
+      collapsedTitleFontFamily: headerTitleStyle.fontFamily,
+      collapsedTitleFontSize: headerTitleStyle.fontSize,
+      collapsedTitleFontWeight: headerTitleStyle.fontWeight,
+      expandedTitleColor: headerLargeTitleStyle.color ?? titleColor,
+      expandedTitleFontFamily: headerLargeTitleStyle.fontFamily,
+      expandedTitleFontSize: headerLargeTitleStyle.fontSize,
+      expandedTitleFontWeight: headerLargeTitleStyle.fontWeight,
       scrollFlagScroll: headerScroll?.enabled,
       scrollFlagEnterAlways: isHeaderScrollDisabled
         ? false
@@ -227,23 +290,39 @@ function getAndroidIcon(
   );
 }
 
-function isAndroidIconTintEnabled(icon: Icon | null | undefined) {
-  return icon?.type !== 'image' || icon.tinted !== false;
-}
-
 function getAndroidToolbarMenu(
   menu: Pick<NativeStackHeaderToolbarMenu, 'groups' | 'items'>,
   tintColor: ColorValue,
   direction: LocaleDirection
 ): StackHeaderToolbarMenuAndroid {
   return {
-    groups: menu.groups?.map((group) => ({
-      groupId: group.identifier,
-      singleSelection: group.singleSelection,
-      ...(group.onSelectionChange == null
-        ? null
-        : { onSelectionChange: group.onSelectionChange }),
-    })),
+    groups: menu.groups?.map((group) => {
+      const { onChange } = group;
+
+      const toggleItemIds = (menu.items ?? []).flatMap((item) =>
+        item.type === 'toggle' && item.groupIdentifier === group.identifier
+          ? [item.identifier]
+          : []
+      );
+
+      return {
+        groupId: group.identifier,
+        singleSelection: group.singleSelection,
+        ...(onChange == null
+          ? null
+          : {
+              onSelectionChange: (selectedItemIds: string[]) =>
+                onChange({
+                  checked: Object.fromEntries(
+                    toggleItemIds.map((itemId) => [
+                      itemId,
+                      selectedItemIds.includes(itemId),
+                    ])
+                  ),
+                }),
+            }),
+      };
+    }),
     ...(menu.items == null
       ? null
       : {
@@ -259,7 +338,8 @@ function getAndroidToolbarMenuElement(
   tintColor: ColorValue,
   direction: LocaleDirection
 ): StackHeaderToolbarMenuElementAndroid {
-  const isIconTintEnabled = isAndroidIconTintEnabled(item.icon);
+  const isIconTintEnabled =
+    item.icon?.type !== 'image' || item.icon.tinted !== false;
   const usesTintedImage = item.icon?.type === 'image' && isIconTintEnabled;
 
   const base = {
@@ -302,10 +382,17 @@ function getAndroidToolbarMenuElement(
     return {
       ...base,
       type: 'menuItem',
-      groupId: item.groupIdentifier,
-      itemType: item.role,
-      initialToggleState: item.initialState,
       onPress: item.onPress,
+    };
+  }
+
+  if (item.type === 'toggle') {
+    return {
+      ...base,
+      type: 'menuItem',
+      groupId: item.groupIdentifier,
+      itemType: 'toggle',
+      initialToggleState: item.defaultChecked,
     };
   }
 
@@ -349,10 +436,14 @@ function getAndroidToolbarMenuElementOptions(
     currentIconState.tintEnabled && !nextIconState.tintEnabled;
   const enablesIconTint =
     !currentIconState.tintEnabled && nextIconState.tintEnabled;
+  const setsTintedImage = icon?.type === 'image' && nextIconState.tintEnabled;
 
   const iconTintOptions = nextIconState.tintEnabled
     ? {
-        ...(updatesNormalIconTint || hasStateIconTint || enablesIconTint
+        ...(updatesNormalIconTint ||
+        hasStateIconTint ||
+        enablesIconTint ||
+        setsTintedImage
           ? { iconTintColorNormal: normalIconTint }
           : null),
         ...('iconTintColorPressed' in options
@@ -407,7 +498,7 @@ function getAndroidToolbarMenuIconStates(
 ) {
   for (const item of items ?? []) {
     result.set(item.identifier, {
-      tintEnabled: isAndroidIconTintEnabled(item.icon),
+      tintEnabled: item.icon?.type !== 'image' || item.icon.tinted !== false,
       normalTint: item.iconTintColor ?? tintColor,
     });
 

@@ -12,6 +12,7 @@ export {
  */
 export type {
   NativeStackHeaderIconAndroid,
+  NativeStackHeaderMenuChangeEvent,
   NativeStackHeaderScrollOptions,
   NativeStackHeaderToolbarMenu,
   NativeStackHeaderToolbarMenuElement,
@@ -19,6 +20,7 @@ export type {
   NativeStackHeaderToolbarMenuGroup,
   NativeStackHeaderToolbarMenuItem,
   NativeStackHeaderToolbarMenuRef,
+  NativeStackHeaderToolbarMenuToggle,
   NativeStackHeaderToolbarSubmenu,
   NativeStackNavigationOptions,
   NativeStackNextHeaderItemMenuAction,

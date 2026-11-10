@@ -97,6 +97,13 @@ const descriptors = {
   },
 } satisfies NativeStackDescriptorMap;
 
+const sheetDescriptors = {
+  ...descriptors,
+  C: { ...descriptors.C, options: { presentation: 'formSheet' } },
+  D: { ...descriptors.D, options: { presentation: 'formSheet' } },
+  E: { ...descriptors.E, options: { presentation: 'formSheet' } },
+} satisfies NativeStackDescriptorMap;
+
 function createState(): NativeStackViewState {
   const routes = [A, B, C];
 
@@ -169,10 +176,9 @@ test('keeps a removed route above its replacement while it closes', () => {
 
   expect(getRouteKeys(state)).toEqual(['A', 'B', 'D', 'C']);
   expect(getPoppedRouteKeys(state)).toEqual(['C']);
-  expect(state.poppedByKey.get('C')?.focusedReplacementKey).toBe('D');
 });
 
-test('recognizes a preloaded route as the replacement', () => {
+test('keeps the rendered order when a preloaded route replaces a route', () => {
   const routes = [A, B, C, D];
   const state = syncState(
     {
@@ -185,26 +191,99 @@ test('recognizes a preloaded route as the replacement', () => {
   );
 
   expect(getRouteKeys(state)).toEqual(['A', 'B', 'C', 'D']);
-  expect(state.poppedByKey.get('C')?.focusedReplacementKey).toBe('D');
+  expect(getPoppedRouteKeys(state)).toEqual(['C']);
 });
 
-test('does not retarget a pending replacement after a later push', () => {
-  let state = syncState(createState(), [A, B, D]);
+test('rejects a form sheet replacing another form sheet', () => {
+  expect(() =>
+    syncState(
+      {
+        ...createState(),
+        previous: {
+          index: 2,
+          routes: [A, B, C],
+          descriptors: sheetDescriptors,
+        },
+      },
+      [A, B, D],
+      sheetDescriptors
+    )
+  ).toThrow(
+    "The form sheet route 'D' cannot replace 'C' in the same native stack."
+  );
+});
 
-  state = syncState(state, [A, B, D, E]);
+test('rejects a preloaded form sheet replacing another form sheet', () => {
+  const routes = [A, B, C, D];
+
+  expect(() =>
+    syncState(
+      {
+        previous: { index: 2, routes, descriptors: sheetDescriptors },
+        renderedRoutes: routes,
+        poppedByKey: new Map(),
+        nativelyDismissedRouteKeys: new Set(),
+      },
+      [A, B, D],
+      sheetDescriptors
+    )
+  ).toThrow(
+    "The form sheet route 'D' cannot replace 'C' in the same native stack."
+  );
+});
+
+test('allows a form sheet to replace a card', () => {
+  const state = syncState(createState(), [A, B, D], {
+    ...descriptors,
+    D: sheetDescriptors.D,
+  });
+
+  expect(getRouteKeys(state)).toEqual(['A', 'B', 'D', 'C']);
+});
+
+test('allows a card to replace a form sheet', () => {
+  const state = syncState(
+    {
+      ...createState(),
+      previous: {
+        index: 2,
+        routes: [A, B, C],
+        descriptors: { ...descriptors, C: sheetDescriptors.C },
+      },
+    },
+    [A, B, D]
+  );
+
+  expect(getRouteKeys(state)).toEqual(['A', 'B', 'D', 'C']);
+});
+
+test('allows pushing a form sheet while a replaced form sheet closes', () => {
+  let state = syncState(
+    {
+      ...createState(),
+      previous: {
+        index: 2,
+        routes: [A, B, C],
+        descriptors: { ...descriptors, C: sheetDescriptors.C },
+      },
+    },
+    [A, B, D]
+  );
+
+  state = syncState(state, [A, B, D, E], {
+    ...descriptors,
+    E: sheetDescriptors.E,
+  });
 
   expect(getRouteKeys(state)).toEqual(['A', 'B', 'D', 'E', 'C']);
-  expect(state.poppedByKey.get('C')?.focusedReplacementKey).toBe('D');
 });
 
-test('tracks consecutive replacements independently', () => {
+test('keeps consecutively replaced routes in order while they close', () => {
   let state = syncState(createState(), [A, B, D]);
 
   state = syncState(state, [A, B, E]);
 
   expect(getRouteKeys(state)).toEqual(['A', 'B', 'E', 'D', 'C']);
-  expect(state.poppedByKey.get('C')?.focusedReplacementKey).toBe('D');
-  expect(state.poppedByKey.get('D')?.focusedReplacementKey).toBe('E');
 });
 
 test('keeps a removed middle route above its replacement while it closes', () => {
@@ -212,7 +291,6 @@ test('keeps a removed middle route above its replacement while it closes', () =>
 
   expect(getRouteKeys(state)).toEqual(['A', 'D', 'B', 'C']);
   expect(getPoppedRouteKeys(state)).toEqual(['B']);
-  expect(state.poppedByKey.get('B')?.focusedReplacementKey).toBeUndefined();
 });
 
 test('rejects reordering retained routes', () => {
@@ -247,9 +325,6 @@ test('keeps removed routes above a root replacement while they close', () => {
 
   expect(getRouteKeys(state)).toEqual(['D', 'A', 'B', 'C']);
   expect(getPoppedRouteKeys(state)).toEqual(['A', 'B', 'C']);
-  expect(state.poppedByKey.get('A')?.focusedReplacementKey).toBe('D');
-  expect(state.poppedByKey.get('B')?.focusedReplacementKey).toBe('D');
-  expect(state.poppedByKey.get('C')?.focusedReplacementKey).toBe('D');
 });
 
 test('stops retaining a route when its key returns to navigation state', () => {
@@ -315,7 +390,6 @@ test('retains a popped route and its previous descriptor until dismissal', () =>
   expect(state.poppedByKey.get('C')).toEqual({
     descriptor: descriptors.C,
     previousDescriptor: descriptors.B,
-    focusedReplacementKey: undefined,
   });
 
   const dismissedState = reducer(state, {

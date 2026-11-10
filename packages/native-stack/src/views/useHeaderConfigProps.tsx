@@ -7,7 +7,7 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   type HeaderBarButtonItemMenuAction,
@@ -28,8 +28,10 @@ import {
 import type {
   NativeStackHeaderItem,
   NativeStackHeaderItemButton,
+  NativeStackHeaderItemMenu,
   NativeStackHeaderItemMenuAction,
   NativeStackHeaderItemMenuSubmenu,
+  NativeStackHeaderItemMenuToggle,
   NativeStackNavigationOptions,
 } from '../types';
 
@@ -39,12 +41,24 @@ type Props = NativeStackNavigationOptions & {
   route: Route<string>;
 };
 
+type ToggleItemsState = {
+  checked: Map<string, boolean>;
+  onCheckedChange: (checked: Record<string, boolean>) => void;
+};
+
+type ToggleMenu = {
+  toggleItems: NativeStackHeaderItemMenuToggle[];
+  isSingleSelection: boolean;
+  onChange: NativeStackHeaderItemMenu['menu']['onChange'];
+};
+
 const ICON_SIZE = 24;
 
 const processBarButtonItems = (
   items: NativeStackHeaderItem[] | undefined,
   colors: Theme['colors'],
-  fonts: Theme['fonts']
+  fonts: Theme['fonts'],
+  toggleItemsState: ToggleItemsState
 ) => {
   return items
     ?.map((item, index) => {
@@ -101,16 +115,20 @@ const processBarButtonItems = (
         if (processedItemCommon.type === 'menu' && item.type === 'menu') {
           const { multiselectable, layout } = item.menu;
 
+          const toggleMenu = getToggleMenu(item.menu);
+
           processedItem = {
             ...processedItemCommon,
             menu: {
-              ...processedItemCommon.menu,
+              title: item.menu.title,
               singleSelection:
                 typeof multiselectable === 'boolean'
                   ? !multiselectable
                   : undefined,
               displayAsPalette: layout === 'palette',
-              items: item.menu.items.map(getMenuItem),
+              items: item.menu.items.map((menuItem) =>
+                getMenuItem(menuItem, toggleItemsState, toggleMenu)
+              ),
             },
           };
         } else if (
@@ -168,31 +186,105 @@ const transformIcon = (
   return icon;
 };
 
+const getToggleMenu = (
+  menu: Pick<
+    NativeStackHeaderItemMenuSubmenu,
+    'items' | 'multiselectable' | 'onChange'
+  >
+): ToggleMenu => {
+  const isSingleSelection = menu.multiselectable === false;
+
+  return {
+    toggleItems: getToggleItems(menu.items, isSingleSelection),
+    isSingleSelection,
+    onChange: menu.onChange,
+  };
+};
+
+const getToggleItems = (
+  items: NativeStackHeaderItemMenuSubmenu['items'],
+  includeSubmenus: boolean
+): NativeStackHeaderItemMenuToggle[] =>
+  items.flatMap((item) => {
+    if (item.type === 'toggle') {
+      return [item];
+    }
+
+    if (item.type === 'submenu' && includeSubmenus) {
+      return getToggleItems(item.items, includeSubmenus);
+    }
+
+    return [];
+  });
+
 const getMenuItem = (
-  item: NativeStackHeaderItemMenuAction | NativeStackHeaderItemMenuSubmenu
+  item:
+    | NativeStackHeaderItemMenuAction
+    | NativeStackHeaderItemMenuToggle
+    | NativeStackHeaderItemMenuSubmenu,
+  toggleItemsState: ToggleItemsState,
+  toggleMenu: ToggleMenu
 ): HeaderBarButtonItemMenuAction | HeaderBarButtonItemSubmenu => {
   if (item.type === 'submenu') {
-    const {
-      label,
-      description,
-      icon,
-      inline,
-      layout,
-      items,
-      multiselectable,
-      ...rest
-    } = item;
+    const submenuToggleMenu = toggleMenu.isSingleSelection
+      ? toggleMenu
+      : getToggleMenu(item);
 
     return {
-      ...rest,
-      icon: transformIcon(icon),
-      title: label,
-      subtitle: description,
-      displayAsPalette: layout === 'palette',
-      displayInline: inline,
+      type: 'submenu',
+      icon: transformIcon(item.icon),
+      title: item.label,
+      subtitle: item.description,
+      destructive: item.destructive,
+      displayAsPalette: item.layout === 'palette',
+      displayInline: item.inline,
       singleSelection:
-        typeof multiselectable === 'boolean' ? !multiselectable : undefined,
-      items: items.map(getMenuItem),
+        typeof item.multiselectable === 'boolean'
+          ? !item.multiselectable
+          : undefined,
+      items: item.items.map((submenuItem) =>
+        getMenuItem(submenuItem, toggleItemsState, submenuToggleMenu)
+      ),
+    };
+  }
+
+  if (item.type === 'toggle') {
+    const isChecked =
+      toggleItemsState.checked.get(item.identifier) ??
+      item.defaultChecked ??
+      false;
+
+    return {
+      type: 'action',
+      icon: transformIcon(item.icon),
+      title: item.label,
+      subtitle: item.description,
+      state: isChecked ? 'on' : 'off',
+      disabled: item.disabled,
+      destructive: item.destructive,
+      hidden: item.hidden,
+      keepsMenuPresented: item.keepsMenuPresented,
+      discoverabilityLabel: item.discoverabilityLabel,
+      onPress: () => {
+        if (toggleMenu.isSingleSelection && isChecked) {
+          return;
+        }
+
+        const checked = Object.fromEntries(
+          toggleMenu.toggleItems.map((toggleItem) => [
+            toggleItem.identifier,
+            toggleItem.identifier === item.identifier
+              ? !isChecked
+              : !toggleMenu.isSingleSelection &&
+                (toggleItemsState.checked.get(toggleItem.identifier) ??
+                  toggleItem.defaultChecked ??
+                  false),
+          ])
+        );
+
+        toggleItemsState.onCheckedChange(checked);
+        toggleMenu.onChange?.({ checked });
+      },
     };
   }
 
@@ -241,6 +333,19 @@ export function useHeaderConfigProps({
 }: Props): ScreenStackHeaderConfigProps {
   const { direction } = useLocale();
   const { colors, fonts, dark } = useTheme();
+
+  const [checkedToggleItems, setCheckedToggleItems] = useState(
+    () => new Map<string, boolean>()
+  );
+
+  const toggleItemsState: ToggleItemsState = {
+    checked: checkedToggleItems,
+    onCheckedChange: (checked) =>
+      setCheckedToggleItems(
+        (previous) => new Map([...previous, ...Object.entries(checked)])
+      ),
+  };
+
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
 
@@ -577,8 +682,18 @@ export function useHeaderConfigProps({
       headerInsets?.bottom !== undefined ? !headerInsets.bottom : undefined,
     translucent: translucent === true,
     children,
-    headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
-    headerRightBarButtonItems: processBarButtonItems(rightItems, colors, fonts),
+    headerLeftBarButtonItems: processBarButtonItems(
+      leftItems,
+      colors,
+      fonts,
+      toggleItemsState
+    ),
+    headerRightBarButtonItems: processBarButtonItems(
+      rightItems,
+      colors,
+      fonts,
+      toggleItemsState
+    ),
     experimental_userInterfaceStyle: dark ? 'dark' : 'light',
   } as const;
 }

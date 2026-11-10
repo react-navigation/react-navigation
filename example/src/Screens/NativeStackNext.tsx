@@ -77,6 +77,7 @@ const DEMOS = [
   { name: 'NativeStackNextAppBar', label: 'App bar (Android)' },
   { name: 'NativeStackNextToolbarMenu', label: 'Toolbar menu (Android)' },
   { name: 'NativeStackNextSheets', label: 'Form sheets' },
+  { name: 'NativeStackNextAnimations', label: 'Animations (Android)' },
   { name: 'NativeStackNextPreventRemove', label: 'Prevent remove' },
   { name: 'NativeStackNextActivityStates', label: 'Activity states' },
   { name: 'NativeStackNextEvents', label: 'Transition events' },
@@ -252,22 +253,151 @@ const CustomHeaderScreen = () => {
 
 const HeaderAppearanceScreen = () => {
   const navigation = useNavigation('NativeStackNextHeaderAppearance');
-  const [transparent, setTransparent] = React.useState(true);
+  const [transparent, setTransparent] = React.useState('default');
+  const [background, setBackground] = React.useState('image');
+  const [largeTitle, setLargeTitle] = React.useState(false);
+  const [titleAlign, setTitleAlign] = React.useState<'left' | 'center'>('left');
+  const [customTitleStyle, setCustomTitleStyle] = React.useState(false);
+  const [customBackTitle, setCustomBackTitle] = React.useState(false);
+  const [backDisplayMode, setBackDisplayMode] = React.useState<
+    'default' | 'generic' | 'minimal'
+  >('default');
+  const [backMenu, setBackMenu] = React.useState(true);
+  const [backIcon, setBackIcon] = React.useState('default');
 
   React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTransparent: transparent,
+    const titleFontFamily = Platform.select({
+      ios: 'Georgia',
+      default: 'serif',
     });
-  }, [navigation, transparent]);
+
+    navigation.setOptions({
+      headerTransparent:
+        transparent === 'default' ? undefined : transparent === 'on',
+      headerLargeTitleEnabled: largeTitle,
+      headerTintColor: background === 'theme' ? undefined : 'white',
+      headerBackground:
+        background === 'image'
+          ? () => (
+              <Image
+                source={require('../../assets/misc/cpu.jpg')}
+                resizeMode="cover"
+                style={StyleSheet.absoluteFill}
+              />
+            )
+          : undefined,
+      headerStyle:
+        background === 'color' ? { backgroundColor: 'tomato' } : undefined,
+      headerTitleAlign: titleAlign,
+      headerTitleStyle: customTitleStyle
+        ? {
+            color: 'gold',
+            fontFamily: titleFontFamily,
+            fontSize: 20,
+            fontWeight: '700',
+          }
+        : undefined,
+      headerLargeTitleStyle: customTitleStyle
+        ? { color: 'gold', fontFamily: titleFontFamily, fontSize: 40 }
+        : undefined,
+      headerBackTitle: customBackTitle ? 'Demos' : undefined,
+      headerBackButtonDisplayMode: backDisplayMode,
+      headerBackButtonMenuEnabled: backMenu,
+      headerBackIcon:
+        backIcon === 'material'
+          ? { type: 'materialSymbol', name: 'close' }
+          : backIcon === 'sfSymbol'
+            ? { type: 'sfSymbol', name: 'xmark' }
+            : undefined,
+    });
+  }, [
+    navigation,
+    transparent,
+    background,
+    largeTitle,
+    titleAlign,
+    customTitleStyle,
+    customBackTitle,
+    backDisplayMode,
+    backMenu,
+    backIcon,
+  ]);
 
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic">
       <View style={styles.controls}>
         <Option
           label="Transparent header"
-          choices={ON_OFF}
+          choices={[
+            { label: 'Default', value: 'default' },
+            { label: 'On', value: 'on' },
+            { label: 'Off', value: 'off' },
+          ]}
           value={transparent}
           onValueChange={setTransparent}
+        />
+        <Option
+          label="Background"
+          choices={[
+            { label: 'Theme', value: 'theme' },
+            { label: 'Image', value: 'image' },
+            { label: 'Color', value: 'color' },
+          ]}
+          value={background}
+          onValueChange={setBackground}
+        />
+        <Option
+          label="Large title (iOS)"
+          choices={ON_OFF}
+          value={largeTitle}
+          onValueChange={setLargeTitle}
+        />
+        <Option
+          label="Title align (Android)"
+          choices={[
+            { label: 'Left', value: 'left' },
+            { label: 'Center', value: 'center' },
+          ]}
+          value={titleAlign}
+          onValueChange={setTitleAlign}
+        />
+        <Option
+          label="Custom title style"
+          choices={ON_OFF}
+          value={customTitleStyle}
+          onValueChange={setCustomTitleStyle}
+        />
+        <Option
+          label="Custom back title (iOS)"
+          choices={ON_OFF}
+          value={customBackTitle}
+          onValueChange={setCustomBackTitle}
+        />
+        <Option
+          label="Back button display mode (iOS)"
+          choices={[
+            { label: 'Default', value: 'default' },
+            { label: 'Generic', value: 'generic' },
+            { label: 'Minimal', value: 'minimal' },
+          ]}
+          value={backDisplayMode}
+          onValueChange={setBackDisplayMode}
+        />
+        <Option
+          label="Back button menu (iOS)"
+          choices={ON_OFF}
+          value={backMenu}
+          onValueChange={setBackMenu}
+        />
+        <Option
+          label="Back icon (Android)"
+          choices={[
+            { label: 'Default', value: 'default' },
+            { label: 'Material', value: 'material' },
+            { label: 'SF Symbol', value: 'sfSymbol' },
+          ]}
+          value={backIcon}
+          onValueChange={setBackIcon}
         />
       </View>
       <Article author={{ name: 'Babel fish' }} scrollEnabled={scrollEnabled} />
@@ -281,10 +411,13 @@ const HeaderButtonsScreen = () => {
   const [showRight, setShowRight] = React.useState(true);
   const [backVisible, setBackVisible] = React.useState(false);
   const [customBackLabel, setCustomBackLabel] = React.useState(false);
+  const [buttonBackground, setButtonBackground] = React.useState(true);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerBackVisible: backVisible,
+      headerLeftBackgroundVisible: buttonBackground,
+      headerRightBackgroundVisible: buttonBackground,
       headerBackTitle: customBackLabel ? 'Start' : undefined,
       headerLeft: showLeft
         ? ({ tintColor, label }) => (
@@ -304,7 +437,14 @@ const HeaderButtonsScreen = () => {
           )
         : undefined,
     });
-  }, [navigation, showLeft, showRight, backVisible, customBackLabel]);
+  }, [
+    navigation,
+    showLeft,
+    showRight,
+    backVisible,
+    customBackLabel,
+    buttonBackground,
+  ]);
 
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic">
@@ -333,6 +473,12 @@ const HeaderButtonsScreen = () => {
           value={customBackLabel}
           onValueChange={setCustomBackLabel}
         />
+        <Option
+          label="Button background (iOS 26)"
+          choices={ON_OFF}
+          value={buttonBackground}
+          onValueChange={setButtonBackground}
+        />
         <Button variant="tinted" onPress={() => navigation.pop()}>
           Go back
         </Button>
@@ -341,9 +487,15 @@ const HeaderButtonsScreen = () => {
   );
 };
 
+const getCheckedIds = (checked: Record<string, boolean>) =>
+  Object.keys(checked)
+    .filter((id) => checked[id])
+    .join(', ') || 'none';
+
 const HeaderItemsScreen = () => {
   const navigation = useNavigation('NativeStackNextHeaderItems');
   const [lastAction, setLastAction] = React.useState('None');
+  const [disabled, setDisabled] = React.useState(false);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -351,6 +503,7 @@ const HeaderItemsScreen = () => {
         {
           type: 'button',
           label: 'Info',
+          disabled,
           onPress: () => setLastAction('Info'),
         },
       ],
@@ -358,6 +511,7 @@ const HeaderItemsScreen = () => {
         {
           type: 'button',
           label: 'Add',
+          variant: 'prominent',
           onPress: () => setLastAction('Add'),
         },
         { type: 'spacing', spacing: 8 },
@@ -373,34 +527,44 @@ const HeaderItemsScreen = () => {
                 onPress: () => setLastAction('Share'),
               },
               {
-                type: 'action',
-                label: 'Starred',
-                role: 'toggle',
-                initialState: true,
-                keepsMenuPresented: true,
-                onPress: () => setLastAction('Starred'),
+                type: 'submenu',
+                label: 'Flags',
+                inline: true,
+                onChange: ({ checked }) =>
+                  setLastAction(`Flags: ${getCheckedIds(checked)}`),
+                items: [
+                  {
+                    type: 'toggle',
+                    label: 'Starred',
+                    identifier: 'starred',
+                    defaultChecked: true,
+                    keepsMenuPresented: true,
+                  },
+                  {
+                    type: 'toggle',
+                    label: 'Pinned',
+                    identifier: 'pinned',
+                    keepsMenuPresented: true,
+                  },
+                ],
               },
               {
                 type: 'submenu',
                 label: 'Sort by',
                 multiselectable: false,
-                onSelectionChange: (ids) =>
-                  setLastAction(`Sort by ${ids.join(', ')}`),
+                onChange: ({ checked }) =>
+                  setLastAction(`Sort by ${getCheckedIds(checked)}`),
                 items: [
                   {
-                    type: 'action',
+                    type: 'toggle',
                     label: 'Name',
                     identifier: 'name',
-                    role: 'toggle',
-                    initialState: true,
-                    onPress: () => setLastAction('Sort by name'),
+                    defaultChecked: true,
                   },
                   {
-                    type: 'action',
+                    type: 'toggle',
                     label: 'Date',
                     identifier: 'date',
-                    role: 'toggle',
-                    onPress: () => setLastAction('Sort by date'),
                   },
                 ],
               },
@@ -409,13 +573,14 @@ const HeaderItemsScreen = () => {
         },
         {
           type: 'custom',
+          hidesSharedBackground: true,
           element: (
             <MaterialDesignIcons name="heart" size={24} color="tomato" />
           ),
         },
       ],
     });
-  }, [navigation]);
+  }, [navigation, disabled]);
 
   return (
     <View style={styles.content}>
@@ -423,6 +588,12 @@ const HeaderItemsScreen = () => {
         <Text style={styles.note}>Header items are only supported on iOS.</Text>
       ) : null}
       <Text style={styles.text}>Last action: {lastAction}</Text>
+      <Option
+        label="Disable info button"
+        choices={ON_OFF}
+        value={disabled}
+        onValueChange={setDisabled}
+      />
       <Button
         variant="tinted"
         onPress={() => navigation.goBack()}
@@ -560,8 +731,8 @@ const ToolbarMenuScreen = () => {
           {
             identifier: 'sort',
             singleSelection: true,
-            onSelectionChange: (ids) =>
-              setLastAction(`Sort by ${ids.join(', ')}`),
+            onChange: ({ checked }) =>
+              setLastAction(`Sort by ${getCheckedIds(checked)}`),
           },
         ],
         items: [
@@ -586,19 +757,17 @@ const ToolbarMenuScreen = () => {
             onPress: () => setLastAction('Share'),
           },
           {
-            type: 'item',
+            type: 'toggle',
             identifier: 'sort-name',
             label: 'Sort by name',
             groupIdentifier: 'sort',
-            role: 'toggle',
-            initialState: true,
+            defaultChecked: true,
           },
           {
-            type: 'item',
+            type: 'toggle',
             identifier: 'sort-date',
             label: 'Sort by date',
             groupIdentifier: 'sort',
-            role: 'toggle',
           },
           {
             type: 'item',
@@ -815,6 +984,95 @@ const SheetScreen = ({ route }: StaticScreenProps<{ preset: SheetPreset }>) => {
         semper, id ultrices urna egestas. Aliquam vitae libero vestibulum,
         ultrices mauris vel, facilisis turpis. Morbi ac volutpat ipsum.
       </Text>
+    </ScrollView>
+  );
+};
+
+const ANIMATIONS = [
+  'default',
+  'fade',
+  'fade_from_bottom',
+  'slide_from_bottom',
+  'slide_from_right',
+  'slide_from_left',
+  'ios_from_right',
+  'ios_from_left',
+  'flip',
+  'none',
+] as const satisfies NativeStackNavigationOptions['animation'][];
+
+type AnimationParams =
+  | {
+      animation: (typeof ANIMATIONS)[number];
+      duration: number | undefined;
+      replaceAnimation: 'push' | 'pop';
+    }
+  | undefined;
+
+const AnimationsScreen = ({ route }: StaticScreenProps<AnimationParams>) => {
+  const navigation = useNavigation('NativeStackNextAnimations');
+  const [duration, setDuration] = React.useState(0);
+  const [replaceAnimation, setReplaceAnimation] = React.useState<
+    'push' | 'pop'
+  >('push');
+
+  return (
+    <ScrollView contentContainerStyle={styles.content}>
+      {Platform.OS !== 'android' ? (
+        <Text style={styles.note}>
+          Animation options are only supported on Android.
+        </Text>
+      ) : null}
+      <Text style={styles.text}>
+        Current: {route.params?.animation ?? 'default'}
+      </Text>
+      <Option
+        label="Duration"
+        choices={[
+          { label: 'Default', value: 0 },
+          { label: '1000ms', value: 1000 },
+        ]}
+        value={duration}
+        onValueChange={setDuration}
+      />
+      <Option
+        label="Animation for replace"
+        choices={[
+          { label: 'Push', value: 'push' },
+          { label: 'Pop', value: 'pop' },
+        ]}
+        value={replaceAnimation}
+        onValueChange={setReplaceAnimation}
+      />
+      {ANIMATIONS.map((animation) => (
+        <Button
+          key={animation}
+          variant="tinted"
+          onPress={() =>
+            navigation.push('NativeStackNextAnimations', {
+              animation,
+              duration: duration === 0 ? undefined : duration,
+              replaceAnimation,
+            })
+          }
+          style={styles.button}
+        >
+          {`Push ${animation}`}
+        </Button>
+      ))}
+      <Button
+        variant="filled"
+        onPress={() =>
+          navigation.replace('NativeStackNextAnimations', {
+            animation: 'default',
+            duration: undefined,
+            replaceAnimation,
+          })
+        }
+        style={styles.button}
+      >
+        Replace
+      </Button>
     </ScrollView>
   );
 };
@@ -1087,14 +1345,6 @@ const NativeStackNextNavigator = createNativeStackNavigator({
       screen: HeaderAppearanceScreen,
       options: {
         title: 'Header appearance',
-        headerTintColor: 'white',
-        headerBackground: () => (
-          <Image
-            source={require('../../assets/misc/cpu.jpg')}
-            resizeMode="cover"
-            style={StyleSheet.absoluteFill}
-          />
-        ),
         contentStyle: {
           backgroundColor: 'rgba(255, 99, 71, 0.08)',
         },
@@ -1144,6 +1394,16 @@ const NativeStackNextNavigator = createNativeStackNavigator({
         headerShown: false,
         ...SHEET_PRESETS[route.params.preset].options,
       }),
+    }),
+    NativeStackNextAnimations: createNativeStackScreen({
+      screen: AnimationsScreen,
+      options: ({ route }) => ({
+        title: 'Animations',
+        animation: route.params?.animation,
+        animationDuration: route.params?.duration,
+        animationTypeForReplace: route.params?.replaceAnimation,
+      }),
+      linking: 'animations',
     }),
     NativeStackNextPreventRemove: createNativeStackScreen({
       screen: PreventRemoveScreen,
