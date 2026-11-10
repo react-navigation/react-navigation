@@ -376,21 +376,17 @@ export function Drawer({
 
   const drawerAnimatedStyle = useAnimatedStyle(() => {
     const distanceFromEdge = Math.max(layout.width - drawerWidth, 0);
+    const zIndex = translateX.value === 0 ? 0 : 1;
+    // Keep Android front drawers above the scene even if their styles update separately.
+    const zIndexOffset =
+      Platform.OS === 'android' && drawerType === 'front' ? 2 : 0;
 
     return {
       // FIXME: Reanimated skips committing to the shadow tree if no layout props are animated
       // This results in pressables not getting their correct position and can't be pressed
       // So we animate the zIndex to force the commit
-      // For 'back' type: always keep drawer behind content (-1 when open, 0 when closed/animating)
-      // For other types: 0 when open, 1 when closed/animating
-      zIndex:
-        drawerType === 'back'
-          ? translateX.value === 0
-            ? -1
-            : 0
-          : translateX.value === 0
-            ? 0
-            : 1,
+      // Keep 'back' drawers behind the scene.
+      zIndex: drawerType === 'back' ? zIndex - 1 : zIndex + zIndexOffset,
       display: isHidden.value ? 'none' : 'flex',
       transform:
         drawerType === 'permanent'
