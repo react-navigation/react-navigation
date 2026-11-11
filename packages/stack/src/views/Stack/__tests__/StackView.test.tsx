@@ -196,7 +196,7 @@ describe('StackView.getDerivedStateFromProps', () => {
 
       expect(result.routes.map((r) => r.key)).toEqual(['A', 'B', 'C']);
       expect(result.replacingRouteKeys).toEqual(['A', 'B']);
-      expect(result.openingRouteKeys).toEqual(['C']);
+      expect(result.openingRouteKeys).toEqual(['B', 'C']);
     });
   });
 
