@@ -213,3 +213,161 @@ test("doesn't fail if same object used multiple times", () => {
     serializable: true,
   });
 });
+
+test('skips params with a custom stringify in the linking config', () => {
+  const state = {
+    routes: [{ name: 'foo', params: { date: new Date(0) } }],
+  };
+
+  expect(checkSerializable(state)).toEqual({
+    serializable: false,
+    location: ['routes', 0, 'params', 'date'],
+    reason: 'Date',
+  });
+
+  expect(
+    checkSerializable(state, {
+      screens: {
+        foo: { stringify: { date: (value: Date) => value.toISOString() } },
+      },
+    })
+  ).toEqual({ serializable: true });
+});
+
+test('skips nested values inside params with a custom stringify', () => {
+  expect(
+    checkSerializable(
+      {
+        routes: [{ name: 'foo', params: { filter: { compare: () => 0 } } }],
+      },
+      {
+        screens: {
+          foo: { stringify: { filter: (value: object) => String(value) } },
+        },
+      }
+    )
+  ).toEqual({ serializable: true });
+});
+
+test('reports params without a custom stringify in the linking config', () => {
+  const config = {
+    screens: {
+      foo: { stringify: { date: (value: Date) => value.toISOString() } },
+    },
+  };
+
+  expect(
+    checkSerializable(
+      {
+        routes: [
+          { name: 'foo', params: { date: new Date(0), callback: () => 42 } },
+        ],
+      },
+      config
+    )
+  ).toEqual({
+    serializable: false,
+    location: ['routes', 0, 'params', 'callback'],
+    reason: 'Function',
+  });
+
+  expect(
+    checkSerializable(
+      {
+        routes: [{ name: 'bar', params: { date: new Date(0) } }],
+      },
+      config
+    )
+  ).toEqual({
+    serializable: false,
+    location: ['routes', 0, 'params', 'date'],
+    reason: 'Date',
+  });
+});
+
+test("doesn't skip params when the screen config is a path string", () => {
+  expect(
+    checkSerializable(
+      {
+        routes: [{ name: 'foo', params: { date: new Date(0) } }],
+      },
+      { screens: { foo: 'foo/:date' } }
+    )
+  ).toEqual({
+    serializable: false,
+    location: ['routes', 0, 'params', 'date'],
+    reason: 'Date',
+  });
+});
+
+test('skips params with a custom stringify in a nested navigator state', () => {
+  expect(
+    checkSerializable(
+      {
+        routes: [
+          {
+            name: 'foo',
+            state: {
+              routes: [{ name: 'bar', params: { date: new Date(0) } }],
+            },
+          },
+        ],
+      },
+      {
+        screens: {
+          foo: {
+            screens: {
+              bar: {
+                stringify: { date: (value: Date) => value.toISOString() },
+              },
+            },
+          },
+        },
+      }
+    )
+  ).toEqual({ serializable: true });
+});
+
+test('skips params with a custom stringify for a nested screen in params', () => {
+  const config = {
+    screens: {
+      foo: {
+        screens: {
+          bar: { stringify: { date: (value: Date) => value.toISOString() } },
+        },
+      },
+    },
+  };
+
+  expect(
+    checkSerializable(
+      {
+        routes: [
+          {
+            name: 'foo',
+            params: { screen: 'bar', params: { date: new Date(0) } },
+          },
+        ],
+      },
+      config
+    )
+  ).toEqual({ serializable: true });
+
+  expect(
+    checkSerializable(
+      {
+        routes: [
+          {
+            name: 'foo',
+            params: {
+              state: {
+                routes: [{ name: 'bar', params: { date: new Date(0) } }],
+              },
+            },
+          },
+        ],
+      },
+      config
+    )
+  ).toEqual({ serializable: true });
+});
