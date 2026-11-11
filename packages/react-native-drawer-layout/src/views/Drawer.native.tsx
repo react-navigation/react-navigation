@@ -78,14 +78,22 @@ export function Drawer({
   const windowDimensions = useWindowDimensions();
 
   const layout = customLayout ?? windowDimensions;
-  const drawerWidth = getDrawerWidthNative({ layout, drawerStyle });
+
+  const { width: customWidth, maxWidth: customMaxWidth } =
+    StyleSheet.flatten(drawerStyle) || {};
 
   const isOpen = drawerType === 'permanent' ? true : open;
   const isRight = drawerPosition === 'right';
 
   const getDrawerTranslationX = React.useCallback(
-    (open: boolean) => {
+    (open: boolean, containerWidth: number) => {
       'worklet';
+
+      const drawerWidth = getDrawerWidthNative({
+        containerWidth,
+        customWidth,
+        customMaxWidth,
+      });
 
       if (drawerPosition === 'left') {
         return open ? 0 : -drawerWidth;
@@ -93,7 +101,7 @@ export function Drawer({
 
       return open ? 0 : drawerWidth;
     },
-    [drawerPosition, drawerWidth]
+    [customMaxWidth, customWidth, drawerPosition]
   );
 
   const hideStatusBar = React.useCallback(
@@ -158,9 +166,22 @@ export function Drawer({
     [isRight, isOpen, swipeEdgeWidth]
   );
 
+  const layoutWidth = useSharedValue(layout.width);
+  const translationX = useSharedValue(
+    getDrawerTranslationX(open, layout.width)
+  );
+
+  const updateLayout = useLatestCallback((width: number) => {
+    layoutWidth.value = width;
+    translationX.value = getDrawerTranslationX(open, width);
+  });
+
+  React.useLayoutEffect(() => {
+    updateLayout(layout.width);
+  }, [layout.width, updateLayout]);
+
   const touchStartX = useSharedValue(0);
   const touchX = useSharedValue(0);
-  const translationX = useSharedValue(getDrawerTranslationX(open));
   const gestureState = useSharedValue<GestureState>(GestureState.UNDETERMINED);
 
   const onOpenLatest = useLatestCallback(onOpen);
@@ -188,7 +209,7 @@ export function Drawer({
     (open: boolean, velocity?: number) => {
       'worklet';
 
-      const translateX = getDrawerTranslationX(open);
+      const translateX = getDrawerTranslationX(open, layoutWidth.value);
 
       if (velocity === undefined) {
         runOnJS(onAnimationStart)(open);
@@ -216,6 +237,7 @@ export function Drawer({
       }
     },
     [
+      layoutWidth,
       getDrawerTranslationX,
       onAnimationEnd,
       onAnimationStart,
@@ -227,7 +249,12 @@ export function Drawer({
     ]
   );
 
-  const hasDrawerWidth = drawerWidth > 0;
+  const hasDrawerWidth =
+    getDrawerWidthNative({
+      containerWidth: layout.width,
+      customWidth,
+      customMaxWidth,
+    }) > 0;
 
   const previousHasDrawerWidthRef = React.useRef(hasDrawerWidth);
   const isHidden = useSharedValue(!isOpen && !hasDrawerWidth);
@@ -240,14 +267,21 @@ export function Drawer({
       // Update translationX without animation after measurement
       // This avoids flash of animation on initial render with async layout
       // We only want to animate it when something changes after measurement
-      translationX.value = getDrawerTranslationX(open);
+      translationX.value = getDrawerTranslationX(open, layout.width);
       // Unhide the drawer only after we set the correct translationX
       // Otherwise the drawer might briefly flash in the wrong position
       isHidden.value = false;
     }
 
     previousHasDrawerWidthRef.current = hasDrawerWidth;
-  }, [getDrawerTranslationX, hasDrawerWidth, isHidden, open, translationX]);
+  }, [
+    getDrawerTranslationX,
+    hasDrawerWidth,
+    isHidden,
+    layout.width,
+    open,
+    translationX,
+  ]);
 
   React.useLayoutEffect(() => toggleDrawer(open), [open, toggleDrawer]);
 
@@ -330,6 +364,12 @@ export function Drawer({
   ]);
 
   const translateX = useDerivedValue(() => {
+    const drawerWidth = getDrawerWidthNative({
+      containerWidth: layoutWidth.value,
+      customWidth,
+      customMaxWidth,
+    });
+
     // Comment stolen from react-native-gesture-handler/DrawerLayout
     //
     // While closing the drawer when user starts gesture outside of its area (in greyed
@@ -360,9 +400,9 @@ export function Drawer({
         ? minmax(
             drawerPosition === 'left'
               ? touchStartX.value - drawerWidth
-              : layout.width - drawerWidth - touchStartX.value,
+              : layoutWidth.value - drawerWidth - touchStartX.value,
             0,
-            layout.width
+            layoutWidth.value
           )
         : 0;
 
@@ -375,9 +415,16 @@ export function Drawer({
   });
 
   const drawerAnimatedStyle = useAnimatedStyle(() => {
-    const distanceFromEdge = Math.max(layout.width - drawerWidth, 0);
+    const drawerWidth = getDrawerWidthNative({
+      containerWidth: layoutWidth.value,
+      customWidth,
+      customMaxWidth,
+    });
+
+    const distanceFromEdge = Math.max(layoutWidth.value - drawerWidth, 0);
 
     return {
+      width: drawerWidth,
       // FIXME: Reanimated skips committing to the shadow tree if no layout props are animated
       // This results in pressables not getting their correct position and can't be pressed
       // So we animate the zIndex to force the commit
@@ -415,6 +462,12 @@ export function Drawer({
   });
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
+    const drawerWidth = getDrawerWidthNative({
+      containerWidth: layoutWidth.value,
+      customWidth,
+      customMaxWidth,
+    });
+
     return {
       // FIXME: Force Reanimated to commit to the shadow tree
       zIndex: translateX.value === 0 ? 0 : drawerType === 'back' ? 2 : 1,
@@ -437,11 +490,16 @@ export function Drawer({
   });
 
   const progress = useDerivedValue(() => {
+    const containerWidth = layoutWidth.value;
+
     return drawerType === 'permanent'
       ? 1
       : interpolate(
           translateX.value,
-          [getDrawerTranslationX(false), getDrawerTranslationX(true)],
+          [
+            getDrawerTranslationX(false, containerWidth),
+            getDrawerTranslationX(true, containerWidth),
+          ],
           [0, 1]
         );
   });
@@ -517,7 +575,6 @@ export function Drawer({
                 style={[
                   styles.drawer,
                   {
-                    width: drawerWidth,
                     position:
                       drawerType === 'permanent' ? 'relative' : 'absolute',
                   },
