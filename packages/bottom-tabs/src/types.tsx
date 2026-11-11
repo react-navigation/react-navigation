@@ -42,6 +42,8 @@ export type BottomTabNavigationEventMap = {
    *
    * The `data` object contains the following properties:
    * - `origin`: set to `native` when event originated from the native tab bar.
+   * - `hasTriggeredSpecialEffect`: with the native tab bar, whether the press already
+   *   triggered a native effect (pop to top or scroll to top) before the event was emitted.
    * - `behavior`: specifies how consumers of the event should handle the tab press:
    *   - `scrollToTop`: whether the content should scroll to top.
    *   - `popToTop`: whether the nested stack should pop to top.
@@ -49,6 +51,7 @@ export type BottomTabNavigationEventMap = {
   tabPress: {
     data: {
       origin?: 'native';
+      hasTriggeredSpecialEffect?: boolean;
       behavior: {
         scrollToTop: boolean;
         popToTop: boolean;
