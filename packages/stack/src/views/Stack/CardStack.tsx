@@ -872,12 +872,15 @@ export class CardStack extends React.Component<Props, State> {
               (isAnimationEnabled &&
                 (isFocusing ||
                   isRemoving ||
+                  // The screen below an opening card can still be visible during overlapping pushes
+                  (nextRoute != null &&
+                    openingRouteKeys.includes(nextRoute.key)) ||
                   // Preloaded screens should stay mounted, but remain hidden until focused
                   (!isPreloaded && index >= routes.length - 2)));
 
             const activityMode =
               // Keep focused and focusing screens interactive
-              focused || isFocusing
+              focused || (isFocusing && !isRemoving)
                 ? 'normal'
                 : inactiveBehavior === 'none' ||
                     // Keep effects running until the closing animation finishes
