@@ -134,6 +134,130 @@ export type NativeStackHeaderBackProps = NativeStackHeaderItemProps & {
   href?: string | undefined;
 };
 
+/**
+ * Controls how the header responds when the screen content scrolls.
+ *
+ * An expanded header displays its full height. A collapsed header displays
+ * only the compact toolbar. The start of the content is usually its top.
+ */
+export type NativeStackHeaderScrollOptions =
+  | {
+      /**
+       * Keeps the header at its full height while the content scrolls.
+       */
+      enabled: false;
+    }
+  | ({
+      /**
+       * Allows scrolling to collapse or hide the header.
+       */
+      enabled: true;
+      /**
+       * Whether the header automatically settles at its nearest expanded,
+       * collapsed, or hidden position when scrolling ends.
+       * When `false`, the header can remain partially collapsed.
+       */
+      snap?: boolean | undefined;
+      /**
+       * Whether collapsing stops at the compact toolbar height.
+       * When `false`, the entire header can move off-screen.
+       */
+      exitUntilCollapsed?: boolean | undefined;
+    } & (
+      | {
+          enterAlways?: false | undefined;
+          enterAlwaysCollapsed?: false | undefined;
+        }
+      | {
+          /**
+           * Whether the header starts expanding as soon as the user scrolls
+           * toward the start of the content. When `false`, expansion starts
+           * after the content reaches its start.
+           */
+          enterAlways: true;
+          /**
+           * Whether expansion before the content reaches its start is limited
+           * to the compact toolbar height. The remaining header expands after
+           * the content reaches its start.
+           */
+          enterAlwaysCollapsed?: boolean | undefined;
+        }
+    ));
+
+/**
+ * Options only supported by the experimental stack.
+ */
+export type NativeStackNextNavigationOptions = {
+  /**
+   * Tint color for the back button while it is pressed.
+   *
+   * @platform android
+   */
+  unstable_headerBackButtonTintColorPressed?: ColorValue | undefined;
+  /**
+   * Tint color for the back button while it is focused.
+   *
+   * @platform android
+   */
+  unstable_headerBackButtonTintColorFocused?: ColorValue | undefined;
+  /**
+   * Controls how a custom header background behaves as the app bar collapses.
+   *
+   * @platform android
+   */
+  unstable_headerBackgroundCollapseMode?: 'off' | 'parallax' | undefined;
+  /**
+   * Subtitle displayed below the large title.
+   *
+   * @platform ios 26+
+   */
+  unstable_headerLargeSubtitle?:
+    | string
+    | ((props: { tintColor?: ColorValue | undefined }) => React.ReactNode)
+    | undefined;
+  /**
+   * String or React element displayed as the header subtitle.
+   *
+   * A string is supported on Android and iOS 26+.
+   * A function that returns a React element is only supported on iOS 26+.
+   *
+   * @platform android, ios 26+
+   */
+  unstable_headerSubtitle?:
+    | string
+    | ((props: { tintColor?: ColorValue | undefined }) => React.ReactNode)
+    | undefined;
+  /**
+   * Material app bar size.
+   *
+   * @platform android
+   */
+  unstable_headerType?: 'small' | 'medium' | 'large' | undefined;
+  /**
+   * Scroll behavior configuration for the app bar.
+   * Defaults to disabled for a small header and enabled for medium and large headers.
+   *
+   * @platform android
+   */
+  unstable_headerScroll?: NativeStackHeaderScrollOptions | undefined;
+  /**
+   * Native Android toolbar menu configuration.
+   *
+   * This is an unstable API and might change in the future.
+   *
+   * @platform android
+   */
+  unstable_headerToolbarMenu?: NativeStackHeaderToolbarMenu | undefined;
+  /**
+   * Whether native Android toolbar menu groups display dividers.
+   *
+   * This is an unstable API and might change in the future.
+   *
+   * @platform android
+   */
+  unstable_headerToolbarMenuGroupDividerEnabled?: boolean | undefined;
+};
+
 export type NativeStackNavigationOptions = {
   /**
    * String that can be displayed in the header as a fallback for `headerTitle`.
@@ -243,6 +367,7 @@ export type NativeStackNavigationOptions = {
    * - color
    *
    * Only supported on iOS.
+   * In the experimental stack, it's also used on Android for the expanded title of `medium` and `large` headers.
    *
    * @platform ios
    */
@@ -273,6 +398,11 @@ export type NativeStackNavigationOptions = {
    * Boolean indicating whether the navigation bar is translucent.
    * Setting this to `true` makes the header absolutely positioned,
    * and changes the background color to `transparent` unless specified in `headerStyle`.
+   * On Android, enabling this disables header scrolling and collapsing, so
+   * `unstable_headerScroll` has no effect.
+   *
+   * In the experimental stack on iOS, the content is currently always rendered under the native header,
+   * so setting this to `false` doesn't move the content below it.
    */
   headerTransparent?: boolean | undefined;
   /**
@@ -294,6 +424,7 @@ export type NativeStackNavigationOptions = {
    * Function which returns a React Element to render as the background of the header.
    * This is useful for using backgrounds such as an image, a gradient, blur effect etc.
    * You can use this with `headerTransparent` to render content underneath a translucent header.
+   * On Android, this is ignored for a small header when header scrolling is enabled.
    */
   headerBackground?: (() => React.ReactNode) | undefined;
   /**
@@ -378,6 +509,8 @@ export type NativeStackNavigationOptions = {
    * Defaults to `left` on platforms other than iOS.
    *
    * Not supported on iOS. It's always `center` on iOS and cannot be changed.
+   *
+   * In the experimental stack on Android, it only applies to the `small` header type.
    */
   headerTitleAlign?: 'left' | 'center' | undefined;
   /**
@@ -598,6 +731,9 @@ export type NativeStackNavigationOptions = {
    * - "none": don't animate the screen
    *
    * Only supported on iOS and Android.
+   *
+   * In the experimental stack, it's only supported on Android,
+   * and `flip` and `simple_push` aren't supported.
    */
   animation?: ScreenProps['stackAnimation'] | undefined;
   /**
@@ -612,6 +748,9 @@ export type NativeStackNavigationOptions = {
    * The duration is not customizable for:
    * - Screens with `default` and `flip` animations
    * - Screens with `presentation` set to `modal`, `formSheet`, `pageSheet` (regardless of animation)
+   *
+   * In the experimental stack, it's only supported on Android,
+   * for all animations except `default` and `none`.
    *
    * @platform ios
    */
@@ -833,7 +972,7 @@ export type NativeStackNavigationOptions = {
    * Screens with nested navigators and last 2 screens won't be unmounted.
    */
   inactiveBehavior?: 'pause' | 'unmount' | 'none' | undefined;
-};
+} & NativeStackNextNavigationOptions;
 
 type IconIOS =
   | Extract<Icon, { type: 'image' }>
@@ -862,6 +1001,8 @@ type SharedHeaderItem = {
   /**
    * The variant of the item.
    * "prominent" only available from iOS 26.0 and later.
+   *
+   * "done" isn't supported in the experimental stack.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/style-swift.property
    */
@@ -972,6 +1113,16 @@ export type NativeStackHeaderItemButton = SharedHeaderItem & {
 };
 
 /**
+ * Options only mapped for menu actions by the experimental stack.
+ */
+export type NativeStackNextHeaderItemMenuAction = {
+  /**
+   * Unique identifier for the menu item.
+   */
+  identifier?: string | undefined;
+};
+
+/**
  * An action item in a menu.
  */
 export type NativeStackHeaderItemMenuAction = {
@@ -982,6 +1133,8 @@ export type NativeStackHeaderItemMenuAction = {
   label: string;
   /**
    * The secondary text displayed alongside the label of the menu item.
+   *
+   * Not supported in the experimental stack.
    */
   description?: string | undefined;
   /**
@@ -995,11 +1148,16 @@ export type NativeStackHeaderItemMenuAction = {
   /**
    * The state of an action- or command-based menu item.
    *
+   * Not supported in the experimental stack.
+   * Use items with `type: 'toggle'` instead.
+   *
    * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/state
    */
   state?: 'on' | 'off' | 'mixed' | undefined;
   /**
    * Whether to apply disabled style to the item.
+   *
+   * Not supported in the experimental stack.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/disabled
    */
@@ -1007,11 +1165,15 @@ export type NativeStackHeaderItemMenuAction = {
   /**
    * Whether to apply destructive style to the item.
    *
+   * Not supported in the experimental stack.
+   *
    * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/destructive
    */
   destructive?: boolean | undefined;
   /**
    * Whether to apply hidden style to the item.
+   *
+   * Not supported in the experimental stack.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/hidden
    */
@@ -1028,9 +1190,52 @@ export type NativeStackHeaderItemMenuAction = {
    * On iOS, the system displays this title in the discoverability heads-up display (HUD).
    * If this is not set, the HUD displays the title property.
    *
+   * Not supported in the experimental stack.
+   *
    * Read more: https://developer.apple.com/documentation/uikit/uiaction/discoverabilitytitle
    */
   discoverabilityLabel?: string | undefined;
+} & NativeStackNextHeaderItemMenuAction;
+
+/**
+ * An item in a menu that can be checked and unchecked by the user.
+ */
+export type NativeStackHeaderItemMenuToggle = Omit<
+  NativeStackHeaderItemMenuAction,
+  'type' | 'identifier' | 'onPress' | 'state'
+> & {
+  type: 'toggle';
+  /**
+   * Unique identifier for the menu item.
+   * Used as the key in the `checked` object passed to `onChange` of the menu.
+   */
+  identifier: string;
+  /**
+   * Whether the item is checked when the menu is first shown.
+   *
+   * Defaults to `false`.
+   */
+  defaultChecked?: boolean | undefined;
+};
+
+/**
+ * Event passed to `onChange` of a header menu or a toolbar menu group.
+ */
+export type NativeStackHeaderMenuChangeEvent = {
+  /**
+   * Checked state of the toggle items in the menu, by their `identifier`.
+   */
+  checked: Record<string, boolean>;
+};
+
+/**
+ * Options only mapped for submenus by the experimental stack.
+ */
+export type NativeStackNextHeaderItemMenuSubmenu = {
+  /**
+   * Unique identifier for the submenu.
+   */
+  identifier?: string | undefined;
 };
 
 /**
@@ -1044,6 +1249,8 @@ export type NativeStackHeaderItemMenuSubmenu = {
   label: string;
   /**
    * The secondary text displayed alongside the label of the submenu item.
+   *
+   * Not supported in the experimental stack.
    */
   description?: string | undefined;
   /**
@@ -1073,21 +1280,41 @@ export type NativeStackHeaderItemMenuSubmenu = {
   /**
    * Whether to apply destructive style to the menu item.
    *
+   * Not supported in the experimental stack.
+   *
    * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/destructive
    */
   destructive?: boolean | undefined;
   /**
    * Whether multiple items in the submenu can be selected, i.e. in "on" state.
    *
-   * Defaults to `false`.
+   * Defaults to `true`.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/singleselection
    */
   multiselectable?: boolean | undefined;
   /**
-   * Array of menu items (actions or submenus).
+   * Function called when the user checks or unchecks toggle items in the menu.
+   *
+   * In a single selection menu, i.e. `multiselectable: false`,
+   * toggle items in nested submenus are part of the same selection.
+   * So it also receives them, and `onChange` of the nested submenus isn't called.
+   */
+  onChange?: ((event: NativeStackHeaderMenuChangeEvent) => void) | undefined;
+  /**
+   * Array of menu items (actions, toggles or submenus).
    */
   items: NativeStackHeaderItemMenu['menu']['items'];
+} & NativeStackNextHeaderItemMenuSubmenu;
+
+/**
+ * Options only mapped for menus by the experimental stack.
+ */
+export type NativeStackNextHeaderItemMenuOptions = {
+  /**
+   * Unique identifier for the menu.
+   */
+  identifier?: string | undefined;
 };
 
 /**
@@ -1113,7 +1340,7 @@ export type NativeStackHeaderItemMenu = SharedHeaderItem & {
     /**
      * Whether multiple items in the submenu can be selected, i.e. in "on" state.
      *
-     * Defaults to `false`.
+     * Defaults to `true`.
      *
      * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/singleselection
      */
@@ -1129,13 +1356,22 @@ export type NativeStackHeaderItemMenu = SharedHeaderItem & {
      */
     layout?: 'default' | 'palette' | undefined;
     /**
-     * Array of menu items (actions or submenus).
+     * Function called when the user checks or unchecks toggle items in the menu.
+     *
+     * In a single selection menu, i.e. `multiselectable: false`,
+     * toggle items in nested submenus are part of the same selection.
+     * So it also receives them, and `onChange` of the nested submenus isn't called.
+     */
+    onChange?: ((event: NativeStackHeaderMenuChangeEvent) => void) | undefined;
+    /**
+     * Array of menu items (actions, toggles or submenus).
      */
     items: (
       | NativeStackHeaderItemMenuAction
+      | NativeStackHeaderItemMenuToggle
       | NativeStackHeaderItemMenuSubmenu
     )[];
-  };
+  } & NativeStackNextHeaderItemMenuOptions;
 };
 
 /**
@@ -1180,6 +1416,132 @@ export type NativeStackHeaderItem =
   | NativeStackHeaderItemMenu
   | NativeStackHeaderItemSpacing
   | NativeStackHeaderItemCustom;
+
+/**
+ * Icon supported by native Android header controls in the experimental stack.
+ */
+export type NativeStackHeaderIconAndroid = Extract<
+  Icon,
+  { type: 'image' | 'materialSymbol' }
+>;
+
+type NativeStackHeaderToolbarMenuItemBase = {
+  identifier: string;
+  label?: string | undefined;
+  condensedLabel?: string | undefined;
+  tooltip?: string | undefined;
+  accessibilityLabel?: string | undefined;
+  hidden?: boolean | undefined;
+  disabled?: boolean | undefined;
+  showAsAction?:
+    | 'always'
+    | 'alwaysWithText'
+    | 'ifRoom'
+    | 'ifRoomWithText'
+    | 'never'
+    | undefined;
+  icon?: NativeStackHeaderIconAndroid | undefined;
+  iconTintColor?: ColorValue | undefined;
+  iconTintColorPressed?: ColorValue | undefined;
+  iconTintColorFocused?: ColorValue | undefined;
+  iconTintColorDisabled?: ColorValue | undefined;
+};
+
+/**
+ * An item in the native Android toolbar menu.
+ */
+export type NativeStackHeaderToolbarMenuItem =
+  NativeStackHeaderToolbarMenuItemBase & {
+    type: 'item';
+    onPress?: (() => void) | undefined;
+  };
+
+/**
+ * An item in the native Android toolbar menu that can be checked and unchecked by the user.
+ *
+ * When shown in the toolbar with `showAsAction`, it doesn't show whether it's checked.
+ */
+export type NativeStackHeaderToolbarMenuToggle =
+  NativeStackHeaderToolbarMenuItemBase & {
+    type: 'toggle';
+    /**
+     * Identifier of the group the item belongs to.
+     */
+    groupIdentifier: string;
+    /**
+     * Whether the item is checked when the menu is first shown.
+     *
+     * Defaults to `false`.
+     */
+    defaultChecked?: boolean | undefined;
+  };
+
+/**
+ * Selection behavior for a group of native Android toolbar menu items.
+ */
+export type NativeStackHeaderToolbarMenuGroup = {
+  identifier: string;
+  /**
+   * Whether only one item in the group can be selected.
+   *
+   * Defaults to `false`.
+   */
+  singleSelection?: boolean | undefined;
+  /**
+   * Function called when the user checks or unchecks toggle items in the group.
+   */
+  onChange?: ((event: NativeStackHeaderMenuChangeEvent) => void) | undefined;
+};
+
+type NativeStackHeaderToolbarMenuBase = {
+  groups?: NativeStackHeaderToolbarMenuGroup[] | undefined;
+  items?: NativeStackHeaderToolbarMenuElement[] | undefined;
+};
+
+/**
+ * A submenu in the native Android toolbar menu.
+ */
+export type NativeStackHeaderToolbarSubmenu =
+  NativeStackHeaderToolbarMenuItemBase &
+    NativeStackHeaderToolbarMenuBase & {
+      type: 'menu';
+      menuLabel?: string | undefined;
+    };
+
+/**
+ * An element in the native Android toolbar menu.
+ */
+export type NativeStackHeaderToolbarMenuElement =
+  | NativeStackHeaderToolbarMenuItem
+  | NativeStackHeaderToolbarMenuToggle
+  | NativeStackHeaderToolbarSubmenu;
+
+/**
+ * Options that can be updated imperatively for a toolbar menu element.
+ */
+export type NativeStackHeaderToolbarMenuElementOptions = Partial<
+  Omit<NativeStackHeaderToolbarMenuItemBase, 'identifier'>
+> & {
+  checked?: boolean | undefined;
+  menuLabel?: string | undefined;
+};
+
+/**
+ * Methods for updating the native Android toolbar menu.
+ */
+export type NativeStackHeaderToolbarMenuRef = {
+  setOptions: (
+    identifier: string,
+    options: NativeStackHeaderToolbarMenuElementOptions
+  ) => void;
+};
+
+/**
+ * Configuration for the native Android toolbar menu.
+ */
+export type NativeStackHeaderToolbarMenu = NativeStackHeaderToolbarMenuBase & {
+  ref?: React.Ref<NativeStackHeaderToolbarMenuRef> | undefined;
+};
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
