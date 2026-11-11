@@ -155,6 +155,15 @@ export class StackView extends React.Component<Props, State> {
 
     let { openingRouteKeys, closingRouteKeys, replacingRouteKeys } = state;
 
+    // A route can be removed before its opening animation finishes
+    // e.g. when it was replaced while opening, so stop tracking it
+    // If a route being replaced is added back, it's handled like a newly focused route
+    openingRouteKeys = openingRouteKeys.filter(
+      (key) =>
+        state.routes.some((r) => r.key === key) &&
+        !(replacingRouteKeys.includes(key) && routes.some((r) => r.key === key))
+    );
+
     // If a route that was closing or being replaced is now back in the routes,
     // it was added back before the animation finished, so stop tracking it
     closingRouteKeys = closingRouteKeys.filter(
@@ -240,11 +249,11 @@ export class StackView extends React.Component<Props, State> {
           if (!routes.some((r) => r.key === previousFocusedRoute.key)) {
             // The previous focused route isn't present in state, we treat this as a replace
 
-            openingRouteKeys = openingRouteKeys.filter(
-              (key) => key !== previousFocusedRoute.key
-            );
-
             if (getAnimationTypeForReplace(nextFocusedRoute.key) === 'pop') {
+              openingRouteKeys = openingRouteKeys.filter(
+                (key) => key !== previousFocusedRoute.key
+              );
+
               closingRouteKeys = [
                 ...closingRouteKeys,
                 previousFocusedRoute.key,

@@ -523,11 +523,23 @@ export class CardStack extends React.Component<Props, State> {
 
         const activeAfterTransition = index >= self.length - activeScreensLimit;
 
-        if (index < self.length - activeScreensLimit - 1) {
+        if (
+          index < self.length - activeScreensLimit - 1 &&
+          !props.openingRouteKeys.includes(self[index + 1].key)
+        ) {
           // screen should be inactive because it is too deep in the stack
           // activating it during the transition makes the screen container re-attach
           // all screens above it to keep the order, which can show a blank frame on Android
           activityState = STATE_INACTIVE;
+        } else if (index < self.length - activeScreensLimit - 1) {
+          // When a card is pushed before the previous one finishes opening,
+          // the screen below the previous card is still visible
+          // So it needs to stay active until the card above it finishes opening
+          activityState = scenes[index + 1].progress.current.interpolate({
+            inputRange: [0, 1 - EPSILON, 1],
+            outputRange: [1, 1, STATE_INACTIVE],
+            extrapolate: 'clamp',
+          });
         } else if (Platform.OS === 'android' && index === self.length - 1) {
           // On Android, the screen container switches all screens to hardware layers
           // when no screen is on top, i.e. during the transition
