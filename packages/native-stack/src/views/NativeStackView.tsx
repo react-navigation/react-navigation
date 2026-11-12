@@ -18,6 +18,7 @@ import {
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, StyleSheet } from 'react-native';
+import type { SheetCommands } from 'react-native-screens';
 
 import type {
   NativeStackDescriptor,
@@ -26,6 +27,7 @@ import type {
 } from '../types';
 import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
+import { FormSheetContext } from '../utils/useFormSheet';
 
 type Props = {
   state: StackNavigationState<ParamListBase>;
@@ -159,6 +161,11 @@ const SceneView = React.memo(function SceneView({
 }: SceneViewProps) {
   const { options, navigation, render } = descriptor;
 
+  // Sheets aren't supported on web, so the ref is never attached
+  // But we still provide it so that `useFormSheet` works in shared code
+  const parentSheetRef = React.use(FormSheetContext);
+  const sheetRef = React.useRef<SheetCommands>(null);
+
   const headerBack = previousDescriptor
     ? {
         title: getHeaderTitle(
@@ -240,7 +247,11 @@ const SceneView = React.memo(function SceneView({
       }}
     >
       <HeaderBackContext.Provider value={headerBack}>
-        <AnimatedHeaderHeightProvider>{render()}</AnimatedHeaderHeightProvider>
+        <FormSheetContext.Provider value={parentSheetRef ?? sheetRef}>
+          <AnimatedHeaderHeightProvider>
+            {render()}
+          </AnimatedHeaderHeightProvider>
+        </FormSheetContext.Provider>
       </HeaderBackContext.Provider>
     </Screen>
   );

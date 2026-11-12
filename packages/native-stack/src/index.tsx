@@ -16,6 +16,7 @@ export { NativeStackView } from './views/NativeStackView';
  * Hooks
  */
 export { useAnimatedHeaderHeight } from './utils/useAnimatedHeaderHeight';
+export { useFormSheet } from './utils/useFormSheet';
 
 /**
  * Types
