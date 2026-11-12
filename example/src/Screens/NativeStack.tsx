@@ -66,6 +66,9 @@ const ArticleScreen = () => {
           <Button variant="tinted" onPress={() => navigation.pop()}>
             Pop screen
           </Button>
+          <Button variant="tinted" onPress={() => navigation.push('Dark')}>
+            Push dark screen
+          </Button>
         </View>
         <Article
           author={{ name: route.params?.author ?? 'Unknown' }}
@@ -159,6 +162,26 @@ const AlbumsScreen = () => {
         <Albums scrollEnabled={scrollEnabled} />
       </ScrollView>
       <HeaderHeightView hasOffset />
+    </View>
+  );
+};
+
+const DarkScreen = () => {
+  const navigation = useNavigation('Dark');
+
+  const headerHeight = useHeaderHeight();
+
+  return (
+    <View style={[styles.container, styles.dark]}>
+      <View style={[styles.buttons, { paddingTop: headerHeight + 12 }]}>
+        <Button variant="filled" onPress={() => navigation.goBack()}>
+          Go back
+        </Button>
+      </View>
+      <Text style={styles.darkText}>
+        A dark screen in a light theme. The header uses the dark interface
+        style, so its glass matches the content on iOS 26.
+      </Text>
     </View>
   );
 };
@@ -420,6 +443,24 @@ const NativeStackNavigator = createNativeStackNavigator({
       },
       linking: 'contacts',
     }),
+    Dark: createNativeStackScreen({
+      screen: DarkScreen,
+      options: {
+        title: 'Dark screen',
+        headerTransparent: true,
+        headerTintColor: 'white',
+        headerUserInterfaceStyle: 'dark',
+        unstable_headerRightItems: () => [
+          {
+            type: 'button',
+            label: 'Favorite',
+            icon: { type: 'sfSymbol', name: 'heart' },
+            onPress: () => Alert.alert('Favorite button pressed'),
+          },
+        ],
+      },
+      linking: 'dark',
+    }),
     Albums: createNativeStackScreen({
       screen: AlbumsScreen,
       options: ({ theme }) => ({
@@ -456,6 +497,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
+    padding: 12,
+  },
+  dark: {
+    backgroundColor: '#111',
+  },
+  darkText: {
+    color: 'white',
     padding: 12,
   },
   headerHeight: {
