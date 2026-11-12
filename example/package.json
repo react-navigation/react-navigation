@@ -46,6 +46,7 @@
     "react-native": "0.88.1",
     "react-native-drawer-layout": "workspace:^",
     "react-native-gesture-handler": "^3.5.0",
+    "react-native-nano-icons": "^1.0.1",
     "react-native-pager-view": "^10.0.0",
     "react-native-reanimated": "4.7.1",
     "react-native-safe-area-context": "~5.11.1",

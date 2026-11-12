@@ -47,7 +47,17 @@
           "backgroundColor": "#7b61c1"
         }
       ],
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "react-native-nano-icons",
+        {
+          "symbolSets": [
+            {
+              "inputDir": "./assets/symbols"
+            }
+          ]
+        }
+      ]
     ],
     "buildCacheProvider": {
       "plugin": "expo-build-disk-cache",
