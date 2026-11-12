@@ -11,7 +11,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, Platform, StyleSheet, View } from 'react-native';
 
 import type { Layout, Scene } from '../../types';
 import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
@@ -271,7 +271,15 @@ function CardContainerInner({
         cardStyle,
       ]}
     >
-      <View ref={contentRef} style={styles.container}>
+      <View
+        ref={contentRef}
+        style={styles.container}
+        onAccessibilityEscape={
+          focused && canGoBack
+            ? handleClose
+            : undefined
+        }
+      >
         <ModalPresentationContext.Provider value={modal}>
           {headerMode !== 'float'
             ? renderHeader({
