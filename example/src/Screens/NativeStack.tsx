@@ -4,6 +4,7 @@ import {
   HeaderButton,
   Text,
   useHeaderHeight,
+  useHeaderSearchBar,
 } from '@react-navigation/elements';
 import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import {
@@ -104,6 +105,7 @@ const NewsFeedScreen = () => {
 
 const ContactsScreen = () => {
   const navigation = useNavigation('Contacts');
+  const searchBar = useHeaderSearchBar();
 
   const [query, setQuery] = React.useState('');
 
@@ -125,6 +127,9 @@ const ContactsScreen = () => {
       contentInsetAdjustmentBehavior="automatic"
       ListHeaderComponent={
         <View style={styles.buttons}>
+          <Button variant="filled" onPress={() => searchBar.focus()}>
+            Focus search
+          </Button>
           <Button variant="filled" onPress={() => navigation.push('Albums')}>
             Push albums
           </Button>

@@ -4,6 +4,7 @@ import {
   HeaderHeightContext,
   HeaderShownContext,
 } from '@react-navigation/elements';
+import { HeaderSearchBarContext } from '@react-navigation/elements/internal';
 import {
   type Route,
   useLinkBuilder,
@@ -98,6 +99,7 @@ function CardContainerInner({
   const { direction } = useLocale();
 
   const parentHeaderHeight = React.use(HeaderHeightContext);
+  const parentSearchBarRef = React.use(HeaderSearchBarContext);
 
   const { options } = scene.descriptor;
   const enabled = options.keyboardHandlingEnabled !== false;
@@ -296,7 +298,15 @@ function CardContainerInner({
                       : (parentHeaderHeight ?? 0)
                   }
                 >
-                  {children}
+                  <HeaderSearchBarContext.Provider
+                    value={
+                      headerShown !== false
+                        ? scene.headerSearchBarRef
+                        : (parentSearchBarRef ?? scene.headerSearchBarRef)
+                    }
+                  >
+                    {children}
+                  </HeaderSearchBarContext.Provider>
                 </HeaderHeightContext.Provider>
               </HeaderShownContext.Provider>
             </HeaderBackContext.Provider>
