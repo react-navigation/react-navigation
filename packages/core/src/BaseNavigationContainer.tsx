@@ -121,7 +121,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
 
-  const setKey = React.useCallback((key: string) => {
+  const setKey = React.useCallback((key: string | undefined) => {
     navigatorKeyRef.current = key;
   }, []);
 

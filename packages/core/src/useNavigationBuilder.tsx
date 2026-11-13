@@ -450,7 +450,7 @@ export function useNavigationBuilder<
   );
 
   const {
-    state: currentState,
+    state: parentState,
     getState: getCurrentState,
     setState: setCurrentState,
     subscribe,
@@ -458,6 +458,14 @@ export function useNavigationBuilder<
     getKey,
     getIsInitial,
   } = React.use(NavigationStateContext);
+
+  const currentKey = getKey();
+  const currentState =
+    currentKey === undefined ||
+    currentKey === navigatorKey ||
+    parentState?.stale !== false
+      ? parentState
+      : undefined;
 
   const {
     onEmitEvent,
@@ -859,8 +867,12 @@ export function useNavigationBuilder<
 
     return () => {
       // We need to clean up state for this navigator on unmount
-      if (getCurrentState() !== undefined && getKey() === navigatorKey) {
-        setCurrentState(undefined);
+      if (getKey() === navigatorKey) {
+        setKey(undefined);
+
+        if (getCurrentState() !== undefined) {
+          setCurrentState(undefined);
+        }
       }
 
       mountStateRef.current = 'unmounted';
@@ -869,10 +881,15 @@ export function useNavigationBuilder<
   }, []);
 
   const getState = useLatestCallback((): State => {
+    const currentKey = getKey();
+    const parentState = getCurrentState();
     const currentState =
-      mountStateRef.current === 'unmounted'
+      mountStateRef.current === 'unmounted' ||
+      (currentKey !== undefined &&
+        currentKey !== navigatorKey &&
+        parentState?.stale === false)
         ? savedStateRef.current
-        : getCurrentState();
+        : parentState;
 
     return deepFreeze(
       (isStateInitialized(currentState)

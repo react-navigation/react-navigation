@@ -8,7 +8,7 @@ export const NavigationStateContext = React.createContext<{
   isDefault?: true | undefined;
   state?: NavigationState | PartialState<NavigationState> | undefined;
   getKey: () => string | undefined;
-  setKey: (key: string) => void;
+  setKey: (key: string | undefined) => void;
   getState: () => NavigationState | PartialState<NavigationState> | undefined;
   setState: (
     state: NavigationState | PartialState<NavigationState> | undefined

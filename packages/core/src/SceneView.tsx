@@ -58,7 +58,7 @@ export function SceneView<
     getFocusedRouteKey,
   });
 
-  const setKey = React.useCallback((key: string) => {
+  const setKey = React.useCallback((key: string | undefined) => {
     navigatorKeyRef.current = key;
   }, []);
 
