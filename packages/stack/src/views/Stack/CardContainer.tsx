@@ -105,6 +105,7 @@ function CardContainerInner({
 
   const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
     useKeyboardManager({
+      active,
       enabled,
       focused,
       contentRef,
