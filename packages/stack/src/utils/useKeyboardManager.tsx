@@ -1,18 +1,20 @@
 import * as React from 'react';
-import { type HostInstance, Keyboard, TextInput } from 'react-native';
+import { type HostInstance, Keyboard, Platform, TextInput } from 'react-native';
 
 export function useKeyboardManager({
+  active,
   enabled,
   focused,
   contentRef,
 }: {
+  active: boolean;
   enabled: boolean;
   focused: boolean;
   contentRef: React.RefObject<HostInstance | null>;
 }) {
-  // Numeric id of the previously focused text input
-  // When a gesture didn't change the tab, we can restore the focused input with this
   const previouslyFocusedTextInputRef = React.useRef<HostInstance>(undefined);
+  const unfocusedScreenTextInputRef = React.useRef<HostInstance>(undefined);
+  const closingGestureRef = React.useRef(false);
   const startTimestampRef = React.useRef<number>(0);
   const keyboardTimeoutRef =
     React.useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -32,6 +34,12 @@ export function useKeyboardManager({
     }
 
     clearKeyboardTimeout();
+
+    // On Android, back button hides keyboard without blurring input,
+    // so we need to check if the keyboard is actually visible.
+    if (Platform.OS === 'android' && !Keyboard.isVisible()) {
+      return;
+    }
 
     const input = TextInput.State.currentlyFocusedInput();
 
@@ -90,6 +98,14 @@ export function useKeyboardManager({
       }
 
       if (!closing) {
+        // If the screen was reopened without losing focus,
+        // e.g. the swipe was blocked by preventing removal
+        // We should clear the saved input to avoid refocusing it incorrectly later.
+        if (closingGestureRef.current) {
+          unfocusedScreenTextInputRef.current = undefined;
+          closingGestureRef.current = false;
+        }
+
         onPageChangeCancel();
         return;
       }
@@ -109,6 +125,15 @@ export function useKeyboardManager({
         input?.blur();
       }
 
+      // If a closing swipe already blurred the input,
+      // we can't get it using currentlyFocusedInput() anymore.
+      // So we need to use the input that was saved before the blur.
+      if (gesture) {
+        unfocusedScreenTextInputRef.current =
+          previouslyFocusedTextInputRef.current;
+        closingGestureRef.current = true;
+      }
+
       // Cleanup the ID on successful page change
       previouslyFocusedTextInputRef.current = undefined;
     },
@@ -119,10 +144,48 @@ export function useKeyboardManager({
   // This handles the "navigate forward" case so we don't dismiss the new screen's
   // auto-focused input from handleTransition.
   React.useLayoutEffect(() => {
-    if (enabledRef.current && !focused) {
+    if (
+      enabledRef.current &&
+      // Check the previous focus value so we only dismiss when focus is lost,
+      // and not if the effect re-runs (e.g. because of StrictMode, Activity etc.)
+      focusedRef.current &&
+      !focused
+    ) {
+      closingGestureRef.current = false;
+
+      if (
+        Platform.OS !== 'web' &&
+        // On Android, back button hides keyboard without blurring input,
+        // so we need to check if the keyboard is actually visible.
+        (Platform.OS !== 'android' || Keyboard.isVisible())
+      ) {
+        const input = TextInput.State.currentlyFocusedInput();
+
+        if (input && contentRef.current?.contains(input)) {
+          unfocusedScreenTextInputRef.current = input;
+        }
+      }
+
       Keyboard.dismiss();
     }
-  }, [focused]);
+  }, [contentRef, focused]);
+
+  React.useEffect(() => {
+    if (Platform.OS !== 'web' && focused && active) {
+      const input = unfocusedScreenTextInputRef.current;
+
+      if (
+        enabledRef.current &&
+        input &&
+        contentRef.current?.contains(input) &&
+        !TextInput.State.currentlyFocusedInput()
+      ) {
+        input.focus();
+      }
+
+      unfocusedScreenTextInputRef.current = undefined;
+    }
+  }, [active, contentRef, focused]);
 
   // Dismiss keyboard if native focus is restored to an input in an unfocused screen.
   // This can happen after dismissing a native alert when `autoFocus` is used on iOS.
@@ -150,6 +213,10 @@ export function useKeyboardManager({
   }, [contentRef]);
 
   React.useLayoutEffect(() => {
+    if (!enabled) {
+      unfocusedScreenTextInputRef.current = undefined;
+    }
+
     enabledRef.current = enabled;
     focusedRef.current = focused;
   });
