@@ -106,7 +106,7 @@ function CardContainerInner({
   const contentRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
   const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
-    useKeyboardManager({ enabled, focused, contentRef });
+    useKeyboardManager({ active, enabled, focused, contentRef });
 
   const handleOpen = () => {
     const { route } = scene.descriptor;
@@ -290,7 +290,7 @@ function CardContainerInner({
           cardStyle,
         ]}
       >
-        <View ref={contentRef} style={styles.container}>
+        <View ref={contentRef} collapsable={false} style={styles.container}>
           <ModalPresentationContext.Provider value={modal}>
             {headerMode !== 'float'
               ? renderHeader({
