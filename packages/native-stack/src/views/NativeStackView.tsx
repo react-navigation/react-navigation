@@ -50,20 +50,27 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
       return acc;
     }, {});
 
+  const activeRoutes = state.routes.slice(0, state.index + 1);
+  const lastOpaqueIndex = activeRoutes.findLastIndex((route) => {
+    const presentation = descriptors[route.key]?.options.presentation;
+
+    return (
+      presentation == null || !TRANSPARENT_PRESENTATIONS.includes(presentation)
+    );
+  });
+
   return (
     <SafeAreaProviderCompat>
       {state.routes.concat(state.preloadedRoutes).map((route, i) => {
         const isFocused = state.index === i;
         const previousKey = state.routes[i - 1]?.key;
-        const nextKey = state.routes[i + 1]?.key;
         const previousDescriptor = previousKey
           ? descriptors[previousKey]
           : undefined;
-        const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
         const descriptor =
           descriptors[route.key] ?? preloadedDescriptors[route.key];
 
-        const nextPresentation = nextDescriptor?.options.presentation;
+        const isVisible = i >= lastOpaqueIndex && i <= state.index;
 
         const isPreloaded =
           preloadedDescriptors[route.key] !== undefined &&
@@ -78,12 +85,7 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
             parentHeaderBack={parentHeaderBack}
             buildHref={buildHref}
             focused={isFocused}
-            visible={
-              (isFocused ||
-                (nextPresentation != null &&
-                  TRANSPARENT_PRESENTATIONS.includes(nextPresentation))) &&
-              !isPreloaded
-            }
+            visible={isVisible && !isPreloaded}
           />
         );
       })}
