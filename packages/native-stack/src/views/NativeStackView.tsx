@@ -45,6 +45,14 @@ export function NativeStackView({ state, descriptors }: Props) {
   const activeRoutes = state.routes.slice(0, state.index + 1);
   const modalRouteKeys = getModalRouteKeys(activeRoutes, descriptors);
 
+  const lastOpaqueIndex = activeRoutes.findLastIndex((route) => {
+    const presentation = descriptors[route.key]?.options.presentation;
+
+    return (
+      presentation == null || !TRANSPARENT_PRESENTATIONS.includes(presentation)
+    );
+  });
+
   const [savedNestedStateRouteKeys, setSavedNestedStateRouteKeys] =
     React.useState<string[]>([]);
 
@@ -72,7 +80,6 @@ export function NativeStackView({ state, descriptors }: Props) {
         const previousDescriptor = previousKey
           ? descriptors[previousKey]
           : undefined;
-        const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
         const descriptor = descriptors[route.key];
 
         if (descriptor == null) {
@@ -83,11 +90,7 @@ export function NativeStackView({ state, descriptors }: Props) {
 
         const { inactiveBehavior = 'pause' } = descriptor.options;
 
-        const nextPresentation = nextDescriptor?.options.presentation;
-
-        const isNextScreenTransparent =
-          nextPresentation != null &&
-          TRANSPARENT_PRESENTATIONS.includes(nextPresentation);
+        const isVisible = i >= lastOpaqueIndex && i <= state.index;
 
         const isInactive = i > state.index;
 
@@ -103,9 +106,7 @@ export function NativeStackView({ state, descriptors }: Props) {
             ? 'normal'
             : // Unpause preloaded and retained screens so updates are visible
               // This lets effects on those screens run
-              inactiveBehavior === 'none' ||
-                isInactive ||
-                isNextScreenTransparent
+              inactiveBehavior === 'none' || isInactive || isVisible
               ? 'inert'
               : inactiveBehavior === 'unmount' &&
                   !isNextScreenModal &&
@@ -128,7 +129,7 @@ export function NativeStackView({ state, descriptors }: Props) {
             buildHref={buildHref}
             focused={isFocused}
             activityMode={activityMode}
-            visible={isFocused || isNextScreenTransparent}
+            visible={isVisible}
           />
         );
       })}
