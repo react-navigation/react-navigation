@@ -157,7 +157,14 @@ const getInterpolationIndex = (scenes: Scene[], index: number) => {
     const cardStyleInterpolatorCurrent =
       scenes[i]?.descriptor.options.cardStyleInterpolator;
 
-    if (cardStyleInterpolatorCurrent !== cardStyleInterpolator) {
+    if (
+      cardStyleInterpolatorCurrent !== cardStyleInterpolator &&
+      !(
+        cardStyleInterpolatorCurrent &&
+        getIsModalPresentation(cardStyleInterpolatorCurrent) &&
+        getIsModalPresentation(cardStyleInterpolator)
+      )
+    ) {
       break;
     }
 
@@ -167,29 +174,25 @@ const getInterpolationIndex = (scenes: Scene[], index: number) => {
   return interpolationIndex;
 };
 
+const isSameInterpolator = (
+  a: StackCardStyleInterpolator,
+  b: StackCardStyleInterpolator
+) => a === b || (a.name !== '' && a.name === b.name);
+
 const getIsModalPresentation = (
   cardStyleInterpolator: StackCardStyleInterpolator
-) => {
-  return (
-    cardStyleInterpolator === forModalPresentationIOS ||
-    cardStyleInterpolator.name === forModalPresentationIOS.name
-  );
-};
+) => isSameInterpolator(cardStyleInterpolator, forModalPresentationIOS);
 
 const getIsGestureEnabledByDefault = (
   cardStyleInterpolator: StackCardStyleInterpolator
 ) =>
-  !GESTURE_DISABLED_INTERPOLATORS.some(
-    (interpolator) =>
-      cardStyleInterpolator === interpolator ||
-      cardStyleInterpolator.name === interpolator.name
+  !GESTURE_DISABLED_INTERPOLATORS.some((interpolator) =>
+    isSameInterpolator(cardStyleInterpolator, interpolator)
   );
 
 const getIsScreenHeader = (cardStyleInterpolator: StackCardStyleInterpolator) =>
-  SCREEN_HEADER_INTERPOLATORS.some(
-    (interpolator) =>
-      cardStyleInterpolator === interpolator ||
-      cardStyleInterpolator.name === interpolator.name
+  SCREEN_HEADER_INTERPOLATORS.some((interpolator) =>
+    isSameInterpolator(cardStyleInterpolator, interpolator)
   );
 
 const getIsInModalPresentation = (
