@@ -98,9 +98,24 @@ private class LayoutMeasurementView: UIView {
 
     let host = sequence(first: view, next: \.superview).first { $0.next is UIViewController } ?? window
 
+    let frame = resolveFrame(of: view, in: host)
+
+    // The padding from the insets can grow the view further past the edge of the host
+    // e.g. content taller than the screen in a scroll view, where a larger bottom inset grows it more
+    // So we only measure the part inside the host, otherwise the insets and the size grow in a loop
+    let minX = min(max(frame.minX, 0), host.bounds.width)
+    let minY = min(max(frame.minY, 0), host.bounds.height)
+
+    let visibleFrame = CGRect(
+      x: minX,
+      y: minY,
+      width: max(min(frame.maxX, host.bounds.width) - minX, 0),
+      height: max(min(frame.maxY, host.bounds.height) - minY, 0)
+    )
+
     let state = LayoutMeasurementState(
       props: props,
-      frame: resolveFrame(of: view, in: host),
+      frame: visibleFrame,
       windowBounds: window.bounds,
       isRTL: view.effectiveUserInterfaceLayoutDirection == .rightToLeft
     )
