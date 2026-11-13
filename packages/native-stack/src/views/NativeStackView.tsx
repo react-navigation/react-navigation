@@ -72,7 +72,6 @@ export function NativeStackView({ state, descriptors }: Props) {
         const previousDescriptor = previousKey
           ? descriptors[previousKey]
           : undefined;
-        const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
         const descriptor = descriptors[route.key];
 
         if (descriptor == null) {
@@ -83,11 +82,17 @@ export function NativeStackView({ state, descriptors }: Props) {
 
         const { inactiveBehavior = 'pause' } = descriptor.options;
 
-        const nextPresentation = nextDescriptor?.options.presentation;
+        const isVisible =
+          isFocused ||
+          (i < state.index &&
+            activeRoutes.slice(i + 1).every((r) => {
+              const presentation = descriptors[r.key]?.options.presentation;
 
-        const isNextScreenTransparent =
-          nextPresentation != null &&
-          TRANSPARENT_PRESENTATIONS.includes(nextPresentation);
+              return (
+                presentation != null &&
+                TRANSPARENT_PRESENTATIONS.includes(presentation)
+              );
+            }));
 
         const isInactive = i > state.index;
 
@@ -103,9 +108,7 @@ export function NativeStackView({ state, descriptors }: Props) {
             ? 'normal'
             : // Unpause preloaded and retained screens so updates are visible
               // This lets effects on those screens run
-              inactiveBehavior === 'none' ||
-                isInactive ||
-                isNextScreenTransparent
+              inactiveBehavior === 'none' || isInactive || isVisible
               ? 'inert'
               : inactiveBehavior === 'unmount' &&
                   !isNextScreenModal &&
@@ -128,7 +131,7 @@ export function NativeStackView({ state, descriptors }: Props) {
             buildHref={buildHref}
             focused={isFocused}
             activityMode={activityMode}
-            visible={isFocused || isNextScreenTransparent}
+            visible={isVisible}
           />
         );
       })}
