@@ -123,7 +123,11 @@ const NAMED_TRANSITIONS_PRESETS = {
   slide_from_bottom: ModalSlideFromBottomIOS,
 } as const satisfies Record<StackAnimationName, TransitionPreset>;
 
-const GESTURE_DISABLED_INTERPOLATORS = [
+const MODAL_PRESENTATION_INTERPOLATORS = {
+  forModalPresentationIOS,
+};
+
+const GESTURE_DISABLED_INTERPOLATORS = {
   forCrossDissolveIOS,
   forDialogAndroid,
   forFadeFromBottomAndroid,
@@ -132,12 +136,12 @@ const GESTURE_DISABLED_INTERPOLATORS = [
   forRevealFromBottomAndroid,
   forScaleFromCenterAndroid,
   forVerticalIOS,
-];
+};
 
-const SCREEN_HEADER_INTERPOLATORS = [
+const SCREEN_HEADER_INTERPOLATORS = {
   ...GESTURE_DISABLED_INTERPOLATORS,
   forBottomSheetAndroid,
-];
+};
 
 const HIDDEN_HEADER_HEIGHT = { measured: false, value: 0 };
 
@@ -169,27 +173,27 @@ const getInterpolationIndex = (scenes: Scene[], index: number) => {
 
 const getIsModalPresentation = (
   cardStyleInterpolator: StackCardStyleInterpolator
-) => {
-  return (
-    cardStyleInterpolator === forModalPresentationIOS ||
-    cardStyleInterpolator.name === forModalPresentationIOS.name
+) =>
+  Object.entries(MODAL_PRESENTATION_INTERPOLATORS).some(
+    ([name, interpolator]) =>
+      cardStyleInterpolator === interpolator ||
+      cardStyleInterpolator.name === name
   );
-};
 
 const getIsGestureEnabledByDefault = (
   cardStyleInterpolator: StackCardStyleInterpolator
 ) =>
-  !GESTURE_DISABLED_INTERPOLATORS.some(
-    (interpolator) =>
+  !Object.entries(GESTURE_DISABLED_INTERPOLATORS).some(
+    ([name, interpolator]) =>
       cardStyleInterpolator === interpolator ||
-      cardStyleInterpolator.name === interpolator.name
+      cardStyleInterpolator.name === name
   );
 
 const getIsScreenHeader = (cardStyleInterpolator: StackCardStyleInterpolator) =>
-  SCREEN_HEADER_INTERPOLATORS.some(
-    (interpolator) =>
+  Object.entries(SCREEN_HEADER_INTERPOLATORS).some(
+    ([name, interpolator]) =>
       cardStyleInterpolator === interpolator ||
-      cardStyleInterpolator.name === interpolator.name
+      cardStyleInterpolator.name === name
   );
 
 const getIsInModalPresentation = (
