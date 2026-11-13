@@ -207,6 +207,7 @@ const getMenuItem = (
 };
 
 export function useHeaderConfigProps({
+  header,
   headerBackIcon,
   headerBackButtonDisplayMode,
   headerBackButtonMenuEnabled,
@@ -576,7 +577,7 @@ export function useHeaderConfigProps({
     disableBottomInsetApplication:
       headerInsets?.bottom !== undefined ? !headerInsets.bottom : undefined,
     translucent: translucent === true,
-    children,
+    children: header === undefined ? children : null,
     headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
     headerRightBarButtonItems: processBarButtonItems(rightItems, colors, fonts),
     experimental_userInterfaceStyle: dark ? 'dark' : 'light',

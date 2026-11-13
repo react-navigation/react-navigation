@@ -6,7 +6,7 @@ import {
   jest,
   test,
 } from '@jest/globals';
-import { useHeaderHeight } from '@react-navigation/elements';
+import { getHeaderTitle, useHeaderHeight } from '@react-navigation/elements';
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -354,6 +354,49 @@ test('renders a native-stack navigator with screens', async () => {
     )
   ).toBe(true);
   expect(isHiddenFromAccessibility(screen.getByText('Screen B'))).toBe(false);
+});
+
+test('renders a custom header with working left and right buttons', async () => {
+  const Stack = createNativeStackNavigator<StackParamList>();
+  const user = userEvent.setup();
+  const onPressLeft = jest.fn();
+  const onPressRight = jest.fn();
+
+  await render(
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="A"
+          options={{
+            header: ({ options, route, back }) => (
+              <View>
+                {options.headerLeft?.({ canGoBack: back != null })}
+                <Text>{getHeaderTitle(options, route.name)}</Text>
+                {options.headerRight?.({ canGoBack: back != null })}
+              </View>
+            ),
+            headerTitle: 'Edit profile',
+            headerLeft: () => <Button title="Cancel" onPress={onPressLeft} />,
+            headerRight: () => <Button title="Save" onPress={onPressRight} />,
+          }}
+        >
+          {() => <Text>Profile</Text>}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(screen.getByText('Edit profile')).toBeOnTheScreen();
+  expect(screen.getByText('Cancel')).toBeOnTheScreen();
+  expect(screen.getByText('Save')).toBeOnTheScreen();
+
+  await user.press(screen.getByText('Cancel'));
+
+  expect(onPressLeft).toHaveBeenCalledTimes(1);
+
+  await user.press(screen.getByText('Save'));
+
+  expect(onPressRight).toHaveBeenCalledTimes(1);
 });
 
 test('inactiveBehavior="unmount" keeps screens with nested navigators mounted', async () => {
