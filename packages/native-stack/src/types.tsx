@@ -398,8 +398,38 @@ export type NativeStackNavigationOptions = {
    * If you don't have a `ScrollView`, specify `headerTransparent: false`.
    */
   headerSearchBarOptions?:
-    | (Omit<SearchBarProps, 'onChangeText'> & {
+    | (Omit<SearchBarProps, 'onChangeText' | 'rightAccessory'> & {
         onChange?: SearchBarProps['onChangeText'] | undefined;
+        /**
+         * Custom accessory button displayed at the trailing edge of the search text field.
+         *
+         * Supported values for `type`:
+         * - `bookmark` (default): shown only while the search field is empty,
+         *   the clear button takes its place once text is entered.
+         * - `resultsList`: always shown.
+         *
+         * Only supported on iOS.
+         *
+         * @platform ios
+         */
+        rightAccessory?:
+          | {
+              /**
+               * Icon to display in the accessory button.
+               */
+              icon: IconIOS;
+              /**
+               * Which `UISearchBar` accessory slot to use.
+               *
+               * Defaults to `bookmark`.
+               */
+              type?: 'bookmark' | 'resultsList' | undefined;
+              /**
+               * Function to call when the accessory button is pressed.
+               */
+              onPress?: (() => void) | undefined;
+            }
+          | undefined;
       })
     | undefined;
   /**
