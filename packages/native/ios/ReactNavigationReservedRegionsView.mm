@@ -1,5 +1,3 @@
-#import "ReactNavigationReservedRegionsView.h"
-
 #import <react/renderer/components/ReactNavigationSpec/ComponentDescriptors.h>
 #import <react/renderer/components/ReactNavigationSpec/EventEmitters.h>
 #import <react/renderer/components/ReactNavigationSpec/Props.h>
@@ -8,13 +6,12 @@
 
 #import <React/RCTComponentEvent.h>
 #import <React/RCTConstants.h>
-#import <React/RCTFabricComponentsPlugins.h>
 #import <React/RCTMountingTransactionObserving.h>
+#import <React/RCTViewComponentView.h>
 
 using namespace facebook::react;
 
-@interface ReactNavigationReservedRegionsView () <RCTMountingTransactionObserving>
-
+@interface ReactNavigationReservedRegionsView : RCTViewComponentView <RCTMountingTransactionObserving>
 @end
 
 @implementation ReactNavigationReservedRegionsView {
