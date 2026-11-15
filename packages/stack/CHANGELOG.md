@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.12.2](https://github.com/react-navigation/react-navigation/compare/%40react-navigation%2Fstack%407.12.1...%40react-navigation%2Fstack%407.12.2) (2026-11-15)
+
+### Bug Fixes
+
+* avoid blank frame during stack transitions on Android ([5208038](https://github.com/react-navigation/react-navigation/commit/52080384cd40ef34f29077d76214dfe94801968d)), closes [#12928](https://github.com/react-navigation/react-navigation/issues/12928) [#12928](https://github.com/react-navigation/react-navigation/issues/12928) - by @satya164
+* don't show card overlay through transparent modals ([8d7a88d](https://github.com/react-navigation/react-navigation/commit/8d7a88d6f0082e25ea5dddd0a127b8952acaabc2)), closes [#11825](https://github.com/react-navigation/react-navigation/issues/11825) - by @satya164
+* improve JS stack animation performance ([#13338](https://github.com/react-navigation/react-navigation/issues/13338)) ([7f5f081](https://github.com/react-navigation/react-navigation/commit/7f5f081279efecd73f01f51ba562280fe82eebcf)) - by @satya164
+* keep visible screens attached during overlapping stack transitions ([#13214](https://github.com/react-navigation/react-navigation/issues/13214)) ([900512a](https://github.com/react-navigation/react-navigation/commit/900512ab8c72ca2f8f23570f28cf1b5a662c55af)) - by @hgray-instawork
+* prevent input from being focused in an unfocused screen in stack ([3c7f1fc](https://github.com/react-navigation/react-navigation/commit/3c7f1fc35fab2378dc021c6befb321038af3e63e)) - by @satya164
+* restore focused input after going back in stack ([08ead54](https://github.com/react-navigation/react-navigation/commit/08ead54e171126d3fd6172089517d0cd3ef4c6ac)), closes [#10706](https://github.com/react-navigation/react-navigation/issues/10706) - by @satya164
+* show theme background behind cards in stack ([471fa1b](https://github.com/react-navigation/react-navigation/commit/471fa1b6fa6231d255b3c5eb940905263f596aa1)), closes [#10951](https://github.com/react-navigation/react-navigation/issues/10951) [#8734](https://github.com/react-navigation/react-navigation/issues/8734) [#9883](https://github.com/react-navigation/react-navigation/issues/9883) - by @satya164
+* update screen activity state when route keys change ([3a9e086](https://github.com/react-navigation/react-navigation/commit/3a9e086c8faf2e47e254000af16aba9c78f24e91)), closes [#13337](https://github.com/react-navigation/react-navigation/issues/13337) - by @satya164
+* use supported gesture handler props for stack card gesture ([8462eec](https://github.com/react-navigation/react-navigation/commit/8462eecf4e3e7cdb0ad70c8c17b05bc675308542)), closes [#10772](https://github.com/react-navigation/react-navigation/issues/10772) - by @satya164
+
 ## [7.12.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.12.0...@react-navigation/stack@7.12.1) (2026-10-13)
 
 ### Bug Fixes

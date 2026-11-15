@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.21.1](https://github.com/react-navigation/react-navigation/compare/%40react-navigation%2Fnative-stack%407.21.0...%40react-navigation%2Fnative-stack%407.21.1) (2026-11-15)
+
+### Bug Fixes
+
+* don't render native header items with a custom header ([83c3843](https://github.com/react-navigation/react-navigation/commit/83c38432f89f5136edc7832d79371d6510020630)), closes [#12061](https://github.com/react-navigation/react-navigation/issues/12061) - by @satya164
+* don't show header background if header is hidden ([#13330](https://github.com/react-navigation/react-navigation/issues/13330)) ([95e2fad](https://github.com/react-navigation/react-navigation/commit/95e2fad39728b0125b12aacc3b69d931f4d3a6a1)), closes [#11347](https://github.com/react-navigation/react-navigation/issues/11347) - by @satya164
+* hide screens only below an opaque screen in native stack on web ([03040c1](https://github.com/react-navigation/react-navigation/commit/03040c1901e50a2156059f246ae2e857925f9963)), closes [#12734](https://github.com/react-navigation/react-navigation/issues/12734) - by @satya164
+* set native stack container background to theme background ([625f8c8](https://github.com/react-navigation/react-navigation/commit/625f8c80d80073a1a7eabcd1f6e8147ce2a0c44d)), closes [#12957](https://github.com/react-navigation/react-navigation/issues/12957) - by @satya164
+
 # [7.21.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.20.0...@react-navigation/native-stack@7.21.0) (2026-10-13)
 
 ### Features

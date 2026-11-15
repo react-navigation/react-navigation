@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.13](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout%404.2.12...react-native-drawer-layout%404.2.13) (2026-11-15)
+
+### Bug Fixes
+
+* avoid drawer flash and extra callbacks when layout width changes ([7998cb4](https://github.com/react-navigation/react-navigation/commit/7998cb42578b97bb98672a5650de923f8c4755be)), closes [#13276](https://github.com/react-navigation/react-navigation/issues/13276) - by @satya164
+* respect max width for drawer ([44a60c2](https://github.com/react-navigation/react-navigation/commit/44a60c29494dabf0d5425c54b2a9249d4009b78a)), closes [#12105](https://github.com/react-navigation/react-navigation/issues/12105) - by @satya164
+
 ## [4.2.12](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.11...react-native-drawer-layout@4.2.12) (2026-10-13)
 
 ### Bug Fixes

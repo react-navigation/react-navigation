@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.2](https://github.com/react-navigation/react-navigation/compare/%40react-navigation%2Fmaterial-top-tabs%407.8.1...%40react-navigation%2Fmaterial-top-tabs%407.8.2) (2026-11-15)
+
+### Bug Fixes
+
+* use correct navigation helpers type in tabs ([6e88732](https://github.com/react-navigation/react-navigation/commit/6e887322d415bed94c77ded68683a551a97f28d5)), closes [#10979](https://github.com/react-navigation/react-navigation/issues/10979) - by @satya164
+
 ## [7.8.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.8.0...@react-navigation/material-top-tabs@7.8.1) (2026-10-13)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

@@ -5396,7 +5396,7 @@ __metadata:
   resolution: "@react-navigation/bottom-tabs@workspace:packages/bottom-tabs"
   dependencies:
     "@jest/globals": "npm:^30.5.2"
-    "@react-navigation/elements": "npm:^2.9.45"
+    "@react-navigation/elements": "npm:^2.9.46"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^13.2.1"
     "@types/color": "npm:^4.2.0"
@@ -5425,7 +5425,7 @@ __metadata:
   resolution: "@react-navigation/core@workspace:packages/core"
   dependencies:
     "@jest/globals": "npm:^30.5.2"
-    "@react-navigation/routers": "npm:^7.6.5"
+    "@react-navigation/routers": "npm:^7.6.6"
     "@testing-library/react-native": "npm:^13.2.1"
     "@types/react": "npm:~19.3.0"
     "@types/react-is": "npm:^19.3.0"
@@ -5469,7 +5469,7 @@ __metadata:
     "@babel/core": "npm:^7.29.0"
     "@jest/globals": "npm:^30.5.2"
     "@react-native/metro-config": "npm:0.88.0"
-    "@react-navigation/elements": "npm:^2.9.45"
+    "@react-navigation/elements": "npm:^2.9.46"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^13.2.1"
     "@types/react": "npm:~19.3.0"
@@ -5498,7 +5498,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/elements@npm:^2.9.45, @react-navigation/elements@workspace:packages/elements":
+"@react-navigation/elements@npm:^2.9.46, @react-navigation/elements@workspace:packages/elements":
   version: 0.0.0-use.local
   resolution: "@react-navigation/elements@workspace:packages/elements"
   dependencies:
@@ -5590,7 +5590,7 @@ __metadata:
   resolution: "@react-navigation/material-top-tabs@workspace:packages/material-top-tabs"
   dependencies:
     "@jest/globals": "npm:^30.5.2"
-    "@react-navigation/elements": "npm:^2.9.45"
+    "@react-navigation/elements": "npm:^2.9.46"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^13.2.1"
     "@types/react": "npm:~19.3.0"
@@ -5601,7 +5601,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.44.1"
     react-native-pager-view: "npm:^10.0.0"
     react-native-safe-area-context: "npm:~5.11.1"
-    react-native-tab-view: "npm:^4.3.4"
+    react-native-tab-view: "npm:^4.3.5"
     react-test-renderer: "npm:19.3.0"
     typescript: "npm:~6.0.3"
     use-latest-callback: "npm:^0.2.4"
@@ -5619,7 +5619,7 @@ __metadata:
   resolution: "@react-navigation/native-stack@workspace:packages/native-stack"
   dependencies:
     "@jest/globals": "npm:^30.5.2"
-    "@react-navigation/elements": "npm:^2.9.45"
+    "@react-navigation/elements": "npm:^2.9.46"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^13.2.1"
     "@types/react": "npm:~19.3.0"
@@ -5669,7 +5669,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/routers@npm:^7.6.5, @react-navigation/routers@workspace:packages/routers":
+"@react-navigation/routers@npm:^7.6.6, @react-navigation/routers@workspace:packages/routers":
   version: 0.0.0-use.local
   resolution: "@react-navigation/routers@workspace:packages/routers"
   dependencies:
@@ -5686,7 +5686,7 @@ __metadata:
   resolution: "@react-navigation/stack@workspace:packages/stack"
   dependencies:
     "@jest/globals": "npm:^30.5.2"
-    "@react-navigation/elements": "npm:^2.9.45"
+    "@react-navigation/elements": "npm:^2.9.46"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^13.2.1"
     "@types/color": "npm:^4.2.0"
@@ -15204,7 +15204,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-tab-view@npm:^4.3.4, react-native-tab-view@workspace:packages/react-native-tab-view":
+"react-native-tab-view@npm:^4.3.5, react-native-tab-view@workspace:packages/react-native-tab-view":
   version: 0.0.0-use.local
   resolution: "react-native-tab-view@workspace:packages/react-native-tab-view"
   dependencies:

@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.46](https://github.com/react-navigation/react-navigation/compare/%40react-navigation%2Felements%402.9.45...%40react-navigation%2Felements%402.9.46) (2026-11-15)
+
+### Bug Fixes
+
+* avoid flexBasis: 0% in screen to address slowdown on safari ([3ef424e](https://github.com/react-navigation/react-navigation/commit/3ef424e51ae6fb080eed50062b52ab1d94965e03)) - by @satya164
+* increase Android back button touch target in header ([1f1a051](https://github.com/react-navigation/react-navigation/commit/1f1a0513146ad9e0df14e2a9a06ec3a66a69abac)), closes [#12509](https://github.com/react-navigation/react-navigation/issues/12509) - by @satya164
+* pass disabled to PlatformPressable ([b1cb559](https://github.com/react-navigation/react-navigation/commit/b1cb5599bf042511423d7b7f93624bd0c9180261)), closes [#12905](https://github.com/react-navigation/react-navigation/issues/12905) - by @satya164
+* prevent screen content from drawing over the header ([37d6ccb](https://github.com/react-navigation/react-navigation/commit/37d6ccb8d8c1ad72c173b9f391f3d60b33c2552c)), closes [#12416](https://github.com/react-navigation/react-navigation/issues/12416) - by @satya164
+
 ## [2.9.45](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.44...@react-navigation/elements@2.9.45) (2026-10-13)
 
 ### Bug Fixes

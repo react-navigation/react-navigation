@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.22.0](https://github.com/react-navigation/react-navigation/compare/%40react-navigation%2Fbottom-tabs%407.21.0...%40react-navigation%2Fbottom-tabs%407.22.0) (2026-11-15)
+
+### Bug Fixes
+
+* avoid clipping focus ring of material tab items on web ([b76d869](https://github.com/react-navigation/react-navigation/commit/b76d869c33d4f3dad1ba2434813518ad8ffb20c9)), closes [#12594](https://github.com/react-navigation/react-navigation/issues/12594) - by @satya164
+* use correct navigation helpers type in tabs ([6e88732](https://github.com/react-navigation/react-navigation/commit/6e887322d415bed94c77ded68683a551a97f28d5)), closes [#10979](https://github.com/react-navigation/react-navigation/issues/10979) - by @satya164
+
+### Features
+
+* add a tabBarTransparent option in bottom tabs ([1cc182b](https://github.com/react-navigation/react-navigation/commit/1cc182be611cbb166e36114dc90d1d282f95ae02)) - by @satya164
+
 # [7.21.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.20.0...@react-navigation/bottom-tabs@7.21.0) (2026-10-13)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.14.5](https://github.com/react-navigation/react-navigation/compare/%40react-navigation%2Fdrawer%407.14.4...%40react-navigation%2Fdrawer%407.14.5) (2026-11-15)
+
+### Bug Fixes
+
+* show drawer toggle button on same side as drawer ([#13317](https://github.com/react-navigation/react-navigation/issues/13317)) ([1332ff2](https://github.com/react-navigation/react-navigation/commit/1332ff21a83193bc789e1011316e1306d72a13ac)) - by @satya164
+
 ## [7.14.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.14.3...@react-navigation/drawer@7.14.4) (2026-10-13)
 
 ### Bug Fixes

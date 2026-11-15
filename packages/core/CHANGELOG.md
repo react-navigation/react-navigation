@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.25.0](https://github.com/react-navigation/react-navigation/compare/%40react-navigation%2Fcore%407.24.0...%40react-navigation%2Fcore%407.25.0) (2026-11-15)
+
+### Bug Fixes
+
+* preserve nested route types in linking configs ([6b339b5](https://github.com/react-navigation/react-navigation/commit/6b339b588fce18eb85593b861cfa82c7dc2062c1)), closes [#12736](https://github.com/react-navigation/react-navigation/issues/12736) [#12385](https://github.com/react-navigation/react-navigation/issues/12385) [#10876](https://github.com/react-navigation/react-navigation/issues/10876) - by @satya164
+
+### Features
+
+* export GenericNavigation type for useNavigation ([6000325](https://github.com/react-navigation/react-navigation/commit/600032586ffbc7a936ce42c4b25623afd1e78f9f)), closes [#11893](https://github.com/react-navigation/react-navigation/issues/11893) - by @satya164
+
 # [7.24.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.23.0...@react-navigation/core@7.24.0) (2026-10-13)
 
 ### Bug Fixes
