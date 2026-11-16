@@ -1,4 +1,4 @@
-import { expect, test } from '@jest/globals';
+import { expect, jest, test } from '@jest/globals';
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 import { produce } from 'immer';
 import * as v from 'valibot';
@@ -5570,3 +5570,65 @@ test('supports named capture groups in repeated custom regex params', () => {
     ],
   });
 });
+
+test('only runs the regex of configs whose static segments match the path', () => {
+  const screens: Record<string, string> = {};
+
+  for (let i = 0; i < 100; i++) {
+    screens[`Page${i}`] = `workspaces/:id/page${i}`;
+  }
+
+  const exec = jest.spyOn(RegExp.prototype, 'exec');
+
+  try {
+    expect(
+      getStateFromPath<object>('/workspaces/1/page99', { screens })
+    ).toEqual({
+      routes: [
+        {
+          name: 'Page99',
+          params: { id: '1' },
+          path: '/workspaces/1/page99',
+        },
+      ],
+    });
+
+    const configRegexRuns = exec.mock.contexts.filter((regex) =>
+      (regex as RegExp).source.startsWith('^(')
+    );
+
+    expect(configRegexRuns).toHaveLength(1);
+  } finally {
+    exec.mockRestore();
+  }
+});
+
+test.each([
+  ['/workspaces/1/members', 'Members', { id: '1' }],
+  ['/workspaces/1/caf%C3%A9', 'Cafe', { id: '1' }],
+  ['/workspaces/1/caf%c3%a9', 'Cafe', { id: '1' }],
+  ['/workspaces/rules', 'Rules', { id: undefined }],
+  ['/workspaces/1/rules', 'Rules', { id: '1' }],
+  ['/workspaces/1/files/a/b', 'Files', { id: '1', path: 'a/b' }],
+  ['/workspaces/12/digits', 'Digits', { id: '12' }],
+  ['/workspaces/1/unknown', 'NotFound', undefined],
+])(
+  'matches %s among configs sharing the first segment',
+  (path, name, params) => {
+    const config = {
+      screens: {
+        Members: 'workspaces/:id/members',
+        Cafe: 'workspaces/:id/café',
+        Rules: 'workspaces/:id?/rules',
+        Files: 'workspaces/:id/files/:path+',
+        Digits: 'workspaces/:id(\\d+)/digits',
+        NotFound: '*',
+      },
+    };
+
+    const route = findFocusedRoute(getStateFromPath<object>(path, config)!);
+
+    expect(route?.name).toBe(name);
+    expect(route?.params).toEqual(params);
+  }
+);
