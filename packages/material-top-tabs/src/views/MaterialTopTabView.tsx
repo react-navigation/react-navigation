@@ -33,6 +33,7 @@ const renderTabBarDefault = (props: MaterialTopTabBarProps) => (
 
 export function MaterialTopTabView({
   tabBar = renderTabBarDefault,
+  adapter,
   state,
   navigation,
   descriptors,
@@ -111,6 +112,7 @@ export function MaterialTopTabView({
       }}
       navigationState={state}
       renderTabBar={renderTabBar}
+      renderAdapter={adapter}
       renderLazyPlaceholder={({ route }) =>
         descriptors[route.key]?.options.lazyPlaceholder?.() ?? null
       }
