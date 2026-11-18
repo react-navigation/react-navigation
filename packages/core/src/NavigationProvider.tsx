@@ -69,23 +69,34 @@ export function NavigationProvider({ route, navigation, children }: Props) {
 
   const getIsFocused = useLatestCallback(() => isFocused);
 
-  return (
-    <NamedNavigationStateListenerProvider name={route.name}>
-      <NamedRouteContextListContext.Provider value={NamedRouteContextList}>
-        <NamedRouteContext.Provider value={route}>
-          <NavigationRouteContext.Provider value={route}>
-            <NavigationContext.Provider value={navigation}>
-              <IsFocusedContext.Provider value={isFocused}>
-                <IsFocusedGetterContext.Provider value={getIsFocused}>
-                  <IsScreenContext.Provider value={true}>
-                    {children}
-                  </IsScreenContext.Provider>
-                </IsFocusedGetterContext.Provider>
-              </IsFocusedContext.Provider>
-            </NavigationContext.Provider>
-          </NavigationRouteContext.Provider>
-        </NamedRouteContext.Provider>
-      </NamedRouteContextListContext.Provider>
-    </NamedNavigationStateListenerProvider>
+  return React.useMemo(
+    () => (
+      <NamedNavigationStateListenerProvider name={route.name}>
+        <NamedRouteContextListContext.Provider value={NamedRouteContextList}>
+          <NamedRouteContext.Provider value={route}>
+            <NavigationRouteContext.Provider value={route}>
+              <NavigationContext.Provider value={navigation}>
+                <IsFocusedContext.Provider value={isFocused}>
+                  <IsFocusedGetterContext.Provider value={getIsFocused}>
+                    <IsScreenContext.Provider value={true}>
+                      {children}
+                    </IsScreenContext.Provider>
+                  </IsFocusedGetterContext.Provider>
+                </IsFocusedContext.Provider>
+              </NavigationContext.Provider>
+            </NavigationRouteContext.Provider>
+          </NamedRouteContext.Provider>
+        </NamedRouteContextListContext.Provider>
+      </NamedNavigationStateListenerProvider>
+    ),
+    [
+      NamedRouteContext,
+      NamedRouteContextList,
+      children,
+      getIsFocused,
+      isFocused,
+      navigation,
+      route,
+    ]
   );
 }

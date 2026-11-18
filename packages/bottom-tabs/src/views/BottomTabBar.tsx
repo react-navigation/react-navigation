@@ -15,6 +15,7 @@ import {
 import * as React from 'react';
 import {
   Animated,
+  type ColorValue,
   type LayoutChangeEvent,
   Platform,
   type StyleProp,
@@ -26,8 +27,14 @@ import {
   type EdgeInsets,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import type { TabBarItemLabelVisibilityMode } from 'react-native-screens';
 
-import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
+import type {
+  BottomTabBarProps,
+  BottomTabDescriptor,
+  BottomTabDescriptorMap,
+  BottomTabNavigationHelpers,
+} from '../types';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
 import { useIsKeyboardShown } from '../utils/useIsKeyboardShown';
 import { useTabBarPosition } from '../utils/useTabBarPosition';
@@ -197,6 +204,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
     tabBarVariant = 'uikit',
     tabBarStyle,
     tabBarBackground,
+    tabBarTransparent,
     tabBarActiveTintColor,
     tabBarInactiveTintColor,
     tabBarActiveBackgroundColor,
@@ -270,7 +278,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
         }
       });
     } else {
-      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      // eslint-disable-next-line @eslint-react/set-state-in-effect
       setIsTabBarHidden(true);
 
       const animate =
@@ -350,7 +358,9 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
           ? styles.start
           : tabBarPosition === 'right'
             ? styles.end
-            : styles.bottom,
+            : tabBarPosition === 'top'
+              ? styles.top
+              : styles.bottom,
         (
           Platform.OS === 'web'
             ? tabBarPosition === 'right'
@@ -414,6 +424,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
         {
           pointerEvents: isTabBarHidden ? 'none' : 'auto',
         },
+        tabBarTransparent ? styles.transparent : null,
         tabBarStyle,
       ]}
       onLayout={sidebar ? undefined : handleLayout}
@@ -437,47 +448,6 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
 
           const { options } = descriptor;
 
-          const onPress = () => {
-            const isRepeatedPress =
-              focused && options.tabBarSelectionEnabled !== false;
-
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-              data: {
-                behavior: {
-                  scrollToTop:
-                    isRepeatedPress &&
-                    options.tabBarRepeatedPressBehavior?.scrollToTop !== false,
-                  popToTop:
-                    isRepeatedPress &&
-                    options.tabBarRepeatedPressBehavior?.popToTop !== false,
-                },
-              },
-            });
-
-            if (
-              !focused &&
-              !event.defaultPrevented &&
-              options.tabBarSelectionEnabled !== false
-            ) {
-              React.startTransition(() => {
-                navigation.dispatch({
-                  ...CommonActions.navigate(route.name, route.params),
-                  target: state.key,
-                });
-              });
-            }
-          };
-
-          const onLongPress = () => {
-            navigation.emit({
-              type: 'tabLongPress',
-              target: route.key,
-            });
-          };
-
           const label =
             typeof options.tabBarLabel === 'function'
               ? options.tabBarLabel
@@ -496,58 +466,163 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
                 : undefined;
 
           return (
-            <NavigationProvider
+            <BottomTabBarItem
               key={route.key}
-              navigation={descriptor.navigation}
               route={route}
-            >
-              <BottomTabItem
-                href={buildHref(route.name, route.params)}
-                route={route}
-                descriptor={descriptor}
-                focused={focused}
-                horizontal={hasHorizontalLabels}
-                compact={compact}
-                sidebar={sidebar}
-                variant={tabBarVariant}
-                onPress={onPress}
-                onLongPress={onLongPress}
-                accessibilityLabel={accessibilityLabel}
-                testID={options.tabBarButtonTestID}
-                allowFontScaling={options.tabBarAllowFontScaling}
-                activeTintColor={tabBarActiveTintColor}
-                inactiveTintColor={tabBarInactiveTintColor}
-                activeBackgroundColor={tabBarActiveBackgroundColor}
-                inactiveBackgroundColor={tabBarInactiveBackgroundColor}
-                rippleColor={options.tabBarRippleColor}
-                button={options.tabBarButton}
-                icon={options.tabBarIcon}
-                badge={options.tabBarBadge}
-                badgeStyle={options.tabBarBadgeStyle}
-                label={label}
-                labelVisibilityMode={tabBarLabelVisibilityMode}
-                labelStyle={options.tabBarLabelStyle}
-                iconStyle={options.tabBarIconStyle}
-                style={[
-                  sidebar
-                    ? {
-                        marginVertical: hasHorizontalLabels
-                          ? tabBarVariant === 'material'
-                            ? 0
-                            : 1
-                          : spacing / 2,
-                      }
-                    : styles.bottomItem,
-                  options.tabBarItemStyle,
-                ]}
-              />
-            </NavigationProvider>
+              descriptor={descriptor}
+              navigation={navigation}
+              navigatorKey={state.key}
+              href={buildHref(route.name, route.params)}
+              focused={focused}
+              label={label}
+              accessibilityLabel={accessibilityLabel}
+              hasHorizontalLabels={hasHorizontalLabels}
+              compact={compact}
+              sidebar={sidebar}
+              tabBarVariant={tabBarVariant}
+              spacing={spacing}
+              tabBarActiveTintColor={tabBarActiveTintColor}
+              tabBarInactiveTintColor={tabBarInactiveTintColor}
+              tabBarActiveBackgroundColor={tabBarActiveBackgroundColor}
+              tabBarInactiveBackgroundColor={tabBarInactiveBackgroundColor}
+              tabBarLabelVisibilityMode={tabBarLabelVisibilityMode}
+            />
           );
         })}
       </View>
     </Animated.View>
   );
 }
+
+type BottomTabBarItemProps = {
+  route: TabNavigationState<ParamListBase>['routes'][number];
+  descriptor: BottomTabDescriptor;
+  navigation: BottomTabNavigationHelpers;
+  navigatorKey: string;
+  href: string | undefined;
+  focused: boolean;
+  label: React.ComponentProps<typeof BottomTabItem>['label'];
+  accessibilityLabel: string | undefined;
+  hasHorizontalLabels: boolean;
+  compact: boolean;
+  sidebar: boolean;
+  tabBarVariant: 'uikit' | 'material';
+  spacing: number;
+  tabBarActiveTintColor: ColorValue | undefined;
+  tabBarInactiveTintColor: ColorValue | undefined;
+  tabBarActiveBackgroundColor: ColorValue | undefined;
+  tabBarInactiveBackgroundColor: ColorValue | undefined;
+  tabBarLabelVisibilityMode: TabBarItemLabelVisibilityMode | undefined;
+};
+
+const BottomTabBarItem = React.memo(function BottomTabBarItem({
+  route,
+  descriptor,
+  navigation,
+  navigatorKey,
+  href,
+  focused,
+  label,
+  accessibilityLabel,
+  hasHorizontalLabels,
+  compact,
+  sidebar,
+  tabBarVariant,
+  spacing,
+  tabBarActiveTintColor,
+  tabBarInactiveTintColor,
+  tabBarActiveBackgroundColor,
+  tabBarInactiveBackgroundColor,
+  tabBarLabelVisibilityMode,
+}: BottomTabBarItemProps) {
+  const { options } = descriptor;
+
+  const onPress = () => {
+    const isRepeatedPress = focused && options.tabBarSelectionEnabled !== false;
+
+    const event = navigation.emit({
+      type: 'tabPress',
+      target: route.key,
+      canPreventDefault: true,
+      data: {
+        behavior: {
+          scrollToTop:
+            isRepeatedPress &&
+            options.tabBarRepeatedPressBehavior?.scrollToTop !== false,
+          popToTop:
+            isRepeatedPress &&
+            options.tabBarRepeatedPressBehavior?.popToTop !== false,
+        },
+      },
+    });
+
+    if (
+      !focused &&
+      !event.defaultPrevented &&
+      options.tabBarSelectionEnabled !== false
+    ) {
+      React.startTransition(() => {
+        navigation.dispatch({
+          ...CommonActions.navigate(route.name, route.params),
+          target: navigatorKey,
+        });
+      });
+    }
+  };
+
+  const onLongPress = () => {
+    navigation.emit({
+      type: 'tabLongPress',
+      target: route.key,
+    });
+  };
+
+  return (
+    <NavigationProvider navigation={descriptor.navigation} route={route}>
+      <BottomTabItem
+        href={href}
+        route={route}
+        descriptor={descriptor}
+        focused={focused}
+        horizontal={hasHorizontalLabels}
+        compact={compact}
+        sidebar={sidebar}
+        variant={tabBarVariant}
+        onPress={onPress}
+        onLongPress={onLongPress}
+        accessibilityLabel={accessibilityLabel}
+        testID={options.tabBarButtonTestID}
+        allowFontScaling={options.tabBarAllowFontScaling}
+        activeTintColor={tabBarActiveTintColor}
+        inactiveTintColor={tabBarInactiveTintColor}
+        activeBackgroundColor={tabBarActiveBackgroundColor}
+        inactiveBackgroundColor={tabBarInactiveBackgroundColor}
+        rippleColor={options.tabBarRippleColor}
+        button={options.tabBarButton}
+        icon={options.tabBarIcon}
+        badge={options.tabBarBadge}
+        badgeStyle={options.tabBarBadgeStyle}
+        label={label}
+        labelVisibilityMode={tabBarLabelVisibilityMode}
+        labelStyle={options.tabBarLabelStyle}
+        iconSize={options.tabBarIconSize}
+        iconStyle={options.tabBarIconStyle}
+        style={[
+          sidebar
+            ? {
+                marginVertical: hasHorizontalLabels
+                  ? tabBarVariant === 'material'
+                    ? 0
+                    : 1
+                  : spacing / 2,
+              }
+            : styles.bottomItem,
+          options.tabBarItemStyle,
+        ]}
+      />
+    </NavigationProvider>
+  );
+});
 
 const styles = StyleSheet.create({
   start: {
@@ -560,11 +635,26 @@ const styles = StyleSheet.create({
     bottom: 0,
     end: 0,
   },
+  top: {
+    start: 0,
+    end: 0,
+    top: 0,
+    elevation: 8,
+  },
   bottom: {
     start: 0,
     end: 0,
     bottom: 0,
     elevation: 8,
+  },
+  transparent: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    elevation: 0,
   },
   bottomContent: {
     flex: 1,

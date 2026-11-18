@@ -9,7 +9,7 @@ import type {
 } from '@react-navigation/core';
 import type { ColorValue as ReactNativeColorValue } from 'react-native';
 
-type ColorValue =
+export type ThemeColor =
   | `#${string}`
   | `rgb(${string})`
   | `rgba(${string})`
@@ -39,12 +39,12 @@ type FontStyle = {
 interface NativeTheme {
   dark: boolean;
   colors: {
-    primary: ColorValue;
-    background: ColorValue;
-    card: ColorValue;
-    text: ColorValue;
-    border: ColorValue;
-    notification: ColorValue;
+    primary: ThemeColor;
+    background: ThemeColor;
+    card: ThemeColor;
+    text: ThemeColor;
+    border: ThemeColor;
+    notification: ThemeColor;
   };
   fonts: {
     regular: FontStyle;
@@ -57,6 +57,21 @@ interface NativeTheme {
 declare module '@react-navigation/core' {
   interface Theme extends NativeTheme {}
 }
+
+/**
+ * Names of custom SF Symbols available in the app, such as symbols from the asset catalog.
+ * Custom names can be added using declaration merging:
+ *
+ * ```ts
+ * declare module '@react-navigation/native' {
+ *   interface SFSymbolNames {
+ *     'my.custom.symbol': true;
+ *   }
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface SFSymbolNames {}
 
 export type LocaleDirection = 'ltr' | 'rtl';
 

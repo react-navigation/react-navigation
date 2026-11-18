@@ -3,7 +3,7 @@ import { Header, HeaderButton } from '@react-navigation/elements';
 import { type StaticScreenProps, useTheme } from '@react-navigation/native';
 import {
   type ColorValue,
-  ImageBackground,
+  Image,
   ScrollView,
   StyleSheet,
   View,
@@ -146,8 +146,7 @@ export function ComponentsHeaders(_: StaticScreenProps<{}>) {
         headerTitleAlign="center"
         headerStatusBarHeight={0}
       />
-      <ImageBackground
-        source={balloons}
+      <View
         style={[
           styles.imageBackground,
           {
@@ -155,6 +154,11 @@ export function ComponentsHeaders(_: StaticScreenProps<{}>) {
           },
         ]}
       >
+        <Image
+          source={balloons}
+          resizeMethod="resize"
+          style={styles.backgroundImage}
+        />
         <Header
           title="Transparent"
           back={{ title: 'Profile', href: undefined }}
@@ -189,7 +193,7 @@ export function ComponentsHeaders(_: StaticScreenProps<{}>) {
           )}
           headerStatusBarHeight={0}
         />
-      </ImageBackground>
+      </View>
     </ScrollView>
   );
 }
@@ -210,5 +214,10 @@ const styles = StyleSheet.create({
     paddingTop: SPACING / 2,
     paddingHorizontal: SPACING,
     gap: SPACING,
+  },
+  backgroundImage: {
+    ...StyleSheet.absoluteFill,
+    width: 'auto',
+    height: 'auto',
   },
 });

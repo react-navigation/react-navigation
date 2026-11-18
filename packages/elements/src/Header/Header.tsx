@@ -1,5 +1,7 @@
 import {
-  UNSTABLE_CornerInset,
+  MaterialSymbol,
+  UNSTABLE_LayoutRegionView,
+  useLocale,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -18,9 +20,12 @@ import searchIcon from '../assets/search-icon.png';
 import { Color } from '../Color';
 import { isLiquidGlassSupported } from '../LiquidGlassView';
 import { PlatformColor } from '../PlatformColor';
-import type { HeaderOptions } from '../types';
+import type { HeaderOptions, Icon } from '../types';
 import { useFrameSize } from '../useFrameSize';
-import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
+import {
+  getDefaultHeaderHeight,
+  LIQUID_GLASS_HEADER_BOTTOM_SPACING,
+} from './getDefaultHeaderHeight';
 import { HeaderBackButton } from './HeaderBackButton';
 import { HeaderBackground } from './HeaderBackground';
 import { BUTTON_SIZE, BUTTON_SPACING, HeaderButton } from './HeaderButton';
@@ -80,9 +85,16 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
 
 const useNativeDriver = Platform.OS !== 'web';
 
+const isLiquidGlassPhone =
+  Platform.OS === 'ios' && !Platform.isPad && isLiquidGlassSupported;
+
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
+  const { direction } = useLocale();
+
+  const startInset = direction === 'rtl' ? insets.right : insets.left;
+  const endInset = direction === 'rtl' ? insets.left : insets.right;
 
   const navigation = useNavigation();
   const isParentHeaderShown = React.use(HeaderShownContext);
@@ -239,6 +251,7 @@ export function Header(props: Props) {
   // Users can use `null` instead
   for (const [styleProp, value] of Object.entries(safeStyles)) {
     if (value === undefined) {
+      // eslint-disable-next-line @eslint-react/purity
       Reflect.deleteProperty(safeStyles, styleProp);
     }
   }
@@ -360,6 +373,46 @@ export function Header(props: Props) {
     0
   );
 
+  // Native navigation bars with liquid glass on iPhone don't add the safe area insets
+  // They use the standard margins, which are larger on wide phones and in landscape
+  const liquidGlassEdgeSpacing = useFrameSize((frame) =>
+    frame.width > frame.height ? 38 : frame.width >= 414 ? 20 : 16
+  );
+
+  const contentSpacingStyle = isLiquidGlassSupported
+    ? {
+        marginTop:
+          defaultHeight - BUTTON_SIZE - LIQUID_GLASS_HEADER_BOTTOM_SPACING,
+        marginBottom: LIQUID_GLASS_HEADER_BOTTOM_SPACING,
+      }
+    : {
+        marginTop: statusBarSpacing,
+      };
+
+  let searchBarSpacingStyle: ViewStyle;
+
+  if (Platform.OS === 'ios') {
+    searchBarSpacingStyle = {
+      ...contentSpacingStyle,
+      ...(isLiquidGlassSupported
+        ? {
+            marginHorizontal: isLiquidGlassPhone
+              ? liquidGlassEdgeSpacing
+              : BUTTON_SPACING,
+          }
+        : {
+            marginStart: startInset + BUTTON_SPACING,
+            marginEnd: endInset + BUTTON_SPACING,
+          }),
+    };
+  } else {
+    searchBarSpacingStyle = {
+      marginTop: statusBarSpacing,
+      marginStart: startInset,
+      marginEnd: endInset,
+    };
+  }
+
   return (
     <Animated.View
       style={[
@@ -400,19 +453,26 @@ export function Header(props: Props) {
           styles.content,
           {
             pointerEvents: searchBarVisible ? 'none' : 'auto',
-            marginTop: statusBarSpacing,
             opacity: headerOpacity,
           },
+          contentSpacingStyle,
         ]}
       >
-        <UNSTABLE_CornerInset direction="horizontal" edge="left" />
+        <UNSTABLE_LayoutRegionView
+          region="safeArea"
+          cornerAdaptation="horizontal"
+          cornerAdaptationOnly
+          edges={{ start: 'additive' }}
+        />
         <View
           style={[
             styles.start,
             headerTitleAlign === 'center' ? styles.expand : styles.shrink,
             {
               minWidth: buttonMinWidth,
-              marginStart: insets.left,
+              marginStart: isLiquidGlassPhone
+                ? liquidGlassEdgeSpacing - BUTTON_OFFSET
+                : startInset,
             },
           ]}
         >
@@ -443,7 +503,9 @@ export function Header(props: Props) {
             styles.expand,
             {
               minWidth: buttonMinWidth,
-              marginEnd: insets.right,
+              marginEnd: isLiquidGlassPhone
+                ? liquidGlassEdgeSpacing - BUTTON_OFFSET
+                : endInset,
             },
           ]}
         >
@@ -454,6 +516,10 @@ export function Header(props: Props) {
             {rightButton}
             {headerSearchBarOptions ? (
               <HeaderButton
+                accessibilityLabel={
+                  headerSearchBarOptions.openButtonAccessibilityLabel ??
+                  'Search'
+                }
                 tintColor={iconTintColor}
                 pressColor={headerPressColor}
                 pressOpacity={headerPressOpacity}
@@ -463,11 +529,16 @@ export function Header(props: Props) {
                 }}
               >
                 <HeaderIcon
-                  icon={Platform.select({
-                    android: {
-                      type: 'materialSymbol',
-                      name: 'search',
-                    },
+                  icon={Platform.select<Icon>({
+                    android: MaterialSymbol.isAvailable()
+                      ? {
+                          type: 'materialSymbol',
+                          name: 'search',
+                        }
+                      : {
+                          type: 'image',
+                          source: searchIcon,
+                        },
                     ios: {
                       type: 'sfSymbol',
                       name: 'magnifyingglass',
@@ -483,19 +554,32 @@ export function Header(props: Props) {
             ) : null}
           </HeaderButtonBackground>
         </View>
+        <UNSTABLE_LayoutRegionView
+          region="safeArea"
+          cornerAdaptation="horizontal"
+          cornerAdaptationOnly
+          edges={{ end: 'additive' }}
+        />
       </Animated.View>
       {searchBarRendered ? (
-        <HeaderSearchBar
-          {...headerSearchBarOptions}
-          statusBarHeight={statusBarSpacing}
-          visible={searchBarVisible}
-          onClose={() => {
-            setSearchBarVisible(false);
-            headerSearchBarOptions?.onClose?.();
-          }}
-          tintColor={headerTintColor}
-          style={[StyleSheet.absoluteFill, { opacity: searchBarOpacity }]}
-        />
+        <UNSTABLE_LayoutRegionView
+          region="safeArea"
+          cornerAdaptation="horizontal"
+          cornerAdaptationOnly
+          edges={{ start: 'additive', end: 'additive' }}
+          style={StyleSheet.absoluteFill}
+        >
+          <HeaderSearchBar
+            {...headerSearchBarOptions}
+            visible={searchBarVisible}
+            onClose={() => {
+              setSearchBarVisible(false);
+              headerSearchBarOptions?.onClose?.();
+            }}
+            tintColor={headerTintColor}
+            style={[searchBarSpacingStyle, { opacity: searchBarOpacity }]}
+          />
+        </UNSTABLE_LayoutRegionView>
       ) : null}
     </Animated.View>
   );

@@ -15,9 +15,6 @@ export const NavigationStateContext = React.createContext<{
   ) => void;
   subscribe: (callback: () => void) => () => void;
   getIsInitial: () => boolean;
-  addOptionsGetter?:
-    | ((key: string, getter: () => object | undefined | null) => void)
-    | undefined;
 }>({
   isDefault: true,
 

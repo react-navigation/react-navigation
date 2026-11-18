@@ -60,7 +60,8 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
    */
   initialState?: NavigationContainerProps['initialState'];
   /**
-   * Text direction of the components. Defaults to `'ltr'`.
+   * Text direction of the components.
+   * Defaults to `I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'` on native and `'ltr'` on Web.
    */
   direction?: LocaleDirection | undefined;
   /**

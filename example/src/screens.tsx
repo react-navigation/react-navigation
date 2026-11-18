@@ -8,8 +8,10 @@ import { BottomTabsFullHistory } from './Screens/BottomTabsFullHistory';
 import { BottomTabsPreloadFlow } from './Screens/BottomTabsPreloadFlow';
 import { ComponentsButton } from './Screens/ComponentsButton';
 import { ComponentsHeaders } from './Screens/ComponentsHeaders';
+import { ComponentsLayoutRegionView } from './Screens/ComponentsLayoutRegionView';
 import { ComponentsLink } from './Screens/ComponentsLink';
 import { ComponentsMaterialSymbols } from './Screens/ComponentsMaterialSymbols';
+import { ComponentsReservedRegionsView } from './Screens/ComponentsReservedRegionsView';
 import { ComponentsSFSymbols } from './Screens/ComponentsSFSymbols';
 import { DrawerMasterDetail } from './Screens/DrawerMasterDetail';
 import { LibrariesDrawerLayout } from './Screens/LibrariesDrawerLayout';
@@ -76,6 +78,8 @@ export const SCREENS = {
   ComponentsLink,
   ComponentsMaterialSymbols,
   ComponentsSFSymbols,
+  ComponentsReservedRegionsView,
+  ComponentsLayoutRegionView,
   AuthFlow,
   NavigatorLayout,
   ScreenLayout,

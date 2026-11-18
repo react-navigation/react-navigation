@@ -171,7 +171,7 @@ function Card({
     React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const pendingOnCloseCallbackRef =
     React.useRef<ReturnType<typeof setTimeout>>(undefined);
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const initialAnimationHandleRef = React.useRef<number | undefined>(undefined);
 
   const [inverted] = React.useState(
     () =>
@@ -309,13 +309,23 @@ function Card({
       animationIdRefForCleanup.current++;
       gesture.stopAnimation();
 
+      // In development, StrictMode re-runs effects without unmounting,
+      // e.g. when the card moves to a new position after rearranging.
+      // The stopped animation didn't reach its value, so reset the state,
+      // to make sure that `maybeAnimate` restarts it when effects re-run.
+      isAnimatingRef.current = false;
+      lastToValueRef.current = undefined;
+
       if (animationHandleRef.current) {
         cancelAnimationFrame(animationHandleRef.current);
       }
 
       clearTimeout(pendingGestureCallbackRef.current);
       clearTimeout(pendingOnCloseCallbackRef.current);
-      clearTimeout(timeoutRef.current);
+
+      if (initialAnimationHandleRef.current !== undefined) {
+        cancelAnimationFrame(initialAnimationHandleRef.current);
+      }
     };
   }, [gesture]);
 
@@ -325,16 +335,20 @@ function Card({
 
     if (!didInitiallyAnimate.current) {
       // Animate the card in on initial mount
-      // Wrap in setTimeout to ensure animation starts after
-      // rending of the screen is done. This is especially important
-      // in the new architecture
+      // Wait after the next frame to ensure animation starts after mount.
+      // Otherwise, the animation can drop frames.
+      // This is especially important in the new architecture
       // cf., https://github.com/react-navigation/react-navigation/issues/12401
-      clearTimeout(timeoutRef.current);
+      if (initialAnimationHandleRef.current !== undefined) {
+        cancelAnimationFrame(initialAnimationHandleRef.current);
+      }
 
-      timeoutRef.current = setTimeout(() => {
-        didInitiallyAnimate.current = true;
-        animate({ closing });
-      }, 0);
+      initialAnimationHandleRef.current = requestAnimationFrame(() => {
+        initialAnimationHandleRef.current = requestAnimationFrame(() => {
+          didInitiallyAnimate.current = true;
+          animate({ closing });
+        });
+      });
     } else {
       const previousOpening = previousPropsRef.current?.opening;
       const previousToValue = previousPropsRef.current
@@ -589,7 +603,7 @@ function Card({
           collapsable={false}
         />
       ) : null}
-      {(overlayEnabled ?? overlayStyle != null) ? (
+      {(overlayEnabled ?? (overlayStyle != null && !isTransparent)) ? (
         <View style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}>
           {overlay({ style: overlayStyle })}
         </View>

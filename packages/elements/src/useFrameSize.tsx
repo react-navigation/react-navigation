@@ -82,7 +82,7 @@ export function useFrameSize<T>(
     return unsubscribe;
 
     // We only need to check for changes on initial render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, []);
 
   React.useEffect(() => {

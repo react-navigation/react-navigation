@@ -52,22 +52,17 @@ type SceneViewProps = {
   focused: boolean;
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor | undefined;
-  nextDescriptor?: NativeStackDescriptor | undefined;
   isPresentationModal: boolean;
   isNextScreenTransparent: boolean;
   isNextScreenSheet: boolean;
   isNextScreenModal: boolean;
   isInactive: boolean;
   isBeforeLast: boolean;
-  onWillDisappear: () => void;
-  onWillAppear: () => void;
-  onAppear: () => void;
-  onDisappear: () => void;
-  onDismissed: ScreenProps['onDismissed'];
-  onHeaderBackButtonClicked: ScreenProps['onHeaderBackButtonClicked'];
-  onNativeDismissCancelled: ScreenProps['onDismissed'];
-  onGestureCancel: ScreenProps['onGestureCancel'];
-  onSheetDetentChanged: ScreenProps['onSheetDetentChanged'];
+  hasNestedState: boolean;
+  stateKey: string;
+  emit: NativeStackNavigationHelpers['emit'];
+  dispatch: NativeStackNavigationHelpers['dispatch'];
+  setNextDismissedKey: (key: string) => void;
 };
 
 const useNativeDriver = Platform.OS !== 'web';
@@ -79,7 +74,7 @@ const TRANSPARENT_PRESENTATIONS = [
 
 const SHEET_PRESENTATIONS = ['formSheet', 'pageSheet'];
 
-const SceneView = ({
+const SceneView = React.memo(function SceneView({
   index,
   focused,
   descriptor,
@@ -90,17 +85,93 @@ const SceneView = ({
   isNextScreenModal,
   isInactive,
   isBeforeLast,
-  onWillDisappear,
-  onWillAppear,
-  onAppear,
-  onDisappear,
-  onDismissed,
-  onHeaderBackButtonClicked,
-  onNativeDismissCancelled,
-  onGestureCancel,
-  onSheetDetentChanged,
-}: SceneViewProps) => {
+  hasNestedState,
+  stateKey,
+  emit,
+  dispatch,
+  setNextDismissedKey,
+}: SceneViewProps) {
   const { route, navigation, options, render } = descriptor;
+
+  const onWillDisappear = () => {
+    emit({
+      type: 'transitionStart',
+      data: { closing: true },
+      target: route.key,
+    });
+  };
+
+  const onWillAppear = () => {
+    emit({
+      type: 'transitionStart',
+      data: { closing: false },
+      target: route.key,
+    });
+  };
+
+  const onAppear = () => {
+    emit({
+      type: 'transitionEnd',
+      data: { closing: false },
+      target: route.key,
+    });
+  };
+
+  const onDisappear = () => {
+    emit({
+      type: 'transitionEnd',
+      data: { closing: true },
+      target: route.key,
+    });
+  };
+
+  const onDismissed: ScreenProps['onDismissed'] = (event) => {
+    if (isInactive) {
+      return;
+    }
+
+    dispatch({
+      ...StackActions.dismiss(event.nativeEvent.dismissCount),
+      source: route.key,
+      target: stateKey,
+    });
+
+    setNextDismissedKey(route.key);
+  };
+
+  const onHeaderBackButtonClicked = () => {
+    dispatch({
+      ...StackActions.pop(),
+      source: route.key,
+      target: stateKey,
+    });
+  };
+
+  const onNativeDismissCancelled: ScreenProps['onDismissed'] = (event) => {
+    dispatch({
+      ...StackActions.dismiss(event.nativeEvent.dismissCount),
+      source: route.key,
+      target: stateKey,
+    });
+  };
+
+  const onGestureCancel = () => {
+    emit({
+      type: 'gestureCancel',
+      target: route.key,
+    });
+  };
+
+  const onSheetDetentChanged: ScreenProps['onSheetDetentChanged'] = (event) => {
+    emit({
+      type: 'sheetDetentChange',
+      target: route.key,
+      data: {
+        index: event.nativeEvent.index,
+        stable: event.nativeEvent.isStable,
+      },
+    });
+  };
 
   const {
     inactiveBehavior = 'pause',
@@ -192,7 +263,7 @@ const SceneView = ({
 
   const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line @eslint-react/exhaustive-deps
   const setHeaderHeightDebounced = React.useCallback(
     // Debounce the header height updates to avoid excessive re-renders
     debounce(setHeaderHeight, 100),
@@ -307,6 +378,14 @@ const SceneView = ({
         }
       );
 
+  // Nested navigators clean up `route.state` when the screen is paused with `Activity`
+  // So we remember if the route had state until the screen is removed
+  const [hadNestedState, setHadNestedState] = React.useState(hasNestedState);
+
+  if (hasNestedState && !hadNestedState) {
+    setHadNestedState(true);
+  }
+
   const activityMode =
     // Render focused screens normally
     // Unpause preloaded and retained screens so updates are visible
@@ -325,7 +404,7 @@ const SceneView = ({
     (isNextScreenModal && !isModal) ||
     isBeforeLast
       ? 'normal'
-      : inactiveBehavior === 'unmount' && !('state' in route && route.state)
+      : inactiveBehavior === 'unmount' && !hadNestedState
         ? 'unmounted'
         : 'paused';
 
@@ -334,7 +413,7 @@ const SceneView = ({
       <HeaderHeightContext.Provider
         value={headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)}
       >
-        {headerBackground != null ? (
+        {headerShown !== false && headerBackground != null ? (
           /**
            * To show a custom header background, we render it at the top of the screen below the header
            * The header also needs to be positioned absolutely (with `translucent` style)
@@ -477,7 +556,7 @@ const SceneView = ({
       </ScreenStackItem>
     </NavigationProvider>
   );
-};
+});
 
 type Props = {
   state: StackNavigationState<ParamListBase>;
@@ -486,6 +565,7 @@ type Props = {
 };
 
 export function NativeStackView({ state, navigation, descriptors }: Props) {
+  const { colors } = useTheme();
   const { setNextDismissedKey } = useDismissedRouteError(state);
 
   useInvalidPreventRemoveError(descriptors);
@@ -495,7 +575,10 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
   return (
     <SafeAreaProviderCompat>
-      <ScreenStack style={styles.container}>
+      <ScreenStack
+        style={styles.container}
+        nativeContainerStyle={{ backgroundColor: colors.background }}
+      >
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
 
@@ -534,84 +617,17 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
               focused={isFocused}
               descriptor={descriptor}
               previousDescriptor={previousDescriptor}
-              nextDescriptor={nextDescriptor}
               isPresentationModal={isModal}
               isNextScreenTransparent={isNextScreenTransparent}
               isNextScreenSheet={isNextScreenSheet}
               isNextScreenModal={isNextScreenModal}
               isInactive={index > state.index}
               isBeforeLast={index === activeRoutes.length - 2}
-              onWillDisappear={() => {
-                navigation.emit({
-                  type: 'transitionStart',
-                  data: { closing: true },
-                  target: route.key,
-                });
-              }}
-              onWillAppear={() => {
-                navigation.emit({
-                  type: 'transitionStart',
-                  data: { closing: false },
-                  target: route.key,
-                });
-              }}
-              onAppear={() => {
-                navigation.emit({
-                  type: 'transitionEnd',
-                  data: { closing: false },
-                  target: route.key,
-                });
-              }}
-              onDisappear={() => {
-                navigation.emit({
-                  type: 'transitionEnd',
-                  data: { closing: true },
-                  target: route.key,
-                });
-              }}
-              onDismissed={(event) => {
-                if (index > state.index) {
-                  return;
-                }
-
-                navigation.dispatch({
-                  ...StackActions.dismiss(event.nativeEvent.dismissCount),
-                  source: route.key,
-                  target: state.key,
-                });
-
-                setNextDismissedKey(route.key);
-              }}
-              onHeaderBackButtonClicked={() => {
-                navigation.dispatch({
-                  ...StackActions.pop(),
-                  source: route.key,
-                  target: state.key,
-                });
-              }}
-              onNativeDismissCancelled={(event) => {
-                navigation.dispatch({
-                  ...StackActions.dismiss(event.nativeEvent.dismissCount),
-                  source: route.key,
-                  target: state.key,
-                });
-              }}
-              onGestureCancel={() => {
-                navigation.emit({
-                  type: 'gestureCancel',
-                  target: route.key,
-                });
-              }}
-              onSheetDetentChanged={(event) => {
-                navigation.emit({
-                  type: 'sheetDetentChange',
-                  target: route.key,
-                  data: {
-                    index: event.nativeEvent.index,
-                    stable: event.nativeEvent.isStable,
-                  },
-                });
-              }}
+              hasNestedState={route.state != null}
+              stateKey={state.key}
+              emit={navigation.emit}
+              dispatch={navigation.dispatch}
+              setNextDismissedKey={setNextDismissedKey}
             />
           );
         })}

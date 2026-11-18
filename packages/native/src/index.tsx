@@ -6,16 +6,20 @@ export { createStaticNavigation } from './createStaticNavigation';
 export { Link } from './Link';
 export { LinkingContext } from './LinkingContext';
 export { LocaleDirContext } from './LocaleDirContext';
-export {
-  type CornerInsetProps,
-  type CornerInsetRef,
-  CornerInset as UNSTABLE_CornerInset,
-} from './native/CornerInset';
+export { LayoutRegionView as UNSTABLE_LayoutRegionView } from './native/LayoutRegionView';
 export {
   MaterialSymbol,
   type MaterialSymbolProps,
 } from './native/MaterialSymbol';
+export { ReservedRegionsView as UNSTABLE_ReservedRegionsView } from './native/ReservedRegionsView';
 export { SFSymbol, type SFSymbolProps } from './native/SFSymbol';
+export type {
+  LayoutRegionInsetsChangeEvent,
+  LayoutRegionViewProps,
+  ReservedRegion,
+  ReservedRegionsChangeEvent,
+  ReservedRegionsViewProps,
+} from './native/types';
 export { NavigationContainer } from './NavigationContainer';
 export { DarkTheme } from './theming/DarkTheme';
 export { LightTheme as DefaultTheme } from './theming/LightTheme';

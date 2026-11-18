@@ -1666,9 +1666,11 @@ export type PathConfig<Params> = FlatType<
      * Additional path alias that will be matched to the same screen.
      */
     alias?: (string | PathConfigAlias<Params>)[] | undefined;
-  } & (NonNullable<Params> extends NavigatorScreenParams<infer ParamList>
-      ? ParamListForNavigator<ParamList> extends infer ChildParamList extends {}
-        ? {
+  } & (ChildParamListForPathConfig<Params> extends infer ChildParamList extends
+      {}
+      ? [ChildParamList] extends [never]
+        ? {}
+        : {
             /**
              * Path configuration for child screens.
              */
@@ -1680,9 +1682,13 @@ export type PathConfig<Params> = FlatType<
               | Extract<keyof ChildParamList, string>
               | undefined;
           }
-        : {}
       : {})
 >;
+
+type ChildParamListForPathConfig<Params> =
+  Params extends NavigatorScreenParams<infer ParamList>
+    ? ParamListForNavigator<ParamList>
+    : never;
 
 export type PathConfigMap<ParamList extends {}> = {
   [RouteName in keyof ParamList]?:

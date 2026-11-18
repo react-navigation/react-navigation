@@ -4,6 +4,7 @@ import {
   SafeAreaProviderCompat,
 } from '@react-navigation/elements/internal';
 import {
+  type NavigationRoute,
   type ParamListBase,
   StackActions,
   type TabNavigationState,
@@ -23,6 +24,7 @@ import {
 } from '../TransitionConfigs/TransitionPresets';
 import type {
   BottomTabBarProps,
+  BottomTabDescriptor,
   BottomTabDescriptorMap,
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
@@ -275,21 +277,12 @@ export function BottomTabViewCustom({
             );
           }
 
-          const { navigation, options, render } = descriptor;
-
-          const {
-            lazy = true,
-            inactiveBehavior = 'pause',
-            animation = 'none',
-            sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
-              .sceneStyleInterpolator,
-            sceneStyle: customSceneStyle,
-          } = options;
+          const { lazy = true, inactiveBehavior = 'pause' } =
+            descriptor.options;
 
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
-          const animationEnabled = hasAnimation(descriptor.options);
           const tabAnimation = tabAnims[route.key];
 
           if (tabAnimation == null) {
@@ -297,29 +290,6 @@ export function BottomTabViewCustom({
               `Couldn't find an animation for route '${route.key}'.`
             );
           }
-
-          const content = (
-            <AnimatedScreenContent
-              key={route.key}
-              progress={tabAnimation}
-              animationEnabled={animationEnabled}
-              sceneStyleInterpolator={sceneStyleInterpolator}
-              style={[StyleSheet.absoluteFill, customSceneStyle]}
-            >
-              <ScreenContent
-                isFocused={isFocused}
-                route={route}
-                navigation={navigation}
-                options={options}
-              >
-                <BottomTabBarHeightContext.Provider
-                  value={tabBarPosition === 'bottom' ? tabBarHeight : 0}
-                >
-                  {render()}
-                </BottomTabBarHeightContext.Provider>
-              </ScreenContent>
-            </AnimatedScreenContent>
-          );
 
           const isAnimatingRoute =
             lastUpdate.animating &&
@@ -335,22 +305,18 @@ export function BottomTabViewCustom({
             (lazy === false && !loaded.includes(route.key));
 
           return (
-            <Deferred
+            <TabScene
               key={route.key}
+              route={route}
+              descriptor={descriptor}
               lazy={lazy}
               visible={isFocused || isPreloaded || loaded.includes(route.key)}
-            >
-              <ActivityView
-                mode={isFocused ? 'normal' : isActive ? 'inert' : 'paused'}
-                visible={isFocused || isAnimatingRoute}
-                style={{
-                  ...StyleSheet.absoluteFill,
-                  zIndex: isFocused ? 0 : -1,
-                }}
-              >
-                {content}
-              </ActivityView>
-            </Deferred>
+              isFocused={isFocused}
+              isActive={isActive}
+              isAnimatingRoute={isAnimatingRoute}
+              tabAnimation={tabAnimation}
+              tabBarHeight={tabBarPosition === 'bottom' ? tabBarHeight : 0}
+            />
           );
         })}
       </Container>
@@ -360,6 +326,77 @@ export function BottomTabViewCustom({
     </SafeAreaProviderCompat>
   );
 }
+
+type TabSceneProps = {
+  route: NavigationRoute<ParamListBase, string>;
+  descriptor: BottomTabDescriptor;
+  lazy: boolean;
+  visible: boolean;
+  isFocused: boolean;
+  isActive: boolean;
+  isAnimatingRoute: boolean;
+  tabAnimation: Animated.Value;
+  tabBarHeight: number;
+};
+
+const TabScene = React.memo(function TabScene({
+  route,
+  descriptor,
+  lazy,
+  visible,
+  isFocused,
+  isActive,
+  isAnimatingRoute,
+  tabAnimation,
+  tabBarHeight,
+}: TabSceneProps) {
+  const { navigation, options, render } = descriptor;
+
+  const {
+    animation = 'none',
+    sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
+      .sceneStyleInterpolator,
+    sceneStyle: customSceneStyle,
+  } = options;
+
+  const animationEnabled = hasAnimation(descriptor.options);
+
+  const content = (
+    <AnimatedScreenContent
+      key={route.key}
+      progress={tabAnimation}
+      animationEnabled={animationEnabled}
+      sceneStyleInterpolator={sceneStyleInterpolator}
+      style={[StyleSheet.absoluteFill, customSceneStyle]}
+    >
+      <ScreenContent
+        isFocused={isFocused}
+        route={route}
+        navigation={navigation}
+        options={options}
+      >
+        <BottomTabBarHeightContext.Provider value={tabBarHeight}>
+          {render()}
+        </BottomTabBarHeightContext.Provider>
+      </ScreenContent>
+    </AnimatedScreenContent>
+  );
+
+  return (
+    <Deferred lazy={lazy} visible={visible}>
+      <ActivityView
+        mode={isFocused ? 'normal' : isActive ? 'inert' : 'paused'}
+        visible={isFocused || isAnimatingRoute}
+        style={{
+          ...StyleSheet.absoluteFill,
+          zIndex: isFocused ? 0 : -1,
+        }}
+      >
+        {content}
+      </ActivityView>
+    </Deferred>
+  );
+});
 
 function AnimatedScreenContent({
   progress,

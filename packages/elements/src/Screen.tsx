@@ -149,7 +149,13 @@ export function Screen(props: Props) {
           </View>
         </NavigationProvider>
       ) : null}
-      <View style={[page ? styles.page : styles.content, contentStyle]}>
+      <View
+        style={[page ? styles.page : styles.content, contentStyle]}
+        // A view with only layout styles can get flattened.
+        // Then its children become siblings of the header,
+        // so a child with a higher `zIndex` would be drawn on top of the header.
+        collapsable={false}
+      >
         <HeaderShownContext.Provider
           value={isParentHeaderShown || headerShown !== false}
         >
@@ -169,7 +175,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    flex: 1,
+    // FIXME: A numeric flex shorthand uses a percentage basis in browsers.
+    // With nested views, it slows down layout in Safari on iOS 27.
+    // So we explicitly set flex properties with `flexBasis: 0`.
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
   },
   page: {
     flexGrow: 1,

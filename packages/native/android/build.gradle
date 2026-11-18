@@ -177,7 +177,7 @@ tasks.register('copyMaterialFonts', Copy) {
     }
   }
 
-  def assetFiles = fontFiles ? fontFiles + "MaterialSymbols.codepoints" : []
+  def assetFiles = fontFiles ? fontFiles + "MaterialSymbols.codepoints" + "MaterialSymbols.mirrored" : []
 
   if (assetFiles) {
     from(assetsFontsDir) { include assetFiles }

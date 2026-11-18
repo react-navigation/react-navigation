@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.58](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.57...@react-navigation/drawer@8.0.0-alpha.58) (2026-10-13)
+
+### Bug Fixes
+
+* dismiss keyboard when drawer is opened programmatically ([#13287](https://github.com/react-navigation/react-navigation/issues/13287)) ([a9e209f](https://github.com/react-navigation/react-navigation/commit/a9e209fdf67e135cdbd8a6507c4216f2bb1eb965)), closes [#13273](https://github.com/react-navigation/react-navigation/issues/13273) - by @MSliwa01
+* fallback to images when material symbols are not available ([8a45f3d](https://github.com/react-navigation/react-navigation/commit/8a45f3d06ecd2b2ced29e27a4d6d680b51e2c4d6)) - by @satya164
+
 # [8.0.0-alpha.57](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.56...@react-navigation/drawer@8.0.0-alpha.57) (2026-10-02)
 
 **Note:** Version bump only for package @react-navigation/drawer

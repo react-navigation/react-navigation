@@ -1,8 +1,7 @@
-/* eslint-disable import-x/no-default-export */
-
 import { type TurboModule, TurboModuleRegistry } from 'react-native';
 
 export interface Spec extends TurboModule {
+  isAvailable(): boolean;
   getImageSource(
     name: string,
     variant: string | undefined,
@@ -11,7 +10,8 @@ export interface Spec extends TurboModule {
     size: number,
     // Codegen requires using `Object` instead of `object
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
-    color: Object
+    color: Object,
+    direction: 'ltr' | 'rtl'
   ): string;
 }
 

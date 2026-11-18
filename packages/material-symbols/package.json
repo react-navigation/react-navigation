@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/material-symbols",
   "description": "Material Symbols fonts for React Navigation",
-  "version": "8.0.0-alpha.0",
+  "version": "8.0.0-alpha.1",
   "keywords": [
     "react-native",
     "react-navigation",

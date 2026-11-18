@@ -6,12 +6,13 @@ import {
   jest,
   test,
 } from '@jest/globals';
-import { useHeaderHeight } from '@react-navigation/elements';
+import { getHeaderTitle, useHeaderHeight } from '@react-navigation/elements';
 import {
   CommonActions,
   createNavigationContainerRef,
   type NavigationAction,
   NavigationContainer,
+  type NavigatorScreenParams,
   StackActions,
   usePreventRemove,
 } from '@react-navigation/native';
@@ -23,6 +24,7 @@ import {
   screen,
   userEvent,
 } from '@testing-library/react-native';
+import * as React from 'react';
 import { Button, Platform, Text, View } from 'react-native';
 
 import {
@@ -37,6 +39,18 @@ type StackParamList = {
 
 type NestedStackParamList = {
   C: undefined;
+};
+
+type ParentStackParamList = {
+  A: NavigatorScreenParams<ChildStackParamList>;
+  B: undefined;
+  C: undefined;
+  D: undefined;
+};
+
+type ChildStackParamList = {
+  X: undefined;
+  Y: undefined;
 };
 
 beforeEach(() => {
@@ -340,6 +354,113 @@ test('renders a native-stack navigator with screens', async () => {
     )
   ).toBe(true);
   expect(isHiddenFromAccessibility(screen.getByText('Screen B'))).toBe(false);
+});
+
+test('renders a custom header with left and right buttons', async () => {
+  const Stack = createNativeStackNavigator<StackParamList>();
+
+  const user = userEvent.setup();
+
+  const onPressLeft = jest.fn();
+  const onPressRight = jest.fn();
+
+  await render(
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="A"
+          options={{
+            header: ({ options, route, back }) => (
+              <View>
+                {options.headerLeft?.({ canGoBack: back != null })}
+                <Text>{getHeaderTitle(options, route.name)}</Text>
+                {options.headerRight?.({ canGoBack: back != null })}
+              </View>
+            ),
+            headerTitle: 'Edit profile',
+            headerLeft: () => <Button title="Cancel" onPress={onPressLeft} />,
+            headerRight: () => <Button title="Save" onPress={onPressRight} />,
+          }}
+        >
+          {() => <Text>Profile</Text>}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(screen.getByText('Edit profile')).toBeOnTheScreen();
+  expect(screen.getByText('Cancel')).toBeOnTheScreen();
+  expect(screen.getByText('Save')).toBeOnTheScreen();
+
+  await user.press(screen.getByText('Cancel'));
+
+  expect(onPressLeft).toHaveBeenCalledTimes(1);
+
+  await user.press(screen.getByText('Save'));
+
+  expect(onPressRight).toHaveBeenCalledTimes(1);
+});
+
+test('inactiveBehavior="unmount" keeps screens with nested navigators mounted', async () => {
+  const Stack = createNativeStackNavigator<ParentStackParamList>();
+  const NestedStack = createNativeStackNavigator<ChildStackParamList>();
+
+  const navigation = createNavigationContainerRef<ParentStackParamList>();
+  const user = userEvent.setup();
+
+  const Counter = ({ name }: { name: string }) => {
+    const [count, setCount] = React.useState(0);
+
+    return (
+      <View>
+        <Text>
+          {name}: {count}
+        </Text>
+        <Button onPress={() => setCount((c) => c + 1)} title="Increment" />
+      </View>
+    );
+  };
+
+  const Nested = () => (
+    <NestedStack.Navigator>
+      <NestedStack.Screen name="X">{() => null}</NestedStack.Screen>
+      <NestedStack.Screen name="Y">
+        {() => <Counter name="Nested" />}
+      </NestedStack.Screen>
+    </NestedStack.Navigator>
+  );
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator screenOptions={{ inactiveBehavior: 'unmount' }}>
+        <Stack.Screen name="A" component={Nested} />
+        <Stack.Screen name="B">{() => <Counter name="Plain" />}</Stack.Screen>
+        <Stack.Screen name="C">{() => null}</Stack.Screen>
+        <Stack.Screen name="D">{() => null}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('A', { screen: 'Y' }));
+  await user.press(screen.getByRole('button', { name: 'Increment' }));
+
+  expect(screen.getByText('Nested: 1')).toBeOnTheScreen();
+
+  await act(() => navigation.navigate('B'));
+  await user.press(screen.getByRole('button', { name: 'Increment' }));
+
+  expect(screen.getByText('Plain: 1')).toBeOnTheScreen();
+
+  await act(() => navigation.navigate('C'));
+  await act(() => navigation.navigate('D'));
+
+  await act(() => navigation.dispatch(StackActions.popTo('B')));
+
+  expect(screen.getByText('Plain: 0')).toBeOnTheScreen();
+
+  await act(() => navigation.dispatch(StackActions.popTo('A')));
+
+  expect(screen.getByText('Nested: 1')).toBeOnTheScreen();
 });
 
 describe('useHeaderHeight in native-stack', () => {

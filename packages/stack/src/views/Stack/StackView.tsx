@@ -7,6 +7,7 @@ import {
   type Route,
   StackActions,
   type StackNavigationState,
+  ThemeContext,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -162,6 +163,18 @@ export class StackView extends React.Component<Props, State> {
 
     let { openingRouteKeys, closingRouteKeys, replacingRouteKeys } = state;
 
+    // A route can be removed before its opening animation finishes
+    // e.g. when it was replaced while opening, so stop tracking it
+    // If a route being replaced is added back, it's handled like a newly focused route
+    openingRouteKeys = openingRouteKeys.filter(
+      (key) =>
+        state.routes.some((r) => r.key === key) &&
+        !(
+          replacingRouteKeys.includes(key) &&
+          activeRoutes.some((r) => r.key === key)
+        )
+    );
+
     // If a route that was closing or being replaced is now back in the routes,
     // it was added back before the animation finished, so stop tracking it
     closingRouteKeys = closingRouteKeys.filter(
@@ -250,11 +263,11 @@ export class StackView extends React.Component<Props, State> {
           if (!routes.some((r) => r.key === previousFocusedRoute.key)) {
             // The previous focused route isn't present in state, we treat this as a replace
 
-            openingRouteKeys = openingRouteKeys.filter(
-              (key) => key !== previousFocusedRoute.key
-            );
-
             if (getAnimationTypeForReplace(nextFocusedRoute.key) === 'pop') {
+              openingRouteKeys = openingRouteKeys.filter(
+                (key) => key !== previousFocusedRoute.key
+              );
+
               closingRouteKeys = [
                 ...closingRouteKeys,
                 previousFocusedRoute.key,
@@ -426,7 +439,7 @@ export class StackView extends React.Component<Props, State> {
         return {
           routes: newRoutes,
           openingRouteKeys: state.openingRouteKeys.filter(
-            (key) => key !== route.key
+            (key) => key !== route.key && !replacingRoutesToRemove.has(key)
           ),
           closingRouteKeys: state.closingRouteKeys.filter(
             (key) => key !== route.key
@@ -522,43 +535,52 @@ export class StackView extends React.Component<Props, State> {
     } = this.state;
 
     return (
-      <GestureHandlerWrapper style={styles.container}>
-        <SafeAreaProviderCompat>
-          <SafeAreaInsetsContext.Consumer>
-            {(insets) => (
-              <ModalPresentationContext.Consumer>
-                {(isParentModal) => (
-                  <HeaderShownContext.Consumer>
-                    {(isParentHeaderShown) => (
-                      <CardStack
-                        insets={insets!}
-                        isParentHeaderShown={isParentHeaderShown}
-                        isParentModal={isParentModal}
-                        getPreviousRoute={this.getPreviousRoute}
-                        routes={routes}
-                        openingRouteKeys={openingRouteKeys}
-                        closingRouteKeys={closingRouteKeys}
-                        replacingRouteKeys={replacingRouteKeys}
-                        onOpenRoute={this.handleOpenRoute}
-                        onCloseRoute={this.handleCloseRoute}
-                        onTransitionStart={this.handleTransitionStart}
-                        onTransitionEnd={this.handleTransitionEnd}
-                        renderHeader={this.renderHeader}
-                        state={state}
-                        descriptors={descriptors}
-                        onGestureStart={this.handleGestureStart}
-                        onGestureEnd={this.handleGestureEnd}
-                        onGestureCancel={this.handleGestureCancel}
-                        {...rest}
-                      />
+      <ThemeContext.Consumer>
+        {(theme) => (
+          <GestureHandlerWrapper
+            style={[
+              styles.container,
+              { backgroundColor: theme?.colors.background },
+            ]}
+          >
+            <SafeAreaProviderCompat>
+              <SafeAreaInsetsContext.Consumer>
+                {(insets) => (
+                  <ModalPresentationContext.Consumer>
+                    {(isParentModal) => (
+                      <HeaderShownContext.Consumer>
+                        {(isParentHeaderShown) => (
+                          <CardStack
+                            insets={insets!}
+                            isParentHeaderShown={isParentHeaderShown}
+                            isParentModal={isParentModal}
+                            getPreviousRoute={this.getPreviousRoute}
+                            routes={routes}
+                            openingRouteKeys={openingRouteKeys}
+                            closingRouteKeys={closingRouteKeys}
+                            replacingRouteKeys={replacingRouteKeys}
+                            onOpenRoute={this.handleOpenRoute}
+                            onCloseRoute={this.handleCloseRoute}
+                            onTransitionStart={this.handleTransitionStart}
+                            onTransitionEnd={this.handleTransitionEnd}
+                            renderHeader={this.renderHeader}
+                            state={state}
+                            descriptors={descriptors}
+                            onGestureStart={this.handleGestureStart}
+                            onGestureEnd={this.handleGestureEnd}
+                            onGestureCancel={this.handleGestureCancel}
+                            {...rest}
+                          />
+                        )}
+                      </HeaderShownContext.Consumer>
                     )}
-                  </HeaderShownContext.Consumer>
+                  </ModalPresentationContext.Consumer>
                 )}
-              </ModalPresentationContext.Consumer>
-            )}
-          </SafeAreaInsetsContext.Consumer>
-        </SafeAreaProviderCompat>
-      </GestureHandlerWrapper>
+              </SafeAreaInsetsContext.Consumer>
+            </SafeAreaProviderCompat>
+          </GestureHandlerWrapper>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }

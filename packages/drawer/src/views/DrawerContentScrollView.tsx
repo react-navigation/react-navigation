@@ -1,4 +1,4 @@
-import { UNSTABLE_CornerInset, useLocale } from '@react-navigation/native';
+import { UNSTABLE_LayoutRegionView, useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Platform,
@@ -57,7 +57,12 @@ export function DrawerContentScrollView({
       style={[styles.container, style]}
     >
       {Platform.OS === 'ios' && contentInsetAdjustmentBehavior !== 'never' && (
-        <UNSTABLE_CornerInset direction="vertical" edge="top" />
+        <UNSTABLE_LayoutRegionView
+          region="safeArea"
+          cornerAdaptation="vertical"
+          cornerAdaptationOnly
+          edges={{ top: 'additive' }}
+        />
       )}
       {children}
     </ScrollView>

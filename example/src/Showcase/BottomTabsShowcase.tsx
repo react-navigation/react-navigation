@@ -640,7 +640,8 @@ const BottomTabsShowcaseNavigator = createBottomTabNavigator({
       screen: SearchStack,
       layout: ({ children }) => children,
       options: {
-        tabBarSystemItem: 'search',
+        tabBarRole: 'search',
+        tabBarSearchAutoFocus: true,
         tabBarButtonTestID: 'showcase-bottom-tabs-search',
         tabBarIcon: Platform.select<Icon>({
           ios: { type: 'sfSymbol', name: 'magnifyingglass' },

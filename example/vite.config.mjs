@@ -19,10 +19,9 @@ const packages = pack.workspaces.flatMap((workspace) =>
 );
 
 export default defineConfig((env) => {
-  const base = config(env);
   const conditions = ['@react-navigation/source'];
 
-  return mergeConfig(base, {
+  return mergeConfig(config(env), {
     appType: 'custom',
     resolve: {
       conditions,
@@ -34,25 +33,11 @@ export default defineConfig((env) => {
     },
     ssr: {
       noExternal:
-        /^(?:@expo|@react-native-vector-icons|@react-navigation|expo(?:-|$)|react-native(?:-|$))/,
+        /^(?:@react-native-async-storage|@react-native-vector-icons|@react-navigation)/,
       resolve: {
         conditions: [...defaultServerConditions, ...conditions],
       },
       optimizeDeps: {
-        esbuildOptions: {
-          ...base.optimizeDeps.esbuildOptions,
-          plugins: [
-            {
-              name: 'externalize-react',
-              setup(build) {
-                build.onResolve(
-                  { filter: /^react(?:-dom)?(?:\/.*)?$/ },
-                  ({ path }) => ({ external: true, path })
-                );
-              },
-            },
-          ],
-        },
         include: [
           'expo',
           '@expo-google-fonts/nunito',
@@ -64,7 +49,6 @@ export default defineConfig((env) => {
           '@react-native-vector-icons/material-design-icons',
           '@expo/react-native-action-sheet',
           'react-native-safe-area-context',
-          'react-native-web',
         ],
       },
     },

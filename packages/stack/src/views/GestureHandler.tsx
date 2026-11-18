@@ -21,11 +21,11 @@ export function GestureDetector({
   );
 }
 
-// eslint-disable-next-line @eslint-react/hooks-extra/no-unnecessary-use-prefix, @eslint-react/hooks-extra/ensure-custom-hooks-using-other-hooks
+// eslint-disable-next-line @eslint-react/no-unnecessary-use-prefix
 export function usePanGesture(_config: PanGestureConfig) {
   return undefined;
 }
 
-export const GestureHandlerRootView = View;
+export const GestureHandlerRootView: typeof View = View;
 
 export type { PanGesture } from 'react-native-gesture-handler';

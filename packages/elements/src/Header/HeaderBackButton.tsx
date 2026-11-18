@@ -1,4 +1,4 @@
-import { useTheme } from '@react-navigation/native';
+import { MaterialSymbol, useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -45,6 +45,7 @@ export function HeaderBackButton({
   );
 
   const { colors } = useTheme();
+  const { direction } = useLocale();
 
   const isMinimal = displayMode === 'minimal' || measuredMinimal;
 
@@ -60,19 +61,43 @@ export function HeaderBackButton({
       Platform.select<Icon>({
         ios: {
           type: 'sfSymbol',
-          name: 'chevron.left',
+          name: 'chevron.backward',
         },
-        android: {
-          type: 'materialSymbol',
-          name: 'arrow_back',
-        },
+        android: MaterialSymbol.isAvailable()
+          ? {
+              type: 'materialSymbol',
+              name: 'arrow_back',
+            }
+          : {
+              type: 'image',
+              source: backIconImage,
+            },
         default: {
           type: 'image',
           source: backIconImage,
         },
       });
 
-    return <HeaderIcon icon={backIcon} color={color} style={styles.icon} />;
+    return (
+      <HeaderIcon
+        icon={backIcon}
+        color={color}
+        weight={
+          icon == null
+            ? // Native back buttons use a heavier chevron than other buttons
+              'semibold'
+            : undefined
+        }
+        style={[
+          styles.icon,
+          direction === 'rtl' &&
+            // Material Symbols and SF Symbols are mirrored natively in RTL
+            // So we only need to flip images
+            backIcon.type === 'image' &&
+            styles.flip,
+        ]}
+      />
+    );
   };
 
   const handlePress = () => {
@@ -285,5 +310,8 @@ const styles = StyleSheet.create({
     width: ICON_WIDTH,
     marginStart: ICON_SPACING_START,
     marginEnd: 0,
+  },
+  flip: {
+    transform: 'scaleX(-1)',
   },
 });

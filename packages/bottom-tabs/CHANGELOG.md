@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.57](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.56...@react-navigation/bottom-tabs@8.0.0-alpha.57) (2026-10-13)
+
+### Bug Fixes
+
+* fix scroll edge effect flash when switching tabs ([a499bfe](https://github.com/react-navigation/react-navigation/commit/a499bfed0a107ae55c0f223802c90b482879e023)), closes [#13285](https://github.com/react-navigation/react-navigation/issues/13285) - by @satya164
+
+### Features
+
+* accept a direction option in MaterialSymbol.getImageSource ([7ce51a6](https://github.com/react-navigation/react-navigation/commit/7ce51a6977e9767379eaafd886b88200462f998d)) - by @satya164
+* add a tabBarRole option for prominent and search tabs on iOS 27 ([#13283](https://github.com/react-navigation/react-navigation/issues/13283)) ([0646cdd](https://github.com/react-navigation/react-navigation/commit/0646cdd5e1e1d3650d6b638be396f84398941c98)) - by @satya164
+* add per-tab icon size & active-indicator size options to bottom tabs([#13168](https://github.com/react-navigation/react-navigation/issues/13168)) ([f77c75d](https://github.com/react-navigation/react-navigation/commit/f77c75db9b2399f9e73854fe42c39cbaafc953b2)), closes [software-mansion/react-native-screens#4209](https://github.com/software-mansion/react-native-screens/issues/4209) - by @stachbial
+* add support for filled material symbols and reduce size ([#13274](https://github.com/react-navigation/react-navigation/issues/13274)) ([d6c10f5](https://github.com/react-navigation/react-navigation/commit/d6c10f5390ce4c54d9b205e0c080ff3d7fff9441)) - by @satya164
+* add tabBarLabelPositionAdjustment option for native tabs on iOS ([#13265](https://github.com/react-navigation/react-navigation/issues/13265)) ([cfc724b](https://github.com/react-navigation/react-navigation/commit/cfc724b018b5a751da4e75c45fcab651fb7d01be)) - by @hydromoll
+* support tinted image icons on Android and rendering mode for SF Symbol icons ([#13278](https://github.com/react-navigation/react-navigation/issues/13278)) ([e50049a](https://github.com/react-navigation/react-navigation/commit/e50049a71517809fec9371c5345e225edfb70477)), closes [#13282](https://github.com/react-navigation/react-navigation/issues/13282) - by @stachbial
+
 # [8.0.0-alpha.56](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.55...@react-navigation/bottom-tabs@8.0.0-alpha.56) (2026-10-02)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

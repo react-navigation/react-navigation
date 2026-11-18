@@ -57,10 +57,11 @@ export function SafeAreaProviderCompat({ children, style }: Props) {
 
         return (
           <SafeAreaProvider
-            ref={ref}
             initialMetrics={initialMetrics}
             style={style}
             onLayout={onLayout}
+            // @ts-expect-error the ref type changed in newer react-native versions
+            ref={ref}
           >
             {children}
           </SafeAreaProvider>

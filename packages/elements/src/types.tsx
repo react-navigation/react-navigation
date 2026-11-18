@@ -1,4 +1,7 @@
-import type { MaterialSymbolProps } from '@react-navigation/native';
+import type {
+  MaterialSymbolProps,
+  SFSymbolProps,
+} from '@react-navigation/native';
 import * as React from 'react';
 import type {
   Animated,
@@ -10,7 +13,6 @@ import type {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import type { SFSymbol } from 'sf-symbols-typescript';
 
 import type { BlurEffectType } from './getBlurBackgroundColor';
 
@@ -46,7 +48,15 @@ type IconSfSymbol = {
   /**
    * Name of the SF Symbol to use as the icon.
    */
-  name: SFSymbol;
+  name: SFSymbolProps['name'];
+  /**
+   * How to color the symbol.
+   * - `monochrome`: Single color, using the tint color.
+   * - `multicolor`: Uses the symbol's built-in multicolor scheme.
+   *
+   * Defaults to a single color for system symbols.
+   */
+  renderingMode?: 'monochrome' | 'multicolor' | undefined;
 };
 
 type IconMaterialSymbol = {
@@ -98,6 +108,21 @@ export type HeaderSearchBarOptions = {
    * @platform ios
    */
   cancelButtonText?: string | undefined;
+  /**
+   * Accessibility label for the button that closes the search bar.
+   * Defaults to `Close` on iOS 26+, `cancelButtonText` on older iOS and `Back` on other platforms.
+   */
+  cancelButtonAccessibilityLabel?: string | undefined;
+  /**
+   * Accessibility label for the button that clears the search input.
+   * Defaults to `Clear text`.
+   */
+  clearButtonAccessibilityLabel?: string | undefined;
+  /**
+   * Accessibility label for the header button that opens the search bar.
+   * Defaults to `Search`.
+   */
+  openButtonAccessibilityLabel?: string | undefined;
   /**
    * Sets type of the input. Defaults to `text`.
    */
@@ -200,16 +225,7 @@ export type HeaderOptions = {
   /**
    * Function which returns a React Element to display on the left side of the header.
    */
-  headerLeft?:
-    | ((
-        props: HeaderBackButtonProps & {
-          /**
-           * Whether it's possible to navigate back.
-           */
-          canGoBack?: boolean | undefined;
-        }
-      ) => React.ReactNode)
-    | undefined;
+  headerLeft?: ((props: HeaderLeftProps) => React.ReactNode) | undefined;
   /**
    * Whether the liquid glass background is visible for the item.
    *
@@ -269,9 +285,7 @@ export type HeaderOptions = {
    * You can use this with `headerTransparent` to render a blur view, for example, to create a translucent header.
    */
   headerBackground?:
-    | ((props: {
-        style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-      }) => React.ReactNode)
+    | ((props: HeaderBackgroundProps) => React.ReactNode)
     | undefined;
   /**
    * Style object for the container of the `headerBackground` element.
@@ -435,4 +449,18 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    * Whether label font should scale to respect Text Size accessibility settings.
    */
   allowFontScaling?: boolean | undefined;
+};
+
+export type HeaderLeftProps = HeaderBackButtonProps & {
+  /**
+   * Whether it's possible to navigate back.
+   */
+  canGoBack?: boolean | undefined;
+};
+
+export type HeaderBackgroundProps = {
+  /**
+   * Style object for the header background.
+   */
+  style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };

@@ -13,6 +13,7 @@ class MaterialSymbolView @JvmOverloads constructor(
   private var weight: Int? = null
   private var fill: Boolean? = null
   private var symbol: String? = null
+  private var autoMirrored = false
 
   init {
     setColor(null)
@@ -28,12 +29,16 @@ class MaterialSymbolView @JvmOverloads constructor(
     val x = width / 2f
     val y = (height - (fontMetrics.descent - fontMetrics.ascent)) / 2f - fontMetrics.ascent
 
+    if (autoMirrored && layoutDirection == LAYOUT_DIRECTION_RTL) {
+      canvas.scale(-1f, 1f, x, height / 2f)
+    }
+
     canvas.drawText(symbol, x, y, paint)
   }
 
   fun setName(name: String?) {
-    text = name
     symbol = name?.let { MaterialSymbolTypeface.getSymbol(context, it) }
+    autoMirrored = name?.let { MaterialSymbolTypeface.isAutoMirrored(context, it) } ?: false
 
     invalidate()
   }
@@ -85,6 +90,6 @@ class MaterialSymbolView @JvmOverloads constructor(
   }
 
   fun setSize(size: Float) {
-    textSize = size
+    setTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, size)
   }
 }

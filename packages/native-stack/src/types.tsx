@@ -247,12 +247,9 @@ export type NativeStackNavigationOptions = {
    * @platform ios
    */
   headerLargeTitleStyle?:
-    | StyleProp<{
-        fontFamily?: string | undefined;
-        fontSize?: number | undefined;
-        fontWeight?: string | undefined;
-        color?: ColorValue | undefined;
-      }>
+    | StyleProp<
+        Pick<TextStyle, 'fontFamily' | 'fontSize' | 'fontWeight' | 'color'>
+      >
     | undefined;
   /**
    * Whether to show the header. The header is shown by default.
@@ -392,9 +389,7 @@ export type NativeStackNavigationOptions = {
    */
   headerTitleStyle?:
     | StyleProp<
-        Pick<TextStyle, 'fontFamily' | 'fontSize' | 'fontWeight'> & {
-          color?: ColorValue | undefined;
-        }
+        Pick<TextStyle, 'fontFamily' | 'fontSize' | 'fontWeight' | 'color'>
       >
     | undefined;
   /**
@@ -631,7 +626,7 @@ export type NativeStackNavigationOptions = {
    * - "containedModal": will use "UIModalPresentationCurrentContext" modal style on iOS and will fallback to "modal" on Android.
    * - "containedTransparentModal": will use "UIModalPresentationOverCurrentContext" modal style on iOS and will fallback to "transparentModal" on Android.
    * - "fullScreenModal": will use "UIModalPresentationFullScreen" modal style on iOS and will fallback to "modal" on Android.
-   * - "formSheet": will use "UIModalPresentationFormSheet" modal style on iOS and will fallback to "modal" on Android.
+   * - "formSheet": will use "UIModalPresentationFormSheet" modal style on iOS and a bottom sheet on Android.
    * - "pageSheet": will use "UIModalPresentationPageSheet" modal style on iOS and will fallback to "modal" on Android.
    *
    * Only supported on iOS and Android.
@@ -772,6 +767,10 @@ export type NativeStackNavigationOptions = {
    * - "landscape_left": landscape-left orientation is permitted.
    * - "landscape_right": landscape-right orientation is permitted.
    *
+   * If not set, the screen inherits the orientation of its parent screen.
+   * If no parent screen sets the `orientation`, it uses the supported orientations in the app's `Info.plist` on iOS,
+   * on Android, it lets the system decide the best orientation.
+   *
    * Only supported on iOS and Android.
    */
   orientation?: ScreenProps['screenOrientation'] | undefined;
@@ -836,7 +835,9 @@ export type NativeStackNavigationOptions = {
   inactiveBehavior?: 'pause' | 'unmount' | 'none' | undefined;
 };
 
-type IconIOS = Extract<Icon, { type: 'image' | 'sfSymbol' }>;
+type IconIOS =
+  | Extract<Icon, { type: 'image' }>
+  | Omit<Extract<Icon, { type: 'sfSymbol' }>, 'renderingMode'>;
 
 type SharedHeaderItem = {
   /**
@@ -902,6 +903,18 @@ type SharedHeaderItem = {
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/identifier
    */
   identifier?: string | undefined;
+  /**
+   * Priority used when the items don't fit in the header.
+   * Items with lower priority are moved to the overflow menu first.
+   *
+   * Only applies to items in `unstable_headerRightItems`.
+   *
+   * Defaults to `default`.
+   * Only available from iOS 27.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitemvisibilitypriority
+   */
+  visibilityPriority?: 'low' | 'default' | 'high' | undefined;
   /**
    * A badge to display on a item.
    * Only available from iOS 26.0 and later.
@@ -1029,6 +1042,10 @@ export type NativeStackHeaderItemMenuSubmenu = {
    * Label for the submenu item.
    */
   label: string;
+  /**
+   * The secondary text displayed alongside the label of the submenu item.
+   */
+  description?: string | undefined;
   /**
    * Icon for the submenu item.
    */

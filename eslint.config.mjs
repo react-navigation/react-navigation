@@ -80,7 +80,7 @@ export default defineConfig([
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
 
-      'react-hooks/exhaustive-deps': [
+      '@eslint-react/exhaustive-deps': [
         'error',
         {
           additionalHooks: '(useAnimatedStyle|useAnimatedProps)',
@@ -125,6 +125,13 @@ export default defineConfig([
   },
   {
     files: ['**/*.config.{ts,mts,js,cjs,mjs}', '**/.*rc.{ts,mts,js,cjs,mjs}'],
+
+    rules: {
+      'import-x/no-default-export': 'off',
+    },
+  },
+  {
+    files: ['**/Native?*.{js,ts,tsx}', '**/?*NativeComponent*.{js,ts,tsx}'],
 
     rules: {
       'import-x/no-default-export': 'off',

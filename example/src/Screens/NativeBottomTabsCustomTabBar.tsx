@@ -73,7 +73,7 @@ function AlbumsScreen() {
         contentContainerStyle={{
           paddingTop:
             Platform.OS === 'ios'
-              ? // FIXME: seems iOS has an extra inset on top of header height
+              ? // iOS also has automatic safe area insets at top
                 headerHeight - insets.top
               : headerHeight,
         }}

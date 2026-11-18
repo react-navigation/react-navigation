@@ -4,6 +4,7 @@ import {
   MaterialSymbol,
   type MaterialSymbolProps,
   type StaticScreenProps,
+  useLocale,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -209,6 +210,7 @@ const MaterialSymbolRow = React.memo(function MaterialSymbolRow({
   image: boolean;
 }) {
   const { colors } = useTheme();
+  const { direction } = useLocale();
 
   return (
     <View style={styles.row}>
@@ -223,6 +225,7 @@ const MaterialSymbolRow = React.memo(function MaterialSymbolRow({
                 fill,
                 size: ICON_SIZE,
                 color: colors.text,
+                direction,
               })}
             />
           ) : (

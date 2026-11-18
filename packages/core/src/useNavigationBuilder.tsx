@@ -425,6 +425,7 @@ export function useNavigationBuilder<
     routeKeyList[name] = config.keys;
     routeParamList[name] = config.props.initialParams;
 
+    // eslint-disable-next-line @eslint-react/purity
     Object.assign(routeGetIdList, { [name]: config.props.getId });
   }
 
@@ -475,10 +476,17 @@ export function useNavigationBuilder<
 
   const setState = useLatestCallback(
     (state: State | PartialState<State> | undefined) => {
-      if (mountStateRef.current === 'unmounted') {
-        // Store the state locally in case the current navigator is in `Activity`
+      if (mountStateRef.current !== 'mounted') {
+        // Store the state locally, so we can use it in these cases:
+        // - If the navigator is in `Activity`, its state gets cleaned up when it's hidden
+        //   So we use this state to restore it when it's shown again
+        // - If a screen navigates in an effect when the navigator mounts
+        //   Child effects run first, so the navigation happens before the navigator's mount effect
+        //   Then we use this state in the mount effect instead of the outdated state from render
         savedStateRef.current = state;
+      }
 
+      if (mountStateRef.current === 'unmounted') {
         // State might have been already cleaned up due to unmount
         // We don't want to update `route.state` in parent
         // Otherwise it will be reused if a new navigator gets mounted
@@ -616,7 +624,7 @@ export function useNavigationBuilder<
     // Instead, we handle changes to these in the nextState code below. Note
     // that some changes to routeConfigs are explicitly ignored, such as changes
     // to initialParams
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, [currentState, lastState, router, isStateValid]);
 
   const previousRouteKeyListRef = React.useRef(routeKeyList);
@@ -857,7 +865,7 @@ export function useNavigationBuilder<
 
       mountStateRef.current = 'unmounted';
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, []);
 
   const getState = useLatestCallback((): State => {

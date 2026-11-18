@@ -29,7 +29,7 @@ export const Header = React.memo(function Header({
     previousTitle = back.title;
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line @eslint-react/exhaustive-deps
   const goBack = React.useCallback(
     throttle(() => {
       if (navigation.isFocused() && navigation.canGoBack()) {

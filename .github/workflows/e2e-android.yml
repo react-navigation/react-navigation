@@ -29,7 +29,7 @@ jobs:
       ORG_GRADLE_PROJECT_reactNativeArchitectures: x86_64
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -48,37 +48,38 @@ jobs:
 
       - name: Restore debug build from cache
         id: restore-debug-build
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: android-debug-build/
           key: android-debug-build-${{ runner.os }}-${{ env.API_LEVEL }}-${{ env.ORG_GRADLE_PROJECT_reactNativeArchitectures }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
 
-      - name: Maximize build space
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: AdityaGarg8/remove-unwanted-software@90e01b21170618765a73370fcc3abbd1684a7793
-        with:
-          remove-dotnet: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
-          remove-docker-images: 'true'
+      - parallel:
+          - name: Maximize build space
+            if: steps.restore-debug-build.outputs.cache-hit != 'true'
+            uses: AdityaGarg8/remove-unwanted-software@90e01b21170618765a73370fcc3abbd1684a7793
+            with:
+              remove-dotnet: 'true'
+              remove-haskell: 'true'
+              remove-codeql: 'true'
+              remove-docker-images: 'true'
 
-      - name: Setup JDK
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
-        with:
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          java-version: ${{ env.JAVA_VERSION }}
+          - name: Setup JDK
+            if: steps.restore-debug-build.outputs.cache-hit != 'true'
+            uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
+            with:
+              distribution: ${{ env.JAVA_DISTRIBUTION }}
+              java-version: ${{ env.JAVA_VERSION }}
 
-      - name: Cache Gradle
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
+          - name: Cache Gradle
+            if: steps.restore-debug-build.outputs.cache-hit != 'true'
+            uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+            with:
+              path: |
+                ~/.gradle/caches
+                ~/.gradle/wrapper
+              key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+              restore-keys: |
+                gradle-${{ runner.os }}-
 
       - name: Build Android App
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -96,13 +97,13 @@ jobs:
 
       - name: Store debug build in cache
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: android-debug-build/
           key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
 
       - name: Upload debug build artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: android-debug-build
           path: android-debug-build/android-debug.apk
@@ -124,31 +125,24 @@ jobs:
       EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096 -cores 2 -memory 4096'
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Install nightly react-native-screens
-        if: github.event_name == 'schedule'
-        run: pnpm --recursive update react-native-screens@nightly --no-save
-
-      - name: Download debug build artifact
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
-        with:
-          name: android-debug-build
-          path: android-debug-build
-
-      - name: Install AVD dependencies
-        run: |
-          sudo apt update
-          sudo apt-get install -y libpulse0 libgl1 libxkbfile1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Setup JDK
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
+
+      - parallel:
+          - name: Install AVD dependencies
+            run: |
+              sudo apt update
+              sudo apt-get install -y libpulse0 libgl1 libxkbfile1
+
+          - name: Install Android SDK components
+            run: |
+              yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
+              "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install emulator "platform-tools" "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
 
       - name: Setup Android SDK
         run: |
@@ -157,11 +151,6 @@ jobs:
             echo "$ANDROID_HOME/platform-tools"
             echo "$ANDROID_HOME/cmdline-tools/latest/bin"
           } >> "$GITHUB_PATH"
-
-      - name: Install Android SDK components
-        run: |
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install emulator "platform-tools" "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
 
       - name: Enable KVM
         run: |
@@ -173,22 +162,45 @@ jobs:
         run: |
           avdmanager create avd -n "${{ env.AVD_NAME }}" -d "${{ env.EMULATOR_PROFILE }}" -k "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
 
-      - name: Start Metro bundler
-        run: pnpm --dir example start &
-
       - name: Start emulator
+        id: boot-emulator
         timeout-minutes: 10
         run: |
           "$ANDROID_HOME/emulator/emulator" -avd "${{ env.AVD_NAME }}" ${{ env.EMULATOR_OPTIONS }} &
           adb wait-for-device
           adb shell "while [[ -z \$(getprop sys.boot_completed) ]]; do sleep 1; done"
+        background: true
 
-      - name: Wait for Metro bundler
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Install nightly react-native-screens
+        if: github.event_name == 'schedule'
+        run: pnpm --recursive update react-native-screens@nightly --no-save
+
+      - name: Download debug build artifact
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: android-debug-build
+          path: android-debug-build
+
+      - name: Start Metro bundler
+        run: pnpm --dir example start &
+
+      - name: Warm up Metro bundle
+        id: metro-bundle
         timeout-minutes: 5
         run: |
           until curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=android&dev=true&minify=false" > /dev/null 2>&1; do
             sleep 2
           done
+        background: true
+
+      - name: Wait for emulator
+        wait: boot-emulator
+
+      - name: Wait for Metro bundler
+        wait: metro-bundle
 
       - name: Run E2E tests
         run: |
@@ -199,7 +211,7 @@ jobs:
 
       - name: Store E2E output
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: e2e-output-android
           path: example/agent-device-artifacts/**/*
@@ -212,7 +224,7 @@ jobs:
 
       - name: Store debug output
         if: failure() || cancelled()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: e2e-artifacts-android
           path: |

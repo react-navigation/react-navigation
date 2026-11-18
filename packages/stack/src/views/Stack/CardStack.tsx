@@ -104,6 +104,7 @@ type State = {
   gestures: GestureValues;
   layout: Layout;
   headerHeights: HeaderHeights;
+  nestedStateRouteKeys: string[];
 };
 
 const NAMED_TRANSITIONS_PRESETS = {
@@ -122,7 +123,11 @@ const NAMED_TRANSITIONS_PRESETS = {
   slide_from_bottom: ModalSlideFromBottomIOS,
 } as const satisfies Record<StackAnimationName, TransitionPreset>;
 
-const GESTURE_DISABLED_INTERPOLATORS = [
+const MODAL_PRESENTATION_INTERPOLATORS = {
+  forModalPresentationIOS,
+};
+
+const GESTURE_DISABLED_INTERPOLATORS = {
   forCrossDissolveIOS,
   forDialogAndroid,
   forFadeFromBottomAndroid,
@@ -131,12 +136,12 @@ const GESTURE_DISABLED_INTERPOLATORS = [
   forRevealFromBottomAndroid,
   forScaleFromCenterAndroid,
   forVerticalIOS,
-];
+};
 
-const SCREEN_HEADER_INTERPOLATORS = [
+const SCREEN_HEADER_INTERPOLATORS = {
   ...GESTURE_DISABLED_INTERPOLATORS,
   forBottomSheetAndroid,
-];
+};
 
 const HIDDEN_HEADER_HEIGHT = { measured: false, value: 0 };
 
@@ -168,27 +173,27 @@ const getInterpolationIndex = (scenes: Scene[], index: number) => {
 
 const getIsModalPresentation = (
   cardStyleInterpolator: StackCardStyleInterpolator
-) => {
-  return (
-    cardStyleInterpolator === forModalPresentationIOS ||
-    cardStyleInterpolator.name === forModalPresentationIOS.name
+) =>
+  Object.entries(MODAL_PRESENTATION_INTERPOLATORS).some(
+    ([name, interpolator]) =>
+      cardStyleInterpolator === interpolator ||
+      cardStyleInterpolator.name === name
   );
-};
 
 const getIsGestureEnabledByDefault = (
   cardStyleInterpolator: StackCardStyleInterpolator
 ) =>
-  !GESTURE_DISABLED_INTERPOLATORS.some(
-    (interpolator) =>
+  !Object.entries(GESTURE_DISABLED_INTERPOLATORS).some(
+    ([name, interpolator]) =>
       cardStyleInterpolator === interpolator ||
-      cardStyleInterpolator.name === interpolator.name
+      cardStyleInterpolator.name === name
   );
 
 const getIsScreenHeader = (cardStyleInterpolator: StackCardStyleInterpolator) =>
-  SCREEN_HEADER_INTERPOLATORS.some(
-    (interpolator) =>
+  Object.entries(SCREEN_HEADER_INTERPOLATORS).some(
+    ([name, interpolator]) =>
       cardStyleInterpolator === interpolator ||
-      cardStyleInterpolator.name === interpolator.name
+      cardStyleInterpolator.name === name
   );
 
 const getIsInModalPresentation = (
@@ -475,7 +480,10 @@ export class CardStack extends React.Component<Props, State> {
           isAnimationEnabled &&
           getIsGestureEnabledByDefault(cardStyleInterpolator),
         headerStyleInterpolator = transitionPreset.headerStyleInterpolator,
-        cardOverlayEnabled,
+        cardOverlayEnabled = descriptor.options.presentation ===
+        'transparentModal'
+          ? false
+          : undefined,
         cardShadowEnabled,
       } = optionsForTransitionConfig;
 
@@ -575,6 +583,15 @@ export class CardStack extends React.Component<Props, State> {
         state.layout,
         state.headerHeights
       ),
+      // Nested navigators clean up `route.state` when the screen is paused with `Activity`
+      // So we remember routes which had state until they are removed
+      nestedStateRouteKeys: allRoutes
+        .filter(
+          (route) =>
+            ('state' in route && route.state) ||
+            state.nestedStateRouteKeys.includes(route.key)
+        )
+        .map((route) => route.key),
     };
   }
 
@@ -593,6 +610,7 @@ export class CardStack extends React.Component<Props, State> {
       // on mount what the header height is so we have just used the most
       // common cases here.
       headerHeights: {},
+      nestedStateRouteKeys: [],
     };
   }
 
@@ -695,7 +713,8 @@ export class CardStack extends React.Component<Props, State> {
       onTransitionEnd,
     } = this.props;
 
-    const { scenes, layout, gestures, headerHeights } = this.state;
+    const { scenes, layout, gestures, headerHeights, nestedStateRouteKeys } =
+      this.state;
 
     const allRoutes = getAllRoutes(routes, state);
 
@@ -857,12 +876,15 @@ export class CardStack extends React.Component<Props, State> {
               (isAnimationEnabled &&
                 (isFocusing ||
                   isRemoving ||
+                  // The screen below an opening card can still be visible during overlapping pushes
+                  (nextRoute != null &&
+                    openingRouteKeys.includes(nextRoute.key)) ||
                   // Preloaded screens should stay mounted, but remain hidden until focused
                   (!isPreloaded && index >= routes.length - 2)));
 
             const activityMode =
               // Keep focused and focusing screens interactive
-              focused || isFocusing
+              focused || (isFocusing && !isRemoving)
                 ? 'normal'
                 : inactiveBehavior === 'none' ||
                     // Keep effects running until the closing animation finishes
@@ -883,7 +905,7 @@ export class CardStack extends React.Component<Props, State> {
                       !isVisible &&
                       // Don't unmount screens with nested navigators
                       // So we don't lose their state
-                      !('state' in route && route.state)
+                      !nestedStateRouteKeys.includes(route.key)
                     ? 'unmounted'
                     : 'paused';
 

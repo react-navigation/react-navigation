@@ -16,23 +16,20 @@ import {
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
-import {
-  createNativeStackNavigator,
-  createNativeStackScreen,
-} from '@react-navigation/native-stack';
 import { BlurView } from 'expo-blur';
 import { StatusBar } from 'expo-status-bar';
 import { Alert, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import iconBookUser from '../../assets/icons/book-user.png';
-import iconHeart from '../../assets/icons/heart.png';
+import iconLayoutDashboard from '../../assets/icons/layout-dashboard.png';
 import iconListMusic from '../../assets/icons/list-music.png';
 import iconMusic from '../../assets/icons/music.png';
 import iconNewspaper from '../../assets/icons/newspaper.png';
 import { Albums } from '../Shared/Albums';
 import { Contacts } from '../Shared/Contacts';
 import { MiniPlayer } from '../Shared/MiniPlayer';
+import { NewsFeed } from '../Shared/NewsFeed';
 import { NativeStack } from './NativeStack';
 
 function ContactsScreen(_: StaticScreenProps<{ count: number }>) {
@@ -40,8 +37,9 @@ function ContactsScreen(_: StaticScreenProps<{ count: number }>) {
 
   return (
     <Contacts
+      automaticallyAdjustContentInsets
       contentContainerStyle={{
-        paddingTop: Platform.OS === 'android' ? insets.top : 0,
+        paddingTop: Platform.OS === 'ios' ? 0 : insets.top,
       }}
     />
   );
@@ -61,7 +59,7 @@ function AlbumsScreen() {
         contentContainerStyle={{
           paddingTop:
             Platform.OS === 'ios'
-              ? // FIXME: seems iOS has an extra inset on top of header height
+              ? // iOS also has automatic safe area insets at top
                 headerHeight - insets.top
               : headerHeight,
         }}
@@ -85,19 +83,18 @@ function AlbumsScreen() {
   );
 }
 
-const FavoritesStack = createNativeStackNavigator({
-  screens: {
-    Favorites: createNativeStackScreen({
-      screen: () => null,
-      options: {
-        title: 'Favorites',
-        headerSearchBarOptions: {
-          placeholder: 'Search Favorites',
-        },
-      },
-    }),
-  },
-});
+function NewsFeedScreen() {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <NewsFeed
+      automaticallyAdjustContentInsets
+      contentContainerStyle={{
+        paddingTop: Platform.OS === 'ios' ? 0 : insets.top,
+      }}
+    />
+  );
+}
 
 let i = 1;
 
@@ -185,17 +182,17 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
       },
       linking: 'albums',
     }),
-    TabFavorites: createBottomTabScreen({
-      screen: FavoritesStack,
+    TabFeed: createBottomTabScreen({
+      screen: NewsFeedScreen,
       options: {
-        title: 'Favorites',
-        tabBarSystemItem: 'search',
-        tabBarLabel: 'Favorites',
+        title: 'Feed',
+        tabBarRole: 'prominent',
         tabBarIcon: {
           type: 'image',
-          source: iconHeart,
+          source: iconLayoutDashboard,
         },
       },
+      linking: 'feed',
     }),
   },
 });

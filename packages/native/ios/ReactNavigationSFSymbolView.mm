@@ -1,5 +1,3 @@
-#import "ReactNavigationSFSymbolView.h"
-
 #if __has_include("ReactNavigation/ReactNavigation-Swift.h")
 #import "ReactNavigation/ReactNavigation-Swift.h"
 #else
@@ -7,12 +5,14 @@
 #endif
 
 #import <React/RCTConversions.h>
+#import <React/RCTViewComponentView.h>
 #import <react/renderer/components/ReactNavigationSpec/ComponentDescriptors.h>
 #import <react/renderer/components/ReactNavigationSpec/Props.h>
 
-#import <React/RCTFabricComponentsPlugins.h>
-
 using namespace facebook::react;
+
+@interface ReactNavigationSFSymbolView : RCTViewComponentView
+@end
 
 @implementation ReactNavigationSFSymbolView {
     ReactNavigationSFSymbolViewImpl * _view;
@@ -37,6 +37,13 @@ using namespace facebook::react;
   return self;
 }
 
+- (void)setSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute
+{
+    [super setSemanticContentAttribute:semanticContentAttribute];
+
+    _view.semanticContentAttribute = semanticContentAttribute;
+}
+
 static ReactNavigationSFSymbolViewImplProps *convertProps(const Props::Shared &props) {
     const auto &viewProps = *std::static_pointer_cast<ReactNavigationSFSymbolViewProps const>(props);
 
@@ -44,7 +51,11 @@ static ReactNavigationSFSymbolViewImplProps *convertProps(const Props::Shared &p
 
     swiftProps.name = RCTNSStringFromString(viewProps.name);
     swiftProps.size = viewProps.size;
-    swiftProps.color = RCTUIColorFromSharedColor(viewProps.color);
+
+    if (viewProps.color) {
+        swiftProps.color = RCTUIColorFromSharedColor(viewProps.color);
+    }
+
     swiftProps.weight = viewProps.weight;
     swiftProps.scale = RCTNSStringFromString(viewProps.scale);
     swiftProps.variableValue = viewProps.variableValue;

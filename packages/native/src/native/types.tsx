@@ -1,5 +1,12 @@
-import type { ColorValue } from 'react-native';
+import type * as React from 'react';
+import type {
+  ColorValue,
+  HostInstance,
+  NativeSyntheticEvent,
+  ViewStyle,
+} from 'react-native';
 
+import type { LocaleDirection, SFSymbolNames } from '../types';
 import type { FONT_WEIGHTS } from './constants';
 import type { MaterialSymbolName } from './MaterialSymbolData';
 
@@ -113,6 +120,17 @@ export type MaterialSymbolOptions = {
    * @default 'black'
    */
   color?: ColorValue | undefined;
+};
+
+export type MaterialSymbolImageSourceOptions = MaterialSymbolOptions & {
+  /**
+   * The layout direction to render the symbol for.
+   *
+   * Symbols that support auto-mirroring are flipped horizontally in RTL.
+   *
+   * @default I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'
+   */
+  direction?: LocaleDirection | undefined;
 };
 
 type SFSymbolScale = 'small' | 'medium' | 'large';
@@ -394,7 +412,9 @@ export type SFSymbolOptions = {
   /**
    * The name of the SF Symbol to display.
    */
-  name: import('sf-symbols-typescript').SFSymbol;
+  name:
+    | import('sf-symbols-typescript').SFSymbol
+    | Extract<keyof SFSymbolNames, string>;
   /**
    * The size of the symbol.
    *
@@ -495,4 +515,162 @@ export type SFSymbolOptions = {
    * Requires iOS 17+. Ignored on earlier versions.
    */
   contentTransition?: SFSymbolContentTransition | undefined;
+};
+
+export type ReservedRegion = {
+  /**
+   * The identifier of the region.
+   */
+  id: number;
+  /**
+   * The kind of the region.
+   * - `occlusion` - where content is covered by an element, such as Dynamic Island, camera, or window controls
+   * - `division` - where content splits into separate regions, such as at the fold of a hinge
+   *
+   * This can be used to decide how to place and layout your content:
+   * - Content should be placed outside of `occlusion` regions.
+   * - Content can be arranged into separate sections on each side of `division` regions.
+   */
+  kind: 'occlusion' | 'division';
+  /**
+   * The rect of the region relative to the view's coordinates, including the margins.
+   */
+  frame: { x: number; y: number; width: number; height: number };
+  /**
+   * The margins included in the frame around the reserved rect for interactive content.
+   */
+  margins: { top: number; right: number; bottom: number; left: number };
+  /**
+   * Whether the region is currently active.
+   *
+   * A region can become active or inactive as conditions change.
+   * An active region currently affects your view. An inactive region doesn’t.
+   *
+   * For example, the fold of iPhone Duo is active when the device is partially open,
+   * and inactive when it’s fully open.
+   */
+  active: boolean;
+};
+
+export type ReservedRegionsChangeEvent = {
+  /**
+   * The reserved regions that overlap the view.
+   */
+  regions: ReservedRegion[];
+  /**
+   * The size of the view when the regions were read.
+   */
+  size: { width: number; height: number };
+};
+
+export type ReservedRegionsViewProps = {
+  /**
+   * Callback called with an event containing the reserved regions.
+   */
+  onRegionsChange?:
+    | ((event: NativeSyntheticEvent<ReservedRegionsChangeEvent>) => void)
+    | undefined;
+  /**
+   * Content to render inside the view.
+   */
+  children?: React.ReactNode;
+  /**
+   * Style object for the view.
+   */
+  style?: (React.CSSProperties & ViewStyle) | undefined;
+  /**
+   * Ref to the underlying native view or DOM element.
+   */
+  ref?: React.Ref<HostInstance | HTMLDivElement> | undefined;
+};
+
+type LayoutRegionEdge = 'top' | 'bottom' | 'start' | 'end';
+
+export type LayoutRegionInsetsChangeEvent = {
+  /**
+   * The insets of the region for the view.
+   */
+  insets: Record<LayoutRegionEdge, number>;
+};
+
+export type LayoutRegionViewProps = (
+  | ({
+      /**
+       * The layout region to get the insets from:
+       * - `safeArea` - the area that isn't covered by system UI, such as the status bar, the navigation bar or window controls.
+       * - `margins` - the safe area with additional spacing from the edges, such as for content in a container.
+       * - `readableContent` - the area with a comfortable width for reading text. Requires iOS 26+.
+       */
+      region: 'safeArea' | 'margins' | 'readableContent';
+    } & (
+      | {
+          /**
+           * The direction to inset the content in to avoid the corners of the window.
+           * e.g. on iPadOS, the content is placed next to the window controls with `horizontal`,
+           * and below the window controls with `vertical`.
+           *
+           * The region isn't adapted to the corners if not specified.
+           *
+           * Requires iOS 26+. Ignored on older versions.
+           */
+          cornerAdaptation: 'horizontal' | 'vertical';
+          /**
+           * Whether to only add the space needed to avoid the corners, without the rest of the region.
+           * e.g. the space for the window controls on iPadOS, without the safe area.
+           *
+           * Useful when the region is already handled in the content, such as with the safe area insets.
+           *
+           * @default false
+           */
+          cornerAdaptationOnly?: boolean | undefined;
+        }
+      | {
+          cornerAdaptation?: undefined;
+          cornerAdaptationOnly?: undefined;
+        }
+    ))
+  | {
+      /**
+       * The layout region to get the insets from:
+       * - `bar` - the area for the content of a bar, such as a header
+       *
+       * Requires iOS 27.1+. The insets are 0 on older versions.
+       */
+      region: 'bar';
+      /**
+       * The edge where the bar is placed.
+       */
+      onEdge: LayoutRegionEdge;
+      /**
+       * The size of the bar's content perpendicular to the edge.
+       * e.g. the height of the content of a header on the top edge.
+       */
+      extent: number;
+    }
+) & {
+  /**
+   * The edges to apply the insets of the region to as padding, and how they're combined with the padding from `style`:
+   * - `additive` - the inset is added to the padding from `style`
+   * - `maximum` - the larger of the inset and the padding from `style` is used
+   *
+   * Non-numeric values for padding (such as percentages) are treated as 0 when there's an inset.
+   *
+   * If `edges` is not specified, or a particular edge is not included in `edges`,
+   * the insets for that edge are not applied as the padding.
+   */
+  edges?: Partial<Record<LayoutRegionEdge, 'additive' | 'maximum'>> | undefined;
+  /**
+   * Callback called with an event containing the insets of the region on measurement and changes.
+   */
+  onInsetsChange?:
+    | ((event: NativeSyntheticEvent<LayoutRegionInsetsChangeEvent>) => void)
+    | undefined;
+  /**
+   * Style object for the view.
+   */
+  style?: (React.CSSProperties & ViewStyle) | undefined;
+  /**
+   * Content to lay out inside the region.
+   */
+  children?: React.ReactNode;
 };

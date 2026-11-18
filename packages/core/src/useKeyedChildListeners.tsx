@@ -12,6 +12,7 @@ export function useKeyedChildListeners() {
       KeyedListenerMap[K] | undefined
     >;
   }>(
+    // eslint-disable-next-line @eslint-react/purity
     Object.assign(Object.create(null), {
       getState: {},
       getNavigation: {},

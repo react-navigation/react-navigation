@@ -15,7 +15,7 @@ import {
 import { NavigationStateContext } from './NavigationStateContext';
 import { StaticContainer } from './StaticContainer';
 import type { NavigationProp, RouteConfigComponent } from './types';
-import { useOptionsGetters } from './useOptionsGetters';
+import { OptionsGetterContext, useOptionsGetters } from './useOptionsGetters';
 
 type Props<State extends NavigationState, ScreenOptions extends {}> = {
   screen: RouteConfigComponent<ParamListBase, string> & { name: string };
@@ -103,7 +103,7 @@ export function SceneView<
   // Clear options set by this screen when it is unmounted
   React.useEffect(() => {
     return clearOptions;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, []);
 
   const getIsInitial = React.useCallback(() => isInitialRef.current, []);
@@ -160,7 +160,6 @@ export function SceneView<
       getKey,
       setKey,
       getIsInitial,
-      addOptionsGetter,
     }),
     [
       routeState,
@@ -170,31 +169,34 @@ export function SceneView<
       getKey,
       setKey,
       getIsInitial,
-      addOptionsGetter,
     ]
   );
 
   const ScreenComponent = screen.getComponent
-    ? screen.getComponent()
+    ? // eslint-disable-next-line @eslint-react/static-components
+      screen.getComponent()
     : screen.component;
 
   return (
     <NavigationStateContext.Provider value={context}>
       <NavigationFocusedRouteStateContext.Provider value={focusedRouteState}>
-        <EnsureSingleNavigator>
-          <StaticContainer
-            name={screen.name}
-            render={ScreenComponent || screen.children}
-            navigation={navigation}
-            route={route}
-          >
-            {ScreenComponent !== undefined ? (
-              <ScreenComponent navigation={navigation} route={route} />
-            ) : screen.children !== undefined ? (
-              screen.children({ navigation, route })
-            ) : null}
-          </StaticContainer>
-        </EnsureSingleNavigator>
+        <OptionsGetterContext.Provider value={addOptionsGetter}>
+          <EnsureSingleNavigator>
+            <StaticContainer
+              name={screen.name}
+              render={ScreenComponent || screen.children}
+              navigation={navigation}
+              route={route}
+            >
+              {ScreenComponent !== undefined ? (
+                // eslint-disable-next-line @eslint-react/static-components
+                <ScreenComponent navigation={navigation} route={route} />
+              ) : screen.children !== undefined ? (
+                screen.children({ navigation, route })
+              ) : null}
+            </StaticContainer>
+          </EnsureSingleNavigator>
+        </OptionsGetterContext.Provider>
       </NavigationFocusedRouteStateContext.Provider>
     </NavigationStateContext.Provider>
   );

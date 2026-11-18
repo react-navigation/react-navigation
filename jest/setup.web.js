@@ -1,3 +1,5 @@
+/* global beforeEach */
+
 import { getQueriesForElement, screen } from '@testing-library/dom';
 import { JSDOM } from 'jsdom';
 

@@ -1,11 +1,13 @@
 import * as React from 'react';
 import type { Animated } from 'react-native';
 
-export const AnimatedHeaderHeightContext = React.createContext<
+export const AnimatedHeaderHeightContext: React.Context<
   Animated.AnimatedInterpolation<number> | undefined
->(undefined);
+> = React.createContext<Animated.AnimatedInterpolation<number> | undefined>(
+  undefined
+);
 
-export function useAnimatedHeaderHeight() {
+export function useAnimatedHeaderHeight(): Animated.AnimatedInterpolation<number> {
   const animatedValue = React.use(AnimatedHeaderHeightContext);
 
   if (animatedValue === undefined) {

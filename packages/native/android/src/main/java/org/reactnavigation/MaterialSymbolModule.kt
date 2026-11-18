@@ -34,8 +34,12 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
       .trim()
   }
 
+  override fun isAvailable(): Boolean {
+    return MaterialSymbolTypeface.isAvailable(reactApplicationContext)
+  }
+
   override fun getImageSource(
-    name: String, variant: String?, weight: Double?, fill: Boolean?, size: Double, color: ReadableMap
+    name: String, variant: String?, weight: Double?, fill: Boolean?, size: Double, color: ReadableMap, direction: String
   ): String {
     val colorValue = color.getDynamic("value").let {
       when (it.type) {
@@ -61,8 +65,11 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
       "react_navigation/material_symbols/$typefaceSuffix/$fontHash"
     )
 
+    val mirrored =
+      direction == "rtl" && MaterialSymbolTypeface.isAutoMirrored(reactApplicationContext, name)
+
     val cacheFile = File(
-      cacheDir, "${Uri.encode(name)}_${scaledSize}_$resolvedColor.png"
+      cacheDir, "${Uri.encode(name)}_${scaledSize}_$resolvedColor${if (mirrored) "_rtl" else ""}.png"
     )
 
     val cacheUri = cacheFile.toUri().toString()
@@ -103,6 +110,10 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     try {
       val canvas = Canvas(bitmap)
       val y = (scaledSize - (fontMetrics.descent - fontMetrics.ascent)) / 2f - fontMetrics.ascent
+
+      if (mirrored) {
+        canvas.scale(-1f, 1f, scaledSize / 2f, scaledSize / 2f)
+      }
 
       canvas.drawText(symbol, scaledSize / 2f, y, paint)
 
