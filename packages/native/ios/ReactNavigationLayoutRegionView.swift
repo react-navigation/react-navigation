@@ -18,6 +18,8 @@ private struct LayoutRegionProps: Equatable {
 private struct LayoutMeasurementState: Equatable {
   var props: LayoutRegionProps
   var frame: CGRect
+  var isFlippedX: Bool
+  var isFlippedY: Bool
   var windowBounds: CGRect
   var isRTL: Bool
 }
@@ -98,9 +100,13 @@ private class LayoutMeasurementView: UIView {
 
     let host = sequence(first: view, next: \.superview).first { $0.next is UIViewController } ?? window
 
+    let (frame, isFlippedX, isFlippedY) = resolveFrame(of: view, in: host)
+
     let state = LayoutMeasurementState(
       props: props,
-      frame: resolveFrame(of: view, in: host),
+      frame: frame,
+      isFlippedX: isFlippedX,
+      isFlippedY: isFlippedY,
       windowBounds: window.bounds,
       isRTL: view.effectiveUserInterfaceLayoutDirection == .rightToLeft
     )
@@ -203,8 +209,10 @@ private class LayoutMeasurementView: UIView {
     return measurementView.directionalEdgeInsets(for: region)
   }
 
-  private func resolveFrame(of view: UIView, in host: UIView) -> CGRect {
+  private func resolveFrame(of view: UIView, in host: UIView) -> (frame: CGRect, isFlippedX: Bool, isFlippedY: Bool) {
     var origin = CGPoint.zero
+    var isFlippedX = false
+    var isFlippedY = false
     var current = view
 
     while current !== host, let parent = current.superview {
@@ -213,10 +221,12 @@ private class LayoutMeasurementView: UIView {
       // So we mirror the position within the flipped view to get where the content is on the screen
       if current.transform.a < 0 {
         origin.x = current.bounds.width - origin.x - view.bounds.width
+        isFlippedX.toggle()
       }
 
       if current.transform.d < 0 {
         origin.y = current.bounds.height - origin.y - view.bounds.height
+        isFlippedY.toggle()
       }
 
       var offset = parent.bounds.origin
@@ -232,7 +242,7 @@ private class LayoutMeasurementView: UIView {
       current = parent
     }
 
-    return CGRect(origin: origin, size: view.bounds.size)
+    return (CGRect(origin: origin, size: view.bounds.size), isFlippedX, isFlippedY)
   }
 
   private func resolveMeasurementView(in host: UIView) -> LayoutMeasurementView {
@@ -259,17 +269,19 @@ private class LayoutMeasurementView: UIView {
       // When the window resizes, this can be called before the React Native layout for the new size
       // Then the hidden view still has the frame for the old size,
       // so we need to wait for the next mounting transaction for correct measurement
-      if measurementView.window?.bounds != lastMeasurementState?.windowBounds {
+      guard let state = lastMeasurementState, measurementView.window?.bounds == state.windowBounds else {
         return
       }
 
       let insets = measureInsets(in: measurementView)
 
+      // The edges of a view flipped an odd number of times are on the opposite sides of the screen
+      // So we swap the insets for the flipped axis to apply them on the sides where they're needed
       view?.updateInsets(
-        top: insets.top,
-        bottom: insets.bottom,
-        start: insets.leading,
-        end: insets.trailing,
+        top: state.isFlippedY ? insets.bottom : insets.top,
+        bottom: state.isFlippedY ? insets.top : insets.bottom,
+        start: state.isFlippedX ? insets.trailing : insets.leading,
+        end: state.isFlippedX ? insets.leading : insets.trailing,
         isRTL: measurementView.effectiveUserInterfaceLayoutDirection == .rightToLeft
       )
     }
