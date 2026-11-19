@@ -663,9 +663,94 @@ export type LayoutRegionViewProps = (
   ref?: React.Ref<HostInstance | HTMLDivElement> | undefined;
 };
 
+/**
+ * The type of insets to measure on Android:
+ * - `systemBars` - the status bar, the navigation bar, the caption bar and system overlays
+ * - `statusBars` - the status bar
+ * - `navigationBars` - the navigation bar
+ * - `captionBar` - the caption bar of the window, such as in freeform windows
+ * - `displayCutout` - the area cut out of the display, such as for the camera
+ * - `ime` - the on-screen keyboard
+ * - `systemGestures` - the areas where system gestures have priority over the gestures of the app
+ * - `mandatorySystemGestures` - the areas where system gestures always have priority
+ * - `tappableElement` - the areas where taps are handled by system UI instead of the app
+ * - `custom` - the insets from the `OverlayInsetsProvider` components above the view, such as for headers and tab bars from navigators
+ */
+export type WindowInsetsType =
+  | 'systemBars'
+  | 'statusBars'
+  | 'navigationBars'
+  | 'captionBar'
+  | 'displayCutout'
+  | 'ime'
+  | 'systemGestures'
+  | 'mandatorySystemGestures'
+  | 'tappableElement'
+  | 'custom';
+
+export type WindowInsetsChangeEvent = {
+  /**
+   * The window insets for the view.
+   */
+  insets: Record<LayoutRegionEdge, number>;
+};
+
+export type WindowInsetsViewProps = {
+  /**
+   * The types of insets to measure.
+   * The largest inset for each edge is used when several types are specified.
+   */
+  types: readonly WindowInsetsType[];
+  /**
+   * Whether to measure the insets that the system bars have when visible, even while they're hidden.
+   * This avoids the content moving when the system bars are shown or hidden.
+   * The `ime` insets are always measured for the current state of the keyboard.
+   *
+   * @default false
+   */
+  ignoreVisibility?: boolean | undefined;
+  /**
+   * The edges to apply the window insets to as padding, and how they're combined with the padding from `style`:
+   * - `additive` - the inset is added to the padding from `style`
+   * - `maximum` - the larger of the inset and the padding from `style` is used
+   *
+   * Non-numeric values for padding (such as percentages) are treated as 0 when there's an inset.
+   *
+   * If `edges` is not specified, or a particular edge is not included in `edges`,
+   * the insets for that edge are not applied as the padding.
+   */
+  edges?: Partial<Record<LayoutRegionEdge, 'additive' | 'maximum'>> | undefined;
+  /**
+   * Callback called with an event containing the window insets on measurement and changes.
+   *
+   * The insets are measured each frame during animations on Android 11 and later,
+   * but fewer events are delivered when the JS thread is busy.
+   * Inside a `react-native-screens` form sheet, only the final insets of an animation are delivered.
+   */
+  onInsetsChange?:
+    | ((event: NativeSyntheticEvent<WindowInsetsChangeEvent>) => void)
+    | undefined;
+  /**
+   * Style object for the view.
+   */
+  style?: (React.CSSProperties & ViewStyle) | undefined;
+  /**
+   * Content to lay out inside the view.
+   */
+  children?: React.ReactNode;
+  /**
+   * Ref to the underlying native view or DOM element.
+   */
+  ref?: React.Ref<HostInstance | HTMLDivElement> | undefined;
+};
+
 export type OverlayInsetsProviderProps = {
   /**
-   * Safe area insets for the content.
+   * Safe area insets for the content, such as for a header or a tab bar that covers it.
+   * They aren't added to the system insets. The larger of the two is used for each edge.
+   *
+   * On iOS, they are applied to the safe area of the content.
+   * On Android, they are used only by `WindowInsetsView` with `custom` in its `types`.
    */
   insets?: Partial<Record<LayoutRegionEdge, number>> | undefined;
   /**

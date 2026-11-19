@@ -21,7 +21,11 @@ export type {
   ReservedRegion,
   ReservedRegionsChangeEvent,
   ReservedRegionsViewProps,
+  WindowInsetsChangeEvent,
+  WindowInsetsType,
+  WindowInsetsViewProps,
 } from './native/types';
+export { WindowInsetsView as UNSTABLE_WindowInsetsView } from './native/WindowInsetsView';
 export { NavigationContainer } from './NavigationContainer';
 export { DarkTheme } from './theming/DarkTheme';
 export { LightTheme as DefaultTheme } from './theming/LightTheme';

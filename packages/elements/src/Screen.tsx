@@ -169,7 +169,7 @@ export function Screen(props: Props) {
         <View
           style={[page ? styles.page : styles.content, contentStyle]}
           // A view with only layout styles can get flattened.
-          // Then its children can become siblings of the header (e.g. on Android),
+          // Then its children can become siblings of the header (if the provider is a plain view),
           // so a child with a higher `zIndex` would be drawn on top of the header.
           collapsable={false}
         >

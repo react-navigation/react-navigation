@@ -10,7 +10,9 @@ import com.facebook.react.uimanager.ViewManager
 class ReactNavigationPackage : BaseReactPackage() {
   override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
     return listOf(
-      MaterialSymbolViewManager()
+      MaterialSymbolViewManager(),
+      OverlayInsetsProviderManager(),
+      WindowInsetsViewManager()
     )
   }
 
