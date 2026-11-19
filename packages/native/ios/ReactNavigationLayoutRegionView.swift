@@ -261,6 +261,10 @@ private class LayoutMeasurementView: UIView {
     // so we need to turn off touches to avoid blocking interactions with the content
     measurementView.isUserInteractionEnabled = false
 
+    // FIXME: Adding the view can report insets for its initial zero frame.
+    // Register the callback afterwards so only the resolved frame is measured.
+    host.addSubview(measurementView)
+
     measurementView.onChange = { [weak self] measurementView in
       guard let self else {
         return
@@ -285,8 +289,6 @@ private class LayoutMeasurementView: UIView {
         isRTL: measurementView.effectiveUserInterfaceLayoutDirection == .rightToLeft
       )
     }
-
-    host.addSubview(measurementView)
 
     self.measurementView = measurementView
 

@@ -132,6 +132,7 @@ using namespace facebook::react;
   ReactNavigationLayoutRegionViewImpl * _impl;
   LayoutRegionShadowNode::ConcreteState::Shared _state;
   std::optional<LayoutRegionState> _measuredState;
+  std::optional<LayoutRegionState> _committedState;
   std::optional<LayoutRegionState> _sentState;
 }
 
@@ -174,11 +175,17 @@ using namespace facebook::react;
                        extent:newProps.extent];
 
     [super updateProps:props oldProps:oldProps];
+
+    [self commitInsetsIfNeeded];
 }
 
 - (void)updateState:(const State::Shared &)state oldState:(const State::Shared &)oldState
 {
     _state = std::static_pointer_cast<LayoutRegionShadowNode::ConcreteState const>(state);
+
+    if (!oldState || state->getRevision() == State::initialRevisionValue) {
+        _committedState = _state->getData();
+    }
 }
 
 - (void)prepareForRecycle
@@ -186,6 +193,7 @@ using namespace facebook::react;
     [super prepareForRecycle];
 
     _measuredState.reset();
+    _committedState.reset();
     _sentState.reset();
 }
 
@@ -214,12 +222,37 @@ using namespace facebook::react;
 
     _measuredState = state;
 
-    if (state != _state->getData()) {
+    [self commitInsetsIfNeeded];
+
+    [self sendInsetsChangeIfNeeded];
+}
+
+- (void)commitInsetsIfNeeded
+{
+    if (!_measuredState.has_value()) {
+        return;
+    }
+
+    const auto &edges = static_cast<const ReactNavigationLayoutRegionViewProps &>(*_props).edges;
+
+    if (edges.top == decltype(edges.top)::Off && edges.bottom == decltype(edges.bottom)::Off &&
+        edges.start == decltype(edges.start)::Off && edges.end == decltype(edges.end)::Off) {
+        return;
+    }
+
+    auto state = *_measuredState;
+
+    state.top = edges.top != decltype(edges.top)::Off ? state.top : 0;
+    state.bottom = edges.bottom != decltype(edges.bottom)::Off ? state.bottom : 0;
+    state.start = edges.start != decltype(edges.start)::Off ? state.start : 0;
+    state.end = edges.end != decltype(edges.end)::Off ? state.end : 0;
+
+    if (_committedState != state) {
+        _committedState = state;
+
         // We commit the insets immediately, so they're applied in the same frame
         _state->updateState(std::move(state), EventQueue::UpdateMode::unstable_Immediate);
     }
-
-    [self sendInsetsChangeIfNeeded];
 }
 
 - (void)sendInsetsChangeIfNeeded
