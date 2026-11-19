@@ -4,15 +4,19 @@
 #import "ReactNavigation-Swift.h"
 #endif
 
+#import <React/RCTComponentEvent.h>
+#import <React/RCTConstants.h>
 #import <React/RCTConversions.h>
 #import <React/RCTI18nUtil.h>
 #import <React/RCTMountingTransactionObserving.h>
 #import <React/RCTViewComponentView.h>
 
+#import <react/featureflags/ReactNativeFeatureFlags.h>
 #import <react/renderer/components/ReactNavigationSpec/EventEmitters.h>
 #import <react/renderer/components/ReactNavigationSpec/Props.h>
 #import <react/renderer/components/view/ConcreteViewShadowNode.h>
 #import <react/renderer/core/ConcreteComponentDescriptor.h>
+#import <react/utils/FollyConvert.h>
 
 namespace facebook::react {
 
@@ -273,12 +277,27 @@ using namespace facebook::react;
 
     const auto &state = *_measuredState;
 
-    auto eventEmitter = std::static_pointer_cast<const ReactNavigationLayoutRegionViewEventEmitter>(_eventEmitter);
+    folly::dynamic payload = folly::dynamic::object
+        ("insets", folly::dynamic::object
+            ("top", state.top)
+            ("bottom", state.bottom)
+            ("start", state.start)
+            ("end", state.end));
 
-    eventEmitter->experimental_flushSync([&]() {
-        eventEmitter->onInsetsChange({
-            .insets = {.top = state.top, .bottom = state.bottom, .start = state.start, .end = state.end},
-        });
+    // FIXME: The legacy native Animated module doesn't receive Fabric events,
+    // so we post it separately for `Animated.event` with `useNativeDriver: true`
+    if (!ReactNativeFeatureFlags::cxxNativeAnimatedEnabled()) {
+        RCTComponentEvent *event = [[RCTComponentEvent alloc] initWithName:@"onInsetsChange"
+                                                                viewTag:@(self.tag)
+                                                                   body:convertFollyDynamicToId(payload)];
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:RCTNotifyEventDispatcherObserversOfEvent_DEPRECATED
+                                                            object:nil
+                                                          userInfo:@{ @"event": event }];
+    }
+
+    _eventEmitter->experimental_flushSync([&]() {
+        _eventEmitter->dispatchEvent("insetsChange", std::move(payload), RawEvent::Category::Discrete);
     });
 }
 

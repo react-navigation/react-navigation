@@ -6,6 +6,6 @@ import { View } from './View';
  *
  * Only supported on iOS.
  */
-export function LayoutRegionView({ style, children }: LayoutRegionViewProps) {
-  return <View style={style}>{children}</View>;
+export function LayoutRegionView(props: LayoutRegionViewProps) {
+  return <View {...props} />;
 }

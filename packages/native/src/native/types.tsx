@@ -673,4 +673,8 @@ export type LayoutRegionViewProps = (
    * Content to lay out inside the region.
    */
   children?: React.ReactNode;
+  /**
+   * Ref to the underlying native view or DOM element.
+   */
+  ref?: React.Ref<HostInstance | HTMLDivElement> | undefined;
 };

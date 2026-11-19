@@ -5,6 +5,7 @@ import {
   useFrameSize,
 } from '@react-navigation/elements';
 import {
+  type LayoutRegionInsetsChangeEvent,
   SFSymbol,
   type StaticScreenProps,
   UNSTABLE_LayoutRegionView,
@@ -16,12 +17,17 @@ import * as React from 'react';
 import {
   Image,
   type ImageSourcePropType,
+  type NativeSyntheticEvent,
   Platform,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, {
+  useAnimatedStyle,
+  useEvent,
+  useSharedValue,
+} from 'react-native-reanimated';
 
 import allosaurus from '../../assets/showcase/dinos/allosaurus.png';
 import ankylosaurus from '../../assets/showcase/dinos/ankylosaurus.png';
@@ -47,6 +53,10 @@ type Dino = {
 
 const BAR_HEIGHT = 44;
 const SIDEBAR_WIDTH = 300;
+
+const AnimatedLayoutRegionView = Animated.createAnimatedComponent(
+  UNSTABLE_LayoutRegionView
+);
 
 const DINOS: [Dino, ...Dino[]] = [
   {
@@ -174,7 +184,22 @@ export function ComponentsLayoutRegionView(_: StaticScreenProps<{}>) {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [isSidebarVisible, setIsSidebarVisible] = React.useState(isWide);
 
-  const dino = DINOS[selectedIndex] ?? DINOS[0];
+  const bottomInset = useSharedValue(0);
+
+  const onInsetsChange = useEvent<
+    NativeSyntheticEvent<LayoutRegionInsetsChangeEvent>
+  >(
+    (event) => {
+      'worklet';
+
+      bottomInset.set(event.insets.bottom);
+    },
+    ['onInsetsChange']
+  );
+
+  const footerContentStyle = useAnimatedStyle(() => ({
+    top: -bottomInset.get(),
+  }));
 
   const buttonStyle = {
     backgroundColor: colors.card,
@@ -182,6 +207,8 @@ export function ComponentsLayoutRegionView(_: StaticScreenProps<{}>) {
   };
 
   const isRTL = direction === 'rtl';
+
+  const dino = DINOS[selectedIndex] ?? DINOS[0];
 
   return (
     <View style={styles.container}>
@@ -357,6 +384,23 @@ export function ComponentsLayoutRegionView(_: StaticScreenProps<{}>) {
             />
           </HeaderButton>
         </UNSTABLE_LayoutRegionView>
+        <AnimatedLayoutRegionView
+          region="safeArea"
+          edges={{ start: 'additive', end: 'additive' }}
+          onInsetsChange={onInsetsChange}
+          style={styles.footer}
+        >
+          <Animated.View style={footerContentStyle}>
+            <PlatformPressable style={[styles.footerButton, buttonStyle]}>
+              <SFSymbol
+                name="square.and.arrow.up"
+                size={17}
+                color={colors.text}
+              />
+              <Text style={styles.footerButtonLabel}>Share</Text>
+            </PlatformPressable>
+          </Animated.View>
+        </AnimatedLayoutRegionView>
       </Animated.View>
     </View>
   );
@@ -414,6 +458,7 @@ const styles = StyleSheet.create({
   article: {
     padding: 16,
     paddingTop: 24,
+    paddingBottom: 48,
   },
   title: {
     fontSize: 34,
@@ -437,5 +482,23 @@ const styles = StyleSheet.create({
     end: 0,
     paddingTop: isBarRegionSupported ? 0 : 16,
     paddingEnd: 16,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    start: 0,
+    end: 0,
+    alignItems: 'center',
+  },
+  footerButton: {
+    flexDirection: 'row',
+    borderRadius: 24,
+    borderCurve: 'continuous',
+    paddingVertical: 11,
+    paddingHorizontal: 15,
+    gap: 8,
+  },
+  footerButtonLabel: {
+    fontSize: 17,
   },
 });
