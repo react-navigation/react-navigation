@@ -13,6 +13,7 @@ import { ComponentsLink } from './Screens/ComponentsLink';
 import { ComponentsMaterialSymbols } from './Screens/ComponentsMaterialSymbols';
 import { ComponentsReservedRegionsView } from './Screens/ComponentsReservedRegionsView';
 import { ComponentsSFSymbols } from './Screens/ComponentsSFSymbols';
+import { ComponentsWindowInsetsView } from './Screens/ComponentsWindowInsetsView';
 import { DrawerMasterDetail } from './Screens/DrawerMasterDetail';
 import { LibrariesDrawerLayout } from './Screens/LibrariesDrawerLayout';
 import { LibrariesTabView } from './Screens/LibrariesTabView';
@@ -80,6 +81,7 @@ export const SCREENS = {
   ComponentsSFSymbols,
   ComponentsReservedRegionsView,
   ComponentsLayoutRegionView,
+  ComponentsWindowInsetsView,
   AuthFlow,
   NavigatorLayout,
   ScreenLayout,
