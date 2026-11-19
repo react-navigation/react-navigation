@@ -24,7 +24,6 @@ export interface NativeProps extends ViewProps {
     'none' | 'horizontal' | 'vertical',
     'none'
   >;
-  cornerAdaptationOnly?: CodegenTypes.WithDefault<boolean, false>;
   onEdge?: CodegenTypes.WithDefault<'top' | 'bottom' | 'start' | 'end', 'top'>;
   extent?: CodegenTypes.WithDefault<CodegenTypes.Double, 0>;
   edges?:

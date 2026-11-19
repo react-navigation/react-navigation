@@ -248,7 +248,6 @@ export function ComponentsLayoutRegionView(_: StaticScreenProps<{}>) {
             <UNSTABLE_LayoutRegionView
               region="safeArea"
               cornerAdaptation="vertical"
-              cornerAdaptationOnly
               edges={{ top: 'additive' }}
               style={styles.sidebarContent}
             >

@@ -174,7 +174,6 @@ using namespace facebook::react;
 
     [_impl setPropsWithRegion:RCTNSStringFromString(toString(newProps.region))
              cornerAdaptation:RCTNSStringFromString(toString(newProps.cornerAdaptation))
-         cornerAdaptationOnly:newProps.cornerAdaptationOnly
                        onEdge:RCTNSStringFromString(toString(newProps.onEdge))
                        extent:newProps.extent];
 

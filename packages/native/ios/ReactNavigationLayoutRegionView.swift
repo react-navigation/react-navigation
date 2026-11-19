@@ -10,7 +10,6 @@ import UIKit
 private struct LayoutRegionProps: Equatable {
   var region = "safeArea"
   var cornerAdaptation = "none"
-  var cornerAdaptationOnly = false
   var onEdge = "top"
   var extent: CGFloat = 0
 }
@@ -65,14 +64,12 @@ private class LayoutMeasurementView: UIView {
   @objc public func setProps(
     region: String,
     cornerAdaptation: String,
-    cornerAdaptationOnly: Bool,
     onEdge: String,
     extent: CGFloat
   ) {
     props = LayoutRegionProps(
       region: region,
       cornerAdaptation: cornerAdaptation,
-      cornerAdaptationOnly: cornerAdaptationOnly,
       onEdge: onEdge,
       extent: extent
     )
@@ -136,10 +133,6 @@ private class LayoutMeasurementView: UIView {
 
   private func measureInsets(in measurementView: UIView) -> NSDirectionalEdgeInsets {
     guard #available(iOS 26.0, *) else {
-      if props.cornerAdaptationOnly {
-        return .zero
-      }
-
       switch props.region {
       case "safeArea":
         let insets = measurementView.safeAreaInsets
@@ -179,20 +172,7 @@ private class LayoutMeasurementView: UIView {
     default: nil
     }
 
-    let insets = measureInsets(in: measurementView, cornerAdaptation: cornerAdaptation)
-
-    if props.cornerAdaptationOnly {
-      let unadaptedInsets = measureInsets(in: measurementView, cornerAdaptation: nil)
-
-      return NSDirectionalEdgeInsets(
-        top: insets.top - unadaptedInsets.top,
-        leading: insets.leading - unadaptedInsets.leading,
-        bottom: insets.bottom - unadaptedInsets.bottom,
-        trailing: insets.trailing - unadaptedInsets.trailing
-      )
-    }
-
-    return insets
+    return measureInsets(in: measurementView, cornerAdaptation: cornerAdaptation)
   }
 
   @available(iOS 26.0, *)
