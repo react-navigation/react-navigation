@@ -1,3 +1,10 @@
+#if __has_include("ReactNavigation/ReactNavigation-Swift.h")
+#import "ReactNavigation/ReactNavigation-Swift.h"
+#else
+#import "ReactNavigation-Swift.h"
+#endif
+
+#import <React/RCTMountingTransactionObserving.h>
 #import <React/RCTViewComponentView.h>
 #import <UIKit/UIKit.h>
 
@@ -6,7 +13,7 @@
 
 using namespace facebook::react;
 
-@interface ReactNavigationOverlayInsetsProvider : RCTViewComponentView
+@interface ReactNavigationOverlayInsetsProvider : RCTViewComponentView <RCTMountingTransactionObserving>
 @end
 
 @implementation ReactNavigationOverlayInsetsProvider {
@@ -29,10 +36,17 @@ using namespace facebook::react;
     return self;
 }
 
+- (void)mountingTransactionDidMount:(const MountingTransaction &)transaction
+               withSurfaceTelemetry:(const SurfaceTelemetry &)surfaceTelemetry
+{
+    [self updateAdditionalSafeAreaInsets];
+}
+
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
     [super updateProps:props oldProps:oldProps];
 
+    [self updateViewController];
     [self updateAdditionalSafeAreaInsets];
 }
 
@@ -50,7 +64,14 @@ using namespace facebook::react;
 {
     [super didMoveToWindow];
 
-    if (self.window == nil) {
+    [self updateViewController];
+}
+
+- (void)updateViewController
+{
+    const auto &insets = static_cast<const ReactNavigationOverlayInsetsProviderProps &>(*_props).insets;
+
+    if (self.window == nil || (insets.top == 0 && insets.start == 0 && insets.bottom == 0 && insets.end == 0)) {
         [self detachViewController];
 
         return;
@@ -123,16 +144,29 @@ using namespace facebook::react;
 
     const auto &insets = static_cast<const ReactNavigationOverlayInsetsProviderProps &>(*_props).insets;
 
-    UIEdgeInsets current = _viewController.additionalSafeAreaInsets;
-    UIEdgeInsets safeArea = self.safeAreaInsets;
+    // FIXME: UIKit calculates the safe area with the transforms of ancestors, e.g. during a push.
+    // It keeps that value after the transform is removed, so it can be wrong for the final position.
+    // So we calculate the inherited insets from the position of the view without the transforms.
+    UIEdgeInsets inherited = [ReactNavigationLayoutRegionViewImpl inheritedSafeAreaInsetsOf:self
+                                                                                        in:_viewController.parentViewController.view];
 
     BOOL isRTL = self.effectiveUserInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
 
+    UIEdgeInsets wanted = UIEdgeInsetsMake(
+        MAX(insets.top, inherited.top),
+        MAX(isRTL ? insets.end : insets.start, inherited.left),
+        MAX(insets.bottom, inherited.bottom),
+        MAX(isRTL ? insets.start : insets.end, inherited.right)
+    );
+
+    UIEdgeInsets current = _viewController.additionalSafeAreaInsets;
+    UIEdgeInsets safeArea = self.safeAreaInsets;
+
     UIEdgeInsets additional = UIEdgeInsetsMake(
-        MAX(0, insets.top - (safeArea.top - current.top)),
-        MAX(0, (isRTL ? insets.end : insets.start) - (safeArea.left - current.left)),
-        MAX(0, insets.bottom - (safeArea.bottom - current.bottom)),
-        MAX(0, (isRTL ? insets.start : insets.end) - (safeArea.right - current.right))
+        MAX(0, wanted.top - (safeArea.top - current.top)),
+        MAX(0, wanted.left - (safeArea.left - current.left)),
+        MAX(0, wanted.bottom - (safeArea.bottom - current.bottom)),
+        MAX(0, wanted.right - (safeArea.right - current.right))
     );
 
     if (!UIEdgeInsetsEqualToEdgeInsets(additional, current)) {

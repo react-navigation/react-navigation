@@ -61,6 +61,25 @@ private class LayoutMeasurementView: UIView {
     self.view = view
   }
 
+  @objc public static func inheritedSafeAreaInsets(of view: UIView, in host: UIView) -> UIEdgeInsets {
+    let (frame, isFlippedX, isFlippedY) = resolveFrame(of: view, in: host)
+    let safeArea = host.safeAreaInsets
+
+    let top = max(0, safeArea.top - max(0, frame.minY))
+    let left = max(0, safeArea.left - max(0, frame.minX))
+    let bottom = max(0, safeArea.bottom - max(0, host.bounds.height - frame.maxY))
+    let right = max(0, safeArea.right - max(0, host.bounds.width - frame.maxX))
+
+    // The edges of a view flipped an odd number of times are on the opposite sides of the screen
+    // So we swap the insets for the flipped axis to return them for the sides of the view
+    return UIEdgeInsets(
+      top: isFlippedY ? bottom : top,
+      left: isFlippedX ? right : left,
+      bottom: isFlippedY ? top : bottom,
+      right: isFlippedX ? left : right
+    )
+  }
+
   @objc public func setProps(
     region: String,
     cornerAdaptation: String,
@@ -97,7 +116,7 @@ private class LayoutMeasurementView: UIView {
 
     let host = sequence(first: view, next: \.superview).first { $0.next is UIViewController } ?? window
 
-    let (frame, isFlippedX, isFlippedY) = resolveFrame(of: view, in: host)
+    let (frame, isFlippedX, isFlippedY) = Self.resolveFrame(of: view, in: host)
 
     let state = LayoutMeasurementState(
       props: props,
@@ -189,7 +208,7 @@ private class LayoutMeasurementView: UIView {
     return measurementView.directionalEdgeInsets(for: region)
   }
 
-  private func resolveFrame(of view: UIView, in host: UIView) -> (frame: CGRect, isFlippedX: Bool, isFlippedY: Bool) {
+  private static func resolveFrame(of view: UIView, in host: UIView) -> (frame: CGRect, isFlippedX: Bool, isFlippedY: Bool) {
     var origin = CGPoint.zero
     var isFlippedX = false
     var isFlippedY = false
