@@ -60,7 +60,6 @@ export function DrawerContentScrollView({
         <UNSTABLE_LayoutRegionView
           region="safeArea"
           cornerAdaptation="vertical"
-          cornerAdaptationOnly
           edges={{ top: 'additive' }}
         />
       )}

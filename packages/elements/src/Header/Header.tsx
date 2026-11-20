@@ -394,22 +394,13 @@ export function Header(props: Props) {
   if (Platform.OS === 'ios') {
     searchBarSpacingStyle = {
       ...contentSpacingStyle,
-      ...(isLiquidGlassSupported
-        ? {
-            marginHorizontal: isLiquidGlassPhone
-              ? liquidGlassEdgeSpacing
-              : BUTTON_SPACING,
-          }
-        : {
-            marginStart: startInset + BUTTON_SPACING,
-            marginEnd: endInset + BUTTON_SPACING,
-          }),
+      marginHorizontal: isLiquidGlassPhone
+        ? liquidGlassEdgeSpacing
+        : BUTTON_SPACING,
     };
   } else {
     searchBarSpacingStyle = {
       marginTop: statusBarSpacing,
-      marginStart: startInset,
-      marginEnd: endInset,
     };
   }
 
@@ -454,16 +445,19 @@ export function Header(props: Props) {
           {
             pointerEvents: searchBarVisible ? 'none' : 'auto',
             opacity: headerOpacity,
+            paddingStart: isLiquidGlassPhone ? 0 : startInset,
+            paddingEnd: isLiquidGlassPhone ? 0 : endInset,
           },
           contentSpacingStyle,
         ]}
       >
-        <UNSTABLE_LayoutRegionView
-          region="safeArea"
-          cornerAdaptation="horizontal"
-          cornerAdaptationOnly
-          edges={{ start: 'additive' }}
-        />
+        {!isLiquidGlassPhone ? (
+          <UNSTABLE_LayoutRegionView
+            region="safeArea"
+            cornerAdaptation="horizontal"
+            edges={{ start: 'additive' }}
+          />
+        ) : null}
         <View
           style={[
             styles.start,
@@ -472,7 +466,7 @@ export function Header(props: Props) {
               minWidth: buttonMinWidth,
               marginStart: isLiquidGlassPhone
                 ? liquidGlassEdgeSpacing - BUTTON_OFFSET
-                : startInset,
+                : 0,
             },
           ]}
         >
@@ -505,7 +499,7 @@ export function Header(props: Props) {
               minWidth: buttonMinWidth,
               marginEnd: isLiquidGlassPhone
                 ? liquidGlassEdgeSpacing - BUTTON_OFFSET
-                : endInset,
+                : 0,
             },
           ]}
         >
@@ -554,20 +548,26 @@ export function Header(props: Props) {
             ) : null}
           </HeaderButtonBackground>
         </View>
-        <UNSTABLE_LayoutRegionView
-          region="safeArea"
-          cornerAdaptation="horizontal"
-          cornerAdaptationOnly
-          edges={{ end: 'additive' }}
-        />
+        {!isLiquidGlassPhone ? (
+          <UNSTABLE_LayoutRegionView
+            region="safeArea"
+            cornerAdaptation="horizontal"
+            edges={{ end: 'additive' }}
+          />
+        ) : null}
       </Animated.View>
       {searchBarRendered ? (
         <UNSTABLE_LayoutRegionView
           region="safeArea"
           cornerAdaptation="horizontal"
-          cornerAdaptationOnly
-          edges={{ start: 'additive', end: 'additive' }}
-          style={StyleSheet.absoluteFill}
+          edges={
+            isLiquidGlassPhone ? {} : { start: 'additive', end: 'additive' }
+          }
+          style={{
+            ...StyleSheet.absoluteFill,
+            marginStart: isLiquidGlassPhone ? 0 : startInset,
+            marginEnd: isLiquidGlassPhone ? 0 : endInset,
+          }}
         >
           <HeaderSearchBar
             {...headerSearchBarOptions}

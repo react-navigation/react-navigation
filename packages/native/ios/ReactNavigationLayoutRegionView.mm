@@ -4,15 +4,19 @@
 #import "ReactNavigation-Swift.h"
 #endif
 
+#import <React/RCTComponentEvent.h>
+#import <React/RCTConstants.h>
 #import <React/RCTConversions.h>
 #import <React/RCTI18nUtil.h>
 #import <React/RCTMountingTransactionObserving.h>
 #import <React/RCTViewComponentView.h>
 
+#import <react/featureflags/ReactNativeFeatureFlags.h>
 #import <react/renderer/components/ReactNavigationSpec/EventEmitters.h>
 #import <react/renderer/components/ReactNavigationSpec/Props.h>
 #import <react/renderer/components/view/ConcreteViewShadowNode.h>
 #import <react/renderer/core/ConcreteComponentDescriptor.h>
+#import <react/utils/FollyConvert.h>
 
 namespace facebook::react {
 
@@ -132,6 +136,7 @@ using namespace facebook::react;
   ReactNavigationLayoutRegionViewImpl * _impl;
   LayoutRegionShadowNode::ConcreteState::Shared _state;
   std::optional<LayoutRegionState> _measuredState;
+  std::optional<LayoutRegionState> _committedState;
   std::optional<LayoutRegionState> _sentState;
 }
 
@@ -169,16 +174,21 @@ using namespace facebook::react;
 
     [_impl setPropsWithRegion:RCTNSStringFromString(toString(newProps.region))
              cornerAdaptation:RCTNSStringFromString(toString(newProps.cornerAdaptation))
-         cornerAdaptationOnly:newProps.cornerAdaptationOnly
                        onEdge:RCTNSStringFromString(toString(newProps.onEdge))
                        extent:newProps.extent];
 
     [super updateProps:props oldProps:oldProps];
+
+    [self commitInsetsIfNeeded];
 }
 
 - (void)updateState:(const State::Shared &)state oldState:(const State::Shared &)oldState
 {
     _state = std::static_pointer_cast<LayoutRegionShadowNode::ConcreteState const>(state);
+
+    if (!oldState || state->getRevision() == State::initialRevisionValue) {
+        _committedState = _state->getData();
+    }
 }
 
 - (void)prepareForRecycle
@@ -186,6 +196,7 @@ using namespace facebook::react;
     [super prepareForRecycle];
 
     _measuredState.reset();
+    _committedState.reset();
     _sentState.reset();
 }
 
@@ -214,12 +225,37 @@ using namespace facebook::react;
 
     _measuredState = state;
 
-    if (state != _state->getData()) {
+    [self commitInsetsIfNeeded];
+
+    [self sendInsetsChangeIfNeeded];
+}
+
+- (void)commitInsetsIfNeeded
+{
+    if (!_measuredState.has_value()) {
+        return;
+    }
+
+    const auto &edges = static_cast<const ReactNavigationLayoutRegionViewProps &>(*_props).edges;
+
+    if (edges.top == decltype(edges.top)::Off && edges.bottom == decltype(edges.bottom)::Off &&
+        edges.start == decltype(edges.start)::Off && edges.end == decltype(edges.end)::Off) {
+        return;
+    }
+
+    auto state = *_measuredState;
+
+    state.top = edges.top != decltype(edges.top)::Off ? state.top : 0;
+    state.bottom = edges.bottom != decltype(edges.bottom)::Off ? state.bottom : 0;
+    state.start = edges.start != decltype(edges.start)::Off ? state.start : 0;
+    state.end = edges.end != decltype(edges.end)::Off ? state.end : 0;
+
+    if (_committedState != state) {
+        _committedState = state;
+
         // We commit the insets immediately, so they're applied in the same frame
         _state->updateState(std::move(state), EventQueue::UpdateMode::unstable_Immediate);
     }
-
-    [self sendInsetsChangeIfNeeded];
 }
 
 - (void)sendInsetsChangeIfNeeded
@@ -240,12 +276,27 @@ using namespace facebook::react;
 
     const auto &state = *_measuredState;
 
-    auto eventEmitter = std::static_pointer_cast<const ReactNavigationLayoutRegionViewEventEmitter>(_eventEmitter);
+    folly::dynamic payload = folly::dynamic::object
+        ("insets", folly::dynamic::object
+            ("top", state.top)
+            ("bottom", state.bottom)
+            ("start", state.start)
+            ("end", state.end));
 
-    eventEmitter->experimental_flushSync([&]() {
-        eventEmitter->onInsetsChange({
-            .insets = {.top = state.top, .bottom = state.bottom, .start = state.start, .end = state.end},
-        });
+    // FIXME: The legacy native Animated module doesn't receive Fabric events,
+    // so we post it separately for `Animated.event` with `useNativeDriver: true`
+    if (!ReactNativeFeatureFlags::cxxNativeAnimatedEnabled()) {
+        RCTComponentEvent *event = [[RCTComponentEvent alloc] initWithName:@"onInsetsChange"
+                                                                viewTag:@(self.tag)
+                                                                   body:convertFollyDynamicToId(payload)];
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:RCTNotifyEventDispatcherObserversOfEvent_DEPRECATED
+                                                            object:nil
+                                                          userInfo:@{ @"event": event }];
+    }
+
+    _eventEmitter->experimental_flushSync([&]() {
+        _eventEmitter->dispatchEvent("insetsChange", std::move(payload), RawEvent::Category::Discrete);
     });
 }
 
