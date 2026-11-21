@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { render, screen, userEvent } from '@testing-library/react-native';
 import * as React from 'react';
 import { Button, Text, View } from 'react-native';
+import { PagerViewAdapter } from 'react-native-tab-view';
 
 import {
   createMaterialTopTabNavigator,
@@ -67,4 +68,30 @@ test('renders a material top tab navigator with screens', async () => {
   await user.press(screen.getByRole('button', { name: 'Go to B' }));
 
   expect(screen.getByText('Screen B')).not.toBeNull();
+});
+
+test('renders the adapter passed to the navigator', async () => {
+  const Test = ({ route }: MaterialTopTabScreenProps<TopTabParamList>) => (
+    <Text>Screen {route.name}</Text>
+  );
+
+  const adapter = jest.fn(
+    (props: React.ComponentProps<typeof PagerViewAdapter>) => (
+      <PagerViewAdapter {...props} />
+    )
+  );
+
+  const Tab = createMaterialTopTabNavigator<TopTabParamList>();
+
+  await render(
+    <NavigationContainer>
+      <Tab.Navigator adapter={adapter}>
+        <Tab.Screen name="A" component={Test} />
+        <Tab.Screen name="B" component={Test} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(adapter).toHaveBeenCalled();
+  expect(screen.getByText('Screen A')).not.toBeNull();
 });

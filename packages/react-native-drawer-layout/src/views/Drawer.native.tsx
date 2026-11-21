@@ -442,6 +442,14 @@ export function Drawer({
       },
       activeOffsetX: [-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET],
       failOffsetY: [-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET],
+      // A closed drawer can only be opened, so give up on swipes in the closing direction
+      // This lets other gestures such as a tab pager handle them
+      ...(open
+        ? null
+        : {
+            failOffsetX:
+              drawerPosition === 'left' ? -SWIPE_MIN_OFFSET : SWIPE_MIN_OFFSET,
+          }),
       hitSlop,
       enabled: drawerType !== 'permanent' && swipeEnabled,
     };
