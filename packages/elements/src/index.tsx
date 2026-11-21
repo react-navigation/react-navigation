@@ -12,6 +12,7 @@ export { HeaderHeightContext } from './Header/HeaderHeightContext';
 export { HeaderShownContext } from './Header/HeaderShownContext';
 export { HeaderTitle } from './Header/HeaderTitle';
 export { useHeaderHeight } from './Header/useHeaderHeight';
+export { useHeaderSearchBar } from './Header/useHeaderSearchBar';
 export { getLabel } from './Label/getLabel';
 export { Label } from './Label/Label';
 export { PlatformIcon } from './PlatformIcon';

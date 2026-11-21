@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler/jestSetup';
 
-import { expect, jest, test } from '@jest/globals';
+import { describe, expect, jest, test } from '@jest/globals';
+import { useHeaderSearchBar } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
   NavigationContainer,
@@ -585,4 +586,83 @@ test('goes back to the parent screen with the nested stack header button', async
   expect(screen.getByRole('button', { name: 'Go to B' })).not.toBeNull();
   expect(screen.queryByRole('button', { name: 'Go to A' })).toBeNull();
   expect(screen.queryByRole('button', { name: 'A, back' })).toBeNull();
+});
+
+describe('useHeaderSearchBar in stack', () => {
+  const CancelSearch = () => {
+    const searchBar = useHeaderSearchBar();
+
+    return (
+      <Button onPress={() => searchBar.cancelSearch()} title="Cancel search" />
+    );
+  };
+
+  test.each(['float', 'screen'] as const)(
+    'controls the search bar in the header with %s header mode',
+    async (headerMode) => {
+      const Stack = createStackNavigator<StackParamList>();
+
+      const onClose = jest.fn();
+      const user = userEvent.setup();
+
+      await render(
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerMode }}>
+            <Stack.Screen
+              name="A"
+              component={CancelSearch}
+              options={{ headerSearchBarOptions: { onClose } }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      );
+
+      await user.press(screen.getByRole('button', { name: 'Search' }));
+
+      expect(screen.getByRole('search')).not.toBeNull();
+
+      await user.press(screen.getByRole('button', { name: 'Cancel search' }));
+
+      expect(onClose).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  test("controls the parent's search bar from a nested navigator without a header", async () => {
+    const Stack = createStackNavigator<ParentStackParamList>();
+    const NestedStack = createStackNavigator<ChildStackParamList>();
+
+    const onClose = jest.fn();
+    const user = userEvent.setup();
+
+    const Nested = () => (
+      <NestedStack.Navigator screenOptions={{ headerShown: false }}>
+        <NestedStack.Screen name="X" component={CancelSearch} />
+      </NestedStack.Navigator>
+    );
+
+    await render(
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="A"
+            component={Nested}
+            options={{ headerSearchBarOptions: { onClose } }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+
+    await user.press(screen.getByRole('button', { name: 'Search' }));
+    await user.press(screen.getByRole('button', { name: 'Cancel search' }));
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  test('throws when used outside a navigator', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    await expect(render(<CancelSearch />)).rejects.toThrow(
+      "Couldn't find the header search bar. Are you inside a screen in a navigator with a header?"
+    );
+  });
 });
