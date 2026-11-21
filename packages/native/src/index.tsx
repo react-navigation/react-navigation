@@ -8,6 +8,13 @@ export { LinkingContext } from './LinkingContext';
 export { LocaleDirContext } from './LocaleDirContext';
 export { LayoutRegionView as UNSTABLE_LayoutRegionView } from './native/LayoutRegionView';
 export {
+  type LiquidGlassContainerViewProps,
+  type LiquidGlassViewProps,
+  isLiquidGlassSupported as UNSTABLE_isLiquidGlassSupported,
+  LiquidGlassContainerView as UNSTABLE_LiquidGlassContainerView,
+  LiquidGlassView as UNSTABLE_LiquidGlassView,
+} from './native/LiquidGlass';
+export {
   MaterialSymbol,
   type MaterialSymbolProps,
 } from './native/MaterialSymbol';
