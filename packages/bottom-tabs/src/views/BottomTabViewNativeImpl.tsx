@@ -46,7 +46,7 @@ import type {
   BottomTabNavigationOptions,
 } from '../types';
 import { BottomTabAnimationContext } from '../utils/BottomTabAnimationContext';
-import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
+import { TabBarLayoutContext } from '../utils/TabBarLayoutContext';
 import { useTabBarPosition } from '../utils/useTabBarPosition';
 import { Deferred } from './Deferred';
 import { ScreenContent } from './ScreenContent';
@@ -95,6 +95,8 @@ const ICON_SIZE = Platform.select({
 
 const SUPPORTS_PROMINENT_TAB =
   Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 27;
+
+const EMPTY_TAB_BAR_LAYOUT = { width: 0, height: 0 };
 
 function reducer(state: NativeState, action: NativeAction): NativeState {
   switch (action.type) {
@@ -833,9 +835,9 @@ const TabScene = React.memo(function TabScene({
             style={sceneStyle}
           >
             <AnimatedScreenContent isFocused={isFocused}>
-              <BottomTabBarHeightContext.Provider value={0}>
+              <TabBarLayoutContext.Provider value={EMPTY_TAB_BAR_LAYOUT}>
                 {render()}
-              </BottomTabBarHeightContext.Provider>
+              </TabBarLayoutContext.Provider>
             </AnimatedScreenContent>
           </ScreenContent>
         </ActivityView>

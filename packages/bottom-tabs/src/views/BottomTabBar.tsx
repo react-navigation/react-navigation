@@ -35,7 +35,7 @@ import type {
   BottomTabDescriptorMap,
   BottomTabNavigationHelpers,
 } from '../types';
-import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
+import { TabBarLayoutCallbackContext } from '../utils/TabBarLayoutCallbackContext';
 import { useIsKeyboardShown } from '../utils/useIsKeyboardShown';
 import { useTabBarPosition } from '../utils/useTabBarPosition';
 import { BottomTabItem } from './BottomTabItem';
@@ -236,8 +236,6 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
   const insets = useSafeAreaInsets();
   const isKeyboardShown = useIsKeyboardShown();
 
-  const onHeightChange = React.use(BottomTabBarHeightCallbackContext);
-
   const shouldShowTabBar = !(tabBarHideOnKeyboard && isKeyboardShown);
 
   const visibilityAnimationConfigRef = React.useRef(
@@ -303,10 +301,18 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
     height: 0,
   });
 
-  const handleLayout = (e: LayoutChangeEvent) => {
-    const { height } = e.nativeEvent.layout;
+  const sidebar = tabBarPosition === 'left' || tabBarPosition === 'right';
 
-    onHeightChange?.(height);
+  const onLayout = React.use(TabBarLayoutCallbackContext);
+
+  const handleLayout = (e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+
+    onLayout?.({ width, height });
+
+    if (sidebar) {
+      return;
+    }
 
     setLayout((layout) => {
       if (height === layout.height) {
@@ -316,6 +322,14 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
       }
     });
   };
+
+  const tabBarRef = React.useRef<React.ComponentRef<typeof View>>(null);
+
+  React.useLayoutEffect(() => {
+    tabBarRef.current?.measure((_x, _y, width, height) => {
+      onLayout?.({ width, height });
+    });
+  }, [onLayout, tabBarPosition]);
 
   const { routes } = state;
 
@@ -341,7 +355,6 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
     isCompact({ state, descriptors, dimensions })
   );
 
-  const sidebar = tabBarPosition === 'left' || tabBarPosition === 'right';
   const spacing =
     tabBarVariant === 'material' ? SPACING_MATERIAL : SPACING_UIKIT;
 
@@ -353,6 +366,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
 
   return (
     <Animated.View
+      ref={tabBarRef}
       style={[
         tabBarPosition === 'left'
           ? styles.start
@@ -427,7 +441,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
         tabBarTransparent ? styles.transparent : null,
         tabBarStyle,
       ]}
-      onLayout={sidebar ? undefined : handleLayout}
+      onLayout={handleLayout}
     >
       <View style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]}>
         {tabBarBackgroundElement}

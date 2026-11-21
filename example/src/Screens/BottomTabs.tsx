@@ -3,7 +3,7 @@ import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-
 import {
   type BottomTabScreenProps,
   createBottomTabNavigator,
-  useBottomTabBarHeight,
+  useTabBarHeight,
 } from '@react-navigation/bottom-tabs';
 import {
   Button,
@@ -65,7 +65,7 @@ const linking = {
 const AlbumsScreen = () => {
   const navigation = useNavigation<typeof Tab>();
   const headerHeight = useHeaderHeight();
-  const tabBarHeight = useBottomTabBarHeight();
+  const tabBarHeight = useTabBarHeight();
   const isFocused = useIsFocused();
 
   return (

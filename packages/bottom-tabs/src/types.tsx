@@ -236,7 +236,7 @@ type BottomTabCustomOptions = {
    * You could render an image, a gradient, blur view etc.
    *
    * When using `BlurView`, make sure to set `tabBarTransparent` to `true` as well.
-   * You'd also need to use `useBottomTabBarHeight()` to add a bottom padding to your content.
+   * You'd also need to use `useTabBarHeight()` to add a bottom padding to your content.
    *
    * Only supported with `custom` implementation.
    */
