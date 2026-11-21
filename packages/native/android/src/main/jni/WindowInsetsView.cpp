@@ -1,4 +1,4 @@
-#include <ReactNavigationInsetsPadding.h>
+#include <ReactNavigationScrollInsets.h>
 #include <ReactNavigationSpec.h>
 #include <fbjni/fbjni.h>
 #include <react/fabric/StateWrapperImpl.h>
@@ -8,7 +8,9 @@ namespace facebook::react {
 const char ReactNavigationWindowInsetsViewComponentName[] = "ReactNavigationWindowInsetsView";
 
 WindowInsetsState::WindowInsetsState(const WindowInsetsState &previousState, folly::dynamic data)
-    : top(data["top"].getDouble()),
+    : contentTag(data["contentTag"].getInt()),
+      previousContentTag(previousState.contentTag != contentTag ? previousState.contentTag : 0),
+      top(data["top"].getDouble()),
       bottom(data["bottom"].getDouble()),
       start(data["start"].getDouble()),
       end(data["end"].getDouble()),
@@ -16,24 +18,39 @@ WindowInsetsState::WindowInsetsState(const WindowInsetsState &previousState, fol
       swapLeftAndRight(data["swapLeftAndRight"].getBool()) {}
 
 folly::dynamic WindowInsetsState::getDynamic() const {
-  return folly::dynamic::object("top", top)("bottom", bottom)("start", start)("end", end)("isRTL", isRTL)("swapLeftAndRight", swapLeftAndRight);
+  return folly::dynamic::object("contentTag", contentTag)("top", top)("bottom", bottom)("start", start)("end", end)("isRTL", isRTL)("swapLeftAndRight", swapLeftAndRight);
 }
 
 void ReactNavigationWindowInsetsViewShadowNode::adjustLayoutWithState() {
   ensureUnsealed();
 
   const auto &state = getStateData();
+  const auto &props = getConcreteProps();
 
-  applyInsetsPadding(yogaNode_, getConcreteProps(), state, state.swapLeftAndRight);
+  if (!props.adjustScrollInsets) {
+    applyInsetsPadding(yogaNode_, props, state, state.swapLeftAndRight);
+    return;
+  }
+
+  applyScrollInsets(yogaNode_, props.edges, state, state.swapLeftAndRight);
+}
+
+void ReactNavigationWindowInsetsViewShadowNode::appendChild(const std::shared_ptr<const ShadowNode> &child) {
+  ConcreteViewShadowNode::appendChild(child);
+
+  if (getConcreteProps().adjustScrollInsets) {
+    adjustLayoutWithState();
+  }
 }
 
 class WindowInsetsView : public jni::JavaClass<WindowInsetsView> {
  public:
   static constexpr auto kJavaDescriptor = "Lorg/reactnavigation/WindowInsetsView;";
 
-  static void updateState(
+  static jboolean updateState(
       jni::alias_ref<WindowInsetsView> view,
       jni::alias_ref<StateWrapper::javaobject> stateWrapper,
+      jint contentTag,
       jfloat top,
       jfloat bottom,
       jfloat start,
@@ -51,7 +68,7 @@ class WindowInsetsView : public jni::JavaClass<WindowInsetsView> {
       auto lock = wrapper->lock();
 
       if (!isValid(wrapper)) {
-        return;
+        return false;
       }
 
       state = std::static_pointer_cast<const ReactNavigationWindowInsetsViewShadowNode::ConcreteState>(wrapper->cthis()->getState());
@@ -59,6 +76,8 @@ class WindowInsetsView : public jni::JavaClass<WindowInsetsView> {
 
     WindowInsetsState data;
 
+    data.contentTag = contentTag;
+    data.previousContentTag = contentTag != state->getData().contentTag ? state->getData().contentTag : 0;
     data.top = top;
     data.bottom = bottom;
     data.start = start;
@@ -67,6 +86,7 @@ class WindowInsetsView : public jni::JavaClass<WindowInsetsView> {
     data.swapLeftAndRight = swapLeftAndRight;
 
     state->updateState(std::move(data), EventQueue::UpdateMode::unstable_Immediate);
+    return true;
   }
 
   static void registerNatives() {

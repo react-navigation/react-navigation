@@ -8,8 +8,8 @@
 
 namespace facebook::react {
 
-template <typename Props, typename State>
-void applyInsetsPadding(yoga::Node &node, const Props &props, const State &state, bool swapLeftAndRight) {
+template <typename Props, typename Edges, typename State>
+yoga::Style resolveInsetsPadding(const yoga::Node &node, const Props &props, const Edges &edges, const State &state, bool swapLeftAndRight) {
   const auto &style = props.yogaStyle;
 
   auto firstDefined = [](std::initializer_list<yoga::Style::Length> lengths) {
@@ -62,10 +62,17 @@ void applyInsetsPadding(yoga::Node &node, const Props &props, const State &state
   auto horizontal = newStyle.padding(yoga::Edge::Horizontal);
   auto all = newStyle.padding(yoga::Edge::All);
 
-  applyInset(yoga::Edge::Top, props.edges.top, state.top, {newStyle.padding(yoga::Edge::Top), vertical, all});
-  applyInset(yoga::Edge::Bottom, props.edges.bottom, state.bottom, {newStyle.padding(yoga::Edge::Bottom), vertical, all});
-  applyInset(yoga::Edge::Start, props.edges.start, state.start, {newStyle.padding(yoga::Edge::Start), newStyle.padding(startSide), horizontal, all});
-  applyInset(yoga::Edge::End, props.edges.end, state.end, {newStyle.padding(yoga::Edge::End), newStyle.padding(endSide), horizontal, all});
+  applyInset(yoga::Edge::Top, edges.top, state.top, {newStyle.padding(yoga::Edge::Top), vertical, all});
+  applyInset(yoga::Edge::Bottom, edges.bottom, state.bottom, {newStyle.padding(yoga::Edge::Bottom), vertical, all});
+  applyInset(yoga::Edge::Start, edges.start, state.start, {newStyle.padding(yoga::Edge::Start), newStyle.padding(startSide), horizontal, all});
+  applyInset(yoga::Edge::End, edges.end, state.end, {newStyle.padding(yoga::Edge::End), newStyle.padding(endSide), horizontal, all});
+
+  return newStyle;
+}
+
+template <typename Props, typename State>
+void applyInsetsPadding(yoga::Node &node, const Props &props, const State &state, bool swapLeftAndRight) {
+  auto newStyle = resolveInsetsPadding(node, props, props.edges, state, swapLeftAndRight);
 
   if (newStyle != node.style()) {
     node.setStyle(newStyle);

@@ -750,7 +750,7 @@ export type OverlayInsetsProviderProps = {
    * They aren't added to the system insets. The larger of the two is used for each edge.
    *
    * On iOS, they are applied to the safe area of the content.
-   * On Android, they are used only by `WindowInsetsView` with `custom` in its `types`.
+   * On Android, `ScrollInsets` and `WindowInsetsView` use them when `types` includes `custom`.
    */
   insets?: Partial<Record<LayoutRegionEdge, number>> | undefined;
   /**
@@ -761,4 +761,16 @@ export type OverlayInsetsProviderProps = {
    * Style object for the view.
    */
   style?: (React.CSSProperties & ViewStyle) | undefined;
+};
+
+export type ScrollInsetsProps = {
+  /** Wrap one scrollable component, such as a ScrollView or a list. */
+  children: React.ReactNode;
+  style?: WindowInsetsViewProps['style'];
+  /** Adapts the safe area to window corners on iOS 26 and later. */
+  cornerAdaptation?: 'horizontal' | 'vertical' | undefined;
+  /** Android inset types. Defaults to system bars, display cutouts and navigator overlays. */
+  types?: WindowInsetsViewProps['types'] | undefined;
+  /** Measures Android system bars at their visible size while hidden. */
+  ignoreVisibility?: boolean | undefined;
 };

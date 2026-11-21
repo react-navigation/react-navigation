@@ -13,6 +13,7 @@ export {
 } from './native/MaterialSymbol';
 export { OverlayInsetsProvider as UNSTABLE_OverlayInsetsProvider } from './native/OverlayInsetsProvider';
 export { ReservedRegionsView as UNSTABLE_ReservedRegionsView } from './native/ReservedRegionsView';
+export { ScrollInsets as UNSTABLE_ScrollInsets } from './native/ScrollInsets';
 export { SFSymbol, type SFSymbolProps } from './native/SFSymbol';
 export type {
   LayoutRegionInsetsChangeEvent,
@@ -21,6 +22,7 @@ export type {
   ReservedRegion,
   ReservedRegionsChangeEvent,
   ReservedRegionsViewProps,
+  ScrollInsetsProps,
   WindowInsetsChangeEvent,
   WindowInsetsType,
   WindowInsetsViewProps,

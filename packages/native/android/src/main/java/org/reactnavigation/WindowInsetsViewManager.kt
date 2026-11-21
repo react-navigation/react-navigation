@@ -22,6 +22,11 @@ class WindowInsetsViewManager : ReactViewManager() {
     return WindowInsetsView(context)
   }
 
+  @ReactProp(name = "adjustScrollInsets")
+  fun setAdjustScrollInsets(view: WindowInsetsView, enabled: Boolean) {
+    view.adjustScrollInsets = enabled
+  }
+
   @ReactProp(name = "types")
   fun setTypes(view: WindowInsetsView, types: ReadableArray?) {
     var mask = 0

@@ -12,6 +12,8 @@ namespace facebook::react {
 extern const char ReactNavigationWindowInsetsViewComponentName[];
 
 struct WindowInsetsState {
+  Tag contentTag{0};
+  Tag previousContentTag{0};
   Float top{0};
   Float bottom{0};
   Float start{0};
@@ -34,6 +36,7 @@ class ReactNavigationWindowInsetsViewShadowNode final : public ConcreteViewShado
   using ConcreteViewShadowNode::ConcreteViewShadowNode;
 
   void adjustLayoutWithState();
+  void appendChild(const std::shared_ptr<const ShadowNode> &child) override;
 };
 
 class ReactNavigationWindowInsetsViewComponentDescriptor final : public ConcreteComponentDescriptor<ReactNavigationWindowInsetsViewShadowNode> {

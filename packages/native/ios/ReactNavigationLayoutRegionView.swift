@@ -61,6 +61,10 @@ private class LayoutMeasurementView: UIView {
     self.view = view
   }
 
+  deinit {
+    measurementView?.removeFromSuperview()
+  }
+
   @objc public static func inheritedSafeAreaInsets(of view: UIView, in host: UIView) -> UIEdgeInsets {
     let (frame, isFlippedX, isFlippedY) = resolveFrame(of: view, in: host)
     let safeArea = host.safeAreaInsets
@@ -94,18 +98,16 @@ private class LayoutMeasurementView: UIView {
     )
   }
 
-  @objc public func didMoveToWindow() {
+  @objc public func invalidateMeasurement() {
     measurementView?.removeFromSuperview()
     measurementView = nil
     lastMeasurementState = nil
-
-    updateMeasurement()
   }
 
   // We don't get notified when an ancestor moves the view in the window
   // So we check the position after each mounting transaction, once the whole transaction is mounted
-  @objc public func updateMeasurement() {
-    guard let view, let window = view.window else {
+  @objc public func updateMeasurement(of target: UIView) {
+    guard let window = target.window else {
       return
     }
 
@@ -114,9 +116,8 @@ private class LayoutMeasurementView: UIView {
     // So we lay out the window first, otherwise we get the insets for the old position in the first frame
     window.layoutIfNeeded()
 
-    let host = sequence(first: view, next: \.superview).first { $0.next is UIViewController } ?? window
-
-    let (frame, isFlippedX, isFlippedY) = Self.resolveFrame(of: view, in: host)
+    let host = sequence(first: target, next: \.superview).first { $0.next is UIViewController } ?? window
+    let (frame, isFlippedX, isFlippedY) = Self.resolveFrame(of: target, in: host)
 
     let state = LayoutMeasurementState(
       props: props,
@@ -124,7 +125,7 @@ private class LayoutMeasurementView: UIView {
       isFlippedX: isFlippedX,
       isFlippedY: isFlippedY,
       windowBounds: window.bounds,
-      isRTL: view.effectiveUserInterfaceLayoutDirection == .rightToLeft
+      isRTL: target.effectiveUserInterfaceLayoutDirection == .rightToLeft
     )
 
     if state == lastMeasurementState, measurementView?.superview === host {

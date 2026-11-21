@@ -16,6 +16,7 @@ type InsetsChangeEvent = Readonly<{
 type EdgeMode = CodegenTypes.WithDefault<'off' | 'additive' | 'maximum', 'off'>;
 
 export interface NativeProps extends ViewProps {
+  adjustScrollInsets?: CodegenTypes.WithDefault<boolean, false>;
   types: readonly string[];
   ignoreVisibility?: CodegenTypes.WithDefault<boolean, false>;
   hasInsetsChangeListener?: CodegenTypes.WithDefault<boolean, false>;
