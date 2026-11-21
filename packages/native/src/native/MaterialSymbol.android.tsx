@@ -18,7 +18,7 @@ export type MaterialSymbolProps = MaterialSymbolOptions & {
   /**
    * Style object for the symbol.
    */
-  style?: ViewStyle | undefined;
+  style?: (React.CSSProperties & ViewStyle) | undefined;
 };
 
 export function MaterialSymbol({
