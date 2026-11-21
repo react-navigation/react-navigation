@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Platform, Pressable, StyleSheet, type ViewProps } from 'react-native';
 import Animated, {
   useAnimatedProps,
   useAnimatedStyle,
@@ -24,12 +24,17 @@ export function Overlay({
     };
   });
 
-  const animatedProps = useAnimatedProps(() => {
+  const animatedProps = useAnimatedProps<ViewProps>(() => {
     const active = progress.value > PROGRESS_EPSILON;
 
-    return {
-      'aria-hidden': !active,
-    } as const;
+    if (Platform.OS === 'android') {
+      const importantForAccessibility: ViewProps['importantForAccessibility'] =
+        active ? 'auto' : 'no-hide-descendants';
+
+      return { importantForAccessibility };
+    }
+
+    return { accessibilityElementsHidden: !active };
   });
 
   return (
