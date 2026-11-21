@@ -23,6 +23,7 @@ import {
   ScreenStackHeaderRightView,
   ScreenStackHeaderSearchBarView,
   SearchBar,
+  type SearchBarProps,
 } from 'react-native-screens';
 
 import type {
@@ -166,6 +167,24 @@ const transformIcon = (
   }
 
   return icon;
+};
+
+const transformSearchBarRightAccessory = (
+  rightAccessory: NonNullable<
+    NativeStackNavigationOptions['headerSearchBarOptions']
+  >['rightAccessory']
+): SearchBarProps['rightAccessory'] => {
+  if (rightAccessory == null) {
+    return undefined;
+  }
+
+  const icon = transformIcon(rightAccessory.icon);
+
+  if (icon == null) {
+    return undefined;
+  }
+
+  return { ...rightAccessory, icon };
 };
 
 const getMenuItem = (
@@ -527,6 +546,9 @@ export function useHeaderConfigProps({
           <SearchBar
             {...headerSearchBarOptions}
             onChangeText={headerSearchBarOptions.onChange}
+            rightAccessory={transformSearchBarRightAccessory(
+              headerSearchBarOptions.rightAccessory
+            )}
           />
         </ScreenStackHeaderSearchBarView>
       ) : null}

@@ -115,6 +115,11 @@ const ContactsScreen = () => {
         onChange: (e) => {
           setQuery(e.nativeEvent.text);
         },
+        rightAccessory: {
+          type: 'resultsList',
+          icon: { type: 'sfSymbol', name: 'line.3.horizontal.decrease.circle' },
+          onPress: () => Alert.alert('Filter accessory pressed'),
+        },
       },
     });
   }, [navigation]);
