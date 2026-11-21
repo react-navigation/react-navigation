@@ -47,7 +47,8 @@
     "@jest/globals": "^30.5.2",
     "del-cli": "^8.0.1",
     "react-native-builder-bob": "^0.44.1",
-    "typescript": "^6.0.3"
+    "typescript": "npm:@typescript/typescript6@^6.0.0",
+    "typescript7": "npm:typescript@^7.0.2"
   },
   "react-native-builder-bob": {
     "source": "src",
