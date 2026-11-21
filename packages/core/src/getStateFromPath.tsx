@@ -357,6 +357,8 @@ export function getStateFromPath<ParamList extends {}>(
     firstDecodedSegment = undefined;
   }
 
+  const rawSegments = remaining.split('/').filter(Boolean);
+
   for (const config of configs) {
     // Regex matching is expensive, so skip configs that can't match this path.
     if (
@@ -364,7 +366,8 @@ export function getStateFromPath<ParamList extends {}>(
         config.segments[0],
         firstDecodedSegment,
         firstRawSegment
-      )
+      ) ||
+      !canMatchStaticSegments(config.segments, rawSegments)
     ) {
       continue;
     }
@@ -425,6 +428,59 @@ const canMatchFirstSegment = (
   }
 
   return configSegment === decodedSegment || configSegment === rawSegment;
+};
+
+/**
+ * Compare the static segments of a config with the path, up to the first segment that can match a varying number of path segments.
+ * Many configs often share the first segment, and the regex of each one is compiled the first time it runs.
+ */
+const canMatchStaticSegments = (
+  configSegments: string[],
+  rawSegments: string[]
+) => {
+  for (const [i, configSegment] of configSegments.entries()) {
+    if (configSegment.startsWith(':')) {
+      if (
+        configSegment.includes('(') ||
+        configSegment.endsWith('?') ||
+        configSegment.endsWith('*') ||
+        configSegment.endsWith('+')
+      ) {
+        return true;
+      }
+
+      continue;
+    }
+
+    if (configSegment === '*') {
+      return true;
+    }
+
+    const rawSegment = rawSegments[i];
+
+    if (rawSegment === undefined) {
+      return false;
+    }
+
+    if (configSegment === rawSegment) {
+      continue;
+    }
+
+    let decodedSegment;
+
+    try {
+      decodedSegment = decodeURIComponent(rawSegment);
+    } catch {
+      // Leave malformed segments to the regex
+      return true;
+    }
+
+    if (configSegment !== decodedSegment) {
+      return false;
+    }
+  }
+
+  return true;
 };
 
 /**
