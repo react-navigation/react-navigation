@@ -21,6 +21,7 @@ import { Button, Text, View } from 'react-native';
 import {
   createNativeStackNavigator,
   type NativeStackScreenProps,
+  useFormSheet,
 } from '../index';
 
 type StackParamList = {
@@ -114,6 +115,40 @@ test('inactiveBehavior="unmount" keeps screens with nested navigators mounted', 
   act(() => navigation.dispatch(StackActions.popTo('A')));
 
   expect(screen.getByText('Nested: 1')).toBeTruthy();
+});
+
+test('useFormSheet does nothing on web', async () => {
+  const Stack = createNativeStackNavigator<StackParamList>();
+
+  const navigation = createNavigationContainerRef<StackParamList>();
+  const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+
+  const ExpandSheet = () => {
+    const formSheet = useFormSheet();
+
+    return (
+      <Button onPress={() => formSheet.selectDetent('last')} title="Expand" />
+    );
+  };
+
+  render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="A">{() => null}</Stack.Screen>
+        <Stack.Screen
+          name="B"
+          component={ExpandSheet}
+          options={{ presentation: 'formSheet' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  act(() => navigation.navigate('B'));
+
+  await user.click(screen.getByRole('button', { name: 'Expand' }));
+
+  expect(screen.getByRole('button', { name: 'Expand' })).toBeTruthy();
 });
 
 describe('useHeaderHeight in native-stack', () => {

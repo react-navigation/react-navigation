@@ -5,6 +5,7 @@ import {
   createNativeStackNavigator,
   createNativeStackScreen,
   type NativeStackNavigationOptions,
+  useFormSheet,
 } from '@react-navigation/native-stack';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
@@ -136,6 +137,7 @@ function FormSheetView({
   route,
 }: StaticScreenProps<{ paragraphs?: number } | undefined>) {
   const navigation = useNavigation();
+  const formSheet = useFormSheet();
   const paragraph =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ' +
     'aliquam justo at dolor condimentum tincidunt. Proin velit nibh, ' +
@@ -153,6 +155,15 @@ function FormSheetView({
     <View>
       <ScrollView>
         <View style={[styles.buttons, styles.closeButtonContainer]}>
+          <Button
+            variant="tinted"
+            onPress={() => formSheet.selectDetent('last')}
+          >
+            Expand
+          </Button>
+          <Button variant="tinted" onPress={() => formSheet.selectDetent(0)}>
+            Collapse
+          </Button>
           <Button onPress={() => navigation.goBack()} color="red">
             Close
           </Button>
