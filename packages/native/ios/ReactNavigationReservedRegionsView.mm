@@ -104,7 +104,7 @@ using namespace facebook::react;
 
         _payload = payload;
 
-        // The legacy native Animated module doesn't receive Fabric events,
+        // FIXME: The legacy native Animated module doesn't receive Fabric events,
         // so we post it separately for `Animated.event` with `useNativeDriver: true`
         if (!ReactNativeFeatureFlags::cxxNativeAnimatedEnabled()) {
             RCTComponentEvent *event = [[RCTComponentEvent alloc] initWithName:@"onRegionsChange"

@@ -594,7 +594,7 @@ export type LayoutRegionInsetsChangeEvent = {
 };
 
 export type LayoutRegionViewProps = (
-  | ({
+  | {
       /**
        * The layout region to get the insets from:
        * - `safeArea` - the area that isn't covered by system UI, such as the status bar, the navigation bar or window controls.
@@ -602,33 +602,17 @@ export type LayoutRegionViewProps = (
        * - `readableContent` - the area with a comfortable width for reading text. Requires iOS 26+.
        */
       region: 'safeArea' | 'margins' | 'readableContent';
-    } & (
-      | {
-          /**
-           * The direction to inset the content in to avoid the corners of the window.
-           * e.g. on iPadOS, the content is placed next to the window controls with `horizontal`,
-           * and below the window controls with `vertical`.
-           *
-           * The region isn't adapted to the corners if not specified.
-           *
-           * Requires iOS 26+. Ignored on older versions.
-           */
-          cornerAdaptation: 'horizontal' | 'vertical';
-          /**
-           * Whether to only add the space needed to avoid the corners, without the rest of the region.
-           * e.g. the space for the window controls on iPadOS, without the safe area.
-           *
-           * Useful when the region is already handled in the content, such as with the safe area insets.
-           *
-           * @default false
-           */
-          cornerAdaptationOnly?: boolean | undefined;
-        }
-      | {
-          cornerAdaptation?: undefined;
-          cornerAdaptationOnly?: undefined;
-        }
-    ))
+      /**
+       * The direction to inset the content in to avoid the corners of the window.
+       * e.g. on iPadOS, the content is placed next to the window controls with `horizontal`,
+       * and below the window controls with `vertical`.
+       *
+       * The region isn't adapted to the corners if not specified.
+       *
+       * Requires iOS 26+. Ignored on older versions.
+       */
+      cornerAdaptation?: 'horizontal' | 'vertical' | undefined;
+    }
   | {
       /**
        * The layout region to get the insets from:
@@ -673,4 +657,8 @@ export type LayoutRegionViewProps = (
    * Content to lay out inside the region.
    */
   children?: React.ReactNode;
+  /**
+   * Ref to the underlying native view or DOM element.
+   */
+  ref?: React.Ref<HostInstance | HTMLDivElement> | undefined;
 };
