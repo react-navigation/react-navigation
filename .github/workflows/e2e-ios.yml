@@ -157,9 +157,7 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
-      - name: Boot iOS Simulator
-        id: boot-simulator
-        timeout-minutes: 5
+      - name: Find iOS Simulator
         run: |
           DEVICE_ID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -n 1 | awk -F "[()]" '{print $2}')
 
@@ -169,17 +167,23 @@ jobs:
             exit 1
           fi
 
-          echo "Booting $SIMULATOR_NAME simulator with DEVICE_ID=$DEVICE_ID..."
-          xcrun simctl boot "$DEVICE_ID" || true
+          echo "E2E_IOS_DEVICE=$DEVICE_ID" >> "$GITHUB_ENV"
 
-          while ! xcrun simctl list devices | grep "$DEVICE_ID" | grep -q "(Booted)"; do
+      - name: Boot iOS Simulator
+        id: boot-simulator
+        timeout-minutes: 5
+        run: |
+          echo "Booting $SIMULATOR_NAME simulator with E2E_IOS_DEVICE=$E2E_IOS_DEVICE..."
+          xcrun simctl boot "$E2E_IOS_DEVICE" || true
+
+          while ! xcrun simctl list devices | grep "$E2E_IOS_DEVICE" | grep -q "(Booted)"; do
             sleep 2
           done
 
           echo "Simulator is booted!"
 
           # Add deep link handler so we don't see a prompt when running tests
-          /usr/libexec/PlistBuddy "$HOME/Library/Developer/CoreSimulator/Devices/${DEVICE_ID}/data/Library/Preferences/com.apple.launchservices.schemeapproval.plist" -c "add com.apple.CoreSimulator.CoreSimulatorBridge-->rne string org.reactnavigation.playground"
+          /usr/libexec/PlistBuddy "$HOME/Library/Developer/CoreSimulator/Devices/${E2E_IOS_DEVICE}/data/Library/Preferences/com.apple.launchservices.schemeapproval.plist" -c "add com.apple.CoreSimulator.CoreSimulatorBridge-->rne string org.reactnavigation.playground"
         background: true
 
       - name: Setup
@@ -209,19 +213,7 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ~/.agent-device/apple-runner/derived
-          key: agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-${{ hashFiles('node_modules/agent-device/package.json') }}
-
-      - name: Start Metro bundler
-        run: pnpm --dir example start &
-
-      - name: Warm up Metro bundle
-        id: metro-bundle
-        timeout-minutes: 5
-        run: |
-          until curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=ios&dev=true&minify=false" > /dev/null 2>&1; do
-            sleep 2
-          done
-        background: true
+          key: agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Wait for iOS Simulator
         wait: boot-simulator
@@ -237,51 +229,22 @@ jobs:
           echo "Starting simulator log stream..."
           xcrun simctl spawn booted log stream --style syslog > ~/agent-device-simulator.log 2>&1 &
 
-      - name: Prepare agent-device iOS runner
-        timeout-minutes: 20
-        run: |
-          mkdir -p agent-device-artifacts agent-device-state
-          echo "Preparing agent-device iOS runner..."
-          node ../node_modules/agent-device/bin/agent-device.mjs \
-            prepare ios-runner \
-            --timeout 600000 \
-            --platform ios \
-            --state-dir agent-device-state \
-            --verbose \
-            --no-record \
-            > agent-device-artifacts/ios-prepare.txt
-        working-directory: example
-
-      - name: Wait for Metro bundler
-        wait: metro-bundle
-
       - name: Run E2E tests
-        run: |
-          echo "Running native e2e tests..."
-          AGENT_DEVICE_E2E_TIMEOUT_MS=240000 pnpm e2e:native --platform ios
+        run: pnpm e2e:ios --retries 3 --reporter list,junit
         working-directory: example
 
       - name: Store E2E output
-        if: always()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: e2e-output-ios
-          path: example/agent-device-artifacts/**/*
+          path: example/.e2e/
           include-hidden-files: true
-          overwrite: true
+          if-no-files-found: warn
 
       - name: Shutdown simulator
         if: always()
         run: xcrun simctl shutdown booted || true
-
-      - name: Store debug output
-        if: failure() || cancelled()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
-        with:
-          name: e2e-artifacts-ios
-          path: example/agent-device-state/**/*.log
-          include-hidden-files: true
-          overwrite: true
 
       - name: Store device logs
         if: failure() || cancelled()
