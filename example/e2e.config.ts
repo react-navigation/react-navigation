@@ -7,7 +7,22 @@ import type { E2EConfig } from 'e2e';
 
 import appConfig from './app.json' with { type: 'json' };
 
-const viewport = { width: 390, height: 844 };
+export const viewport = { width: 390, height: 844 };
+
+const initScripts = [
+  () => {
+    // Selecting text or dragging images with the mouse cancels swipe gestures
+    // Hydration skips extra nodes in the head, but not extra attributes on the root
+    // So the style is added as an element instead of on the root element
+    addEventListener('dragstart', (e) => e.preventDefault());
+    addEventListener('DOMContentLoaded', () => {
+      const style = document.createElement('style');
+
+      style.textContent = ':root { user-select: none !important; }';
+      document.head.append(style);
+    });
+  },
+];
 
 const webApp = {
   url: 'http://127.0.0.1:0',
@@ -35,6 +50,8 @@ const metro = {
 // Android uses the default, since snapshots are slow enough to cover transitions
 const settle = 500;
 
+const linkBase = `${appConfig.expo.scheme}://`;
+
 const bundleUrl = (platform: 'ios' | 'android') =>
   `http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=${platform}&dev=true&minify=false`;
 
@@ -44,12 +61,12 @@ const config: E2EConfig = {
   targets: [
     {
       name: 'chromium',
-      engine: web({ viewport }),
+      engine: web({ viewport, initScripts }),
       app: webApp,
     },
     {
       name: 'firefox',
-      engine: web({ browser: 'firefox', viewport }),
+      engine: web({ browser: 'firefox', viewport, initScripts }),
       app: webApp,
     },
     {
@@ -61,6 +78,7 @@ const config: E2EConfig = {
       }),
       app: {
         bundleId: appConfig.expo.ios.bundleIdentifier,
+        linkBase,
         command: metro,
         readyUrl: bundleUrl('ios'),
       },
@@ -73,6 +91,7 @@ const config: E2EConfig = {
       }),
       app: {
         bundleId: appConfig.expo.android.package,
+        linkBase,
         command: metro,
         readyUrl: bundleUrl('android'),
       },

@@ -157,9 +157,7 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
-      - name: Boot iOS Simulator
-        id: boot-simulator
-        timeout-minutes: 5
+      - name: Find iOS Simulator
         run: |
           DEVICE_ID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -n 1 | awk -F "[()]" '{print $2}')
 
@@ -169,18 +167,23 @@ jobs:
             exit 1
           fi
 
-          echo "Booting $SIMULATOR_NAME simulator with DEVICE_ID=$DEVICE_ID..."
-          xcrun simctl boot "$DEVICE_ID" || true
+          echo "E2E_IOS_DEVICE=$DEVICE_ID" >> "$GITHUB_ENV"
 
-          while ! xcrun simctl list devices | grep "$DEVICE_ID" | grep -q "(Booted)"; do
+      - name: Boot iOS Simulator
+        id: boot-simulator
+        timeout-minutes: 5
+        run: |
+          echo "Booting $SIMULATOR_NAME simulator with E2E_IOS_DEVICE=$E2E_IOS_DEVICE..."
+          xcrun simctl boot "$E2E_IOS_DEVICE" || true
+
+          while ! xcrun simctl list devices | grep "$E2E_IOS_DEVICE" | grep -q "(Booted)"; do
             sleep 2
           done
 
           echo "Simulator is booted!"
-          echo "E2E_IOS_DEVICE=$DEVICE_ID" >> "$GITHUB_ENV"
 
           # Add deep link handler so we don't see a prompt when running tests
-          /usr/libexec/PlistBuddy "$HOME/Library/Developer/CoreSimulator/Devices/${DEVICE_ID}/data/Library/Preferences/com.apple.launchservices.schemeapproval.plist" -c "add com.apple.CoreSimulator.CoreSimulatorBridge-->rne string org.reactnavigation.playground"
+          /usr/libexec/PlistBuddy "$HOME/Library/Developer/CoreSimulator/Devices/${E2E_IOS_DEVICE}/data/Library/Preferences/com.apple.launchservices.schemeapproval.plist" -c "add com.apple.CoreSimulator.CoreSimulatorBridge-->rne string org.reactnavigation.playground"
         background: true
 
       - name: Setup

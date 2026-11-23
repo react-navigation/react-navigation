@@ -23,7 +23,7 @@ test('Native Bottom Tabs - Basic', async ({ launch, screen, scroll }) => {
     screen.getByText('Marissa Castillo', { visible: true })
   ).toBeVisible();
 
-  await scroll();
+  await scroll('down', screen.getByText('Marissa Castillo', { visible: true }));
   await expectScrolledOutOfView(
     screen.getByText('Marissa Castillo', { visible: true })
   );
