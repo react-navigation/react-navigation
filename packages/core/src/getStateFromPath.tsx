@@ -346,25 +346,21 @@ export function getStateFromPath<ParamList extends {}>(
 
   // We match the whole path against the regex instead of segments
   // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
-  const firstRawSegment = remaining.split('/')[0];
+  const rawSegments = remaining.split('/').filter(Boolean);
 
-  let firstDecodedSegment: string | undefined;
-
-  try {
-    firstDecodedSegment =
-      firstRawSegment != null ? decodeURIComponent(firstRawSegment) : undefined;
-  } catch {
-    firstDecodedSegment = undefined;
-  }
+  // Decode once here instead of once per config, `null` marks a malformed segment
+  const decodedSegments = rawSegments.map((segment) => {
+    try {
+      return decodeURIComponent(segment);
+    } catch {
+      return null;
+    }
+  });
 
   for (const config of configs) {
     // Regex matching is expensive, so skip configs that can't match this path.
     if (
-      !canMatchFirstSegment(
-        config.segments[0],
-        firstDecodedSegment,
-        firstRawSegment
-      )
+      !canMatchStaticSegments(config.segments, rawSegments, decodedSegments)
     ) {
       continue;
     }
@@ -407,24 +403,56 @@ export function getStateFromPath<ParamList extends {}>(
   return undefined;
 }
 
-const canMatchFirstSegment = (
-  configSegment: string | undefined,
-  decodedSegment: string | undefined,
-  rawSegment: string | undefined
+/**
+ * Compare the static segments of a config with the path, up to the first segment that can match a varying number of path segments.
+ * Many configs often share the first segment, and the regex of each one is compiled the first time it runs.
+ */
+const canMatchStaticSegments = (
+  configSegments: string[],
+  rawSegments: string[],
+  decodedSegments: (string | null)[]
 ) => {
-  if (decodedSegment === undefined) {
-    return true;
+  for (const [i, configSegment] of configSegments.entries()) {
+    if (configSegment.startsWith(':')) {
+      if (
+        configSegment.includes('(') ||
+        configSegment.endsWith('?') ||
+        configSegment.endsWith('*') ||
+        configSegment.endsWith('+')
+      ) {
+        return true;
+      }
+
+      continue;
+    }
+
+    if (configSegment === '*') {
+      return true;
+    }
+
+    const rawSegment = rawSegments[i];
+
+    if (rawSegment === undefined) {
+      return false;
+    }
+
+    if (configSegment === rawSegment) {
+      continue;
+    }
+
+    const decodedSegment = decodedSegments[i];
+
+    // Leave malformed segments to the regex
+    if (decodedSegment === null) {
+      return true;
+    }
+
+    if (configSegment !== decodedSegment) {
+      return false;
+    }
   }
 
-  if (configSegment === undefined) {
-    return false;
-  }
-
-  if (configSegment === '*' || configSegment.startsWith(':')) {
-    return true;
-  }
-
-  return configSegment === decodedSegment || configSegment === rawSegment;
+  return true;
 };
 
 /**
