@@ -17,9 +17,9 @@ import { useDismissedRouteError } from '../../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../../utils/useInvalidPreventRemoveError';
 import { CardScreen } from './CardScreen';
 import {
+  getPresentationType,
   type NativeStackViewState,
   type NativeStackViewStateAction,
-  SUPPORTS_FORM_SHEET,
   useViewState,
 } from './NativeStackViewState';
 import { SheetScreen } from './SheetScreen';
@@ -62,29 +62,28 @@ function NativeStackViewContent({
   );
 
   const onNativeDismiss = React.useCallback(
-    ({
-      key,
-      markNativelyDismissed,
-    }: {
-      key: string;
-      markNativelyDismissed: boolean;
-    }) => {
+    (key: string) => {
       const currentState = navigation.getState();
       const index = currentState.routes.findIndex((route) => route.key === key);
-      const route = currentState.routes[index];
 
-      if (route == null || index > currentState.index) {
+      // The route can be already removed in JS, e.g. if it was popped while user swiped back
+      // In this case, native dismissal finishes the pop, so it doesn't need to be rendered anymore
+      if (index === -1) {
+        dispatch({ type: 'REMOVE_POPPED_ROUTE', key });
+
         return;
       }
 
-      if (markNativelyDismissed) {
-        dispatch({
-          type: 'ADD_NATIVELY_DISMISSED_ROUTES',
-          keys: currentState.routes
-            .slice(index, currentState.index + 1)
-            .map((route) => route.key),
-        });
+      if (index > currentState.index) {
+        return;
       }
+
+      dispatch({
+        type: 'ADD_NATIVELY_DISMISSED_ROUTES',
+        keys: currentState.routes
+          .slice(index, currentState.index + 1)
+          .map((route) => route.key),
+      });
 
       navigation.dispatch({
         ...StackActions.dismiss(),
@@ -92,9 +91,7 @@ function NativeStackViewContent({
         target: currentState.key,
       });
 
-      if (markNativelyDismissed) {
-        setNextDismissedKey(key);
-      }
+      setNextDismissedKey(key);
     },
     [dispatch, navigation, setNextDismissedKey]
   );
@@ -117,87 +114,83 @@ function NativeStackViewContent({
     [navigation]
   );
 
-  const { cards, sheets } = renderedRoutes.reduce<{
-    cards: React.ReactElement[];
-    sheets: React.ReactElement[];
-  }>(
-    (result, route) => {
-      const index = routeIndexByKey.get(route.key);
-      const popped = poppedByKey.get(route.key);
-      const descriptor = descriptors[route.key] ?? popped?.descriptor;
+  const cards: React.ReactElement[] = [];
+  const sheets: React.ReactElement[] = [];
 
-      if (descriptor == null) {
-        throw new Error(
-          `Couldn't find descriptor for route ${route.name} (${route.key}). This is likely a bug.`
-        );
-      }
+  for (const route of renderedRoutes) {
+    const index = routeIndexByKey.get(route.key);
+    const popped = poppedByKey.get(route.key);
+    const descriptor = descriptors[route.key] ?? popped?.descriptor;
 
-      const presentation = descriptor.options.presentation ?? 'card';
+    if (descriptor == null) {
+      throw new Error(
+        `Couldn't find descriptor for route ${route.name} (${route.key}). This is likely a bug.`
+      );
+    }
 
-      if (presentation !== 'card' && presentation !== 'formSheet') {
-        throw new Error(
-          `The route '${route.name}' uses the '${presentation}' presentation, which is not supported in native stack. Only 'card' and 'formSheet' presentations are supported.`
-        );
-      }
+    const presentationType = getPresentationType(descriptor);
 
-      const isPopped = popped != null;
-      const isSheet = SUPPORTS_FORM_SHEET && presentation === 'formSheet';
+    const props = {
+      descriptor,
+      navigation,
+      isFocused: index === state.index,
+      onRemovePoppedRoute,
+      onNativeDismiss,
+    };
 
-      const props = {
-        descriptor,
-        navigation,
-        isFocused: index === state.index,
-        isPopped,
-        onRemovePoppedRoute,
-        onNativeDismiss,
-        onNativeDismissPrevented,
-      };
+    if (presentationType === 'card') {
+      const previousRoute = index == null ? undefined : state.routes[index - 1];
 
-      if (isSheet) {
-        if (index === 0) {
-          throw new Error(
-            `The route '${route.name}' cannot use 'formSheet' presentation because it is the first route in the native stack. Add a screen with 'card' presentation before it.`
-          );
-        }
-
-        const routeAboveSheet =
-          index != null && index < state.index
-            ? state.routes[index + 1]
-            : undefined;
-
-        if (routeAboveSheet != null) {
-          throw new Error(
-            `The route '${routeAboveSheet.name}' was pushed above the form sheet route '${route.name}' in the same native stack. A form sheet does not create a nested stack automatically. Render a nested navigator inside '${route.name}' and push '${routeAboveSheet.name}' on that nested navigator instead.`
-          );
-        }
-
-        result.sheets.push(<SheetScreen key={route.key} {...props} />);
-      } else {
-        const previousRoute =
-          index == null ? undefined : state.routes[index - 1];
-
-        const previousDescriptor = isPopped
-          ? popped?.previousDescriptor
+      const previousDescriptor =
+        popped != null
+          ? popped.previousDescriptor
           : previousRoute == null
             ? undefined
             : descriptors[previousRoute.key];
 
-        result.cards.push(
-          <CardScreen
-            key={route.key}
-            {...props}
-            previousDescriptor={previousDescriptor}
-            isBeforeLast={index === state.index - 1}
-            isDetached={index != null && index > state.index}
-            hasNestedState={index != null && state.routes[index]?.state != null}
-          />
-        );
-      }
+      cards.push(
+        <CardScreen
+          key={route.key}
+          {...props}
+          previousDescriptor={previousDescriptor}
+          isPopped={popped != null}
+          isBeforeLast={index === state.index - 1}
+          isDetached={index != null && index > state.index}
+          hasNestedState={index != null && state.routes[index]?.state != null}
+          onNativeDismissPrevented={onNativeDismissPrevented}
+        />
+      );
 
-      return result;
-    },
-    { cards: [], sheets: [] }
-  );
+      continue;
+    }
+
+    const { presentation } = descriptor.options;
+
+    if (index === 0) {
+      throw new Error(
+        `The route '${route.name}' cannot use '${presentation}' presentation because it is the first route in the native stack. Add a screen with 'card' presentation before it.`
+      );
+    }
+
+    const routeAbove =
+      index != null && index < state.index
+        ? state.routes[index + 1]
+        : undefined;
+
+    if (routeAbove != null) {
+      throw new Error(
+        `The route '${routeAbove.name}' was pushed above the '${presentation}' route '${route.name}' in the same native stack. A '${presentation}' route does not create a nested stack automatically. Render a nested navigator inside '${route.name}' and push '${routeAbove.name}' on that nested navigator instead.`
+      );
+    }
+
+    sheets.push(
+      <SheetScreen
+        key={route.key}
+        {...props}
+        onNativeDismissPrevented={onNativeDismissPrevented}
+      />
+    );
+  }
 
   return (
     <SafeAreaProviderCompat>
@@ -209,6 +202,8 @@ function NativeStackViewContent({
   );
 }
 
+// The view state is synced during render, so the content needs to be a separate component
+// Otherwise it'd render with outdated routes before the synced state is available
 export function NativeStackView({ state, navigation, descriptors }: Props) {
   const [{ renderedRoutes, poppedByKey }, dispatch] = useViewState({
     state,

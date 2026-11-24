@@ -7,26 +7,18 @@ export function useInvalidPreventRemoveError(
   descriptors: NativeStackDescriptorMap
 ) {
   const { preventedRoutes } = usePreventRemoveContext();
-  const preventedRouteKey = Object.keys(preventedRoutes)[0];
-  const preventedDescriptor =
-    preventedRouteKey == null ? undefined : descriptors[preventedRouteKey];
-  const isHeaderBackButtonMenuEnabledOnPreventedScreen =
-    preventedDescriptor?.options?.headerBackButtonMenuEnabled;
-  const preventedRouteName = preventedDescriptor?.route?.name;
+
+  const preventedRouteName = Object.keys(preventedRoutes)
+    .map((key) => descriptors[key])
+    .find((descriptor) => descriptor?.options.headerBackButtonMenuEnabled)
+    ?.route.name;
 
   React.useEffect(() => {
-    if (
-      preventedRouteKey != null &&
-      isHeaderBackButtonMenuEnabledOnPreventedScreen
-    ) {
+    if (preventedRouteName != null) {
       const message =
         `The screen ${preventedRouteName} uses 'usePreventRemove' hook alongside 'headerBackButtonMenuEnabled: true', which is not supported. \n\n` +
         `Consider removing 'headerBackButtonMenuEnabled: true' from ${preventedRouteName} screen to get rid of this error.`;
       console.error(message);
     }
-  }, [
-    preventedRouteKey,
-    isHeaderBackButtonMenuEnabledOnPreventedScreen,
-    preventedRouteName,
-  ]);
+  }, [preventedRouteName]);
 }

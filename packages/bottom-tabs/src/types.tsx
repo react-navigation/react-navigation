@@ -27,7 +27,7 @@ import type {
 } from 'react-native';
 import type {
   TabBarItemLabelVisibilityMode,
-  TabsScreenBlurEffect,
+  TabsBlurEffect,
   TabsScreenSystemItem,
 } from 'react-native-screens';
 
@@ -406,7 +406,7 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  tabBarBlurEffect?: TabsScreenBlurEffect | undefined;
+  tabBarBlurEffect?: TabsBlurEffect | undefined;
 
   /**
    * Minimize behavior for the tab bar.

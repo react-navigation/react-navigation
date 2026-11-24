@@ -209,7 +209,7 @@ test('rejects a form sheet replacing another form sheet', () => {
       sheetDescriptors
     )
   ).toThrow(
-    "The form sheet route 'D' cannot replace 'C' in the same native stack."
+    "The 'formSheet' route 'D' cannot replace the 'formSheet' route 'C' in the same native stack."
   );
 });
 
@@ -228,7 +228,29 @@ test('rejects a preloaded form sheet replacing another form sheet', () => {
       sheetDescriptors
     )
   ).toThrow(
-    "The form sheet route 'D' cannot replace 'C' in the same native stack."
+    "The 'formSheet' route 'D' cannot replace the 'formSheet' route 'C' in the same native stack."
+  );
+});
+
+test('rejects a page sheet replacing a form sheet', () => {
+  expect(() =>
+    syncState(
+      {
+        ...createState(),
+        previous: {
+          index: 2,
+          routes: [A, B, C],
+          descriptors: sheetDescriptors,
+        },
+      },
+      [A, B, D],
+      {
+        ...sheetDescriptors,
+        D: { ...descriptors.D, options: { presentation: 'pageSheet' } },
+      }
+    )
+  ).toThrow(
+    "The 'pageSheet' route 'D' cannot replace the 'formSheet' route 'C' in the same native stack."
   );
 });
 
@@ -349,7 +371,7 @@ test('does not retain routes that were dismissed natively', () => {
   expect(state.nativelyDismissedRouteKeys).toEqual(new Set());
 });
 
-test('retains a natively dismissed route if it stayed in navigation state', () => {
+test('does not retain a natively dismissed route removed after other updates', () => {
   let state = reducer(createState(), {
     type: 'ADD_NATIVELY_DISMISSED_ROUTES',
     keys: ['C'],
@@ -357,14 +379,15 @@ test('retains a natively dismissed route if it stayed in navigation state', () =
 
   // The pop action following the native dismissal didn't remove the route, e.g.
   // when a 'beforeRemove' listener prevented it.
-  state = syncState(state, [A, B, C]);
+  state = syncState(state, [A, B, { ...C, params: { updated: true } }]);
 
-  expect(state.nativelyDismissedRouteKeys).toEqual(new Set());
+  expect(state.nativelyDismissedRouteKeys).toEqual(new Set(['C']));
 
   state = syncState(state, [A, B]);
 
-  expect(getRouteKeys(state)).toEqual(['A', 'B', 'C']);
-  expect(getPoppedRouteKeys(state)).toEqual(['C']);
+  expect(getRouteKeys(state)).toEqual(['A', 'B']);
+  expect(getPoppedRouteKeys(state)).toEqual([]);
+  expect(state.nativelyDismissedRouteKeys).toEqual(new Set());
 });
 
 test('does not retain detached routes removed from navigation state', () => {

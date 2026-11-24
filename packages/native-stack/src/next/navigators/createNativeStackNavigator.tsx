@@ -23,7 +23,7 @@ import { NativeStackView } from '../views/NativeStackView';
 type TabPressEventArg = EventArg<
   'tabPress',
   true,
-  { origin?: string; behavior?: { popToTop?: boolean } } | undefined
+  { behavior?: { popToTop?: boolean } } | undefined
 >;
 
 function NativeStackNavigator({
@@ -72,8 +72,6 @@ function NativeStackNavigator({
         if (
           isFocused &&
           event.data?.behavior?.popToTop !== false &&
-          // Native tabs pop native stacks natively, so we don't need to handle it
-          event.data?.origin !== 'native' &&
           (currentState.index > 0 || currentState.routes[0]?.history?.length) &&
           !event.defaultPrevented
         ) {

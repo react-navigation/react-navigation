@@ -259,6 +259,7 @@ const HeaderAppearanceScreen = () => {
   const [titleAlign, setTitleAlign] = React.useState<'left' | 'center'>('left');
   const [customTitleStyle, setCustomTitleStyle] = React.useState(false);
   const [customBackTitle, setCustomBackTitle] = React.useState(false);
+  const [customBackTitleStyle, setCustomBackTitleStyle] = React.useState(false);
   const [backDisplayMode, setBackDisplayMode] = React.useState<
     'default' | 'generic' | 'minimal'
   >('default');
@@ -301,6 +302,9 @@ const HeaderAppearanceScreen = () => {
         ? { color: 'gold', fontFamily: titleFontFamily, fontSize: 40 }
         : undefined,
       headerBackTitle: customBackTitle ? 'Demos' : undefined,
+      headerBackTitleStyle: customBackTitleStyle
+        ? { fontFamily: titleFontFamily, fontSize: 20 }
+        : undefined,
       headerBackButtonDisplayMode: backDisplayMode,
       headerBackButtonMenuEnabled: backMenu,
       headerBackIcon:
@@ -318,6 +322,7 @@ const HeaderAppearanceScreen = () => {
     titleAlign,
     customTitleStyle,
     customBackTitle,
+    customBackTitleStyle,
     backDisplayMode,
     backMenu,
     backIcon,
@@ -372,6 +377,12 @@ const HeaderAppearanceScreen = () => {
           choices={ON_OFF}
           value={customBackTitle}
           onValueChange={setCustomBackTitle}
+        />
+        <Option
+          label="Custom back title style (iOS)"
+          choices={ON_OFF}
+          value={customBackTitleStyle}
+          onValueChange={setCustomBackTitleStyle}
         />
         <Option
           label="Back button display mode (iOS)"
@@ -503,6 +514,7 @@ const HeaderItemsScreen = () => {
         {
           type: 'button',
           label: 'Info',
+          tintColor: 'tomato',
           disabled,
           onPress: () => setLastAction('Info'),
         },
@@ -881,6 +893,14 @@ const SHEET_PRESETS = {
     options: {
       sheetAllowedDetents: [0.4],
       sheetExpandsWhenScrolledToEdge: false,
+    },
+  },
+  pageSheet: {
+    label: 'Page sheet',
+    options: {
+      presentation: 'pageSheet',
+      sheetAllowedDetents: [0.5, 1],
+      sheetGrabberVisible: true,
     },
   },
 } satisfies Record<

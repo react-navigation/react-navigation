@@ -18,6 +18,7 @@ import type {
   NativeStackNavigationOptions,
 } from '../../types';
 import { CardContent } from './CardContent';
+import { getTransitionEventHandlers } from './getTransitionEventHandlers';
 import { useHeaderConfig } from './useHeaderConfig';
 
 const ANIMATION_PRESETS: Partial<
@@ -47,10 +48,7 @@ type Props = {
   isDetached: boolean;
   hasNestedState: boolean;
   onRemovePoppedRoute: (key: string) => void;
-  onNativeDismiss: (options: {
-    key: string;
-    markNativelyDismissed: boolean;
-  }) => void;
+  onNativeDismiss: (key: string) => void;
   onNativeDismissPrevented: (key: string) => void;
 };
 
@@ -136,7 +134,7 @@ export const CardScreen = React.memo(function CardScreen({
     platformConfig,
     headerConfigRef,
     usesHeaderLeftElement,
-    headerBackgroundMode,
+    rendersHeaderBackgroundInScreen,
   } = useHeaderConfig({
     options,
     hasCustomHeader,
@@ -157,11 +155,11 @@ export const CardScreen = React.memo(function CardScreen({
     setHadNestedState(true);
   }
 
-  let activityMode: 'normal' | 'inert' | 'paused' | 'unmounted';
+  let contentActivityMode: 'normal' | 'inert' | 'paused' | 'unmounted';
 
   if (isPopped) {
     // The screen is animating out, so don't let it handle any interaction
-    activityMode = 'inert';
+    contentActivityMode = 'inert';
   } else if (
     // Render focused screens normally
     isFocused ||
@@ -171,17 +169,17 @@ export const CardScreen = React.memo(function CardScreen({
     // This lets effects on those screens run
     isDetached
   ) {
-    activityMode = 'normal';
+    contentActivityMode = 'normal';
   } else {
     switch (inactiveBehavior) {
       case 'none':
-        activityMode = 'normal';
+        contentActivityMode = 'normal';
         break;
       case 'unmount':
-        activityMode = hadNestedState ? 'paused' : 'unmounted';
+        contentActivityMode = hadNestedState ? 'paused' : 'unmounted';
         break;
       case 'pause':
-        activityMode = 'paused';
+        contentActivityMode = 'paused';
         break;
     }
   }
@@ -210,38 +208,9 @@ export const CardScreen = React.memo(function CardScreen({
       preventNativeDismiss={isRemovePrevented}
       animation={animation}
       replaceAnimation={options.animationTypeForReplace ?? 'push'}
-      onWillAppear={() =>
-        navigation.emit({
-          type: 'transitionStart',
-          data: { closing: false },
-          target: route.key,
-        })
-      }
-      onDidAppear={() =>
-        navigation.emit({
-          type: 'transitionEnd',
-          data: { closing: false },
-          target: route.key,
-        })
-      }
-      onWillDisappear={() =>
-        navigation.emit({
-          type: 'transitionStart',
-          data: { closing: true },
-          target: route.key,
-        })
-      }
-      onDidDisappear={() =>
-        navigation.emit({
-          type: 'transitionEnd',
-          data: { closing: true },
-          target: route.key,
-        })
-      }
+      {...getTransitionEventHandlers(navigation, route.key)}
       onDismiss={onRemovePoppedRoute}
-      onNativeDismiss={() => {
-        onNativeDismiss({ key: route.key, markNativelyDismissed: true });
-      }}
+      onNativeDismiss={onNativeDismiss}
       onNativeDismissPrevented={() => {
         onNativeDismissPrevented(route.key);
       }}
@@ -250,13 +219,19 @@ export const CardScreen = React.memo(function CardScreen({
         <CardContent
           descriptor={descriptor}
           headerBack={headerBack}
-          activityMode={activityMode}
+          activityMode={contentActivityMode}
           backgroundColor={colors.background}
-          headerBackgroundMode={headerBackgroundMode}
+          rendersHeaderBackgroundInScreen={rendersHeaderBackgroundInScreen}
         />
         <Stack.HeaderConfig
           ref={headerConfigRef}
-          title={headerTitleElement == null ? headerTitleText : undefined}
+          // iOS uses the title for the back button and back menu of the next screen
+          // So we pass it even when a custom title element replaces it in the header
+          title={
+            Platform.OS === 'ios' || headerTitleElement == null
+              ? headerTitleText
+              : undefined
+          }
           subtitle={
             typeof options.unstable_headerSubtitle === 'string'
               ? options.unstable_headerSubtitle
@@ -265,7 +240,7 @@ export const CardScreen = React.memo(function CardScreen({
           hidden={hasCustomHeader || options.headerShown === false}
           transparent={
             (options.headerBackground != null &&
-              headerBackgroundMode === 'screen') ||
+              rendersHeaderBackgroundInScreen) ||
             options.headerTransparent
           }
           backButtonHidden={

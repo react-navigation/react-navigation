@@ -1,8 +1,8 @@
 import { type Theme, useTheme } from '@react-navigation/native';
-import { StyleSheet, type TextStyle } from 'react-native';
+import { type ColorValue, StyleSheet, type TextStyle } from 'react-native';
 import type {
   StackHeaderAppearanceIOS,
-  StackHeaderConfigProps,
+  StackHeaderItemIOS,
   StackHeaderMenuElementIOS,
   StackHeaderMenuIOS,
 } from 'react-native-screens';
@@ -13,15 +13,11 @@ import type {
   NativeStackHeaderItemMenuSubmenu,
   NativeStackNavigationOptions,
 } from '../../types';
+import { getMenuChangeEvent } from './getMenuChangeEvent';
 import type {
   HeaderConfigOptions,
   HeaderConfigResult,
 } from './useHeaderConfig';
-
-type StackHeaderConfigIOS = NonNullable<StackHeaderConfigProps['ios']>;
-type StackHeaderItemIOS = NonNullable<
-  StackHeaderConfigIOS['leadingItems']
->[number];
 
 type HeaderMenu = Omit<NativeStackHeaderItemMenu['menu'], 'title'> &
   Partial<Pick<NativeStackHeaderItemMenuSubmenu, 'icon' | 'inline'>>;
@@ -68,6 +64,7 @@ export function useHeaderConfig({
     nativeHeaderLeftItems == null && headerLeftElement != null;
   const usesHeaderRightElement =
     nativeHeaderRightItems == null && headerRightElement != null;
+
   const platformConfig: HeaderConfigResult['platformConfig'] = {
     ios: {
       subtitleItem:
@@ -79,7 +76,11 @@ export function useHeaderConfig({
             },
       leadingItems:
         nativeHeaderLeftItems != null
-          ? getIOSHeaderItems(nativeHeaderLeftItems, 'leading')
+          ? getIOSHeaderItems(
+              nativeHeaderLeftItems,
+              'leading',
+              options.headerTintColor
+            )
           : usesHeaderLeftElement
             ? [
                 {
@@ -100,7 +101,11 @@ export function useHeaderConfig({
             },
       trailingItems:
         nativeHeaderRightItems != null
-          ? getIOSHeaderItems([...nativeHeaderRightItems].reverse(), 'trailing')
+          ? getIOSHeaderItems(
+              [...nativeHeaderRightItems].reverse(),
+              'trailing',
+              options.headerTintColor
+            )
           : usesHeaderRightElement
             ? [
                 {
@@ -130,41 +135,43 @@ export function useHeaderConfig({
       backButtonMenuEnabled: isRemovePrevented
         ? false
         : options.headerBackButtonMenuEnabled,
-      standardAppearance: getIOSHeaderAppearance(
-        options,
-        fonts,
-        options.headerTintColor
-      ),
+      standardAppearance: getIOSHeaderAppearance(options, fonts),
     },
   };
 
   return {
     platformConfig,
     usesHeaderLeftElement,
-    headerBackgroundMode: 'screen',
+    rendersHeaderBackgroundInScreen: true,
   };
 }
 
 function getIOSHeaderAppearance(
   options: NativeStackNavigationOptions,
-  fonts: Theme['fonts'],
-  tintColor: NativeStackNavigationOptions['headerTintColor']
+  fonts: Theme['fonts']
 ): StackHeaderAppearanceIOS | undefined {
   const titleStyle = StyleSheet.flatten(options.headerTitleStyle) ?? {};
   const largeTitleStyle =
     StyleSheet.flatten(options.headerLargeTitleStyle) ?? {};
+  const backTitleStyle = StyleSheet.flatten(options.headerBackTitleStyle) ?? {};
 
   const titleFont = getIOSFont(fonts.bold, titleStyle, '600');
   const largeTitleFont = getIOSFont(fonts.heavy, largeTitleStyle, '700');
+  const backTitleFont = getIOSFont(fonts.regular, backTitleStyle, '400');
+  const buttonFont = getIOSFont(fonts.regular, {}, '400');
+  const prominentButtonFont = getIOSFont(fonts.bold, {}, '600');
 
-  const titleFontColor = titleStyle.color ?? tintColor;
+  const titleFontColor = titleStyle.color ?? options.headerTintColor;
   const largeTitleFontColor = largeTitleStyle.color;
 
   if (
     titleFont == null &&
     largeTitleFont == null &&
     titleFontColor == null &&
-    largeTitleFontColor == null
+    largeTitleFontColor == null &&
+    backTitleFont == null &&
+    buttonFont == null &&
+    prominentButtonFont == null
   ) {
     return undefined;
   }
@@ -178,6 +185,10 @@ function getIOSHeaderAppearance(
     largeTitleFontSize: largeTitleFont?.fontSize,
     largeTitleFontWeight: largeTitleFont?.fontWeight,
     largeTitleFontColor,
+    backButton: backTitleFont == null ? undefined : { normal: backTitleFont },
+    button: buttonFont == null ? undefined : { normal: buttonFont },
+    prominentButton:
+      prominentButtonFont == null ? undefined : { normal: prominentButtonFont },
   };
 }
 
@@ -212,7 +223,8 @@ function getIOSFont(
 
 function getIOSHeaderItems(
   items: NativeStackHeaderItem[],
-  placement: 'leading' | 'trailing'
+  placement: 'leading' | 'trailing',
+  tintColor: ColorValue | undefined
 ): StackHeaderItemIOS[] {
   return items.map((item, index) => {
     const fallbackId = `${placement}-${index}`;
@@ -227,6 +239,7 @@ function getIOSHeaderItems(
         title: item.label,
         icon: getIOSHeaderIcon(item.icon),
         variant: item.variant === 'done' ? undefined : item.variant,
+        tintColor: item.tintColor ?? tintColor,
         disabled: item.disabled,
         hidesSharedBackground: item.hidesSharedBackground,
         visibilityPriority:
@@ -285,19 +298,11 @@ function getIOSHeaderMenu(
       typeof menu.multiselectable === 'boolean'
         ? !menu.multiselectable
         : undefined,
-    ...(onChange == null
-      ? null
-      : {
-          onSelectionChange: (selectedItemIds: string[]) =>
-            onChange({
-              checked: Object.fromEntries(
-                toggleItemIds.map((itemId) => [
-                  itemId,
-                  selectedItemIds.includes(itemId),
-                ])
-              ),
-            }),
-        }),
+    onSelectionChange:
+      onChange == null
+        ? undefined
+        : (selectedItemIds) =>
+            onChange(getMenuChangeEvent(toggleItemIds, selectedItemIds)),
     children: menu.items.map((item, index) =>
       getIOSHeaderMenuElement(item, `${menuId}-${index}`)
     ),
@@ -332,7 +337,7 @@ function getIOSHeaderMenuElement(
       title: item.label,
       icon: getIOSHeaderIcon(item.icon),
       itemType: 'action',
-      ...(item.onPress == null ? null : { onPress: item.onPress }),
+      onPress: item.onPress,
       keepsMenuPresented: item.keepsMenuPresented,
     };
   }

@@ -3,27 +3,24 @@ import {
   HeaderHeightContext,
   HeaderShownContext,
 } from '@react-navigation/elements';
-import { usePreventRemoveContext, useTheme } from '@react-navigation/native';
+import { usePreventRemoveContext } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { FormSheet } from 'react-native-screens';
+import { FormSheet, PageSheet } from 'react-native-screens';
 
 import type {
   NativeStackDescriptor,
   NativeStackNavigationHelpers,
 } from '../../types';
 import { AnimatedHeaderHeightContext } from '../../utils/useAnimatedHeaderHeight';
+import { getTransitionEventHandlers } from './getTransitionEventHandlers';
 
 type Props = {
   descriptor: NativeStackDescriptor;
   navigation: NativeStackNavigationHelpers;
   isFocused: boolean;
-  isPopped: boolean;
   onRemovePoppedRoute: (key: string) => void;
-  onNativeDismiss: (options: {
-    key: string;
-    markNativelyDismissed: boolean;
-  }) => void;
+  onNativeDismiss: (key: string) => void;
   onNativeDismissPrevented: (key: string) => void;
 };
 
@@ -31,21 +28,26 @@ export const SheetScreen = React.memo(function SheetScreen({
   descriptor,
   navigation,
   isFocused,
-  isPopped,
   onRemovePoppedRoute,
   onNativeDismiss,
   onNativeDismissPrevented,
 }: Props) {
   const { preventedRoutes } = usePreventRemoveContext();
-  const { colors } = useTheme();
 
   const { options, route } = descriptor;
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove === true;
   const [animatedHeaderHeight] = React.useState(() => new Animated.Value(0));
 
+  const transitionEventHandlers = getTransitionEventHandlers(
+    navigation,
+    route.key
+  );
+
+  const Sheet = options.presentation === 'pageSheet' ? PageSheet : FormSheet;
+
   return (
-    <FormSheet
+    <Sheet
       isOpen={isFocused}
       detents={options.sheetAllowedDetents}
       initialDetentIndex={options.sheetInitialDetentIndex}
@@ -56,37 +58,10 @@ export const SheetScreen = React.memo(function SheetScreen({
         options.sheetExpandsWhenScrolledToEdge
       }
       preventNativeDismiss={isRemovePrevented}
-      onWillAppear={() =>
-        navigation.emit({
-          type: 'transitionStart',
-          data: { closing: false },
-          target: route.key,
-        })
-      }
-      onDidAppear={() =>
-        navigation.emit({
-          type: 'transitionEnd',
-          data: { closing: false },
-          target: route.key,
-        })
-      }
-      onWillDisappear={() =>
-        navigation.emit({
-          type: 'transitionStart',
-          data: { closing: true },
-          target: route.key,
-        })
-      }
+      {...transitionEventHandlers}
       onDidDisappear={() => {
-        navigation.emit({
-          type: 'transitionEnd',
-          data: { closing: true },
-          target: route.key,
-        });
-
-        if (isPopped) {
-          onRemovePoppedRoute(route.key);
-        }
+        transitionEventHandlers.onDidDisappear();
+        onRemovePoppedRoute(route.key);
       }}
       onDetentChanged={(event) => {
         navigation.emit({
@@ -96,7 +71,7 @@ export const SheetScreen = React.memo(function SheetScreen({
         });
       }}
       onNativeDismiss={() => {
-        onNativeDismiss({ key: route.key, markNativelyDismissed: true });
+        onNativeDismiss(route.key);
       }}
       onNativeDismissPrevented={() => {
         onNativeDismissPrevented(route.key);
@@ -107,7 +82,6 @@ export const SheetScreen = React.memo(function SheetScreen({
           options.sheetAllowedDetents === 'fitToContents'
             ? styles.fit
             : styles.fill,
-          { backgroundColor: colors.background },
           options.contentStyle,
         ]}
       >
@@ -121,7 +95,7 @@ export const SheetScreen = React.memo(function SheetScreen({
           </HeaderHeightContext.Provider>
         </AnimatedHeaderHeightContext.Provider>
       </View>
-    </FormSheet>
+    </Sheet>
   );
 });
 

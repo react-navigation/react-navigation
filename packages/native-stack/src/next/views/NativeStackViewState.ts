@@ -11,8 +11,34 @@ import type {
   NativeStackDescriptorMap,
 } from '../../types';
 
-export const SUPPORTS_FORM_SHEET =
-  Platform.OS === 'android' || Platform.OS === 'ios';
+const SUPPORTS_FORM_SHEET =
+  Platform.OS === 'android' ||
+  (Platform.OS === 'ios' &&
+    (!Platform.isTV || parseInt(Platform.Version, 10) >= 26));
+
+const SUPPORTS_PAGE_SHEET =
+  Platform.OS === 'android' || (Platform.OS === 'ios' && !Platform.isTV);
+
+export function getPresentationType({
+  options,
+  route,
+}: NativeStackDescriptor): 'card' | 'sheet' {
+  const { presentation = 'card' } = options;
+
+  switch (presentation) {
+    case 'card':
+      return 'card';
+    // Sheets aren't available on all platforms, e.g. tvOS, so they fall back to cards
+    case 'formSheet':
+      return SUPPORTS_FORM_SHEET ? 'sheet' : 'card';
+    case 'pageSheet':
+      return SUPPORTS_PAGE_SHEET ? 'sheet' : 'card';
+    default:
+      throw new Error(
+        `The route '${route.name}' uses the '${presentation}' presentation, which is not supported in native stack. Only 'card', 'formSheet' and 'pageSheet' presentations are supported.`
+      );
+  }
+}
 
 export type NativeStackViewState = {
   previous: {
@@ -106,13 +132,15 @@ export function reducer(
           continue;
         }
 
+        // Sheets are presented over the stack
+        // So another one can't be presented till the previous one closes
         if (
-          SUPPORTS_FORM_SHEET &&
-          descriptor.options.presentation === 'formSheet' &&
-          focusedReplacementDescriptor?.options.presentation === 'formSheet'
+          focusedReplacementDescriptor != null &&
+          getPresentationType(descriptor) === 'sheet' &&
+          getPresentationType(focusedReplacementDescriptor) === 'sheet'
         ) {
           throw new Error(
-            `The form sheet route '${focusedReplacementDescriptor.route.name}' cannot replace '${route.name}' in the same native stack. Wait for the previous sheet to close before presenting another sheet.`
+            `The '${focusedReplacementDescriptor.options.presentation}' route '${focusedReplacementDescriptor.route.name}' cannot replace the '${descriptor.options.presentation}' route '${route.name}' in the same native stack. Wait for the previous route to close before presenting another one.`
           );
         }
 
@@ -161,12 +189,13 @@ export function reducer(
         }
       }
 
-      // Native dismissal keys are only needed for the next state sync
-      // So we don't need to keep the list anymore
-      const nativelyDismissedRouteKeys =
-        state.nativelyDismissedRouteKeys.size === 0
-          ? state.nativelyDismissedRouteKeys
-          : new Set<string>();
+      // Native dismissal keys are needed till their routes are removed
+      // e.g. if the removal was prevented, the route may still be removed later
+      const nativelyDismissedRouteKeys = new Set(
+        [...state.nativelyDismissedRouteKeys].filter((key) =>
+          routeIndexByKey.has(key)
+        )
+      );
 
       return {
         previous: {

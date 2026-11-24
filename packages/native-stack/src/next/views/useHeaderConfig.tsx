@@ -23,7 +23,7 @@ export type HeaderConfigResult = {
   platformConfig: Pick<StackHeaderConfigProps, 'android' | 'ios'>;
   headerConfigRef?: React.RefObject<StackHeaderConfigRef | null> | undefined;
   usesHeaderLeftElement: boolean;
-  headerBackgroundMode: 'native' | 'screen' | 'none';
+  rendersHeaderBackgroundInScreen: boolean;
 };
 
 // Android calls hooks, so all platform implementations use the same hook name.
@@ -34,6 +34,6 @@ export function useHeaderConfig({
   return {
     platformConfig: {},
     usesHeaderLeftElement: headerLeftElement != null,
-    headerBackgroundMode: 'screen',
+    rendersHeaderBackgroundInScreen: true,
   };
 }

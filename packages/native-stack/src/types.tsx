@@ -769,6 +769,11 @@ export type NativeStackNavigationOptions = {
    * - "pageSheet": will use "UIModalPresentationPageSheet" modal style on iOS and will fallback to "modal" on Android.
    *
    * Only supported on iOS and Android.
+   *
+   * In the experimental stack, only `card`, `formSheet` and `pageSheet` are supported.
+   * `pageSheet` uses a bottom sheet on Android, same as `formSheet`,
+   * and the sheet options that work with `formSheet` also work with `pageSheet`.
+   * Sheets fall back to `card` on tvOS versions that don't support them, and don't show a header.
    */
   presentation?:
     | Exclude<ScreenProps['stackPresentation'], 'push'>
@@ -985,6 +990,8 @@ type SharedHeaderItem = {
   label: string;
   /**
    * Style for the item label.
+   *
+   * Not supported in the experimental stack.
    */
   labelStyle?:
     | {
@@ -1021,6 +1028,8 @@ type SharedHeaderItem = {
    * The width of the item.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/width
+   *
+   * Not supported in the experimental stack.
    */
   width?: number | undefined;
   /**
@@ -1035,6 +1044,8 @@ type SharedHeaderItem = {
    * Only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/sharesbackground
+   *
+   * Not supported in the experimental stack.
    */
   sharesBackground?: boolean | undefined;
   /**
@@ -1061,6 +1072,8 @@ type SharedHeaderItem = {
    * Only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitembadge
+   *
+   * Not supported in the experimental stack.
    */
   badge?:
     | {
@@ -1084,10 +1097,14 @@ type SharedHeaderItem = {
     | undefined;
   /**
    * Accessibility label for the item.
+   *
+   * Not supported in the experimental stack.
    */
   accessibilityLabel?: string | undefined;
   /**
    * Accessibility hint for the item.
+   *
+   * Not supported in the experimental stack.
    */
   accessibilityHint?: string | undefined;
 };
@@ -1108,6 +1125,8 @@ export type NativeStackHeaderItemButton = SharedHeaderItem & {
    * Whether the item is in a selected state.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
+   *
+   * Not supported in the experimental stack.
    */
   selected?: boolean | undefined;
 };
@@ -1327,6 +1346,8 @@ export type NativeStackHeaderItemMenu = SharedHeaderItem & {
    * Tapping an item in a selection menu will add a checkmark to the selected item.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
+   *
+   * Not supported in the experimental stack.
    */
   changesSelectionAsPrimaryAction?: boolean | undefined;
   /**

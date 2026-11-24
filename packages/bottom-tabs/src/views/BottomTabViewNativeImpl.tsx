@@ -261,7 +261,7 @@ export function BottomTabViewNative({
       }
     }
 
-    if (actionOrigin === 'programmatic-js' || focusedRouteKey === route.key) {
+    if (actionOrigin === 'programmaticJs' || focusedRouteKey === route.key) {
       dispatch({
         type: 'CONFIRM_STATE',
         confirmed,

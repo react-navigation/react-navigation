@@ -24,7 +24,7 @@ type Props = {
   headerBack: React.ContextType<typeof HeaderBackContext>;
   activityMode: React.ComponentProps<typeof ActivityView>['mode'] | 'unmounted';
   backgroundColor: ColorValue;
-  headerBackgroundMode: 'native' | 'screen' | 'none';
+  rendersHeaderBackgroundInScreen: boolean;
 };
 
 export function CardContent({
@@ -32,7 +32,7 @@ export function CardContent({
   headerBack,
   activityMode,
   backgroundColor,
-  headerBackgroundMode,
+  rendersHeaderBackgroundInScreen,
 }: Props) {
   const { route, navigation, options, render } = descriptor;
 
@@ -49,21 +49,21 @@ export function CardContent({
   const parentHeaderHeight = React.use(HeaderHeightContext);
   const isParentHeaderShown = React.use(HeaderShownContext);
 
-  const isLandscape = useFrameSize((frame) => frame.width > frame.height);
+  const defaultHeaderHeight = useFrameSize((frame) => {
+    const landscape = frame.width > frame.height;
 
-  const topInset =
-    isParentHeaderShown ||
-    (Platform.OS === 'ios' && !(Platform.isPad || Platform.isTV) && isLandscape)
-      ? 0
-      : insets.top;
+    const topInset =
+      isParentHeaderShown ||
+      (Platform.OS === 'ios' && !(Platform.isPad || Platform.isTV) && landscape)
+        ? 0
+        : insets.top;
 
-  const defaultHeaderHeight = useFrameSize((frame) =>
-    getDefaultHeaderHeight({
-      landscape: frame.width > frame.height,
+    return getDefaultHeaderHeight({
+      landscape,
       modalPresentation: false,
       topInset,
-    })
-  );
+    });
+  });
 
   const [animatedHeaderHeight] = React.useState(
     () => new Animated.Value(defaultHeaderHeight)
@@ -76,26 +76,21 @@ export function CardContent({
       ? defaultHeaderHeight
       : (measuredHeaderHeight ?? defaultHeaderHeight);
 
+  const visibleHeaderHeight =
+    headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0);
+
   const headerContainerRef =
     React.useRef<React.ComponentRef<typeof View>>(null);
 
-  const updateHeaderHeight = React.useCallback(
-    (height: number) => {
-      animatedHeaderHeight.setValue(height);
-      setMeasuredHeaderHeight(height);
-    },
-    [animatedHeaderHeight]
-  );
-
   React.useLayoutEffect(() => {
-    animatedHeaderHeight.setValue(headerHeight);
-  }, [animatedHeaderHeight, headerHeight]);
+    animatedHeaderHeight.setValue(visibleHeaderHeight);
+  }, [animatedHeaderHeight, visibleHeaderHeight]);
 
   React.useLayoutEffect(() => {
     headerContainerRef.current?.measure((_x, _y, _width, height) => {
-      updateHeaderHeight(height);
+      setMeasuredHeaderHeight(height);
     });
-  }, [updateHeaderHeight]);
+  }, []);
 
   let contentElement: React.ReactNode;
 
@@ -105,7 +100,7 @@ export function CardContent({
     const backgroundElement =
       headerShown !== false &&
       headerBackground != null &&
-      headerBackgroundMode === 'screen' ? (
+      rendersHeaderBackgroundInScreen ? (
         <View
           style={[
             styles.background,
@@ -129,7 +124,9 @@ export function CardContent({
         >
           <View
             ref={headerContainerRef}
-            onLayout={(e) => updateHeaderHeight(e.nativeEvent.layout.height)}
+            onLayout={(e) =>
+              setMeasuredHeaderHeight(e.nativeEvent.layout.height)
+            }
             style={styles.headerContent}
           >
             {header({
@@ -145,11 +142,7 @@ export function CardContent({
     contentElement = (
       <ActivityView mode={activityMode} visible style={styles.content}>
         <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
-          <HeaderHeightContext.Provider
-            value={
-              headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)
-            }
-          >
+          <HeaderHeightContext.Provider value={visibleHeaderHeight}>
             {backgroundElement}
             {headerElement}
             <HeaderShownContext.Provider
