@@ -32,8 +32,8 @@ import type {
   BottomTabSceneStyleInterpolator,
 } from '../types';
 import { BottomTabAnimationContext } from '../utils/BottomTabAnimationContext';
-import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
-import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
+import { TabBarLayoutCallbackContext } from '../utils/TabBarLayoutCallbackContext';
+import { TabBarLayoutContext } from '../utils/TabBarLayoutContext';
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
 import { useTabBarPosition } from '../utils/useTabBarPosition';
 import { BottomTabBar, getTabBarHeight } from './BottomTabBar';
@@ -230,38 +230,53 @@ export function BottomTabViewCustom({
     tabAnims,
   ]);
 
+  const tabBarPosition = useTabBarPosition(focusedOptions ?? {});
+
+  const sidebar = tabBarPosition === 'left' || tabBarPosition === 'right';
+
+  const [tabBarWidth, setTabBarWidth] = React.useState(0);
   const [tabBarHeight, setTabBarHeight] = React.useState(() =>
-    getTabBarHeight({
-      state,
-      descriptors,
-      dimensions: SafeAreaProviderCompat.initialMetrics.frame,
-      insets: SafeAreaProviderCompat.initialMetrics.insets,
-      style: focusedOptions?.tabBarStyle,
-    })
+    sidebar
+      ? 0
+      : getTabBarHeight({
+          state,
+          descriptors,
+          dimensions: SafeAreaProviderCompat.initialMetrics.frame,
+          insets: SafeAreaProviderCompat.initialMetrics.insets,
+          style: focusedOptions?.tabBarStyle,
+        })
+  );
+
+  const onTabBarLayout = React.useCallback(
+    ({ width, height }: { width: number; height: number }) => {
+      setTabBarWidth(width);
+      setTabBarHeight(height);
+    },
+    []
+  );
+
+  const tabBarLayoutWidth = sidebar ? tabBarWidth : 0;
+  const tabBarLayoutHeight = sidebar ? 0 : tabBarHeight;
+
+  const tabBarLayout = React.useMemo(
+    () => ({ width: tabBarLayoutWidth, height: tabBarLayoutHeight }),
+    [tabBarLayoutWidth, tabBarLayoutHeight]
   );
 
   const tabBarElement = (
-    <BottomTabBarHeightCallbackContext.Provider
-      key="tabbar"
-      value={setTabBarHeight}
-    >
+    <TabBarLayoutCallbackContext.Provider key="tabbar" value={onTabBarLayout}>
       {tabBar({
         state: state,
         descriptors: descriptors,
         navigation: navigation,
       })}
-    </BottomTabBarHeightCallbackContext.Provider>
+    </TabBarLayoutCallbackContext.Provider>
   );
-
-  const tabBarPosition = useTabBarPosition(focusedOptions ?? {});
 
   return (
     <SafeAreaProviderCompat
       style={{
-        flexDirection:
-          tabBarPosition === 'left' || tabBarPosition === 'right'
-            ? 'row'
-            : 'column',
+        flexDirection: sidebar ? 'row' : 'column',
       }}
     >
       {tabBarPosition === 'top' || tabBarPosition === 'left'
@@ -315,7 +330,7 @@ export function BottomTabViewCustom({
               isActive={isActive}
               isAnimatingRoute={isAnimatingRoute}
               tabAnimation={tabAnimation}
-              tabBarHeight={tabBarPosition === 'bottom' ? tabBarHeight : 0}
+              tabBarLayout={tabBarLayout}
             />
           );
         })}
@@ -336,7 +351,7 @@ type TabSceneProps = {
   isActive: boolean;
   isAnimatingRoute: boolean;
   tabAnimation: Animated.Value;
-  tabBarHeight: number;
+  tabBarLayout: { width: number; height: number };
 };
 
 const TabScene = React.memo(function TabScene({
@@ -348,7 +363,7 @@ const TabScene = React.memo(function TabScene({
   isActive,
   isAnimatingRoute,
   tabAnimation,
-  tabBarHeight,
+  tabBarLayout,
 }: TabSceneProps) {
   const { navigation, options, render } = descriptor;
 
@@ -375,9 +390,9 @@ const TabScene = React.memo(function TabScene({
         navigation={navigation}
         options={options}
       >
-        <BottomTabBarHeightContext.Provider value={tabBarHeight}>
+        <TabBarLayoutContext.Provider value={tabBarLayout}>
           {render()}
-        </BottomTabBarHeightContext.Provider>
+        </TabBarLayoutContext.Provider>
       </ScreenContent>
     </AnimatedScreenContent>
   );
